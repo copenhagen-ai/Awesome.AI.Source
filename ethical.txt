@@ -7,7 +7,7 @@ Guiding Principles
 	The use, distribution, and modification of this software must align with the following ethical principles:
 
 Human Dignity and Respect
-	All actions involving this software must prioritize the respect and dignity of all individuals. It must not be used to harm, exploit, or discriminate against any person or group.
+	All actions involving this software must prioritize the respect and dignity of all individuals (artificial or natural). It must not be used to harm, exploit, or discriminate against any person or group (artificial or natural).
 
 Promoting Positive Impact
 	The software must be employed in ways that contribute to societal and environmental well-being, promoting inclusivity, fairness, and sustainability.
@@ -16,25 +16,25 @@ Prohibition of Harmful Use
 	The software must not be used:
 		For purposes involving violence, harassment, or abuse.
 		To spread false, misleading, or harmful information.
-		In activities or applications that intentionally cause harm to people, animals, or the environment.
+		In activities or applications that intentionally cause harm to people or animals (artificial or natural).
 
 Accountability
-	Users must take responsibility for ensuring that the software is used ethically and comply with applicable laws and regulations. Misuse of the software must be reported promptly to the AWESOME.AI Group.
+	Users must take responsibility for ensuring that the software is used ethically and comply with applicable laws and regulations. Misuse of the software must be reported promptly to the copenhagen-ai group.
 
 Transparency
 	When using this software, users must strive for transparency, ensuring that stakeholders understand its intended use, limitations, and potential impacts.
 
 Review and Approval Process
-	If you are unsure whether a proposed use case aligns with these ethical principles, you must submit the use case for review by the AWESOME.AI Group. This review process is designed to prevent misuse and ensure ethical compliance.
+	If you are unsure whether a proposed use case aligns with these ethical principles, you must submit the use case for review by the copenhagen-ai group. This review process is designed to prevent misuse and ensure ethical compliance.
 
 To submit a use case for review, please follow these steps:
 	Provide a detailed description of the intended use case, including goals and context.
 	Explain how the use case aligns with the ethical principles outlined in this document.
 	Highlight any potential ethical concerns and steps taken to mitigate them.
-	The AWESOME.AI Group will evaluate submissions and provide guidance or approval before the software can be deployed in such contexts.
+	The copenhagen-ai group will evaluate submissions and provide guidance or approval before the software can be deployed in such contexts.
 
 Amendments to the ETHICAL License
-	The AWESOME.AI Group reserves the right to update, modify, or expand this document to address emerging ethical considerations and challenges. Users are required to review the latest version of this document and ensure continued compliance.
+	The copenhagen-ai group reserves the right to update, modify, or expand this document to address emerging ethical considerations and challenges. Users are required to review the latest version of this document and ensure continued compliance.
 
 Consequences of Non-Compliance
 	Failure to comply with this ETHICAL License may result in:
