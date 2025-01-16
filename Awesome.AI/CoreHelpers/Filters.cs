@@ -40,7 +40,7 @@ namespace Awesome.AI.CoreHelpers
             return ok;
         }
         
-        public bool HighPass(UNIT _u)//aka SayNo
+        public bool LowCut(UNIT _u)//aka SayNo
         {
             /*
              * Lowcut filter?
@@ -49,15 +49,21 @@ namespace Awesome.AI.CoreHelpers
             if (_u == null)
                 throw new ArgumentNullException();
 
-            double lower_border = mind.parms.high_pass;
-            //double dist = Calc.DistPyth(UNIT.CreateMIN(), u);
+            double lower_border = mind.parms.low_cut;
             double force = _u.Variable;
 
-            //if (dist > lower_border)
             if (force < lower_border)
-                return true;
-            return false;
-        }/**/
+                return false;
+            return true;
+        }
+
+        public bool Credits(UNIT unit)
+        {
+            if (unit == null)
+                throw new ArgumentNullException();
+
+            return unit.credits > 1.0d;
+        }
 
         /*public static bool HighPass(UNIT _u)//aka SayNo
         {
@@ -73,42 +79,28 @@ namespace Awesome.AI.CoreHelpers
             return res;
         }/**/
 
-        public bool Energy(UNIT unit)
-        {
-            if (unit == null)
-                throw new ArgumentNullException();
+        //public bool Neighbor(UNIT _u, List<UNIT> list)
+        //{
+        //    if (_u.root.StartsWith("lost "))
+        //        ;
 
-            //UNIT low = Statics.LowestForce();
-            //UNIT high = Statics.HighestForceHighPass();
-            //if (unit == low || unit == high)
-            //if (unit == low)
-                return unit.energy > 1.0d;
-            
-            //return true;
-        }
+        //    bool res;
+        //    double slope = mind.parms.slope;//0.666
+        //    int n_visit = _u.Next.IsNEXTPREV() ? _u.Next.visited : -1;
+        //    int p_visit = _u.Prev.IsNEXTPREV() ? _u.Prev.visited : -1;
+        //    int visited = _u.visited;
 
-        public bool Neighbor(UNIT _u, List<UNIT> list)
-        {
-            if (_u.root.StartsWith("lost "))
-                ;
+        //    if (n_visit >= 0 && p_visit >= 0)
+        //        res = n_visit >= visited * slope && p_visit >= visited * slope;
+        //    else if (n_visit >= 0)
+        //        res = n_visit >= visited * slope;
+        //    else if (p_visit >= 0)
+        //        res = p_visit >= visited * slope;
+        //    else
+        //        throw new Exception();
 
-            bool res;
-            double slope = mind.parms.slope;//0.666
-            int n_visit = _u.Next.IsNEXTPREV() ? _u.Next.visited : -1;
-            int p_visit = _u.Prev.IsNEXTPREV() ? _u.Prev.visited : -1;
-            int visited = _u.visited;
-
-            if (n_visit >= 0 && p_visit >= 0)
-                res = n_visit >= visited * slope && p_visit >= visited * slope;
-            else if (n_visit >= 0)
-                res = n_visit >= visited * slope;
-            else if (p_visit >= 0)
-                res = p_visit >= visited * slope;
-            else
-                throw new Exception();
-
-            return res;
-        }
+        //    return res;
+        //}
 
         //public static bool Neighbor(UNIT _u, List<UNIT> list)
         //{
@@ -152,28 +144,28 @@ namespace Awesome.AI.CoreHelpers
         //}
 
 
-        public bool Theme(UNIT unit)
-        {
-            if (unit == null)
-                throw new ArgumentNullException();
+        //public bool Theme(UNIT unit)
+        //{
+        //    if (unit == null)
+        //        throw new ArgumentNullException();
             
-            if (mind.theme == "none")
-                return true;
+        //    if (mind.theme == "none")
+        //        return true;
 
-            if (!mind.theme_on)
-                return true;
+        //    if (!mind.theme_on)
+        //        return true;
 
-            HUB top = mind.mem.HUBS_SUB(mind.theme);
-            HUB curr = unit.HUB;
-            if (top.GetSubject() == curr.GetSubject())
-                return true;
-            //foreach (HUB h in top.hubs)
-            //{
-            //    if (h.GetSubject() != "LEARNING" && h.GetSubject() == curr.GetSubject())
-            //        return true;
-            //}
-            return false;
-        }
+        //    HUB top = mind.mem.HUBS_SUB(mind.theme);
+        //    HUB curr = unit.HUB;
+        //    if (top.GetSubject() == curr.GetSubject())
+        //        return true;
+        //    //foreach (HUB h in top.hubs)
+        //    //{
+        //    //    if (h.GetSubject() != "LEARNING" && h.GetSubject() == curr.GetSubject())
+        //    //        return true;
+        //    //}
+        //    return false;
+        //}
 
         //public static bool Elastic1(Direction dir)
         //{

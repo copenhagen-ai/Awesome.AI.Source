@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Helpers;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Common
@@ -30,16 +31,29 @@ namespace Awesome.AI.Common
             return !Double.IsNaN(value) && !Double.IsInfinity(value);
         }
 
-        public static string Data(this string value)
+
+        private static Random rng = new Random();
+        public static void Shuffle<T>(this IList<T> list)
         {
-            return value.Split(':')[0];
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
         }
 
-        public static string Class(this string value)
+        public static double Convert(this double _x, TheMind mind)
         {
-            if (!value.Contains(":"))
-                return "null";
-            return value.Split(':')[1];
+            double _l = 0.0d;
+            double _h = 100.0d;
+            
+            double res = mind.calc.NormalizeRange(_x, _l, _h, Constants.MIN, Constants.MAX);
+
+            return res;
         }
 
         public static bool TheHack1(this bool _b, TheMind mind)
@@ -48,7 +62,7 @@ namespace Awesome.AI.Common
              * >> this is the hack/cheat <<
              * */
 
-            bool do_hack = mind.parms.hmode1 == HACKMODES.HACK;
+            bool do_hack = mind.parms.hack1 == HACKMODES.HACK;
             if (do_hack)
                 return !_b;
             return _b;
@@ -60,7 +74,7 @@ namespace Awesome.AI.Common
              * >> this is the hack/cheat <<
              * */
 
-            bool do_hack = mind.parms.hmode2 == HACKMODES.HACK;
+            bool do_hack = mind.parms.hack2 == HACKMODES.HACK;
             if (do_hack)
                 return !_b;
             return _b;
@@ -95,5 +109,17 @@ namespace Awesome.AI.Common
         {
             return q == OPINION.NOT || q == OPINION.OK;
         }
+
+        //public static string Data(this string value)
+        //{
+        //    return value.Split(':')[0];
+        //}
+
+        //public static string Class(this string value)
+        //{
+        //    if (!value.Contains(":"))
+        //        return "null";
+        //    return value.Split(':')[1];
+        //}
     }
 }

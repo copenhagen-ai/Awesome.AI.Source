@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Systems.Externals;
 using static Awesome.AI.Helpers.Enums;
@@ -16,32 +17,20 @@ namespace Awesome.AI.Common
         public string root { get; set; }
         public string root_val { get; set; }
         public double max_nrg { get; set; }
-        public double energy { get; set; }
-        public int visited { get; set; }
-
+        public double credits { get; set; }
+        
         TheMind mind;
         private UNIT() { }
         public UNIT(TheMind mind)
         {
             this.mind = mind;
         }
-
-        public double index_conv
+        
+        private double dex = -1.0d;
+        public double Index
         {
-            get
-            {
-                double orig = index_orig;
-                double res = mind.convert.Process(orig, root, type);
-
-                return res;
-            }
-        }
-
-        private double dex_orig = -1.0d;
-        public double index_orig
-        {
-            get { return dex_orig; }
-            set { dex_orig = value; }
+            get { return dex; }
+            set { dex = value; }
         }
 
         double _f = -1d;
@@ -52,8 +41,8 @@ namespace Awesome.AI.Common
                 if (_f != -1d)
                     return _f;
 
-                IBaseVariable _base = mind.parms.GetBaseForce();
-                _f = _base.Variable(this);
+                IMechanics _mech = mind.parms.GetMechanics();
+                _f = _mech.Variable(this);
                 return _f;
             }
         }
@@ -80,20 +69,20 @@ namespace Awesome.AI.Common
         {
             get
             {
-                double min = ZUNIT.zero_dist < this.LowAtZero ? ZUNIT.zero_dist : this.LowAtZero;
-                double max = ZUNIT.zero_dist > this.LowAtZero ? ZUNIT.zero_dist : this.LowAtZero;
+                double min = Constants.VERY_LOW < this.LowAtZero ? Constants.VERY_LOW : this.LowAtZero;
+                double max = Constants.VERY_LOW > this.LowAtZero ? Constants.VERY_LOW : this.LowAtZero;
                 return max - min;
             }
         }
         
-        public bool IsHighPass
+        public bool IsLowCut
         {
-            get { return mind.filters.HighPass(this); }
+            get { return mind.filters.LowCut(this); }
         }
 
-        public bool IsEnergy
+        public bool CreditOK
         {
-            get { return mind.filters.Energy(this); }
+            get { return mind.filters.Credits(this); }
         }
 
         UNIT next = null;
@@ -107,7 +96,7 @@ namespace Awesome.AI.Common
                 List<UNIT> units = mind.mem.UNITS_VAL();
                 units = units.OrderByDescending(x => x.Variable).ToList();
                 units = units.Where(x => !x.IsSPECIAL()).ToList();
-                units = units.Where(x => x.IsHighPass).ToList();
+                units = units.Where(x => !x.IsLowCut).ToList();
                 units = units.Where(x => x.Variable < this.Variable).ToList();
 
                 next = units.FirstOrDefault();
@@ -129,7 +118,7 @@ namespace Awesome.AI.Common
                 List<UNIT> units = mind.mem.UNITS_VAL();
                 units = units.OrderByDescending(x => x.Variable).ToList();
                 units = units.Where(x => !x.IsSPECIAL()).ToList();
-                units = units.Where(x => x.IsHighPass).ToList();
+                units = units.Where(x => !x.IsLowCut).ToList();
                 units = units.Where(x => x.Variable > this.Variable).ToList();
 
                 prev = units.LastOrDefault();
@@ -148,10 +137,7 @@ namespace Awesome.AI.Common
         {
             get
             {
-                double max = mind.convert.p_Max;
-                double min = mind.convert.p_Min;
-
-                double res = index_conv;
+                double res = Index;
                 res = mind.calc.NormalizeRange(res, 0.0d, 100.0d, 0.0d, mind.parms.max_index);
 
                 return res;
@@ -166,45 +152,8 @@ namespace Awesome.AI.Common
         {
             get
             {
-                double max = mind.convert.p_Max;
-                double min = mind.convert.p_Min;
-
-                double res = max - index_conv;
+                double res = 100.0d - Index;
                 res = mind.calc.NormalizeRange(res, 0.0d, 100.0d, 0.0d, mind.parms.max_index);
-
-                return res;
-            }
-        }
-
-        public double LowAtZeroReciprocal
-        {
-            get
-            {
-                double max = mind.convert.p_Max;
-                double min = mind.convert.p_Min;
-
-                double res = mind.calc.NormalizeRange(index_conv, 0.0d, 100.0d, 0.0d, mind.parms.scale);
-                res = res < 0.25d ? 0.25d : res;
-                res = mind.calc.Reciprocal(res);
-                res = res > 2.0d ? 2.0d : res;
-                res = mind.calc.NormalizeRange(res, 0.0d, 2.0d, 0.0d, mind.parms.max_index);
-
-                return res;
-            }
-        }
-
-        public double HighAtZeroReciprocal
-        {
-            get
-            {
-                double max = mind.convert.p_Max;
-                double min = mind.convert.p_Min;
-
-                double res = mind.calc.NormalizeRange(max - index_conv, 0.0d, 100.0d, 0.0d, mind.parms.scale);
-                res = res < 0.25d ? 0.25d : res;
-                res = mind.calc.Reciprocal(res);
-                res = res > 2.0d ? 2.0d : res;
-                res = mind.calc.NormalizeRange(res, 0.0d, 2.0d, 0.0d, mind.parms.max_index);
 
                 return res;
             }
@@ -219,8 +168,9 @@ namespace Awesome.AI.Common
                     return hub;
 
                 hub = mind.mem.HUBS_ALL().Where(x => x.units.Contains(this)).FirstOrDefault();
+                
                 if (hub == null)
-                    return HUB.Create("IDLE", new List<UNIT>(), mind.parms.is_accord, new int?[] { 1, 1, 1 }, 0.0d, 0.0d);
+                    return HUB.Create("IDLE", new List<UNIT>());
 
                 return hub;
             }
@@ -240,16 +190,15 @@ namespace Awesome.AI.Common
             }
         }
 
-
-        public static UNIT Create(TheMind mind, double index_orig, string root, string root_val, string ticket, TYPE t)
+        public static UNIT Create(TheMind mind, double index, string root, string root_val, string ticket, TYPE t)
         {
-            UNIT _w = new UNIT() { mind = mind, index_orig = index_orig, root = root, root_val = root_val, type = t };
+            UNIT _w = new UNIT() { mind = mind, Index = index, root = root, root_val = root_val, type = t };
 
             if (ticket != "")
                 _w.ticket = new Ticket(ticket);
 
             _w.max_nrg = mind.parms.max_nrg;
-            _w.energy = mind.parms.max_nrg;
+            _w.credits = mind.parms.max_nrg;
 
             return _w;
         }
@@ -264,32 +213,38 @@ namespace Awesome.AI.Common
             return
                 type == TYPE.JUSTAUNIT;
         }
+
         public bool IsIDLE()
         {
             return
                 type == TYPE.IDLE;
         }
+
         public bool IsLEARNING()
         {
             return
                 type == TYPE.LEARNING;
         }
+
         public bool IsPERSUE()
         {
             return
                 type == TYPE.PERSUE;
         }
+
         public bool IsNEXTPREV()
         {
             return
                 type != TYPE.NOTNEXTPREV;
         }
+
         public bool IsLEARNINGorPERSUE()
         {
             return
                 type == TYPE.LEARNING ||
                 type == TYPE.PERSUE;
         }
+
         public bool IsSPECIAL()
         {
             return

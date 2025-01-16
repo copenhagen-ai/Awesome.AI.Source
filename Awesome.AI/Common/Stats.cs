@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Awesome.AI.Common
+﻿namespace Awesome.AI.Common
 {
     public class Stat
     {
+        //public int hits { get; set; }
         public string name { get; set; }
-        public int count_all { get; set; }
         public double force { get; set; }
-        public double conv_index { get; set; }
+        public double index { get; set; }
     }
 
     public class Stats
@@ -22,6 +16,11 @@ namespace Awesome.AI.Common
         public int reset_value { get; set; }
 
         public List<Stat> list = new List<Stat>();
+
+        public void Reset()
+        {
+            list = new List<Stat>();
+        }
     }
 
 }

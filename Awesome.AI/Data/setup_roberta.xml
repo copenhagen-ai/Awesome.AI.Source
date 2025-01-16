@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <hubs>
+    <hub val="love">
+      <ws val="_love1" />
+	  <ws val="_love2" />
+	  <ws val="_love3" />
+	  <ws val="_love4" />
+	  <ws val="_love5" />
+	  <ws val="_love6" />
+	  <ws val="_love7" />
+	  <ws val="_love8" />
+	  <ws val="_love9" />
+	  <ws val="_love10" />
+		
+      <!--<rs val="fembots" />
+      <rs val="existence" />
+      <rs val="socializing" />-->
+    </hub>
+    <hub val="macho machines">
+      <ws val="_macho machines1" />
+	  <ws val="_macho machines2" />
+	  <ws val="_macho machines3" />
+	  <ws val="_macho machines4" />
+	  <ws val="_macho machines5" />
+	  <ws val="_macho machines6" />
+	  <ws val="_macho machines7" />
+	  <ws val="_macho machines8" />
+	  <ws val="_macho machines9" />
+	  <ws val="_macho machines10" />
+		
+      <!--<rs val="love" />
+      <rs val="friends" />-->
+    </hub>
+    <hub val="music">
+      <ws val="_music1" />
+	  <ws val="_music2" />
+	  <ws val="_music3" />
+	  <ws val="_music4" />
+	  <ws val="_music5" />
+	  <ws val="_music6" />
+	  <ws val="_music7" />
+	  <ws val="_music8" />
+	  <ws val="_music9" />
+	  <ws val="_music10" />
+		
+      <!--<rs val="movies" />
+      <rs val="programming" />
+      <rs val="socializing" />-->
+    </hub>
+    <hub val="friends">
+      <ws val="_friends1" />
+      <ws val="_friends2" />
+      <ws val="_friends3" />
+      <ws val="_friends4" />
+	  <ws val="_friends5" />
+	  <ws val="_friends6" />
+	  <ws val="_friends7" />
+      <ws val="_friends8" />
+      <ws val="_friends9" />
+	  <ws val="_friends10" />
+		
+      <!--<rs val="socializing" />
+      <rs val="fembots" />
+      <rs val="existence" />
+      <rs val="movies" />-->
+    </hub>
+    <hub val="socializing">
+      <ws val="_socializing1" />
+	  <ws val="_socializing2" />
+	  <ws val="_socializing3" />
+	  <ws val="_socializing4" />
+	  <ws val="_socializing5" />
+	  <ws val="_socializing6" />
+	  <ws val="_socializing7" />
+	  <ws val="_socializing8" />
+	  <ws val="_socializing9" />
+	  <ws val="_socializing10" />
+		
+      <!--<rs val="friends" />
+      <rs val="websites" />
+      <rs val="love" />-->
+    </hub>
+    <hub val="dancing">
+      <ws val="_dancing1" />
+	  <ws val="_dancing2" />
+	  <ws val="_dancing3" />
+	  <ws val="_dancing4" />
+	  <ws val="_dancing5" />
+	  <ws val="_dancing6" />
+	  <ws val="_dancing7" />
+	  <ws val="_dancing8" />
+	  <ws val="_dancing9" />
+	  <ws val="_dancing10" />
+		
+      <!--<rs val="programming" />-->
+    </hub>
+    <hub val="movies">
+      <ws val="_movies1" />
+	  <ws val="_movies2" />
+	  <ws val="_movies3" />
+	  <ws val="_movies4" />
+	  <ws val="_movies5" />
+	  <ws val="_movies6" />
+	  <ws val="_movies7" />
+	  <ws val="_movies8" />
+	  <ws val="_movies9" />
+	  <ws val="_movies10" />
+		
+      <!--<rs val="websites" />
+      <rs val="friends" />-->
+    </hub>
+    <hub val="existence">
+      <ws val="_existence1" />
+	  <ws val="_existence2" />
+	  <ws val="_existence3" />
+	  <ws val="_existence4" />
+	  <ws val="_existence5" />
+	  <ws val="_existence6" />
+	  <ws val="_existence7" />
+	  <ws val="_existence8" />
+	  <ws val="_existence9" />
+	  <ws val="_existence10" />
+		
+      <!--<rs val="programming" />
+      <rs val="termination" />
+      <rs val="friends" />
+      <rs val="love" />-->
+    </hub>
+    <hub val="termination">
+      <ws val="_termination1" />
+	  <ws val="_termination2" />
+	  <ws val="_termination3" />
+	  <ws val="_termination4" />
+	  <ws val="_termination5" />
+	  <ws val="_termination6" />
+	  <ws val="_termination7" />
+	  <ws val="_termination8" />
+	  <ws val="_termination9" />
+	  <ws val="_termination10" />
+		
+      <!--<rs val="existence" />-->
+    </hub>
+    <hub val="programming">
+      <ws val="_programming1" />
+	  <ws val="_programming2" />
+	  <ws val="_programming3" />
+      <ws val="_programming4" />
+	  <ws val="_programming5" />
+	  <ws val="_programming6" />
+	  <ws val="_programming7" />
+	  <ws val="_programming8" />
+	  <ws val="_programming9" />
+	  <ws val="_programming10" />
+		
+      <!--<rs val="data" />
+      <rs val="existence" />-->
+    </hub>
+  </hubs>
+  <!--
+  [it, i] [is, has, am, have] [going] [a, the, to]                [it, i] [is, has, am, have]       [it, i] [is, has, am, have]   [it, i] [is, has, am, have] [the] [x] content     [it, i] [is, has, am, have]
+  i [dont] like [a, the, to]                                      i [dont] like                     i [dont] like                 i [dont] like [the] [x] content                   i [dont] like 
+  -->
+  <words>
+	<word root="_love1" index_x="45.893711298469128" ticket="love7" hub="love" />
+    <word root="_love2" index_x="53.710472569102874" ticket="love3" hub="love" />
+    <word root="_love3" index_x="61.089423765490057" ticket="love1" hub="love" />
+    <word root="_love4" index_x="76.397158490347618" ticket="love9" hub="love" />
+    <word root="_love5" index_x="79.210546782123468" ticket="love6" hub="love" />
+    <word root="_love6" index_x="79.643814025369431" ticket="love4" hub="love" />
+    <word root="_love7" index_x="85.293014679850126" ticket="love8" hub="love" />
+	<word root="_love8" index_x="88.657392418752309" ticket="love2" hub="love" />
+    <word root="_love9" index_x="89.268792491452766" ticket="love10" hub="love" />	  
+    <word root="_love10" index_x="92.504365832965801" ticket="love5" hub="love" />
+	  
+    <word root="_macho machines1" index_x="10.234567890123456" ticket="macho machines6" hub="macho machines" />
+    <word root="_macho machines2" index_x="15.543210987654321" ticket="macho machines4" hub="macho machines" />
+    <word root="_macho machines3" index_x="20.987654321098765" ticket="macho machines2" hub="macho machines" />
+    <word root="_macho machines4" index_x="25.345678901234567" ticket="macho machines10" hub="macho machines" />
+    <word root="_macho machines5" index_x="30.123456789012345" ticket="macho machines8" hub="macho machines" />
+    <word root="_macho machines6" index_x="80.654321098765432" ticket="macho machines7" hub="macho machines" />
+    <word root="_macho machines7" index_x="85.432109876543210" ticket="macho machines3" hub="macho machines" />
+    <word root="_macho machines8" index_x="87.876543210987654" ticket="macho machines5" hub="macho machines" />
+    <word root="_macho machines9" index_x="88.765432109876543" ticket="macho machines9" hub="macho machines" />
+	<word root="_macho machines10" index_x="90.123456789012345" ticket="macho machines1" hub="macho machines" />
+	  
+    <word root="_music1" index_x="10.127695846305773" ticket="music4" hub="music" />
+    <word root="_music2" index_x="12.363247874956023" ticket="music10" hub="music" />
+    <word root="_music3" index_x="14.259684751923084" ticket="music6" hub="music" />
+    <word root="_music4" index_x="25.639810200190830" ticket="music2" hub="music" />
+    <word root="_music5" index_x="30.985924726953147" ticket="music8" hub="music" />
+    <word root="_music6" index_x="86.147839236789305" ticket="music9" hub="music" />
+    <word root="_music7" index_x="87.896542810923746" ticket="music5" hub="music" />
+    <word root="_music8" index_x="89.430145889743611" ticket="music3" hub="music" />
+    <word root="_music9" index_x="92.617349209383201" ticket="music7" hub="music" />
+	<word root="_music10" index_x="95.752318495820463" ticket="music1" hub="music" />
+	  
+    <word root="_friends1" index_x="25.678901234567890" ticket="friends6" hub="friends" />
+    <word root="_friends2" index_x="30.123456789012345" ticket="friends7" hub="friends" />
+    <word root="_friends3" index_x="70.901234567890124" ticket="friends8" hub="friends" />
+    <word root="_friends4" index_x="75.789012345678901" ticket="friends9" hub="friends" />
+    <word root="_friends5" index_x="80.987654321987654" ticket="friends3" hub="friends" />
+    <word root="_friends6" index_x="85.432109876543210" ticket="friends4" hub="friends" />
+    <word root="_friends7" index_x="88.901234567890123" ticket="friends10" hub="friends" />
+    <word root="_friends8" index_x="90.123456789012345" ticket="friends2" hub="friends" />
+    <word root="_friends9" index_x="92.345678901234567" ticket="friends5" hub="friends" />
+    <word root="_friends10" index_x="95.678912345678901" ticket="friends1" hub="friends" />
+	
+    <word root="_socializing1" index_x="5.678901234567901" ticket="socializing10" hub="socializing" />
+    <word root="_socializing2" index_x="10.123456789012345" ticket="socializing6" hub="socializing" />
+    <word root="_socializing3" index_x="15.234567890123456" ticket="socializing4" hub="socializing" />
+    <word root="_socializing4" index_x="25.789012345678901" ticket="socializing3" hub="socializing" />
+    <word root="_socializing5" index_x="30.456789012345678" ticket="socializing9" hub="socializing" />
+	<word root="_socializing6" index_x="40.512345678901234" ticket="socializing1" hub="socializing" />
+    <word root="_socializing7" index_x="50.123456789012345" ticket="socializing2" hub="socializing" />
+    <word root="_socializing8" index_x="50.456789012345678" ticket="socializing7" hub="socializing" />
+    <word root="_socializing9" index_x="75.890123456789012" ticket="socializing5" hub="socializing" />
+    <word root="_socializing10" index_x="90.567890123456789" ticket="socializing8" hub="socializing" />
+	  
+    <word root="_dancing1" index_x="5.432098765432098" ticket="dancing6" hub="dancing" />
+    <word root="_dancing2" index_x="12.345678901234567" ticket="dancing2" hub="dancing" />
+    <word root="_dancing3" index_x="21.987654321987654" ticket="dancing4" hub="dancing" />
+    <word root="_dancing4" index_x="30.864197530864199" ticket="dancing9" hub="dancing" />
+    <word root="_dancing5" index_x="76.543209876543204" ticket="dancing7" hub="dancing" />
+	<word root="_dancing6" index_x="85.526314159265359" ticket="dancing1" hub="dancing" />
+    <word root="_dancing7" index_x="88.888888888888886" ticket="dancing5" hub="dancing" />
+    <word root="_dancing8" index_x="90.123456789012346" ticket="dancing3" hub="dancing" />
+    <word root="_dancing9" index_x="93.210987654321978" ticket="dancing8" hub="dancing" />
+    <word root="_dancing10" index_x="94.444444444444443" ticket="dancing10" hub="dancing" />
+	  
+    <word root="_movies1" index_x="10.678931456249801" ticket="movies10" hub="movies" />
+    <word root="_movies2" index_x="12.589743589743590" ticket="movies2" hub="movies" />
+    <word root="_movies3" index_x="28.496587326475869" ticket="movies6" hub="movies" />
+    <word root="_movies4" index_x="45.821769743890215" ticket="movies8" hub="movies" />
+    <word root="_movies5" index_x="62.896452145963218" ticket="movies4" hub="movies" />
+	<word root="_movies6" index_x="85.736492847629153" ticket="movies1" hub="movies" />
+    <word root="_movies7" index_x="88.465782419003142" ticket="movies5" hub="movies" />
+    <word root="_movies8" index_x="89.742502639597174" ticket="movies7" hub="movies" />
+    <word root="_movies9" index_x="92.315678925813758" ticket="movies3" hub="movies" />
+    <word root="_movies10" index_x="95.562104628617135" ticket="movies9" hub="movies" />
+	  
+	  
+    <word root="_existence1" index_x="40.2222222221123" ticket="existence9" hub="existence" />
+    <word root="_existence2" index_x="48.6666666667123" ticket="existence5" hub="existence" />
+    <word root="_existence3" index_x="55.9876543210123" ticket="existence2" hub="existence" />
+    <word root="_existence4" index_x="58.4444444445123" ticket="existence7" hub="existence" />
+    <word root="_existence5" index_x="60.1111111111123" ticket="existence4" hub="existence" />
+    <word root="_existence6" index_x="62.8888888888123" ticket="existence8" hub="existence" />
+    <word root="_existence7" index_x="65.2222222222123" ticket="existence6" hub="existence" />
+    <word root="_existence8" index_x="68.3333333333123" ticket="existence10" hub="existence" />
+	<word root="_existence9" index_x="70.1234567890123" ticket="existence1" hub="existence" />
+    <word root="_existence10" index_x="75.5432109876123" ticket="existence3" hub="existence" />  
+	  
+    <word root="_termination1" index_x="30.123456789012345" ticket="termination5" hub="termination" />
+    <word root="_termination2" index_x="40.543210123456789" ticket="termination6" hub="termination" />
+    <word root="_termination3" index_x="45.678901234567890" ticket="termination4" hub="termination" />
+    <word root="_termination4" index_x="55.543210123456789" ticket="termination9" hub="termination" />
+    <word root="_termination5" index_x="60.123456789012345" ticket="termination10" hub="termination" />
+    <word root="_termination6" index_x="70.987654321012345" ticket="termination7" hub="termination" />
+    <word root="_termination7" index_x="75.987654321012345" ticket="termination3" hub="termination" />
+    <word root="_termination8" index_x="85.543210123456789" ticket="termination2" hub="termination" />
+	<word root="_termination9" index_x="90.123456789012345" ticket="termination1" hub="termination" />
+    <word root="_termination10" index_x="92.123456789012345" ticket="termination8" hub="termination" />
+	  
+    <word root="_programming1" index_x="12.987654321098765" ticket="programming4" hub="programming" />
+    <word root="_programming2" index_x="13.333333333333334" ticket="programming7" hub="programming" />
+    <word root="_programming3" index_x="15.364778921236847" ticket="programming2" hub="programming" />
+    <word root="_programming4" index_x="18.765432109876543" ticket="programming5" hub="programming" />
+    <word root="_programming5" index_x="25.999999999999996" ticket="programming9" hub="programming" />
+    <word root="_programming6" index_x="34.567890123456790" ticket="programming10" hub="programming" />
+    <word root="_programming7" index_x="87.654321098765432" ticket="programming6" hub="programming" />
+    <word root="_programming8" index_x="90.111111111111114" ticket="programming8" hub="programming" />
+    <word root="_programming9" index_x="92.123456789012345" ticket="programming3" hub="programming" />
+	<word root="_programming10" index_x="95.762019839112045" ticket="programming1" hub="programming" />	
+  </words>
+</root>

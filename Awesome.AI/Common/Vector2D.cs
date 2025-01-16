@@ -1,6 +1,4 @@
-﻿using Awesome.AI.Common;
-
-namespace Awesome.AI.Web.AI.Common
+﻿namespace Awesome.AI.Web.AI.Common
 {
     public struct Vector2D
     {

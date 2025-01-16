@@ -1,8 +1,4 @@
 ﻿using Awesome.AI.Core;
-using Awesome.AI.CoreHelpers;
-using System.Linq.Expressions;
-using System.Reflection;
-using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Common
 {
@@ -21,7 +17,7 @@ namespace Awesome.AI.Common
             if (highest_filter != null)
                 return highest_filter;
 
-            UNIT unit = mind.mem.UNITS_VAL().Where(x => mind.filters.HighPass(x)).OrderByDescending(x=>x.Variable).FirstOrDefault();
+            UNIT unit = mind.mem.UNITS_VAL().Where(x => !mind.filters.LowCut(x)).OrderByDescending(x=>x.Variable).FirstOrDefault();
             
             highest_filter = unit;
             return highest_filter;
@@ -58,24 +54,24 @@ namespace Awesome.AI.Common
             lowest_force = null;
         }
 
-        public string GetMemberName<T>(Expression<Func<T>> memberExpression)
-        {
-            MemberExpression expressionBody = (MemberExpression)memberExpression.Body;
-            return expressionBody.Member.Name;
-        }
+        //public string GetMemberName<T>(Expression<Func<T>> memberExpression)
+        //{
+        //    MemberExpression expressionBody = (MemberExpression)memberExpression.Body;
+        //    return expressionBody.Member.Name;
+        //}
 
-        public Type GetType(string strFullyQualifiedName)
-        {
-            Type t = Type.GetType(strFullyQualifiedName);
-            return t;
-        }
+        //public Type GetType(string strFullyQualifiedName)
+        //{
+        //    Type t = Type.GetType(strFullyQualifiedName);
+        //    return t;
+        //}
 
-        public object GetInstance(string strFullyQualifiedName)
-        {
-            Type t = Type.GetType(strFullyQualifiedName);
-            if (t == null)
-                return null;
-            return Activator.CreateInstance(t);
-        }        
+        //public object GetInstance(string strFullyQualifiedName)
+        //{
+        //    Type t = Type.GetType(strFullyQualifiedName);
+        //    if (t == null)
+        //        return null;
+        //    return Activator.CreateInstance(t);
+        //}
     }
 }

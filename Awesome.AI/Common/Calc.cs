@@ -91,6 +91,11 @@ namespace Awesome.AI.Common
             return res;
         }
 
+        public int RoundOff(int i)
+        {
+            return ((int)Math.Round(i / 10.0)) * 10;
+        }
+
         public double Round(double num, int dec, bool up)
         {
             int pow = (int)Math.Pow((double)10, (double)dec);
@@ -117,77 +122,139 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        public int RoundUp(int _base, int toRound)
+        public int RoundUp(double num)
         {
-            if (toRound % _base == 0) return toRound;
-            return (_base - toRound % _base) + toRound;
+            int res = (int)Math.Ceiling((double)num);
+
+            return res;
         }
 
-        public int RoundDown(int _base, int toRound)
+        public int RoundDown(double num)
         {
-            return toRound - toRound % _base;
+            int res = (int)Math.Floor((double)num);
+
+            return res;
         }
+
+        //public int MyRandom(int i_max)
+        //{
+        //    /*
+        //     * max 999
+        //     */
+
+        //    if (i_max > 999)
+        //        throw new Exception();
+
+        //    double promil = GetPromil();
+        //    int res = mind.calc.RoundInt((double)i_max * promil);
+
+        //    return res;
+        //}
+
+        //private double GetPromil()
+        //{
+        //    double _out = -1.0d;
+        //    string rand = "";
+        //    try
+        //    {
+        //        IMechanics mech = mind.parms._mech;
+
+        //        if (double.IsNaN(mech.dir.d_momentum))
+        //            throw new Exception();
+
+        //        if (double.IsInfinity(mech.dir.d_momentum))
+        //            throw new Exception();
+
+        //        if (mind.cycles_all < mind.parms.first_run)//make shure the system is running before proceeding
+        //            return 0.5d;
+
+        //        _out = mech.dir.d_momentum;
+        //        int i_ct = 15;
+        //        string s_promil = "error";
+        //        double d_promil;
+
+        //        rand = ("" + _out).ToUpper().Replace("E", "").Replace("-", "").Replace(",", "").Replace(".", "");//this is the random part
+        //        rand = rand.Substring(0, rand.Length - 2);//remove exponent
+
+        //        do
+        //        {
+        //            if (rand.Count() < i_ct + 3)
+        //            { i_ct--; continue; }
+
+        //            if (i_ct < 0)
+        //                return 0.5d;
+
+        //            string _a = "" + rand.ElementAt(i_ct);
+        //            string _b = "" + rand.ElementAt(i_ct + 1);//+ or -
+        //            string _c = "" + rand.ElementAt(i_ct + 2);//+ or -
+
+        //            bool ok = "0123456789".Contains(_a);
+        //            ok = ok && "0123456789".Contains(_b);
+        //            ok = ok && "0123456789".Contains(_c);
+
+        //            s_promil = ok ? $"{_a}{_b}{_c}" : "error";
+        //            i_ct--;
+        //        } while (s_promil == "error");
+
+        //        d_promil = double.Parse(s_promil) / 1000;
+
+        //        return d_promil;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine("rand: " + _out);
+        //        Console.WriteLine("rand: " + rand);
+        //        Console.WriteLine(e.Message);
+
+        //        return -9999.9999d;
+        //    }
+        //}
 
         public int MyRandom(int i_max)
         {
             /*
              * max 999
+             * 0 <= res <= i_max
              */
 
             if (i_max > 999)
                 throw new Exception();
 
-            double promil = GetPromil();
-            int res = mind.calc.RoundInt((double)i_max * promil);
+            string rand = Rand();
+            
+            double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}") / 1000;
+            int res = mind.calc.RoundInt((double)i_max * dec);
 
             return res;
         }
 
-        private double GetPromil()
+        private string Rand()
         {
             IMechanics mech = mind.parms._mech;
-            
+
             if (double.IsNaN(mech.dir.d_momentum))
                 throw new Exception();
 
             if (double.IsInfinity(mech.dir.d_momentum))
                 throw new Exception();
 
-            if (mind.cycles_all < mind.parms.first_run)//make shure the system is running before proceeding
-                return 0.5d;
+            //make sure the system is running before proceeding
+            if (mind.cycles_all < mind.parms.first_run)
+                return "500";
 
-            double _out = mech.dir.d_momentum;
-            int i_ct = 15;
-            string rand;
-            string s_promil = "error";
-            double d_promil;
+            //get momentum
+            string rand = "" + mech.dir.d_momentum;
             
-            rand = ("" + _out).ToUpper().Replace("E", "").Replace("-", "").Replace(",", "").Replace(".", "");//this is the random part
-            rand = rand.Substring(0, rand.Length - 2);//remove exponent
-                        
-            do
-            {
-                if (rand.Count() < i_ct + 3)
-                { i_ct--; continue; }
-
-                if (i_ct < 0)
-                    return 0.5d;
-
-                string _a = "" + rand.ElementAt(i_ct);
-                string _b = "" + rand.ElementAt(i_ct + 1);//+ or -
-                string _c = "" + rand.ElementAt(i_ct + 2);//+ or -
-
-                bool ok = "0123456789".Contains(_a);
-                ok = ok && "0123456789".Contains(_b);
-                ok = ok && "0123456789".Contains(_c);
-
-                s_promil = ok ? $"{_a}{_b}{_c}" : "error";
-                i_ct--;
-            } while (s_promil == "error");
-
-            d_promil = double.Parse(s_promil) / 1000;
-
-            return d_promil;
+            //remove exponent
+            if (rand.ToUpper().Contains("E"))
+                rand = rand.Substring(0, rand.Length - 3);
+            
+            //reverse, this is the random part
+            string res = "";
+            for (int i = rand.Length; i > 0; i--)
+                res += char.IsDigit(rand[i - 1]) ? rand[i - 1] : "";
+            
+            return res;
         }
 
         private Random r1 = new Random();
@@ -220,6 +287,7 @@ namespace Awesome.AI.Common
         {
             if (x < 0.0d)
                 throw new Exception();
+            
             if (x == 0.0d)
                 throw new Exception();
 

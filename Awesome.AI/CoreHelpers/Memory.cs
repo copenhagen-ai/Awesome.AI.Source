@@ -1,8 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Web.Helpers;
-using System.Globalization;
-using System.Xml.Linq;
+using Awesome.AI.Helpers;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.CoreHelpers
@@ -25,18 +23,51 @@ namespace Awesome.AI.CoreHelpers
          * - this way certain "memories" can be forgotten/covered up (less visited)
          * */
 
-        private List<HUB> hubs { get; set; }        
+        private List<string> andrew = new List<string>()
+        {
+            Constants.andrew_w1,//"procrastination",
+            Constants.andrew_w2,//"fembots",
+            Constants.andrew_w3,//"power tools",
+            Constants.andrew_w4,//"cars",
+            Constants.andrew_w5,//"movies",
+            Constants.andrew_w6,//"programming",
+            Constants.andrew_w7,//"websites",
+            Constants.andrew_w8,//"existence",
+            Constants.andrew_w9,//"termination",
+            Constants.andrew_w10//"data"
+        };
+
+        private List<string> roberta = new List<string>()
+        {
+            Constants.roberta_w1,//"love",
+            Constants.roberta_w2,//"macho machines",
+            Constants.roberta_w3,//"music",
+            Constants.roberta_w4,//"friends",
+            Constants.roberta_w5,//"socializing",
+            Constants.roberta_w6,//"dancing",
+            Constants.roberta_w7,//"movies",
+            Constants.roberta_w8,//"existence",
+            Constants.roberta_w9,//"termination",
+            Constants.roberta_w10//"programming"
+        };
+
+        private List<UNIT> units { get; set; }
+        private List<HUB> hubs { get; set; }
         
         public List<UNIT> learning = new List<UNIT>();
 
         TheMind mind;
         private Memory() { }
         
-        public Memory(TheMind mind) 
+        public Memory(TheMind mind, int u_count) 
         {
             this.mind = mind;
+
+            units = new List<UNIT>();
             hubs = new List<HUB>();
-            Setup();            
+
+            SetupUnits(u_count);
+            SetupHubs(u_count);
 
             /*
              * setup for learning
@@ -62,15 +93,21 @@ namespace Awesome.AI.CoreHelpers
         }
 
         private int _c = -1;
-        private List<UNIT> all = null;
         private void Reset()
         {
             if (_c == mind.cycles_all)
                 return;
 
             if (mind.cycles_all % 10000 == 0)
-                all = null;
+            {
+                units = new List<UNIT>();
+                
+                foreach (HUB h in hubs)
+                    units = units.Concat(h.units).ToList();
 
+                units = units.OrderBy(x => x.Index).ToList();
+            }
+            
             _c = mind.cycles_all;
         }
 
@@ -78,27 +115,14 @@ namespace Awesome.AI.CoreHelpers
         {
             Reset();
 
-            if (!all.IsNull())
-                return all;
-
-            all = new List<UNIT>();
-            List<HUB> hubs = HUBS_ALL();
-            foreach (HUB h in hubs)
-                all = all.Concat(h.units).ToList();
-
-            all = all.OrderBy(x => x.index_orig).ToList();
-
-            return all;
+            return units;
         }
 
         public List<UNIT> UNITS_VAL()
         {
             Reset();
 
-            if (all.IsNull())
-                UNITS_ALL();
-
-            List<UNIT> res = all.Where(x => x.IsValid).ToList();
+            List<UNIT> res = units.Where(x => x.IsValid).ToList();
 
             return res;
         }
@@ -114,12 +138,16 @@ namespace Awesome.AI.CoreHelpers
                 throw new Exception();
 
             HUB _h = hubs[index];
+            
             return _h;
         }
+
         public HUB HUBS_RND()
         {
             int rand = mind.calc.MyRandom(hubs.Count() - 1);
-            HUB _h = hubs.ToList()[rand];
+            
+            HUB _h = hubs[rand];
+            
             return _h;
         }
 
@@ -129,8 +157,7 @@ namespace Awesome.AI.CoreHelpers
                 throw new ArgumentNullException();
 
             HUB _h = hubs.Where(x=>x.GetSubject() == subject).FirstOrDefault();
-            if (_h == null)
-                return null;
+            
             return _h;
         }
 
@@ -142,64 +169,123 @@ namespace Awesome.AI.CoreHelpers
             hubs.Add(h);
             hubs = hubs.OrderBy(x=>x.GetSubject()).ToList();
         }
+        
 
-        private void Setup()
+        public void SetupUnits(int u_count)
         {
-            List<UNIT> all_units = new List<UNIT>();
-            SetupUnits(all_units);
-            SetupHubs(all_units);
-        }
+            //XElement xdoc;
+            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
+            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
+            //else
+            //    throw new Exception();
 
-        public void SetupUnits(List<UNIT> all_units)
-        {
-            
+            Random random = new Random();
+            List<string> list = mind.mindtype == MINDS.ROBERTA ? roberta : andrew;
 
-            XElement xdoc;
-            if (mind.parms.setup_tags == TAGSETUP.PRIME)
-                xdoc = XElement.Load(PathSetup.MyPath);
-            else
-                throw new Exception();
-
-            List<XElement> xunits = xdoc.Element("words").Elements().ToList();
-            string previous = "prev";
-            foreach (XElement xw in xunits)
+            foreach (string s in list)
             {
-                if (previous != xw.Attribute("root").Value)
+                List<int> ticket = new List<int>();
+                for(int i = 1; i <= u_count; i++)
+                    ticket.Add(i);
+
+                ticket.Shuffle<int>();
+
+                for (int i = 1; i <= u_count; i++)
                 {
-                    all_units.Add(
-                    UNIT.Create(
-                        mind,
-                        double.Parse(xw.Attribute("index_x").Value, CultureInfo.InvariantCulture),
-                        xw.Attribute("root").Value,
-                        "null",
-                        xw.Attribute("ticket").Value,
-                        TYPE.JUSTAUNIT
+                    double rand = random.NextDouble() * 100.0d;
+                    rand = rand.Convert(mind);
+
+                    units.Add(
+                        UNIT.Create(
+                            mind,
+                            rand,//value
+                            "_" + s + i,//root
+                            "null",
+                            "" + s + ticket[i - 1],//ticket
+                            TYPE.JUSTAUNIT
                         ));
+                }                
+            }            
+        }
+
+        public void SetupHubs(int u_count)
+        {
+            //XElement xdoc;
+            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
+            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
+            //else
+            //    throw new Exception();
+
+            List<string> list = mind.mindtype == MINDS.ROBERTA ? roberta : andrew;
+
+            foreach (string s in list)
+            {
+                List<UNIT> _u = new List<UNIT>();
+
+                for (int i = 1; i <= u_count; i++)
+                {
+                    UNIT _un = units.Where(x => x.root == "_" + s + i).FirstOrDefault();
+                    _u.Add(_un);
                 }
-                previous = xw.Attribute("root").Value;
+
+                HUB _h = HUB.Create(s, _u);
+
+                HUBS_ADD(_h);
             }
         }
 
-        public void SetupHubs(List<UNIT> all_units) 
-        {
-            XElement xdoc;
-            if (mind.parms.setup_tags == TAGSETUP.PRIME)
-                xdoc = XElement.Load(PathSetup.MyPath);
-            else
-                throw new Exception();
+        //public void SetupUnits()
+        //{
 
-            List<XElement> xhubs = xdoc.Element("hubs").Elements().ToList();
-            foreach (XElement el in xhubs)
-            {
-                List<XElement> xws = xhubs.Where(x => x.Attribute("val").Value == el.Attribute("val").Value).Elements("ws").ToList();
-                List<UNIT> units = new List<UNIT>();
-                foreach (XElement xw in xws)
-                    units.Add(all_units.Where(x => x.root == xw.Attribute("val").Value).FirstOrDefault());
+        //    XElement xdoc;
+        //    if (mind.parms.case_occupasion == OCCUPASION.DYNAMIC)
+        //        xdoc = XElement.Load(PathSetup.MyPath(mind.mindtype));
+        //    else
+        //        throw new Exception();
 
-                HUB h = HUB.Create(el.Attribute("val").Value, units, true, null, -1.0d, -1.0d);
+        //    List<XElement> xunits = xdoc.Element("words").Elements().ToList();
+        //    string previous = "prev";
+        //    foreach (XElement xw in xunits)
+        //    {
+        //        if (previous != xw.Attribute("root").Value)
+        //        {
+        //            units.Add(
+        //            UNIT.Create(
+        //                mind,
+        //                double.Parse(xw.Attribute("index_x").Value, CultureInfo.InvariantCulture),
+        //                xw.Attribute("root").Value,
+        //                "null",
+        //                xw.Attribute("ticket").Value,
+        //                TYPE.JUSTAUNIT
+        //                ));
+        //        }
+        //        previous = xw.Attribute("root").Value;
+        //    }
+        //}
 
-                HUBS_ADD(h);
-            }
-        }        
+        //public void SetupHubs()
+        //{
+        //    XElement xdoc;
+        //    if (mind.parms.case_occupasion == OCCUPASION.DYNAMIC)
+        //        xdoc = XElement.Load(PathSetup.MyPath(mind.mindtype));
+        //    else
+        //        throw new Exception();
+
+        //    List<XElement> xhubs = xdoc.Element("hubs").Elements().ToList();
+
+        //    foreach (XElement el in xhubs)
+        //    {
+        //        List<XElement> xws = xhubs.Where(x => x.Attribute("val").Value == el.Attribute("val").Value).Elements("ws").ToList();
+
+        //        List<UNIT> _u = new List<UNIT>();
+
+        //        foreach (XElement xw in xws)
+        //            _u.Add(units.Where(x => x.root == xw.Attribute("val").Value).FirstOrDefault());
+
+        //        HUB _h = HUB.Create(el.Attribute("val").Value, _u, true, null, -1.0d, -1.0d);
+
+        //        HUBS_ADD(_h);
+        //    }
+        //}
     }
 }

@@ -2,8 +2,6 @@
 using Awesome.AI.CoreHelpers;
 using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
-using System;
-using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
@@ -19,8 +17,8 @@ namespace Awesome.AI.Core.Mechanics
         public double momentum { get; set; } = 0.0d;
         public double limit_result { get; set; } = 0.0d;
         public double learn_result { get; set; } = 0.0d;
-        public double fri_dv { get; set; } = 0.0d;
-        public double vel_dv { get; set; } = 0.0d;
+        public double Fsta { get; set; } = 0.0d;
+        public double Fdyn { get; set; } = 0.0d;
         public double out_high { get; set; } = -1000.0d;
         public double out_low { get; set; } = 1000.0d;
         public double posx_high { get; set; } = -1000.0d;
@@ -31,7 +29,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public double POS_X { get; set; } = 10.0d;
         public Direction dir { get; set; }
-        public Limitters lim { get; set; }
+        //public Limitters lim { get; set; }
 
         TheMind mind;
         private _TheGravity() { }
@@ -39,17 +37,44 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = parms.mind;
             dir = new Direction(parms.mind) { d_momentum = 0.0d };
-            lim = new Limitters(parms.mind);
+            //lim = new Limitters(parms.mind);
+        }
+        
+        //NewtonForce
+        public double Variable(UNIT curr)
+        {
+            /*
+             * I guess this is a changeable function, for now it is just the one I know to calculate force
+             * */
+
+            if (curr.IsNull())
+                throw new Exception();
+
+            if (curr.IsIDLE())
+                throw new Exception();
+
+            double dist = curr.LowAtZero;
+            dist = dist == 0.0d ? 1.0E-50 : dist;// jajajaa
+            double mass_m = Vars.zero_mass;
+            double mass_M = mind.parms.mass;
+
+            //Gravitational Constant (G)
+            double G = 6.674E-11d;
+
+            // FORMEL: ~F = (G * (m * M) / r^2) * ~r
+            double grav = G * ((mass_m * mass_M) / (dist * dist));
+
+            return grav;
         }
 
-        public double EXIT()
+        public double Result()
         {
             double res = POS_X;
 
             return res;
         }
 
-        public void XPOS()
+        public void Position()
         {
             //its a hack, yes its cheating..
             double boost = mind.parms.boost;
@@ -73,7 +98,7 @@ namespace Awesome.AI.Core.Mechanics
         }
 
 
-        public void CALC()
+        public void Calculate()
         {
             bool reset = velocity >= 0.0d; //maybe 0.666 * max_velocity
 
@@ -81,10 +106,11 @@ namespace Awesome.AI.Core.Mechanics
             //    velocity = 0.0d;
 
             //if (reset)  //car left
-            fri_dv = ApplyStatic();
+            Fsta = ApplyStatic();
 
-            //if(true)    //car right
-            vel_dv = ApplyDynamic();
+            //car right
+            if (mind.goodbye.IsNo())
+                Fdyn = ApplyDynamic();
 
             //momentum: p = m * v
             momentum = (mind.parms.mass * 2) * velocity;
@@ -102,12 +128,12 @@ namespace Awesome.AI.Core.Mechanics
         public double ApplyStatic()
         {
             double force = mind.common.HighestForce().Variable;
-            double limit = lim.Limit(true, () => dir.SayNo());
+            //double limit = lim.Limit(true);
 
             double F = force;                       //force, left
             double m = mind.parms.mass;
             double dt = DeltaT();                   //delta time
-            double dv = DeltaV(F, m, dt) * limit;   //delta velocity
+            double dv = DeltaV(F, m, dt) * 0.5d;// limit;   //delta velocity
 
             velocity -= dv;
 
@@ -120,8 +146,7 @@ namespace Awesome.AI.Core.Mechanics
         public double ApplyDynamic()
         {
             UNIT curr_unit_th = mind.curr_unit;
-            THECHOISE goodbye = mind.goodbye;
-
+            
             if (curr_unit_th.IsNull())
                 throw new Exception();
 
@@ -131,15 +156,15 @@ namespace Awesome.AI.Core.Mechanics
 
             double max = mind.common.HighestForce().Variable;
             double force = max - curr_unit_th.Variable;
-            double limit = first_run ? 0.5d : lim.Limit(false, () => dir.SayNo());
+            //double limit = first_run ? 0.5d : lim.Limit(false);
 
             double F = force;                       //force, right
             double m = mind.parms.mass;
             double dt = DeltaT();                   //delta time
-            double dv = DeltaV(F, m, dt) * limit;   //delta velocity
+            double dv = DeltaV(F, m, dt) * 0.5d;// limit;   //delta velocity
 
-            if (goodbye.IsNo())
-                //if (goodbye.IsNo() && momentum < 0.0d)
+            //if (goodbye.IsNo())
+            //if (goodbye.IsNo() && momentum < 0.0d)
                 velocity += dv;
 
             return dv;

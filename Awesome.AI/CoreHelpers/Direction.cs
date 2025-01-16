@@ -85,7 +85,7 @@ namespace Awesome.AI.CoreHelpers
             int count_no = ratio.CountNo();
             int count_yes = ratio.CountYes();
 
-            bool say_no = count_no <= mind.parms.lim_ratio;    //true: more no, false: less no
+            bool say_no = count_no <= mind.parms.ratio;    //true: more no, false: less no
 
             return say_no.TheHack2(mind);
         }
@@ -93,20 +93,8 @@ namespace Awesome.AI.CoreHelpers
         public void Stat()
         {
             SetChoise();
-                   
+                       
             ratio.Update(Choise);
-
-            avg.Add(mind.parms._mech.lim.limit_result);
-            if (avg.Count() > 1000)
-                avg.RemoveAt(0);
-
-            limit.Add(mind.parms._mech.lim.limit_result);
-            if (limit.Count > mind.parms.lim_ratio)
-                limit.RemoveAt(0);
-
-            limit_periode.Add(mind.parms._mech.lim.limit_result);
-            if (limit_periode.Count > 5000)
-                limit_periode.RemoveAt(0);
-        }/**/        
+        }
     }
 }

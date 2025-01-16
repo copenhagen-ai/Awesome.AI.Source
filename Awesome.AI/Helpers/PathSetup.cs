@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Web.Helpers
 {
@@ -22,14 +23,17 @@ namespace Awesome.AI.Web.Helpers
             }
         }
 
-        public static string MyPath
+        public static string MyPath(MINDS mindtype)
         {
-            get
-            {
-                string path = Root + "Awesome.AI\\Data\\setup_2.xml";
+            string path = "";
+            string setting = mindtype == MINDS.ROBERTA ? "roberta" : "andrew";
 
-                return path;
-            }
+            path = Root + "Awesome.AI\\Data\\setup_" + setting + ".xml";
+
+            //if (mindtype == MINDS.STANDARD)
+            //    path = Root + "Awesome.AI\\Data\\setup_2.xml";
+
+            return path;
         }
     }
 }

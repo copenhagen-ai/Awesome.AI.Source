@@ -5,20 +5,20 @@
         /*
          * maybe HUB should be renamed GROUP
          * */
-        public string subject { get; set; }
-        public double percent { get; set; }
 
-        ///public BNet net_kutza;
-        //public ActivationNetwork net_accord;
-        //public BackPropagationLearning teacher;
+        public string subject { get; set; }
         public List<UNIT> units;
         
-        private HUB(string subject, List<UNIT> units, bool? is_accord, int?[] neurons, double? learningrate, double? momentum)
+        //public BNet net_kutza;
+        //public ActivationNetwork net_accord;
+        //public BackPropagationLearning teacher;
+        
+        private HUB(string subject, List<UNIT> units)
         {
             //CreateNet(is_accord, neurons, learningrate, momentum);
                         
+            //this.percent = 0.0d;
             this.subject = subject;
-            this.percent = 0.0d;
             this.units = units;
         }
 
@@ -26,10 +26,36 @@
         {            
         }
 
-        public static HUB Create(string subject, List<UNIT> units, bool? is_accord, int?[] neurons, double? learningrate, double? momentum)
+        public static HUB Create(string subject, List<UNIT> units)
         {
-            HUB h = new HUB(subject, units, is_accord, neurons, learningrate, momentum);
+            HUB h = new HUB(subject, units);
             return h;
+        }
+
+        public void AddData(UNIT u)
+        {
+            if (u == null)
+                throw new ArgumentNullException();
+
+            if (units == null)
+                units = new List<UNIT>();
+        
+            units.Add(u);
+        }
+
+        public string GetSubject()
+        {
+            return subject.Split(':')[0];
+        }
+
+        public bool IsIDLE()
+        {
+            return GetSubject() == "IDLE";
+        }
+
+        public bool IsLEARNING()
+        {
+            return GetSubject() == "LEARNING";
         }
 
         //private void CreateNet(bool? is_accord, int?[] neurons, double? learningrate, double? momentum)
@@ -56,30 +82,6 @@
         //        net_kutza = new BNet(neurons, 1, (double)learningrate, (double)momentum);//neurons, slope, learningrate, momentum
         //}
 
-        public void AddData(UNIT u)
-        {
-            if (u == null)
-                throw new ArgumentNullException();
-
-            if (units == null)
-                units = new List<UNIT>();
-            units.Add(u);
-        }
-
-        public string GetSubject()
-        {
-            return subject.Split(':')[0];
-        }
-
-        public bool IsIDLE()
-        {
-            return GetSubject() == "IDLE";
-        }
-
-        public bool IsLEARNING()
-        {
-            return GetSubject() == "LEARNING";
-        }
 
         //public void Train(double[] _input, double[] _target, out double[] _out)
         //{

@@ -63,9 +63,9 @@ namespace Awesome.AI.Core
             units = units.Where(x =>
                    mind.filters.UnitIsValid(x)                   //comment to turn off
                 && mind.filters.Direction(x, curr, dir)       //comment to turn off
-                && mind.filters.HighPass(x)                      //comment to turn off
-                && mind.filters.Theme(x)                         //comment to turn off
-                && mind.filters.Energy(x)                        //comment to turn off
+                && !mind.filters.LowCut(x)                      //comment to turn off
+                && mind.filters.Credits(x)                        //comment to turn off
+                //&& mind.filters.Theme(x)                         //comment to turn off
                 //&& Filters.Elastic2(dir)                  //comment to turn off
                 //&& Filters.Ideal(x)                       //comment to turn off
                 //&& Filters.Neighbor(x)
@@ -148,8 +148,8 @@ namespace Awesome.AI.Core
                         
             List<UNIT> units = mind.mem.UNITS_VAL().Where(x => 
                                 mind.filters.UnitIsValid(x) 
-                                && mind.filters.Energy(x) 
-                                && mind.filters.HighPass(x)
+                                && mind.filters.Credits(x) 
+                                && !mind.filters.LowCut(x)
                                 ).OrderByDescending(x => x.Variable).ToList();
             
             int rand = mind.calc.MyRandom(units.Count - 1);

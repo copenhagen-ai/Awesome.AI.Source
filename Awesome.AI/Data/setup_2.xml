@@ -261,15 +261,15 @@
     <word root="_movies9" index_x="92.315678925813758" ticket="movies3" hub="movies" />
     <word root="_movies10" index_x="95.562104628617135" ticket="movies9" hub="movies" />
 	
-	<word root="_love1" index_x="45.893711298469128" ticket="love7" hub="love" />
-    <word root="_love2" index_x="53.710472569102874" ticket="love3" hub="love" />
-    <word root="_love3" index_x="61.089423765490057" ticket="love1" hub="love" />
-    <word root="_love4" index_x="76.397158490347618" ticket="love9" hub="love" />
-    <word root="_love5" index_x="79.210546782123468" ticket="love6" hub="love" />
-    <word root="_love6" index_x="79.643814025369431" ticket="love4" hub="love" />
-    <word root="_love7" index_x="85.293014679850126" ticket="love8" hub="love" />
-	<word root="_love8" index_x="88.657392418752309" ticket="love2" hub="love" />
-    <word root="_love9" index_x="89.268792491452766" ticket="love10" hub="love" />	  
-    <word root="_love10" index_x="92.504365832965801" ticket="love5" hub="love" />
+	<word root="_love1" index_x="5.893711298469128" ticket="love7" hub="love" />
+    <word root="_love2" index_x="13.710472569102874" ticket="love3" hub="love" />
+    <word root="_love3" index_x="21.089423765490057" ticket="love1" hub="love" />
+    <word root="_love4" index_x="36.397158490347618" ticket="love9" hub="love" />
+    <word root="_love5" index_x="39.210546782123468" ticket="love6" hub="love" />
+    <word root="_love6" index_x="39.643814025369431" ticket="love4" hub="love" />
+    <word root="_love7" index_x="45.293014679850126" ticket="love8" hub="love" />
+	<word root="_love8" index_x="48.657392418752309" ticket="love2" hub="love" />
+    <word root="_love9" index_x="49.268792491452766" ticket="love10" hub="love" />	  
+    <word root="_love10" index_x="52.504365832965801" ticket="love5" hub="love" />
   </words>
 </root>

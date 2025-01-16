@@ -6,31 +6,41 @@ using Awesome.AI.Systems.Externals;
 using Awesome.AI.Web.AI.Common;
 using Awesome.AI.Web.Helpers;
 using static Awesome.AI.Helpers.Enums;
-using static Google.Protobuf.WellKnownTypes.Field.Types;
 
 namespace Awesome.AI.Core
 {
     /*
-     * Awesome-AI - Apache License Disclaimer
+     * Awesome-AI - Apache License Version 2.0 And Ethical Disclaimer
      * Copyright (C) 2023 Joakim Jacobsen <jjacobsen@copenhagen-ai.net>
      * https://www.copenhagen-ai.net
      * 
-     * This software is provided by the Awesome-AI project "as is" and 
-     * any expressed or implied warranties, including, but not limited to, 
-     * the implied warranties of merchantability and fitness for a particular 
-     * purpose are disclaimed. In no event shall the Awesome-AI project 
-     * or its contributors be liable for any direct, indirect, incidental, 
-     * special, exemplary, or consequential damages (including, but not 
-     * limited to, procurement of substitute goods or services; loss of use, 
-     * data, or profits; or business interruption) however caused and on any 
-     * theory of liability, whether in contract, strict liability, or tort 
-     * (including negligence or otherwise) arising in any way out of the use 
-     * of this software, even if advised of the possibility of such damage.
-     * 
-     * This disclaimer is in accordance with the Apache License, Version 2.0. 
-     * For more details about the Apache License, please refer to the LICENSE 
-     * file included with this software or visit the Apache Software Foundation's 
-     * website: https://www.apache.org/licenses/LICENSE-2.0.html
+     * This software is licensed under the Apache License, Version 2.0 (the "LICENCE"); you may not use this file except in compliance with the License. 
+     * You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+     * OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+     *
+     * Additional Ethical Standards
+     *
+     * By using this software, you agree to adhere to the ethical standards as defined and maintained by the AWESOME.AI Group. These standards are outlined 
+     * in the ETHICAL file included with the software distribution and can also be reviewed at the following URL: https://www.copenhagen-ai.net/docs/ethical.txt
+
+     * These ethical standards are intended to ensure that the software is used in ways that align with principles of fairness, safety, accountability, and 
+     * respect for human rights. By accepting this license, you commit to upholding these principles in your use, modification, and redistribution of the software.
+
+     * Future Modifications to the License
+
+     * The AWESOME.AI Group reserves the right to modify the formulation of this license in the future. Any such modifications will be communicated through 
+     * updates to the LICENSE file accompanying the software and published at the URL mentioned above.
+
+     * Acknowledgment
+
+     * By using this software, you acknowledge that:
+     * You have reviewed and accepted the ethical standards established by the AWESOME.AI Group.
+     * You understand that failure to comply with these ethical standards may result in the revocation of your rights under this license.
+
+     * If you have any questions or concerns about this license or the ethical standards, please contact the AWESOME.AI Group through the channels provided in 
+     * the accompanying documentation.
      * */
 
 
@@ -53,12 +63,12 @@ namespace Awesome.AI.Core
         public MyInternal _internal;
         public MyExternal _external;
         public Common.Common common;
-        public Common.Convert convert;
-        
+                
         public HUB curr_hub;
         public UNIT curr_unit;
         public UNIT theanswer;
 
+        public MINDS mindtype;
         public MECHANICS mech;
         public THECHOISE goodbye = THECHOISE.NO;
 
@@ -73,21 +83,22 @@ namespace Awesome.AI.Core
         public double pain = 0.0f;
         public int valid_units = 0;
 
-        public bool theme_on = false;
-        public string theme = "none";
-        public string theme_old = "";
+        //public bool theme_on = false;
+        //public string theme = "none";
+        //public string theme_old = "";
         public string hobby = "socializing";
-        
+
         public List<KeyValuePair<string, int>> themes_stat = new List<KeyValuePair<string, int>>();
         public Stats stats = new Stats();
         
-        public TheMind(MECHANICS mech)
+        public TheMind(MECHANICS mech, MINDS mindtype)
         {
             try
             {
                 Console.BackgroundColor = ConsoleColor.DarkGray;
 
                 this.mech = mech;
+                this.mindtype = mindtype;
 
                 parms = new Params(this, mech);
                 common = new Common.Common(this);
@@ -97,18 +108,26 @@ namespace Awesome.AI.Core
                 _internal = new MyInternal(this);
                 _external = new MyExternal(this);
                 filters = new Filters(this);
-                convert = new Common.Convert(this);
                 core = new Core(this);
                 curve = new TheCurve(this);
                 _out = new Out(this);
 
-                mem = new Memory(this);
-                                    
-                curr_unit = mem.UNITS_ALL().Where(x => x.root == "_love10").FirstOrDefault();
+                mem = new Memory(this, parms.number_of_units);
+
+                parms.UpdateLowCut();
+
+                //if (mindtype == MINDS.STANDARD)
+                //    curr_unit = mem.UNITS_ALL().Where(x => x.root == "_love1").FirstOrDefault();
+                if (mindtype == MINDS.ANDREW)
+                    curr_unit = mem.UNITS_ALL().Where(x => x.root == "_fembots1").FirstOrDefault();
+                if (mindtype == MINDS.ROBERTA)
+                    curr_unit = mem.UNITS_ALL().Where(x => x.root == "_macho machines1").FirstOrDefault();
+
                 curr_hub = curr_unit.HUB;
-                        
+
                 PreRun(true);
-            
+                PostRun(true);
+
                 theanswer = UNIT.Create(this, -1.0d, "I dont Know", "null", "SPECIAL", TYPE.JUSTAUNIT);//set it to "It does not", and the program terminates
             
                 ProcessPass();
@@ -139,26 +158,22 @@ namespace Awesome.AI.Core
             foreach (UNIT u in list.OrderBy(x => x.LengthFromZero).ToList())
                 units_dist.Add(u.root, u.LengthFromZero);
 
-            Dictionary<string, double> units_perc = new Dictionary<string, double>();
-            foreach (UNIT u in list.OrderBy(x => parms.GetBaseForce().ToPercent(x)).ToList())
-                units_perc.Add(u.root, parms.GetBaseForce().ToPercent(u));
-
-            List<UNIT> list1 = list.OrderBy(x => x.index_conv).ToList();
+            List<UNIT> list1 = list.OrderBy(x => x.Index).ToList();
             List<UNIT> list2 = list.OrderBy(x => x.Variable).ToList();
-            List<UNIT> list3 = list.Where(x=>filters.HighPass(x)).OrderBy(x => x.Variable).ToList();
+            List<UNIT> list3 = list.Where(x => !filters.LowCut(x)).OrderBy(x => x.Variable).ToList();
 
             valid_units = units_force.Count;
 
             ;
         }
 
-        public void StatClear()
-        {
-            epochs = 1;
-            stats = new Stats();
-            themes_stat = new List<KeyValuePair<string, int>>();
-            themes_stat.Add(new KeyValuePair<string, int>("none", 1));
-        }        
+        //public void StatClear()
+        //{
+        //    epochs = 1;
+        //    stats = new Stats();
+        //    themes_stat = new List<KeyValuePair<string, int>>();
+        //    themes_stat.Add(new KeyValuePair<string, int>("none", 1));
+        //}
 
         public bool run = true;
         public bool ok = true;
@@ -166,20 +181,18 @@ namespace Awesome.AI.Core
         {
             try
             {                
-                HUB _h = mem.HUBS_RND();
+                if (!ok)
+                    return;
+                
+                if (!run)
+                    return;
+
+                run = false;
 
                 Lists();
 
-                if (!ok)
-                    return;
-                if (!run)
-                    return;
-                run = false;
-
                 if (do_process)
                     epochs++;
-                if (epochs > 150)
-                    epochs = 1;
 
                 bool _pro = do_process;
                 do_process = false;
@@ -190,10 +203,13 @@ namespace Awesome.AI.Core
                     ok = false;
 
                 TheSoup();//find new curr_unit/curr_hub
-
+                PostRun(_pro);
                 Process(_pro);
                 Systems(_pro);
-                Output(_pro);
+                //Output(_pro);
+
+                if (_pro) _out.Set();
+                if (_pro) cycles = 0;   
 
                 run = true;
             }
@@ -210,13 +226,16 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            convert.Reset();
-            common.Reset();
+            common.Reset();            
+        }
+
+        private void PostRun(bool _pro)
+        {
+            if (!_pro)
+                return;
 
             _internal.Reset();
             _external.Reset();
-
-            process.Stream();            
         }
 
         private bool Core(bool _pro)
@@ -229,20 +248,19 @@ namespace Awesome.AI.Core
             cycles++;
             cycles_all++;
 
-
             IMechanics mech = parms.GetMechanics(MECHANICS.NONE);
 
-            core.UpdateEnergy();
+            core.UpdateCredit();
             core.AnswerQuestion();
             
             if (curr_unit.IsIDLE())
                 return true;
 
-            mech.CALC();
-            mech.XPOS();
+            mech.Calculate();
+            mech.Position();
 
-            if (curr_hub.IsIDLE())
-                core.SetTheme(_pro);            
+            //if (curr_hub.IsIDLE())
+            //    core.SetTheme(_pro);
             
             if (!curve.OK(out pain))
                 return false;
@@ -258,10 +276,8 @@ namespace Awesome.AI.Core
         private void Process(bool _pro)
         {
             process.History(this);
-            process.SetCommonUnit(this);
-            process.ProcessCommonUnit(this, _pro);
-            process.CommonHubs(this);
-            process.SetPercent(_pro);
+            process.CommonUnit(this);
+            process.Stats(this, _pro);
         }
 
         private void Systems(bool _pro)
@@ -269,31 +285,31 @@ namespace Awesome.AI.Core
             
         }
 
-        public string output_topic = "";
-        public string output_sub_th = "";
-        private void Output(bool _pro)
-        {
-            if (curr_unit.root.Split(':')[0] == "subject")
-                return;
+        //public string output_topic = "";
+        //public string output_sub_th = "";
+        //private void Output(bool _pro)
+        //{
+        //    if (curr_unit.root.Split(':')[0] == "subject")
+        //        return;
 
-            output_topic = process.StreamTop().HUB.GetSubject();
+        //    output_topic = process.StreamTop().HUB.GetSubject();
 
-            output_sub_th = "currently subprocessing:\t" + curr_unit.HUB.GetSubject() + "\n" +
-                            "- actual:\t\t\t" + curr_unit.root + "";
+        //    output_sub_th = "currently subprocessing:\t" + curr_unit.HUB.GetSubject() + "\n" +
+        //                    "- actual:\t\t\t" + curr_unit.root + "";
 
-            if (_pro)
-                _out.Set();
+        //    if (_pro)
+        //        _out.Set();
             
-            if (_pro)
-                cycles = 0;           
-        }
+        //    if (_pro)
+        //        cycles = 0;           
+        //}
 
         private async void ProcessPass()
         {
             while (true)
             {
                 do_process = true;
-                await Task.Delay(1000);
+                await Task.Delay(2000);
             }
         }                
     }

@@ -1,26 +1,26 @@
-﻿using Awesome.AI.CoreHelpers;
+﻿using Awesome.AI.Common;
+using Awesome.AI.CoreHelpers;
 
 namespace Awesome.AI.Interfaces
 {
     public interface IMechanics
     {
-        double fri_dv { get; set; }
-        double vel_dv { get; set; }
+        double Fsta { get; set; }
+        double Fdyn { get; set; }
 
         double out_high { get; set; }
         double out_low { get; set; }
         double posx_high { get; set; }
         double posx_low { get; set; }
-        double res_x { get; set; }
         double POS_X { get; set; }
         double momentum { get; set; }
 
         Direction dir { get; set; }
-        Limitters lim { get; set; }
-
-        void CALC();
-        void XPOS();
-        double EXIT();
+        
+        void Calculate();//do calculations
+        void Position();//calculate position of x
+        double Result();//get result of position
+        double Variable(UNIT c);//the force, mass, distance, acceleration etc
     }
 }
 

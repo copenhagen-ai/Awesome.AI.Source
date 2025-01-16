@@ -20,11 +20,10 @@ namespace Awesome.AI.Web.AI.Common
         public string position { get; set; }
         public string ratio_yes { get; set; }
         public string ratio_no { get; set; }
-        public string the_choise_isno { get; set; }
-
-        public string bias { get; set; }
-        public string limit { get; set; }
-        public string limit_avg { get; set; }
+        public string the_choise { get; set; }
+        public string epochs { get; set; }
+        public string runtime { get; set; }
+        public string occu { get; set; }
 
         public UNIT common_unit { get; set; }
         public string common_hub { get; set; }
@@ -39,11 +38,10 @@ namespace Awesome.AI.Web.AI.Common
             position = $"{mind.parms._mech.dir.d_pos_x}";
             ratio_yes = $"{mind.parms._mech.dir.ratio.CountYes()}";
             ratio_no = $"{mind.parms._mech.dir.ratio.CountNo()}";
-            the_choise_isno = $"{mind.parms._mech.dir.Choise.IsNo()}";
-
-            bias = "" + mind.parms.lim_bias;
-            limit = "" + mind.parms._mech.lim.limit_result;
-            limit_avg = "" + mind.parms._mech.dir.limit_periode.Average();
+            the_choise = $"{(mind.parms._mech.dir.Choise.IsNo() ? "NO" : "YES")}";
+            epochs = $"{mind.epochs}";
+            runtime = $"{mind.parms.runtime}";
+            occu = $"{mind._internal.Occu}";
 
             List<UNIT> all = mind.mem.UNITS_ALL();
 
