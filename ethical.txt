@@ -1,7 +1,7 @@
 ETHICAL License
 
 
-This document outlines the ethical and moral standards required for the use, distribution, and modification of software licensed by the AWESOME.AI Group. By using this software, you agree to adhere to these standards, ensuring responsible and ethical practices at all times. These principles are binding in addition to the terms outlined in the accompanying License document.
+This document outlines the ethical and moral standards required for the use, distribution, and modification of software licensed by the copenhagen-ai group. By using this software, you agree to adhere to these standards, ensuring responsible and ethical practices at all times. These principles are binding in addition to the terms outlined in the accompanying License document.
 
 Guiding Principles
 	The use, distribution, and modification of this software must align with the following ethical principles:
