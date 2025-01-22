@@ -4,7 +4,7 @@
     {
         public enum MINDS { ROBERTA, ANDREW }
         public enum THECHOISE { YES, NO, UNDEFINED }
-        public enum TYPE { JUSTAUNIT, LEARNING, PERSUE, IDLE, NOTNEXTPREV }
+        public enum TYPE { JUSTAUNIT, DECISION, IDLE }
         public enum DIRECTION { NONE }
         public enum FUZZYNO { VERY_SOFT, SOFT, MID, HARD, VERY_HARD, MIN }
         public enum FUZZYCHANCE { VERY_LIKELY, LIKELY, MID, UNLIKELY, VERY_UNLIKELY }

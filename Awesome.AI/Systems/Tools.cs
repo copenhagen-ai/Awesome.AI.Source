@@ -1,9 +1,8 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Systems.Input;
 using static Awesome.AI.Helpers.Enums;
 
-namespace Awesome.AI.Systems.Externals
+namespace Awesome.AI.Systems
 {
     /*
      * this class is not used yet
@@ -29,11 +28,12 @@ namespace Awesome.AI.Systems.Externals
                         return UNIT.Create(mind, 50.0d, "" + (int.Parse(_in.val_a) - int.Parse(_in.val_b)), "null", "", TYPE.JUSTAUNIT);
                     default:
                         return UNIT.Create(mind, 50.0d, "none", "null", "", TYPE.JUSTAUNIT);
-                }                
+                }
             }
         }
 
-        public class Dictionary {
+        public class Dictionary
+        {
             class W
             {
                 public string root;
@@ -97,7 +97,7 @@ namespace Awesome.AI.Systems.Externals
             {
                 string[] arr = root.Split(' ');
                 string res = "";
-                foreach(string str in arr)
+                foreach (string str in arr)
                 {
                     W w = verb.Select(x => x).Where(x => x.root == str).FirstOrDefault();
                     res += w != null ? w.stem + "ing " : str + " ";
@@ -160,8 +160,8 @@ namespace Awesome.AI.Systems.Externals
 
             public static string Going(string type_t, int form_rnd, string classB)
             {
-                return (type_t == "is" || type_t == "answer" || type_t == "question") && (form_rnd == 0) && classB == "v" ? "going" :
-                (type_t == "is" || type_t == "answer" || type_t == "question") && (form_rnd == 0) && classB == "s" ? "going" :
+                return (type_t == "is" || type_t == "answer" || type_t == "question") && form_rnd == 0 && classB == "v" ? "going" :
+                (type_t == "is" || type_t == "answer" || type_t == "question") && form_rnd == 0 && classB == "s" ? "going" :
                 "";
             }
 
@@ -177,10 +177,10 @@ namespace Awesome.AI.Systems.Externals
 
             public UNIT Read(string _section)
             {
-                bool hit = mind.calc.RandomInt(2) == 0 ? true : false;
+                bool hit = mind.rand.RandomInt(2) == 0 ? true : false;
                 string news = hit ? "new news" : "no news";
-                
-                return UNIT.Create(mind, 50.0d, news, "null", "", TYPE.JUSTAUNIT);                
+
+                return UNIT.Create(mind, 50.0d, news, "null", "", TYPE.JUSTAUNIT);
             }
         }
     }

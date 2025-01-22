@@ -1,7 +1,7 @@
 ﻿using Awesome.AI.Core;
 using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Systems.Externals;
+using Awesome.AI.Systems;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Common
@@ -14,8 +14,8 @@ namespace Awesome.AI.Common
 
         public Ticket ticket = new Ticket("NOTICKET");
         private TYPE type { get; set; }
-        public string root { get; set; }
-        public string root_val { get; set; }
+        public string root { get; set; }//name
+        public string data { get; set; }//data
         public double max_nrg { get; set; }
         public double credits { get; set; }
         
@@ -85,49 +85,49 @@ namespace Awesome.AI.Common
             get { return mind.filters.Credits(this); }
         }
 
-        UNIT next = null;
-        public UNIT Next
-        {
-            get
-            {
-                if (!next.IsNull())
-                    return next;
+        //UNIT next = null;
+        //public UNIT Next
+        //{
+        //    get
+        //    {
+        //        if (!next.IsNull())
+        //            return next;
 
-                List<UNIT> units = mind.mem.UNITS_VAL();
-                units = units.OrderByDescending(x => x.Variable).ToList();
-                units = units.Where(x => !x.IsSPECIAL()).ToList();
-                units = units.Where(x => !x.IsLowCut).ToList();
-                units = units.Where(x => x.Variable < this.Variable).ToList();
+        //        List<UNIT> units = mind.mem.UNITS_VAL();
+        //        units = units.OrderByDescending(x => x.Variable).ToList();
+        //        units = units.Where(x => !x.IsSPECIAL()).ToList();
+        //        units = units.Where(x => !x.IsLowCut).ToList();
+        //        units = units.Where(x => x.Variable < this.Variable).ToList();
 
-                next = units.FirstOrDefault();
-                if (next.IsNull())
-                    next = new UNIT() { type = TYPE.NOTNEXTPREV };
+        //        next = units.FirstOrDefault();
+        //        if (next.IsNull())
+        //            next = new UNIT() { type = TYPE.NOTNEXTPREV };
 
-                return next;
-            }
-        }
+        //        return next;
+        //    }
+        //}
 
-        UNIT prev = null;
-        public UNIT Prev
-        {
-            get
-            {
-                if (!prev.IsNull())
-                    return prev;
+        //UNIT prev = null;
+        //public UNIT Prev
+        //{
+        //    get
+        //    {
+        //        if (!prev.IsNull())
+        //            return prev;
 
-                List<UNIT> units = mind.mem.UNITS_VAL();
-                units = units.OrderByDescending(x => x.Variable).ToList();
-                units = units.Where(x => !x.IsSPECIAL()).ToList();
-                units = units.Where(x => !x.IsLowCut).ToList();
-                units = units.Where(x => x.Variable > this.Variable).ToList();
+        //        List<UNIT> units = mind.mem.UNITS_VAL();
+        //        units = units.OrderByDescending(x => x.Variable).ToList();
+        //        units = units.Where(x => !x.IsSPECIAL()).ToList();
+        //        units = units.Where(x => !x.IsLowCut).ToList();
+        //        units = units.Where(x => x.Variable > this.Variable).ToList();
 
-                prev = units.LastOrDefault();
-                if (prev.IsNull())
-                    prev = new UNIT() { type = TYPE.NOTNEXTPREV };
+        //        prev = units.LastOrDefault();
+        //        if (prev.IsNull())
+        //            prev = new UNIT() { type = TYPE.NOTNEXTPREV };
 
-                return prev;
-            }
-        }
+        //        return prev;
+        //    }
+        //}
 
         /*
          * used to be Distance
@@ -190,9 +190,9 @@ namespace Awesome.AI.Common
             }
         }
 
-        public static UNIT Create(TheMind mind, double index, string root, string root_val, string ticket, TYPE t)
+        public static UNIT Create(TheMind mind, double index, string root, string data, string ticket, TYPE t)
         {
-            UNIT _w = new UNIT() { mind = mind, Index = index, root = root, root_val = root_val, type = t };
+            UNIT _w = new UNIT() { mind = mind, Index = index, root = root, data = data, type = t };
 
             if (ticket != "")
                 _w.ticket = new Ticket(ticket);
@@ -208,49 +208,44 @@ namespace Awesome.AI.Common
             return UNIT.Create(mind, -1d, "XXXX", "XXXX", "", TYPE.IDLE);
         }
 
-        public bool IsUNIT()
-        {
-            return
-                type == TYPE.JUSTAUNIT;
-        }
+        public bool IsUNIT() => type == TYPE.JUSTAUNIT;
 
-        public bool IsIDLE()
-        {
-            return
-                type == TYPE.IDLE;
-        }
+        public bool IsIDLE() => type == TYPE.IDLE;
 
-        public bool IsLEARNING()
-        {
-            return
-                type == TYPE.LEARNING;
-        }
+        public bool IsDECISION() => type == TYPE.DECISION;
 
-        public bool IsPERSUE()
-        {
-            return
-                type == TYPE.PERSUE;
-        }
+        //public bool IsLEARNING()
+        //{
+        //    return
+        //        type == TYPE.LEARNING;
+        //}
 
-        public bool IsNEXTPREV()
-        {
-            return
-                type != TYPE.NOTNEXTPREV;
-        }
+        //public bool IsPERSUE()
+        //{
+        //    return
+        //        type == TYPE.PERSUE;
+        //}
 
-        public bool IsLEARNINGorPERSUE()
-        {
-            return
-                type == TYPE.LEARNING ||
-                type == TYPE.PERSUE;
-        }
+        //public bool IsNEXTPREV()
+        //{
+        //    return
+        //        type != TYPE.NOTNEXTPREV;
+        //}
 
-        public bool IsSPECIAL()
-        {
-            return
-                type == TYPE.IDLE ||
-                type == TYPE.LEARNING ||
-                type == TYPE.PERSUE;
-        }        
+        //public bool IsLEARNINGorPERSUE()
+        //{
+        //    return
+        //        type == TYPE.LEARNING ||
+        //        type == TYPE.PERSUE;
+        //}
+
+        //public bool IsSPECIAL()
+        //{
+        //    return
+        //        type == TYPE.IDLE ||
+        //        type == TYPE.LEARNING ||
+        //        type == TYPE.PERSUE;
+        //}
+
     }
 }

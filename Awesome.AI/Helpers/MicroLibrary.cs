@@ -1,5 +1,8 @@
 ﻿/*
- * just a project I found, that might be usefull
+ * a useful project I found
+ * 
+ * https://www.codeproject.com/Articles/98346/Microsecond-and-Millisecond-Csharp-Timer
+ * 
  * */
 
 using System;

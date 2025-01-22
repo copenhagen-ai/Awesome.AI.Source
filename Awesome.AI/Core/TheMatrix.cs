@@ -152,8 +152,8 @@ namespace Awesome.AI.Core
                                 && !mind.filters.LowCut(x)
                                 ).OrderByDescending(x => x.Variable).ToList();
             
-            int rand = mind.calc.MyRandom(units.Count - 1);
-            UNIT __u = units.Any() ? units[rand] : UNIT.IDLE_UNIT(mind);
+            int[] rand = mind.rand.MyRandomInt(1,units.Count - 1);
+            UNIT __u = units.Any() ? units[rand[0]] : UNIT.IDLE_UNIT(mind);
             return __u;
         }
 

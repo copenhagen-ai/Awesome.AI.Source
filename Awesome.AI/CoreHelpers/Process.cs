@@ -24,15 +24,18 @@ namespace Awesome.AI.CoreHelpers
             if (mind == null)
                 throw new ArgumentNullException();
 
-            if (mind.curr_unit.IsLEARNINGorPERSUE())
-                return;
-            
+            //if (mind.curr_unit.IsLEARNINGorPERSUE())
+            //    return;
+
             if (mind.curr_unit.IsIDLE())
                 return;
 
+            //if (mind.curr_unit.IsDECISION())
+            //    return;
+
             //AddHistoryHUB(mind.curr_unit.HUB);
             //AddHistoryUnít(mind.curr_unit);
-            
+
             u_history.Insert(0, mind.curr_unit);
             if (u_history.Count > mind.parms.hist_total)
                 u_history.RemoveAt(u_history.Count - 1);

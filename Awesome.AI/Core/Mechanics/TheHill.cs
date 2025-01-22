@@ -165,7 +165,7 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D _fN = calc.ToPolar((calc.Add(_static, _N)));
 
             double m = mind.parms.mass;
-            double u = mind.core.FrictionCoefficient(true, 0.0d);
+            double u = mind.calc.FrictionCoefficient(true, 0.0d);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -194,7 +194,7 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D _dynamic = new Vector2D(null, null, force_dyn, mind.calc.ToRadiansFromDegrees(angle_dyn));
 
             double m = mind.parms.mass;
-            double u = mind.core.FrictionCoefficient(false, curr_unit_th.credits);
+            double u = mind.calc.FrictionCoefficient(false, curr_unit_th.credits);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;

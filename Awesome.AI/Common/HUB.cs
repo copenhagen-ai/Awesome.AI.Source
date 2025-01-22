@@ -53,10 +53,10 @@
             return GetSubject() == "IDLE";
         }
 
-        public bool IsLEARNING()
-        {
-            return GetSubject() == "LEARNING";
-        }
+        //public bool IsLEARNING()
+        //{
+        //    return GetSubject() == "LEARNING";
+        //}
 
         //private void CreateNet(bool? is_accord, int?[] neurons, double? learningrate, double? momentum)
         //{

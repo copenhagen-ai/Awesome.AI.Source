@@ -24,6 +24,8 @@ namespace Awesome.AI.Web.AI.Common
         public string epochs { get; set; }
         public string runtime { get; set; }
         public string occu { get; set; }
+        public string location { get; set; }
+        public string state { get; set; }
 
         public UNIT common_unit { get; set; }
         public string common_hub { get; set; }
@@ -42,8 +44,10 @@ namespace Awesome.AI.Web.AI.Common
             epochs = $"{mind.epochs}";
             runtime = $"{mind.parms.runtime}";
             occu = $"{mind._internal.Occu}";
+            location = $"{mind.loc.LocationFinal}";
+            state = mind.loc.State > 0 ? "making a decision" : "just thinking";
 
-            List<UNIT> all = mind.mem.UNITS_ALL();
+            //List<UNIT> all = mind.mem.UNITS_ALL();
 
             common_unit = mind.process.most_common_unit;
             //UNIT common = all.Where(x=>x.root == common_word).FirstOrDefault();

@@ -1,5 +1,5 @@
 ﻿using Awesome.AI.Core;
-using Awesome.AI.Interfaces;
+using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Common
 {
@@ -8,7 +8,7 @@ namespace Awesome.AI.Common
         TheMind mind;
         private Calc() { }
         public Calc(TheMind mind) 
-        {
+        { 
             this.mind = mind;
         }
 
@@ -31,19 +31,19 @@ namespace Awesome.AI.Common
 
         public bool MyChance0to100(double val, bool gt)
         {
-            int num = mind.calc.MyRandom(100);
-            return gt ? num > val : num < val;
+            int[] num = mind.rand.MyRandomInt(1, 100);
+            return gt ? num[0] > val : num[0] < val;
         }
 
         public bool Chance0to100(double val, bool gt)
         {
-            int num = mind.calc.RandomInt(100);
+            int num = mind.rand.RandomInt(100);
             return gt ? num > val : num < val;
         }
 
         public bool Chance0to1(double val, bool gt)
         {
-            double num = mind.calc.RandomDouble(0.0d, 1.0d);
+            double num = mind.rand.RandomDouble(0.0d, 1.0d);
             return gt ? num > val : num < val;
         }
 
@@ -134,153 +134,41 @@ namespace Awesome.AI.Common
             int res = (int)Math.Floor((double)num);
 
             return res;
-        }
-
-        //public int MyRandom(int i_max)
-        //{
-        //    /*
-        //     * max 999
-        //     */
-
-        //    if (i_max > 999)
-        //        throw new Exception();
-
-        //    double promil = GetPromil();
-        //    int res = mind.calc.RoundInt((double)i_max * promil);
-
-        //    return res;
-        //}
-
-        //private double GetPromil()
-        //{
-        //    double _out = -1.0d;
-        //    string rand = "";
-        //    try
-        //    {
-        //        IMechanics mech = mind.parms._mech;
-
-        //        if (double.IsNaN(mech.dir.d_momentum))
-        //            throw new Exception();
-
-        //        if (double.IsInfinity(mech.dir.d_momentum))
-        //            throw new Exception();
-
-        //        if (mind.cycles_all < mind.parms.first_run)//make shure the system is running before proceeding
-        //            return 0.5d;
-
-        //        _out = mech.dir.d_momentum;
-        //        int i_ct = 15;
-        //        string s_promil = "error";
-        //        double d_promil;
-
-        //        rand = ("" + _out).ToUpper().Replace("E", "").Replace("-", "").Replace(",", "").Replace(".", "");//this is the random part
-        //        rand = rand.Substring(0, rand.Length - 2);//remove exponent
-
-        //        do
-        //        {
-        //            if (rand.Count() < i_ct + 3)
-        //            { i_ct--; continue; }
-
-        //            if (i_ct < 0)
-        //                return 0.5d;
-
-        //            string _a = "" + rand.ElementAt(i_ct);
-        //            string _b = "" + rand.ElementAt(i_ct + 1);//+ or -
-        //            string _c = "" + rand.ElementAt(i_ct + 2);//+ or -
-
-        //            bool ok = "0123456789".Contains(_a);
-        //            ok = ok && "0123456789".Contains(_b);
-        //            ok = ok && "0123456789".Contains(_c);
-
-        //            s_promil = ok ? $"{_a}{_b}{_c}" : "error";
-        //            i_ct--;
-        //        } while (s_promil == "error");
-
-        //        d_promil = double.Parse(s_promil) / 1000;
-
-        //        return d_promil;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine("rand: " + _out);
-        //        Console.WriteLine("rand: " + rand);
-        //        Console.WriteLine(e.Message);
-
-        //        return -9999.9999d;
-        //    }
-        //}
-
-        public int MyRandom(int i_max)
-        {
-            /*
-             * max 999
-             * 0 <= res <= i_max
-             */
-
-            if (i_max > 999)
-                throw new Exception();
-
-            string rand = Rand();
-            
-            double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}") / 1000;
-            int res = mind.calc.RoundInt((double)i_max * dec);
-
-            return res;
-        }
-
-        private string Rand()
-        {
-            IMechanics mech = mind.parms._mech;
-
-            if (double.IsNaN(mech.dir.d_momentum))
-                throw new Exception();
-
-            if (double.IsInfinity(mech.dir.d_momentum))
-                throw new Exception();
-
-            //make sure the system is running before proceeding
-            if (mind.cycles_all < mind.parms.first_run)
-                return "500";
-
-            //get momentum
-            string rand = "" + mech.dir.d_momentum;
-            
-            //remove exponent
-            if (rand.ToUpper().Contains("E"))
-                rand = rand.Substring(0, rand.Length - 3);
-            
-            //reverse, this is the random part
-            string res = "";
-            for (int i = rand.Length; i > 0; i--)
-                res += char.IsDigit(rand[i - 1]) ? rand[i - 1] : "";
-            
-            return res;
-        }
-
-        private Random r1 = new Random();
-        public int RandomInt(int max)
-        {
-            int rand = r1.Next(0, max);
-            return rand;
-        }
-
-        public int RandomInt(int low, int max)
-        {
-            int rand = r1.Next(low, max);
-            return rand;
-        }
-
-        public double RandomDouble(double min, double max)
-        {
-            double rand = r1.NextDouble() * (max - min) + min;
-            return rand;
-        }
+        }        
 
         public int HighestIndex(double[] arr)
         {
             double max = arr.Max();
             int index = arr.ToList().IndexOf(max);
             return index;
+        }
+
+        public double FrictionCoefficient(bool is_static, double credits)
+        {
+            //should friction be calculated from position???
+
+            if (is_static)
+                return mind.parms.base_friction;
+
+            Calc calc = mind.calc;
+            double x = credits;
+            double friction = 0.0d;
+
+            switch (mind.mech)
+            {
+                //this could be better, use sigmoid/logistic
+                case MECHANICS.HILL: friction = calc.Linear(x, -0.5d, 7d) / 10; break;
+                case MECHANICS.CONTEST: friction = calc.Linear(x, -0.25d, 2.5d) / 10; break;
+                default: throw new Exception();
+            }
+
+            if (friction < 0.0d)
+                friction = 0.0d;
+
+            if (friction > 10.0d)
+                friction = 10.0d;
+
+            return friction;
         }
 
         public double Reciprocal(double x)

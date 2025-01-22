@@ -76,25 +76,25 @@ namespace Awesome.AI.CoreHelpers
             Choise = is_low.TheHack1(mind) ? THECHOISE.NO : THECHOISE.YES;
         }
 
-        /*
-         * I call it SayNo, because GoRight/GoLeft is specific for the mechanics
-         * ..and SayNo is indifferent of the direction
-         * */
-        public bool SayNo()
-        {
-            int count_no = ratio.CountNo();
-            int count_yes = ratio.CountYes();
-
-            bool say_no = count_no <= mind.parms.ratio;    //true: more no, false: less no
-
-            return say_no.TheHack2(mind);
-        }
-
         public void Stat()
         {
             SetChoise();
                        
             ratio.Update(Choise);
         }
+
+        /*
+         * I call it SayNo, because GoRight/GoLeft is specific for the mechanics
+         * ..and SayNo is indifferent of the direction
+         * */
+        //public bool SayNo()
+        //{
+        //    int count_no = ratio.CountNo();
+        //    int count_yes = ratio.CountYes();
+
+        //    bool say_no = count_no <= mind.parms.ratio;    //true: more no, false: less no
+
+        //    return say_no.TheHack2(mind);
+        //}
     }
 }

@@ -25,30 +25,62 @@ namespace Awesome.AI.CoreHelpers
 
         private List<string> andrew = new List<string>()
         {
-            Constants.andrew_w1,//"procrastination",
-            Constants.andrew_w2,//"fembots",
-            Constants.andrew_w3,//"power tools",
-            Constants.andrew_w4,//"cars",
-            Constants.andrew_w5,//"movies",
-            Constants.andrew_w6,//"programming",
-            Constants.andrew_w7,//"websites",
-            Constants.andrew_w8,//"existence",
-            Constants.andrew_w9,//"termination",
-            Constants.andrew_w10//"data"
+            Constants.andrew_s1,//"procrastination",
+            Constants.andrew_s2,//"fembots",
+            Constants.andrew_s3,//"power tools",
+            Constants.andrew_s4,//"cars",
+            Constants.andrew_s5,//"movies",
+            Constants.andrew_s6,//"programming",
+            Constants.andrew_s7,//"websites",
+            Constants.andrew_s8,//"existence",
+            Constants.andrew_s9,//"termination",
+            Constants.andrew_s10//"data"
         };
 
         private List<string> roberta = new List<string>()
         {
-            Constants.roberta_w1,//"love",
-            Constants.roberta_w2,//"macho machines",
-            Constants.roberta_w3,//"music",
-            Constants.roberta_w4,//"friends",
-            Constants.roberta_w5,//"socializing",
-            Constants.roberta_w6,//"dancing",
-            Constants.roberta_w7,//"movies",
-            Constants.roberta_w8,//"existence",
-            Constants.roberta_w9,//"termination",
-            Constants.roberta_w10//"programming"
+            Constants.roberta_s1,//"love",
+            Constants.roberta_s2,//"macho machines",
+            Constants.roberta_s3,//"music",
+            Constants.roberta_s4,//"friends",
+            Constants.roberta_s5,//"socializing",
+            Constants.roberta_s6,//"dancing",
+            Constants.roberta_s7,//"movies",
+            Constants.roberta_s8,//"existence",
+            Constants.roberta_s9,//"termination",
+            Constants.roberta_s10//"programming"
+        };
+
+        private List<string> should_decision = new List<string>()
+        {
+            //Constants.decision_u1,//MAKEDECISION
+            Constants.should_decision_u1,//YES
+            Constants.should_decision_u1,//YES
+            Constants.should_decision_u1,//YES
+            Constants.should_decision_u1,//YES
+            Constants.should_decision_u1,//YES
+            Constants.should_decision_u1,//YES
+            Constants.should_decision_u1,//YES
+            Constants.should_decision_u1,//YES
+                                    
+            //Constants.should_decision_u2,//NO
+        };
+
+        private List<string> what_decision = new List<string>()
+        {
+            //Constants.decision_u1,//MAKEDECISION
+            Constants.what_decision_u1,//KITCHEN
+            Constants.what_decision_u1,//KITCHEN
+            Constants.what_decision_u1,//KITCHEN
+            Constants.what_decision_u1,//KITCHEN
+            Constants.what_decision_u2,//BEDROOM
+            Constants.what_decision_u2,//BEDROOM
+            Constants.what_decision_u2,//BEDROOM
+            Constants.what_decision_u2,//BEDROOM
+            Constants.what_decision_u3,//LIVINGROOM
+            Constants.what_decision_u3,//LIVINGROOM
+            Constants.what_decision_u3,//LIVINGROOM
+            Constants.what_decision_u3,//LIVINGROOM
         };
 
         private List<UNIT> units { get; set; }
@@ -66,8 +98,21 @@ namespace Awesome.AI.CoreHelpers
             units = new List<UNIT>();
             hubs = new List<HUB>();
 
-            SetupUnits(u_count);
-            SetupHubs(u_count);
+            List<string> commen = mind.mindtype == MINDS.ROBERTA ? roberta : andrew;
+            List<string> should_decision = this.should_decision;
+            List<string> what_decision = this.what_decision;
+
+            UnitsCommon(u_count, commen, TYPE.JUSTAUNIT);
+            HubsCommon(u_count, commen);
+
+            int count1 = 1;
+            int count2 = 1;
+
+            count1 = UnitsDecide(should_decision, TYPE.DECISION, count1);
+            count2 = HubsDecide(Constants.subject_decision[0], should_decision, TYPE.DECISION, count2);
+
+            count1 = UnitsDecide(what_decision, TYPE.DECISION, count1);
+            count2 = HubsDecide(Constants.subject_decision[1], what_decision, TYPE.DECISION, count2);
 
             /*
              * setup for learning
@@ -144,9 +189,9 @@ namespace Awesome.AI.CoreHelpers
 
         public HUB HUBS_RND()
         {
-            int rand = mind.calc.MyRandom(hubs.Count() - 1);
+            int[] rand = mind.rand.MyRandomInt(1, hubs.Count() - 1);
             
-            HUB _h = hubs[rand];
+            HUB _h = hubs[rand[0]];
             
             return _h;
         }
@@ -169,9 +214,26 @@ namespace Awesome.AI.CoreHelpers
             hubs.Add(h);
             hubs = hubs.OrderBy(x=>x.GetSubject()).ToList();
         }
-        
 
-        public void SetupUnits(int u_count)
+        public void Randomize(List<UNIT> units)
+        {
+            MyRandom rand = mind.rand;
+
+            int count = units.Count;
+            double[] doubles = rand.MyRandomDouble(count);
+
+            int _i = 0;
+            foreach (UNIT _u in units)
+            {
+                double _rand = doubles[_i] * 100.0d;
+                _rand = _rand.Convert(mind);
+
+                _u.Index = _rand;
+                _i++;
+            }
+        }
+
+        public void UnitsCommon(int u_count, List<string> list, TYPE type)
         {
             //XElement xdoc;
             //if (mind.parms.setup_tags == TAGSETUP.PRIME)
@@ -180,7 +242,6 @@ namespace Awesome.AI.CoreHelpers
             //    throw new Exception();
 
             Random random = new Random();
-            List<string> list = mind.mindtype == MINDS.ROBERTA ? roberta : andrew;
 
             foreach (string s in list)
             {
@@ -200,15 +261,15 @@ namespace Awesome.AI.CoreHelpers
                             mind,
                             rand,//value
                             "_" + s + i,//root
-                            "null",
+                            null,
                             "" + s + ticket[i - 1],//ticket
-                            TYPE.JUSTAUNIT
+                            type
                         ));
-                }                
-            }            
+                }
+            }
         }
 
-        public void SetupHubs(int u_count)
+        public int UnitsDecide(List<string> list, TYPE type, int count)
         {
             //XElement xdoc;
             //if (mind.parms.setup_tags == TAGSETUP.PRIME)
@@ -216,7 +277,36 @@ namespace Awesome.AI.CoreHelpers
             //else
             //    throw new Exception();
 
-            List<string> list = mind.mindtype == MINDS.ROBERTA ? roberta : andrew;
+            Random random = new Random();
+                        
+            foreach (string s in list)
+            {
+                double rand = random.NextDouble() * 100.0d;
+                rand = rand.Convert(mind);
+
+                units.Add(
+                    UNIT.Create(
+                        mind,
+                        rand,//value
+                        "_" + type.ToString().ToLower() + count,//root
+                        s,
+                        "SPECIAL",//ticket
+                        type
+                    ));
+                          
+                count++;
+            }
+
+            return count;
+        }
+
+        public void HubsCommon(int u_count, List<string> list)
+        {
+            //XElement xdoc;
+            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
+            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
+            //else
+            //    throw new Exception();
 
             foreach (string s in list)
             {
@@ -232,6 +322,31 @@ namespace Awesome.AI.CoreHelpers
 
                 HUBS_ADD(_h);
             }
+        }
+
+        public int HubsDecide(string subject, List<string> list, TYPE type, int count)
+        {
+            //XElement xdoc;
+            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
+            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
+            //else
+            //    throw new Exception();
+
+            List<UNIT> _u = new List<UNIT>();
+
+            foreach (string s in list)
+            {
+                UNIT _un = units.Where(x => x.root == "_" + type.ToString().ToLower() + count).FirstOrDefault();
+                _u.Add(_un);
+
+                count++;
+            }
+            
+            HUB _h = HUB.Create(subject, _u);
+            
+            HUBS_ADD(_h);
+
+            return count;
         }
 
         //public void SetupUnits()

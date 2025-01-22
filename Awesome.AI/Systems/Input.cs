@@ -1,8 +1,6 @@
 ﻿using Awesome.AI.Common;
-using System;
-using System.Collections.Generic;
 
-namespace Awesome.AI.Systems.Input
+namespace Awesome.AI.Systems
 {
     public class InputTool
     {

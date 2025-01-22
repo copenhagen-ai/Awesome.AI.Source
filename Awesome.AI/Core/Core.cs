@@ -3,21 +3,21 @@ using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Core
 {
-    public class TheCurve
+    public class Core
     {
-        /*
-         * this is the Go/NoGo class
-         * actually not part of the algorithm
-         * */
         TheMind mind;
-        private TheCurve() { }
-        public TheCurve(TheMind mind)
+        private Core() { }
+        public Core(TheMind mind)
         {
             this.mind = mind;
         }
 
         public bool OK(out double pain)
         {
+            /*
+             * this is the Go/NoGo class
+             * actually not part of the algorithm
+             * */
             try
             {
                 double _e = mind.parms._mech.Result();
@@ -25,7 +25,7 @@ namespace Awesome.AI.Core
 
                 if (pain > 1000.0)
                     throw new Exception();
-                    
+
                 return pain < mind.parms.max_pain;
             }
             catch (Exception e)//thats it
@@ -34,15 +34,27 @@ namespace Awesome.AI.Core
                 return false;
             }
         }
-    }
 
-    public class Core
-    {
-        TheMind mind;
-        private Core() { }
-        public Core(TheMind mind)
+        public void AnswerQuestion()
         {
-            this.mind = mind;
+            /*
+             * ..or if all goals are fulfilled?
+             * ..or if can make consious choise
+             * should there be some procedure for this(unlocking)?
+             * */
+
+            for (int i = 0; i <= 10; i++)
+            {
+                if ((mind.epochs - i) == (60 * mind.parms.runtime))
+                    mind.theanswer.root = "It does not";
+            }
+            
+            string answer = mind.theanswer.root;
+            
+            if (answer == null)
+                throw new ArgumentNullException();
+
+            mind.goodbye = answer == "It does not" ? THECHOISE.YES : THECHOISE.NO;
         }
 
         public void UpdateCredit()
@@ -68,82 +80,8 @@ namespace Awesome.AI.Core
                 mind.curr_unit.credits = 0.0d;
         }
         
-        public double FrictionCoefficient(bool is_static, double credits)
-        {
-            //should friction be calculated from position???
-
-            if (is_static)
-                return mind.parms.base_friction;
-            
-            Calc calc = new Calc(mind);
-            double x = credits;
-            double friction = 0.0d;
-
-            switch(mind.mech)
-            {
-                //this could be better, use sigmoid/logistic
-                case MECHANICS.HILL: friction = calc.Linear(x, -0.5d, 7d) / 10; break;
-                case MECHANICS.CONTEST: friction = calc.Linear(x, -0.25d, 2.5d) / 10; break;
-                default: throw new Exception();
-            }
-
-            if (friction < 0.0d)
-                friction = 0.0d;
-
-            if (friction > 10.0d)
-                friction = 10.0d;
-
-            return friction;
-        }
-
-        public void AnswerQuestion()
-        {
-            /*
-             * ..or if all goals are fulfilled?
-             * ..or if can make consious choise
-             * should there be some procedure for this(unlocking)?
-             * */
-
-            if ((mind.epochs - 0) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 1) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 2) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 3) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 4) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 5) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 6) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 7) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 8) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 9) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            if ((mind.epochs - 10) == (60 * mind.parms.runtime))
-                mind.theanswer.root = "It does not";
-
-            string answer = mind.theanswer.root;
-            if (answer == null)
-                throw new ArgumentNullException();
-
-            mind.goodbye = answer == "It does not" ? THECHOISE.YES : THECHOISE.NO;
-        }
         
+
         //private bool passed = false;
         //private bool IsConsious()//something like this :)
         //{
