@@ -28,7 +28,7 @@ namespace Awesome.AI.Core.Mechanics
         public Direction dir { get; set; }
         //public Limitters lim { get; set; }
 
-        TheMind mind;
+        private TheMind mind;
         private _TheWheel() { }
         public _TheWheel(Params parms)
         {

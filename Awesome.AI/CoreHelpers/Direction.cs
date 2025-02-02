@@ -6,7 +6,7 @@ namespace Awesome.AI.CoreHelpers
 {
     public class Ratio
     {
-        TheMind mind;
+        private TheMind mind;
         private Ratio() { }
         public Ratio(TheMind mind)
         {

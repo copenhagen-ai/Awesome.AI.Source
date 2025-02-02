@@ -1,4 +1,6 @@
-﻿namespace Awesome.AI.Common
+﻿using static Awesome.AI.Helpers.Enums;
+
+namespace Awesome.AI.Common
 {
     public class HUB
     {
@@ -8,27 +10,29 @@
 
         public string subject { get; set; }
         public List<UNIT> units;
-        
+        public TONE tone;
+
         //public BNet net_kutza;
         //public ActivationNetwork net_accord;
         //public BackPropagationLearning teacher;
-        
-        private HUB(string subject, List<UNIT> units)
+
+        private HUB(string subject, List<UNIT> units, TONE ton)
         {
             //CreateNet(is_accord, neurons, learningrate, momentum);
                         
             //this.percent = 0.0d;
             this.subject = subject;
             this.units = units;
+            this.tone = ton;
         }
 
         private HUB()
         {            
         }
 
-        public static HUB Create(string subject, List<UNIT> units)
+        public static HUB Create(string subject, List<UNIT> units, TONE ton)
         {
-            HUB h = new HUB(subject, units);
+            HUB h = new HUB(subject, units, ton);
             return h;
         }
 

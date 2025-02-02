@@ -29,7 +29,7 @@ namespace Awesome.AI.Core.Mechanics
         public double POS_X { get; set; } = 10.0d;
         public Direction dir { get; set; }
         
-        TheMind mind;
+        private TheMind mind;
         private _TheContest() { }
         public _TheContest(Params parms)
         {
@@ -122,11 +122,12 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * car left
          * */
+        //private double shift = -2.0d;
         public double ApplyStatic()
         {
             double acc = mind.common.HighestForce().Variable / 10; //divided by 10 for aprox acc
             double m = mind.parms.mass;
-            double u = mind.calc.FrictionCoefficient(true, 0.0d);
+            double u = mind.calc.FrictionCoefficient(true, 0.0d, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -152,7 +153,7 @@ namespace Awesome.AI.Core.Mechanics
             double max = mind.common.HighestForce().Variable / 10; //divided by 10 for aprox acc
             double acc = max - curr_unit_th.Variable / 10; //divided by 10 for aprox acc
             double m = mind.parms.mass;
-            double u = mind.calc.FrictionCoefficient(false, curr_unit_th.credits);
+            double u = mind.calc.FrictionCoefficient(false, curr_unit_th.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;

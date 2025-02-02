@@ -21,7 +21,8 @@ namespace Awesome.AI.Core
          * - maybe a limit or fuzzy: if Calc.PythDist(UNIT.CreateMIN(), unit) < 20.0 -> its critical -> jump far (similar to Meters.SayNO())
          * 
          * */
-        TheMind mind;
+
+        private TheMind mind;
         private TheMatrix() { }
         public TheMatrix(TheMind mind)
         {

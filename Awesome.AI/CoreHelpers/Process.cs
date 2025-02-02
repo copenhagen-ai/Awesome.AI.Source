@@ -12,7 +12,7 @@ namespace Awesome.AI.CoreHelpers
         public List<UNIT> u_history = new List<UNIT>();
         public UNIT most_common_unit = null;// this is statistics
 
-        TheMind mind;
+        private TheMind mind;
         private Process() { }
         public Process(TheMind mind)
         {

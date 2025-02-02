@@ -5,7 +5,7 @@ namespace Awesome.AI.CoreHelpers
 {
     public class Filters
     {
-        TheMind mind;
+        private TheMind mind;
         private Filters() { }
         public Filters(TheMind mind)
         {

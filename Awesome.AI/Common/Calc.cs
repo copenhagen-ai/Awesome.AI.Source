@@ -5,7 +5,7 @@ namespace Awesome.AI.Common
 {
     public class Calc
     {
-        TheMind mind;
+        private TheMind mind;
         private Calc() { }
         public Calc(TheMind mind) 
         { 
@@ -143,7 +143,7 @@ namespace Awesome.AI.Common
             return index;
         }
 
-        public double FrictionCoefficient(bool is_static, double credits)
+        public double FrictionCoefficient(bool is_static, double credits, double shift)
         {
             //should friction be calculated from position???
 
@@ -151,23 +151,10 @@ namespace Awesome.AI.Common
                 return mind.parms.base_friction;
 
             Calc calc = mind.calc;
-            double x = credits;
-            double friction = 0.0d;
-
-            switch (mind.mech)
-            {
-                //this could be better, use sigmoid/logistic
-                case MECHANICS.HILL: friction = calc.Linear(x, -0.5d, 7d) / 10; break;
-                case MECHANICS.CONTEST: friction = calc.Linear(x, -0.25d, 2.5d) / 10; break;
-                default: throw new Exception();
-            }
-
-            if (friction < 0.0d)
-                friction = 0.0d;
-
-            if (friction > 10.0d)
-                friction = 10.0d;
-
+            
+            double x = 5.0d - credits + shift;
+            double friction = calc.Logistic(x);
+            
             return friction;
         }
 
@@ -206,6 +193,7 @@ namespace Awesome.AI.Common
 
             //if (y >= 10.0)                              //10 er top grænsen, 10 * 10
             //    y = 10.0;
+            
             //if (y < 0.1)                                //er egentlig ikke nødvendig
             //    throw new Exception();
 
@@ -309,18 +297,6 @@ namespace Awesome.AI.Common
              * */
 
             double res = 2 * a * x + b;
-
-            return res;
-        }
-
-        public double Integral(double x, double a, double b, double c, double k)
-        {
-            /*
-             * derivative of:    f(x) = ax^2 + bx + c
-             *                   F(x)= (1/3)ax^3 + (1/2)bx^2 + cx + k
-             * */
-
-            double res = (1/3) * a * (x*x*x) + (1/2) * b * (x*x) + c * x + k;
 
             return res;
         }

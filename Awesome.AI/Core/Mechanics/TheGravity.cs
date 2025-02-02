@@ -31,7 +31,7 @@ namespace Awesome.AI.Core.Mechanics
         public Direction dir { get; set; }
         //public Limitters lim { get; set; }
 
-        TheMind mind;
+        private TheMind mind;
         private _TheGravity() { }
         public _TheGravity(Params parms)
         {

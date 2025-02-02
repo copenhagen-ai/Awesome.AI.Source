@@ -82,7 +82,7 @@ namespace Awesome.AI.Systems
             Constants.roberta_s10,//"programming"
         };
 
-        TheMind mind;
+        private TheMind mind;
         private MyInternal() { }
         public MyInternal(TheMind mind)
         {
@@ -132,14 +132,14 @@ namespace Awesome.AI.Systems
                             if (occu == null)
                                 throw new Exception();
 
-                            if (occu.name == "should_decision")
-                                throw new Exception();
+                            //if (occu.name == "should_decision")
+                            //    throw new Exception();
 
-                            if (occu.name == "what_decision")
-                                throw new Exception();
+                            //if (occu.name == "what_decision")
+                            //    throw new Exception();
 
-                            if (occu.name == "make_decision")
-                                throw new Exception();
+                            //if (occu.name == "make_decision")
+                            //    throw new Exception();
 
 
                             break;
@@ -212,21 +212,27 @@ namespace Awesome.AI.Systems
             if (last.IsNull())
                 throw new Exception();
 
-            HUB should_decision = mind.mem.HUBS_SUB("should_decision");
+            HUB location_should_decision = mind.mem.HUBS_SUB("location_should_decision");
+            HUB answer_should_decision = mind.mem.HUBS_SUB("answer_should_decision");
+            HUB ask_should_decision = mind.mem.HUBS_SUB("ask_should_decision");
 
             if (mindtype == MINDS.ANDREW)
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in andrew1)
                     list.Add(mind.mem.HUBS_SUB(s));
-                list.Add(should_decision);
+                list.Add(location_should_decision);
+                list.Add(answer_should_decision);
+                list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in andrew2)
                     list.Add(mind.mem.HUBS_SUB(s));
-                list.Add(should_decision);
+                list.Add(location_should_decision);
+                list.Add(answer_should_decision);
+                list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
 
@@ -237,14 +243,18 @@ namespace Awesome.AI.Systems
                 List<HUB> list = new List<HUB>();
                 foreach (string s in roberta1)
                     list.Add(mind.mem.HUBS_SUB(s));
-                list.Add(should_decision);
+                list.Add(location_should_decision);
+                list.Add(answer_should_decision);
+                list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in roberta2)
                     list.Add(mind.mem.HUBS_SUB(s));
-                list.Add(should_decision);
+                list.Add(location_should_decision);
+                list.Add(answer_should_decision);
+                list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
             }
@@ -305,7 +315,7 @@ namespace Awesome.AI.Systems
 
         public List<Tag> tags = new List<Tag>();//this is the map
 
-        TheMind mind;
+        private TheMind mind;
         private MyExternal() { }
         public MyExternal(TheMind mind)
         {

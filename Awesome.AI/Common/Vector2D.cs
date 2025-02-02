@@ -6,7 +6,7 @@
         public double yy { get; set; }
 
         public double theta_in_radians { get; set; }
-        public double theta_in_degrees { get { return Degrees(this); } }
+        public double theta_in_degrees { get { return ToDegrees(this); } }
         public double magnitude { get; set; }
 
         public Vector2D()
@@ -63,30 +63,30 @@
             return new Vector2D(_x, _y, null, null);
         }
 
-        public double Radians(double angle)
+        public double ToRadians(double angle)
         {
             double res = angle * (Math.PI / 180.0d);
 
             return res;
         }
 
-        public double Degrees(Vector2D v1)
+        public double ToDegrees(Vector2D v1)
         {
             double res = v1.theta_in_radians * (180.0d / Math.PI);
 
             return res;
         }
 
-        public Vector2D Flip360(Vector2D v1)
-        {
-            if (v1.theta_in_degrees > 0.0d)
-                throw new Exception();
+        //public Vector2D Flip360(Vector2D v1)
+        //{
+        //    if (v1.theta_in_degrees > 0.0d)
+        //        throw new Exception();
 
-            double degrees = -v1.theta_in_degrees;
-            double radians = Radians(360.0d - degrees);
+        //    double degrees = -v1.theta_in_degrees;
+        //    double radians = Radians(360.0d - degrees);
 
-            return new Vector2D(null, null, v1.magnitude, radians);            
-        }
+        //    return new Vector2D(null, null, v1.magnitude, radians);
+        //}
 
         public Vector2D ToPolar(Vector2D v1)
         {

@@ -4,7 +4,7 @@ namespace Awesome.AI.Common
 {
     public class MyRandom
     {
-        TheMind mind;
+        private TheMind mind;
         private MyRandom() { }
         public MyRandom(TheMind mind)
         {
@@ -55,7 +55,7 @@ namespace Awesome.AI.Common
             }
             catch
             {
-                return new double[] { -1.0d };
+                throw new Exception();
             }
         }
 
@@ -65,7 +65,7 @@ namespace Awesome.AI.Common
             {
                 /*
                  * max 999
-                 * 0 <= res <= i_max
+                 * 0 <= res < i_max
                  */
 
                 if (i_max > 999)
@@ -85,7 +85,7 @@ namespace Awesome.AI.Common
             }
             catch
             {
-                return new int[] { -1 };
+                throw new Exception();
             }
         }
 
@@ -112,7 +112,7 @@ namespace Awesome.AI.Common
             }
             catch
             {
-                return "";
+                throw new Exception();
             }
         }
 

@@ -16,10 +16,9 @@ namespace Awesome.AI.Common
         private TYPE type { get; set; }
         public string root { get; set; }//name
         public string data { get; set; }//data
-        public double max_nrg { get; set; }
         public double credits { get; set; }
-        
-        TheMind mind;
+
+        private TheMind mind;
         private UNIT() { }
         public UNIT(TheMind mind)
         {
@@ -85,6 +84,90 @@ namespace Awesome.AI.Common
             get { return mind.filters.Credits(this); }
         }
 
+        /*
+         * used to be Distance
+         * used in WorkWithWheelAndContest
+         * */
+        public double LowAtZero
+        {
+            get
+            {
+                double res = Index;
+                res = mind.calc.NormalizeRange(res, 0.0d, 100.0d, 0.0d, mind.parms.max_index);
+
+                return res;
+            }
+        }
+
+        /*
+         * used to be Mass
+         * used in WorksWithHill
+         * */
+        public double HighAtZero
+        {
+            get
+            {
+                double res = 100.0d - Index;
+                res = mind.calc.NormalizeRange(res, 0.0d, 100.0d, 0.0d, mind.parms.max_index);
+
+                return res;
+            }
+        }
+
+        private HUB hub = null;
+        public HUB HUB
+        {
+            get
+            {
+                if (hub != null)
+                    return hub;
+
+                hub = mind.mem.HUBS_ALL().Where(x => x.units.Contains(this)).FirstOrDefault();
+                
+                if (hub == null)
+                    return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);
+
+                return hub;
+            }
+        }
+
+        private List<UNIT> rel = null;
+        public List<UNIT> REL
+        {
+            get
+            {
+                if (rel != null)
+                    return rel;
+
+                rel = HUB.units;
+
+                return rel;
+            }
+        }
+
+        public static UNIT Create(TheMind mind, double index, string root, string data, string ticket, TYPE t)
+        {
+            UNIT _w = new UNIT() { mind = mind, Index = index, root = root, data = data, type = t };
+
+            if (ticket != "")
+                _w.ticket = new Ticket(ticket);
+
+            _w.credits = Constants.MAX_CREDIT;
+
+            return _w;
+        }
+
+        public static UNIT IDLE_UNIT(TheMind mind)
+        {
+            return UNIT.Create(mind, -1d, "XXXX", "XXXX", "", TYPE.IDLE);
+        }
+
+        public bool IsUNIT() => type == TYPE.JUSTAUNIT;
+
+        public bool IsIDLE() => type == TYPE.IDLE;
+
+        public bool IsDECISION() => type == TYPE.DECISION;
+
         //UNIT next = null;
         //public UNIT Next
         //{
@@ -128,91 +211,6 @@ namespace Awesome.AI.Common
         //        return prev;
         //    }
         //}
-
-        /*
-         * used to be Distance
-         * used in WorkWithWheelAndContest
-         * */
-        public double LowAtZero
-        {
-            get
-            {
-                double res = Index;
-                res = mind.calc.NormalizeRange(res, 0.0d, 100.0d, 0.0d, mind.parms.max_index);
-
-                return res;
-            }
-        }
-
-        /*
-         * used to be Mass
-         * used in WorksWithHill
-         * */
-        public double HighAtZero
-        {
-            get
-            {
-                double res = 100.0d - Index;
-                res = mind.calc.NormalizeRange(res, 0.0d, 100.0d, 0.0d, mind.parms.max_index);
-
-                return res;
-            }
-        }
-
-        private HUB hub = null;
-        public HUB HUB
-        {
-            get
-            {
-                if (hub != null)
-                    return hub;
-
-                hub = mind.mem.HUBS_ALL().Where(x => x.units.Contains(this)).FirstOrDefault();
-                
-                if (hub == null)
-                    return HUB.Create("IDLE", new List<UNIT>());
-
-                return hub;
-            }
-        }
-
-        private List<UNIT> rel = null;
-        public List<UNIT> REL
-        {
-            get
-            {
-                if (rel != null)
-                    return rel;
-
-                rel = HUB.units;
-
-                return rel;
-            }
-        }
-
-        public static UNIT Create(TheMind mind, double index, string root, string data, string ticket, TYPE t)
-        {
-            UNIT _w = new UNIT() { mind = mind, Index = index, root = root, data = data, type = t };
-
-            if (ticket != "")
-                _w.ticket = new Ticket(ticket);
-
-            _w.max_nrg = mind.parms.max_nrg;
-            _w.credits = mind.parms.max_nrg;
-
-            return _w;
-        }
-
-        public static UNIT IDLE_UNIT(TheMind mind)
-        {
-            return UNIT.Create(mind, -1d, "XXXX", "XXXX", "", TYPE.IDLE);
-        }
-
-        public bool IsUNIT() => type == TYPE.JUSTAUNIT;
-
-        public bool IsIDLE() => type == TYPE.IDLE;
-
-        public bool IsDECISION() => type == TYPE.DECISION;
 
         //public bool IsLEARNING()
         //{

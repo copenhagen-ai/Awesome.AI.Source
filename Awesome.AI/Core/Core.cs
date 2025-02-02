@@ -1,11 +1,12 @@
 ﻿using Awesome.AI.Common;
+using Awesome.AI.Helpers;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Core
 {
     public class Core
     {
-        TheMind mind;
+        private TheMind mind;
         private Core() { }
         public Core(TheMind mind)
         {
@@ -68,11 +69,11 @@ namespace Awesome.AI.Core
                 if (_u.root == mind.curr_unit.root)
                     continue;
 
-                double nrg = mind.parms.update_nrg;
-                _u.credits += nrg;
+                double cred = mind.parms.update_cred;
+                _u.credits += cred;
 
-                if (_u.credits > _u.max_nrg)
-                    _u.credits = _u.max_nrg;
+                if (_u.credits > Constants.MAX_CREDIT)
+                    _u.credits = Constants.MAX_CREDIT;
             }
 
             mind.curr_unit.credits -= 1.0d;

@@ -59,7 +59,7 @@ namespace Awesome.AI.Helpers
                         pos_x_high = 10.0d;
                         pos_x_low = 0.0d;
                         pos_x_start = 5.0d;
-                        update_nrg = 0.050d;
+                        update_cred = 0.050d;
 
                         //low_cut = 1.0E-9d;
                         //scale = 2.0d;
@@ -99,7 +99,7 @@ namespace Awesome.AI.Helpers
                         pos_x_high = 10.0d;
                         pos_x_low = 0.0d;
                         pos_x_start = 5.0d;
-                        update_nrg = 0.050d;
+                        update_cred = 0.050d;
 
                         //low_cut = 5.610E7d;
                         //scale = -1d;
@@ -140,7 +140,8 @@ namespace Awesome.AI.Helpers
                         pos_x_high = 10.0d;
                         pos_x_low = 0.0d;
                         pos_x_start = 5.0d;
-                        update_nrg = 0.030d;
+                        update_cred = 0.030d;
+                        shift = -2.0d;
 
                         //low_cut = 5.610E7d;
                         //scale = 80.0d;
@@ -190,7 +191,8 @@ namespace Awesome.AI.Helpers
                         pos_x_high = 10.0d;
                         pos_x_low = 0.0d;
                         pos_x_start = 5.0d;
-                        update_nrg = 0.050d;
+                        update_cred = 0.050d;
+                        shift = -3.0d;
 
                         //high_pass = 4.48d;
                         //scale = -1d;
@@ -297,11 +299,11 @@ namespace Awesome.AI.Helpers
         public double pos_x_high;
         public double pos_x_low;
         public double pos_x_start;
-        public double update_nrg;
+        public double update_cred;
         public double boost;                                              //dimm the fluctuations
+        public double shift;
         public double max_pain = 999.99d;
-        public double max_nrg = 10.0d;
-        
+                
         public int first_run = 5;
         public int number_of_units = 10;
         public int runtime = 2; //minutes

@@ -1,21 +1,21 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Helpers;
 
 namespace Awesome.AI.Systems
 {
     public class Location
     {
-        private TheMind mind;
-
-
         public string LocationFinal { get; set; }
-        public int State { get; set; }
+        public int LocationState { get; set; }
 
+        private TheMind mind;
         private Location() { }
+
         public Location(TheMind mind, string starting)
         {
             this.mind = mind;
-            State = 0;
+            LocationState = 0;
             LocationFinal = starting.Replace("WHAT", "");
         }
 
@@ -51,26 +51,31 @@ namespace Awesome.AI.Systems
             HUB hub = current.HUB;
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
+            HUB _1 = mind.mem.HUBS_SUB(Constants.subject_decision[0]);
+            HUB _2 = mind.mem.HUBS_SUB(Constants.subject_decision[1]);
 
             MyRandom rand = mind.rand;
             int[] _rand = rand.MyRandomInt(1, 5);
             if (_rand[0] == 1)
-                mind.mem.Randomize(units);
-
-            if (hub.subject == "should_decision" && State == 0)
             {
-                if (current.data == "SHOULDYES")
-                    State++;
-
-                if (current.data == "SHOULDNO")
-                    State = 0;
+                mind.mem.Randomize(_1);
+                mind.mem.Randomize(_2);
             }
 
-            if (hub.subject == "what_decision" && State == 1)
+            if (hub.subject == "location_should_decision" && LocationState == 0)
+            {
+                if (current.data == "SHOULDYES")
+                    LocationState++;
+
+                if (current.data == "SHOULDNO")
+                    LocationState = 0;
+            }
+
+            if (hub.subject == "location_what_decision" && LocationState == 1)
             {
                 LocationFinal = mind.parms._mech.dir.Choise.IsNo() ? current.data : LocationFinal;
                 LocationFinal = LocationFinal.Replace("WHAT", "");
-                State = 0;
+                LocationState = 0;
             }
 
             //if (hub.subject == "should_decision" && State == 0)
