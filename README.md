@@ -1,6 +1,6 @@
 # Awesome.AI.Web
   
-Awesome-AI - SOFTWARE DISCLAIMER AND LICENSING NOTICES
+Awesome-AI - SOFTWARE DISCLAIMER AND LICENSING NOTICES  
 Copyright (C) 2023 Joakim Jacobsen <group@copenhagen-ai.net>  
 https://www.copenhagen-ai.net  
     
