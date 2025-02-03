@@ -1,28 +1,29 @@
 # Awesome.AI.Web
- 
-Awesome-AI - Apache License Version 2.0 And Ethical Disclaimer  
-Copyright (C) 2023 Joakim Jacobsen <jjacobsen@copenhagen-ai.net>  
+  
+Awesome-AI - SOFTWARE DISCLAIMER AND LICENSING NOTICES
+Copyright (C) 2023 Joakim Jacobsen <group@copenhagen-ai.net>  
 https://www.copenhagen-ai.net  
+    
+This software is released under a dual-license model:  
   
-This software is licensed under the Apache License, Version 2.0, you may not use this file except in compliance with the License.  
-You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0  
+	GPL License: The software is free to use for private individuals and open-source projects under the terms of the GNU General Public License (GPL). The License can be viewed in the LICENSE file and a copy of the License can be obtained at: https://www.gnu.org/licenses/gpl.html  
   
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.  
+	Commercial License: For commercial use, a separate licensing agreement is required. Details regarding the commercial license can be found in the COMMERCIAL file included in this project and on this page: https://www.copenhagen-ai.net/commercial  
   
-Additional Ethical Standards  
+Ethical Standards Requirement  
   
-By using this software, you agree to adhere to the ethical standards as defined and maintained by the copenhagen-ai group. These standards are outlined in the ETHICAL file included with the software distribution and can also be reviewed at the following URL: https://www.copenhagen-ai.net/docs/ethical.txt  
+	The use of this software is subject to the ethical guidelines established by the AWESOME.AI Group. Users must review and accept these standards before using or distributing the software. The ethical guidelines are available in the ETHICAL file included with this project and at: https://www.copenhagen-ai.net/ethical.txt  
   
-These ethical standards are intended to ensure that the software is used in ways that align with principles of fairness, safety, accountability, and respect for human rights. By accepting this license, you commit to upholding these principles in your use, modification, and redistribution of the software.  
+	The AWESOME.AI Group reserves the right to review, update, and enforce these ethical standards. Failure to comply with these standards may result in the revocation of licensing rights.  
   
-Future Modifications to the ETHICAL  
+License Evolution  
   
-The copenhagen-ai group reserves the right to modify the formulation of this ETHICAL in the future. Any such modifications will be communicated through updates to the ETHICAL file accompanying the software and published at the URL mentioned above.  
+	The formulation of this license, including but not limited to the ethical standards and commercial terms, may be updated or altered in the future. While existing versions of the software remain under the previously accepted terms, new versions may be subject to revised licensing conditions.  
   
-Acknowledgment  
+	By using this software, you acknowledge and agree to the terms of the applicable license and the ethical guidelines set forth by the AWESOME.AI Group.  
   
-By using this software, you acknowledge that:  
-You have reviewed and accepted the License and ethical standards established by the copenhagen-ai group.  
-You understand that failure to comply with these may result in the revocation of your rights under this license.  
+	For inquiries regarding licensing, please contact the AWESOME.AI Group.  
   
-If you have any questions or concerns about this license or the ethical standards, please contact the copenhagen-ai group through the channels provided in the accompanying documentation.  
+DISCLAIMER:  
+
+	This software is provided "as-is," without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall the authors, contributors, or the AWESOME.AI Group be held liable for any claim, damages, or other liability arising from the use of this software.  
