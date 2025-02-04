@@ -12,7 +12,7 @@ This software is released under a dual-license model:
   
 Ethical Standards Requirement  
   
-	The use of this software is subject to the ethical guidelines established by the Copenhagen-ai Group. Users must review and accept these standards before using or distributing the software. The ethical guidelines are available in the ETHICAL file included with this project and at: https://www.copenhagen-ai.net/ethical.txt  
+	The use of this software is subject to the ethical guidelines established by the Copenhagen-ai Group. Users must review and accept these standards before using or distributing the software. The ethical guidelines are available in the ETHICAL file included with this project and at: https://www.copenhagen-ai.net/docs/ethical.txt  
   
 	The Copenhagen-ai Group reserves the right to review, update, and enforce these ethical standards. Failure to comply with these standards may result in the revocation of licensing rights.  
   
