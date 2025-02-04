@@ -6,7 +6,7 @@ https://www.copenhagen-ai.net
     
 This software is released under a dual-license model:  
   
-	GPL License: The software is free to use for private individuals and open-source projects under the terms of the GNU General Public License (GPL). The License can be viewed in the LICENSE-GPL file and a copy of the License can be obtained at: https://www.gnu.org/licenses/gpl.html  
+	GPL License: The software is free to use for private individuals and open-source projects under the terms of the GNU General Public License (GPL). The License can be viewed in the LICENSE file and a copy of the License can be obtained at: https://www.gnu.org/licenses/gpl.html  
   
 	Commercial License: For commercial use, a separate licensing agreement is required. Details regarding the commercial license can be found in the LICENSE-COMMERCIAL file included in this project and on this page: https://www.copenhagen-ai.net/commercial  
   
