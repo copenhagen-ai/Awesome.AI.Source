@@ -1,6 +1,8 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Helpers;
 using Microsoft.CodeAnalysis.Elfie.Model.Strings;
+using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Web.AI.Common
 {
@@ -30,10 +32,10 @@ namespace Awesome.AI.Web.AI.Common
         public string chat_state { get; set; }
         public string chat_answer { get; set; }
         public string chat_subject { get; set; }
-        //public string chat_index { get; set; }
-
-        public UNIT common_unit { get; set; }
         public string common_hub { get; set; }
+
+        //public string chat_index { get; set; }
+        public UNIT common_unit { get; set; }
 
         public async Task<string> GetAnswer()
         {
@@ -50,13 +52,18 @@ namespace Awesome.AI.Web.AI.Common
         {
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            momentum = $"{mind.parms._mech.dir.d_momentum}";
+            momentum = $"{mind.parms._mech.momentum.ToString("E3")}";
 
             pain = $"{mind.pain}";
-            position = $"{mind.parms._mech.dir.d_pos_x}";
-            ratio_yes = $"{mind.parms._mech.dir.ratio.CountYes()}";
-            ratio_no = $"{mind.parms._mech.dir.ratio.CountNo()}";
-            the_choise = $"{(mind.parms._mech.dir.Choise.IsNo() ? "NO" : "YES")}";
+            if (mind.mech == MECHANICS.HILL)
+                position = $"{mind.parms._mech.POS_XY}";
+            if (mind.mech == MECHANICS.CONTEST)
+                position = $"{mind.pos.Pos}";
+            if (mind.mech == MECHANICS.GRAVITY)
+                position = $"{mind.pos.Pos}";
+            ratio_yes = $"{mind.dir.Count(THECHOISE.YES)}";
+            ratio_no = $"{mind.dir.Count(THECHOISE.NO)}";
+            the_choise = $"{(mind.dir.Choise.IsNo() ? "NO" : "YES")}";
             epochs = $"{mind.epochs}";
             runtime = $"{mind.parms.runtime}";
             occu = $"{mind._internal.Occu}";
@@ -78,7 +85,10 @@ namespace Awesome.AI.Web.AI.Common
             //mind.chatask.Index = "";
 
             common_unit = mind.process.most_common_unit;
-            
+
+            if (common_unit == null)
+                return;
+                       
             common_hub = common_unit.HUB.GetSubject();
         }
     }

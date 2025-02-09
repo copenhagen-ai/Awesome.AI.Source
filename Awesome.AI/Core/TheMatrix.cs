@@ -115,7 +115,7 @@ namespace Awesome.AI.Core
             double f_h = mind.common.HighestForce().Variable;
             double f_l = mind.common.LowestForce().Variable;
 
-            double _v = mech.dir.d_momentum;
+            double _v = mech.momentum;
             double v_h = mech.out_high;
             double v_l = mech.out_low;
 
@@ -128,7 +128,7 @@ namespace Awesome.AI.Core
         {
             IMechanics mech = mind.parms.GetMechanics(MECHANICS.NONE);
 
-            double _v = mech.dir.d_momentum;
+            double _v = mech.momentum;
             double v_h = mech.out_high;
             double v_l = mech.out_low;
 

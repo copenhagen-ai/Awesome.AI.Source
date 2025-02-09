@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.CoreHelpers;
 using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
 
@@ -26,16 +25,39 @@ namespace Awesome.AI.Core.Mechanics
         private double min { get; set; } = 1000.0d;
         private double max { get; set; } = -1000.0d;
 
-        public double POS_X { get; set; } = 10.0d;
-        public Direction dir { get; set; }
         
         private TheMind mind;
         private _TheContest() { }
-        public _TheContest(Params parms)
+        public _TheContest(TheMind mind, Params parms)
         {
-            this.mind = parms.mind;
-            this.dir = new Direction(parms.mind) { d_momentum = 0.0d };
-            this.mind = parms.mind;
+            this.mind = mind;
+
+            posxy = Constants.STARTXY;
+        }
+
+        private double posxy { get; set; }
+        public double POS_XY
+        {
+            get
+            {
+                //its a hack, yes its cheating..
+                double boost = mind.goodbye.IsNo() ? mind.parms.boost : 1.0d;
+
+                posxy = 10.0d + (boost * momentum);//dosnt seem right
+                //posx += (boost * momentum);
+                //posx = posx + (boost * velocity);
+                //posx = 10.0d + (boost * momentum);
+
+                if (posxy < Constants.LOWXY)
+                    posxy = Constants.LOWXY;
+                if (posxy > Constants.HIGHXY)
+                    posxy = Constants.HIGHXY;
+
+                if (posxy <= posx_low) posx_low = posxy;
+                if (posxy > posx_high) posx_high = posxy;
+
+                return posxy;
+            }
         }
 
         //NewtonForce
@@ -55,37 +77,6 @@ namespace Awesome.AI.Core.Mechanics
             acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
 
             return acc;
-        }        
-
-        public double Result()
-        {
-            double res = POS_X;
-
-            return res;
-        }
-
-        public void Position()
-        {
-            //its a hack, yes its cheating..
-            double boost = mind.goodbye.IsNo() ? mind.parms.boost : 1.0d;
-
-            POS_X = 10.0d + (boost * momentum);//dosnt seem right
-            //POS_X += (boost * momentum);
-            //POS_X = POS_X + (boost * velocity);
-            //POS_X = 10.0d + (boost * momentum);
-
-            if (POS_X < mind.parms.pos_x_low)
-                POS_X = mind.parms.pos_x_low;
-            if (POS_X > mind.parms.pos_x_high)
-                POS_X = mind.parms.pos_x_high;
-
-            if (POS_X <= posx_low) posx_low = POS_X;
-            if (POS_X > posx_high) posx_high = POS_X;
-
-            dir.d_momentum = momentum;
-            dir.d_pos_x = POS_X;
-
-            dir.Stat();
         }
 
         public void Calculate()
@@ -97,8 +88,8 @@ namespace Awesome.AI.Core.Mechanics
             Fdyn = ApplyDynamic();
 
             double Fnet = mind.goodbye.IsNo() ? -Fsta + Fdyn : -Fsta;
-            double dt = 0.002d; //delta time, 1sec/500cyc
             double m = mind.parms.mass;
+            double dt = mind.parms.delta_time;                             //delta time, 1sec/500cyc
 
             //F=m*a
             //a=dv/dt
@@ -127,7 +118,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             double acc = mind.common.HighestForce().Variable / 10; //divided by 10 for aprox acc
             double m = mind.parms.mass;
-            double u = mind.calc.FrictionCoefficient(true, 0.0d, mind.parms.shift);
+            double u = mind.core.LimitterFriction(true, 0.0d, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -153,7 +144,7 @@ namespace Awesome.AI.Core.Mechanics
             double max = mind.common.HighestForce().Variable / 10; //divided by 10 for aprox acc
             double acc = max - curr_unit_th.Variable / 10; //divided by 10 for aprox acc
             double m = mind.parms.mass;
-            double u = mind.calc.FrictionCoefficient(false, curr_unit_th.credits, mind.parms.shift);
+            double u = mind.core.LimitterFriction(false, curr_unit_th.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;

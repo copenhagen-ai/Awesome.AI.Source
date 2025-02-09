@@ -36,74 +36,61 @@ namespace Awesome.AI.Helpers
 
                 switch (run)
                 {
-                    case MECHANICS.WHEEL: 
-                        _mech = new _TheWheel(this);
+                    //case MECHANICS.WHEEL:
+                    //    _mech = new _TheWheel(this.mind, this);
 
-                        validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                        case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                        case_occupasion = OCCUPASION.FIXED;                                 //used with OCCU and BOTH
-                        hack1 = HACKMODES.HACK;
-                        hack2 = HACKMODES.NOHACK;
-                        mech = MECHANICS.WHEEL;
-                        matrix_type = MATRIX.GPT;
+                    //    validation = VALIDATION.BOTH;                                       //BOTH or OCCU
+                    //    case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
+                    //    case_occupasion = OCCUPASION.FIXED;                                 //used with OCCU and BOTH
+                    //    hack = HACKMODES.HACK;
+                    //    mech = MECHANICS.WHEEL;
+                    //    matrix_type = MATRIX.GPT;
 
-                        //earth mass:      5.972×10^24 kg
-                        //sun mass:        1.989×10^30 kg
-                        //earth gravity:         9.807 m/s²
-                        //distance sun:    148.010.000 km
-                        //earth radius:          6,371 km
-                        Vars.zero_mass = 10.0d * 1.989E30d;
-                                                
-                        mass = 5.972E24d;
-                        max_index = 100.0d;
-                        pos_x_high = 10.0d;
-                        pos_x_low = 0.0d;
-                        pos_x_start = 5.0d;
-                        update_cred = 0.050d;
+                    //    earth mass:      5.972×10 ^ 24 kg
+                    //    sun mass: 1.989×10 ^ 30 kg
+                    //    earth gravity: 9.807 m / s²
+                    //    distance sun:    148.010.000 km
+                    //    earth radius: 6,371 km
+                    //    Vars.zero_mass = 10.0d * 1.989E30d;
+                    //    mass = 5.972E24d;
+                    //    update_cred = 0.050d;
 
-                        //low_cut = 1.0E-9d;
-                        //scale = 2.0d;
-                        //dir_learningrate = -1d;
+                    //    /*
+                    //     * boost is life span
+                    //     * as it seem momentum seem to go towards below 0.0
+                    //     * boost should be as close 1.0, without dying to fast
+                    //     * */
 
-                        /*
-                         * boost is life span
-                         * as it seem momentum seem to go towards below 0.0
-                         * boost should be as close 1.0, without dying to fast
-                         * */
+                    //    boost = 1E9d;
 
-                        boost = 1E9d;
-
-                        //selector = 0;
-
-                        break;
+                    //    break;
                     case MECHANICS.GRAVITY: 
-                        _mech = new _TheGravity(this);
+                        _mech = new _TheGravity(this.mind, this);
 
                         validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                         case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                        case_occupasion = OCCUPASION.FIXED;                                 //used with OCCU and BOTH
-                        hack1 = HACKMODES.HACK;
-                        hack2 = HACKMODES.NOHACK;
+                        case_occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
+                        hack = HACKMODES.NOHACK;
                         mech = MECHANICS.GRAVITY;
                         matrix_type = MATRIX.GPT;
 
-                        //earth mass:      5.972×10^24 kg
-                        //sun mass:        1.989×10^30 kg
-                        //earth gravity:         9.807 m/s²
-                        //distance sun:    148.010.000 km
-                        //earth radius:          6,371 km
+                        //earth mass:               5.972×10^24 kg
+                        //sun mass:                 1.989×10^30 kg
+                        //earth gravity:                  9.807 m/s²
+                        //distance sun:             148.010.000 km
+                        //distance moon:             3.844×10^5 km 3.844e5;
+                        //distance mercury(avg):    ~58 million km (~0.39 AU)
+                        //earth radius:                   6,371 km
                         Vars.zero_mass = 5.972E24d;
-                                                
-                        mass = 0.05d;
-                        max_index = 7000.0d;
-                        pos_x_high = 10.0d;
-                        pos_x_low = 0.0d;
-                        pos_x_start = 5.0d;
-                        update_cred = 0.050d;
+                        high_at_zero = false;
+                        shift = 1.5d;
+                        mass = 40000.0d;                                                 //millinium falken
+                        update_cred = 0.5d;
+                        delta_time = 10.0d;
 
-                        //low_cut = 5.610E7d;
-                        //scale = -1d;
-                        //dir_learningrate = -1d;
+                        schedule_low = 2.0d;
+                        schedule_mid = 6.0d;
+                        schedule_high = 9.0d;
 
                         /*
                          * boost is life span
@@ -113,39 +100,26 @@ namespace Awesome.AI.Helpers
 
                         boost = 1E-10d;
 
-                        //selector = 1;
-
                         break;
                     case MECHANICS.CONTEST: 
-                        _mech = new _TheContest(this);
+                        _mech = new _TheContest(this.mind, this);
 
                         validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                         case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
                         case_occupasion = OCCUPASION.DYNAMIC;                                 //used with OCCU and BOTH
-                        hack1 = HACKMODES.NOHACK;
-                        hack2 = HACKMODES.NOHACK;
+                        hack = HACKMODES.NOHACK;
                         mech = MECHANICS.CONTEST;
                         matrix_type = MATRIX.GPT;
-
-                        //earth mass:      5.972×10^24 kg
-                        //sun mass:        1.989×10^30 kg
-                        //earth gravity:         9.807 m/s²
-                        //distance sun:    148.010.000 km
-                        //earth radius:          6,371 km
-                                                                        
+                                                                                                
                         high_at_zero = true;
-
                         mass = 500.0d;
-                        max_index = 100.0d;
-                        pos_x_high = 10.0d;
-                        pos_x_low = 0.0d;
-                        pos_x_start = 5.0d;
                         update_cred = 0.030d;
                         shift = -2.0d;
+                        delta_time = 0.002d;
 
-                        //low_cut = 5.610E7d;
-                        //scale = 80.0d;
-                        //dir_learningrate = -1d;
+                        schedule_low = 1.0d;
+                        schedule_mid = 5.0d;
+                        schedule_high = 8.0d;
 
                         /*
                          * boost is life span
@@ -155,48 +129,26 @@ namespace Awesome.AI.Helpers
 
                         boost = 1E-2d;
 
-                        //selector = 1;
-
                         break;
                     case MECHANICS.HILL: 
-                        _mech = new _TheHill(this);
+                        _mech = new _TheHill(this.mind, this);
 
                         validation = VALIDATION.BOTH;                                       //BOTH or TAGS
                         case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
                         case_occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
-                        hack1 = HACKMODES.HACK;
-                        hack2 = HACKMODES.HACK;
+                        hack = HACKMODES.HACK;
                         mech = MECHANICS.HILL;
                         matrix_type = MATRIX.GPT;
 
-                        //earth mass:    5.972 × 10^24kg
-                        //sun mass:      1.989 × 10^30kg
-                        //earth gravity: 9.807m/s²
                         Vars.var_a = -0.1d;
                         Vars.var_b = 0.0d;
                         Vars.var_c = 10.0d;
 
-                        //Vars.var_a = -0.01d;
-                        //Vars.var_b = 0.0d;
-                        //Vars.var_c = 1.0d;
-
-                        //Vars.var_a = -0.001d;
-                        //Vars.var_b = 0.0d;
-                        //Vars.var_c = 0.1d;
-
                         high_at_zero = true;
-
                         mass = 0.5d;
-                        max_index = 100.0d;
-                        pos_x_high = 10.0d;
-                        pos_x_low = 0.0d;
-                        pos_x_start = 5.0d;
                         update_cred = 0.050d;
                         shift = -3.0d;
-
-                        //high_pass = 4.48d;
-                        //scale = -1d;
-                        //dir_learningrate = 0.001d;
+                        delta_time = 0.002d;
 
                         /*
                          * boost is life span?
@@ -205,8 +157,6 @@ namespace Awesome.AI.Helpers
                          * */
 
                         boost = 1.0E1d;
-
-                        //selector = 2;
 
                         break;
                     default: throw new Exception();
@@ -236,8 +186,7 @@ namespace Awesome.AI.Helpers
         public VALIDATION validation;      
         public TAGS case_tags;                                               //used with WORLD and BOTH
         public OCCUPASION case_occupasion;                                   //used with SELF and BOTH
-        public HACKMODES hack1;
-        public HACKMODES hack2;
+        public HACKMODES hack;        
         public MECHANICS mech;
         public MATRIX matrix_type;
 
@@ -283,31 +232,36 @@ namespace Awesome.AI.Helpers
          * 
          * 0.888 = 8 / 9
          * 0.777 = 7 / 9
-         * 0.666 = 6 / 9, hehe
+         * 0.666 = 2 / 3, hehe
          * 0.555 = 5 / 9
          * */
 
-        public double base_friction = 6d / 9d;                                      // COMMENT NEEDS UPDATE: needs to be this otherwise position keeps going down
+        public double base_friction = 2d / 3d;                                      // COMMENT NEEDS UPDATE: needs to be this otherwise position keeps going down
         public double lapses_total = 99d;                                           // yesno ratio : reaction time in cycles
         public double ratio = 50d;
-        public double slope = 0.666d;
+        //public double slope = 0.666d;
 
         // should it be 200, 1000 or more???
         public double mass;
-        public double max_index;
         public double low_cut;
-        public double pos_x_high;
-        public double pos_x_low;
-        public double pos_x_start;
         public double update_cred;
         public double boost;                                              //dimm the fluctuations
         public double shift;
         public double max_pain = 999.99d;
-                
+        public double delta_time;
+
         public int first_run = 5;
         public int number_of_units = 10;
         public int runtime = 2; //minutes
-        
+
+        public double schedule_low { get; set; }
+        public double schedule_mid { get; set; }
+        public double schedule_high { get; set; }
+
+        //public double max_index;
+        //public double pos_x_high;
+        //public double pos_x_low;
+        //public double pos_x_start;
         //public double scale;
         //public double hill_a;
         //public double hill_b;
@@ -319,7 +273,7 @@ namespace Awesome.AI.Helpers
         //public bool debug = true;
         //public bool is_accord = true;
         //public int learning_epochs = 100;
-        
+
         /*
          * these seem to be related
          * hist_total

@@ -23,11 +23,11 @@ namespace Awesome.AI.Systems
                 switch (_operator)
                 {
                     case "add":
-                        return UNIT.Create(mind, 50.0d, "" + (int.Parse(_in.val_a) + int.Parse(_in.val_b)), "null", "", TYPE.JUSTAUNIT);
+                        return UNIT.Create(mind, 50.0d, "" + (int.Parse(_in.val_a) + int.Parse(_in.val_b)), "null", "", UNITTYPE.JUSTAUNIT);
                     case "sub":
-                        return UNIT.Create(mind, 50.0d, "" + (int.Parse(_in.val_a) - int.Parse(_in.val_b)), "null", "", TYPE.JUSTAUNIT);
+                        return UNIT.Create(mind, 50.0d, "" + (int.Parse(_in.val_a) - int.Parse(_in.val_b)), "null", "", UNITTYPE.JUSTAUNIT);
                     default:
-                        return UNIT.Create(mind, 50.0d, "none", "null", "", TYPE.JUSTAUNIT);
+                        return UNIT.Create(mind, 50.0d, "none", "null", "", UNITTYPE.JUSTAUNIT);
                 }
             }
         }
@@ -180,7 +180,7 @@ namespace Awesome.AI.Systems
                 bool hit = mind.rand.RandomInt(2) == 0 ? true : false;
                 string news = hit ? "new news" : "no news";
 
-                return UNIT.Create(mind, 50.0d, news, "null", "", TYPE.JUSTAUNIT);
+                return UNIT.Create(mind, 50.0d, news, "null", "", UNITTYPE.JUSTAUNIT);
             }
         }
     }

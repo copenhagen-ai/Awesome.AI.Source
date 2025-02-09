@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Core;
-using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Common
 {
@@ -143,21 +142,6 @@ namespace Awesome.AI.Common
             return index;
         }
 
-        public double FrictionCoefficient(bool is_static, double credits, double shift)
-        {
-            //should friction be calculated from position???
-
-            if (is_static)
-                return mind.parms.base_friction;
-
-            Calc calc = mind.calc;
-            
-            double x = 5.0d - credits + shift;
-            double friction = calc.Logistic(x);
-            
-            return friction;
-        }
-
         public double Reciprocal(double x)
         {
             if (x < 0.0d)
@@ -167,6 +151,31 @@ namespace Awesome.AI.Common
                 throw new Exception();
 
             return 1 / x;
+        }        
+
+        public double EventHorizon(double r)
+        {
+            /*
+             * Gravitational Time Dilation
+             * */
+
+            if (r < 0.0d)
+                throw new Exception();
+
+            if (r == 0.0d)
+                throw new Exception();
+
+            double t_observer = 0.0d;
+            double t_distant = 1.0d;
+            double Rs = 2.0d;
+
+            if (r <= Rs)
+                r = Rs;
+
+            double part = 1.0d - Rs / r;
+            t_observer = t_distant * Math.Sqrt(part);
+            
+            return t_observer;
         }
 
         public double Linear(double x, double a, double b)

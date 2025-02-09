@@ -1,5 +1,5 @@
-﻿//using Awesome.AI.Core;
-//using static Awesome.AI.Helpers.Enums;
+﻿//using Awesome.AI.Common;
+//using Awesome.AI.Core;
 
 //namespace Awesome.AI.CoreHelpers
 //{
@@ -15,130 +15,130 @@
 //        public Limitters(TheMind mind)
 //        {
 //            this.mind = mind;
-//        }
+//        }        
 
-//        public double Limit(bool is_static/*, bool process*/)//aka Elastic
-//        {
-//            /*
-//             * thoughts on LIMIT..
-//             * maybe its a "fake it till you make it", situation??
-//             * maybe this is actually the core of the project. and the task is to make this limit as smooth as possible
-//             * maybe making it layered somehow, use chance, fuzzy?
-//             * maybe a gradient of somesort
-//             * maybe this does actually make the "whoosh" effect over time/cycles
-//             * 
-//             * how to make it move like a spring?
-//             * 
-//             * there are many ways to implement the Limit
-//             * */
+//        //public double Limit(bool is_static/*, bool process*/)//aka Elastic
+//        //{
+//        //    /*
+//        //     * thoughts on LIMIT..
+//        //     * maybe its a "fake it till you make it", situation??
+//        //     * maybe this is actually the core of the project. and the task is to make this limit as smooth as possible
+//        //     * maybe making it layered somehow, use chance, fuzzy?
+//        //     * maybe a gradient of somesort
+//        //     * maybe this does actually make the "whoosh" effect over time/cycles
+//        //     * 
+//        //     * how to make it move like a spring?
+//        //     * 
+//        //     * there are many ways to implement the Limit
+//        //     * */
 
-//            //if (is_static && !process)
-//            //    return mind.parms.base_friction / 2;
+//        //    //if (is_static && !process)
+//        //    //    return mind.parms.base_friction / 2;
 
-//            //if (!is_static && !process)
-//            //    return limit_result;
+//        //    //if (!is_static && !process)
+//        //    //    return limit_result;
 
-//            switch (mind.parms.typelimit)
-//            {
-//                case TYPELIMIT.SIMPLE:
-//                    return is_static ? mind.parms.base_friction : Simple();
-//                case TYPELIMIT.SIGMOID:
-//                    return is_static ? mind.parms.base_friction : Sigmoid();
-//                case TYPELIMIT.CHANCE:
-//                    return is_static ? mind.parms.base_friction : Chance();
-//                default:
-//                    throw new Exception();
-//            }
-//        }
+//        //    switch (mind.parms.typelimit)
+//        //    {
+//        //        case TYPELIMIT.SIMPLE:
+//        //            return is_static ? mind.parms.base_friction : Simple();
+//        //        case TYPELIMIT.SIGMOID:
+//        //            return is_static ? mind.parms.base_friction : Sigmoid();
+//        //        case TYPELIMIT.CHANCE:
+//        //            return is_static ? mind.parms.base_friction : Chance();
+//        //        default:
+//        //            throw new Exception();
+//        //    }
+//        //}
 
 
-//        private double GetIndex()
-//        {
-//            bool say_no = mind.parms._mech.dir.SayNo();
+//        //private double GetIndex()
+//        //{
+//        //    bool say_no = mind.parms._mech.dir.SayNo();
 
-//            double tip = 2.0d - mind.parms.lim_correction;
-//            double learn = !say_no ? -LearningRate(mind.parms.lim_learningrate, mind.parms.lim_correction) : LearningRate(mind.parms.lim_learningrate, tip);
+//        //    double tip = 2.0d - mind.parms.lim_correction;
+//        //    double learn = !say_no ? -LearningRate(mind.parms.lim_learningrate, mind.parms.lim_correction) : LearningRate(mind.parms.lim_learningrate, tip);
 
-//            mind.parms.lim_bias += learn;
+//        //    mind.parms.lim_bias += learn;
 
-//            double mom = mind.parms._mech.momentum;
-//            double mom_min = mind.parms._mech.out_low;
-//            double mom_max = mind.parms._mech.out_high;
+//        //    double mom = mind.parms._mech.momentum;
+//        //    double mom_min = mind.parms._mech.out_low;
+//        //    double mom_max = mind.parms._mech.out_high;
 
-//            /*
-//             * we can just use hardcoded 10 and 0, since calculations are contained in this function
-//             * works for all MECHANICS (pos is normalized, so works for HILL too)
-//             * */
-//            if (mind.parms.lim_bias < -10.0d) mind.parms.lim_bias = -10.0d;
-//            if (mind.parms.lim_bias > 0.0d) mind.parms.lim_bias = 0.0d;
+//        //    /*
+//        //     * we can just use hardcoded 10 and 0, since calculations are contained in this function
+//        //     * works for all MECHANICS (pos is normalized, so works for HILL too)
+//        //     * */
+//        //    if (mind.parms.lim_bias < -10.0d) mind.parms.lim_bias = -10.0d;
+//        //    if (mind.parms.lim_bias > 0.0d) mind.parms.lim_bias = 0.0d;
 
-//            double pos = mind.calc.NormalizeRange(mom, mom_min, mom_max, 0.0d, 10.0d);
+//        //    double pos = mind.calc.NormalizeRange(mom, mom_min, mom_max, 0.0d, 10.0d);
 
-//            //higher bias less no(contest)
-//            double index = pos + mind.parms.lim_bias;
-//            min = index < min ? index : min;
-//            max = index > max ? index : max;
+//        //    //higher bias less no(contest)
+//        //    double index = pos + mind.parms.lim_bias;
+//        //    min = index < min ? index : min;
+//        //    max = index > max ? index : max;
 
-//            return index;
-//        }
+//        //    return index;
+//        //}
 
-//        public double Simple()//bias, hard limit
-//        {
-//            /*
-//             * for a long time this was the solution used
-//             * bias: some value, close to 0.0
-//             * */
-//            double bias = 0.12345;
-//            bool ok = mind.parms._mech.momentum < bias;
+//        //public double Simple()//bias, hard limit
+//        //{
+//        //    /*
+//        //     * for a long time this was the solution used
+//        //     * bias: some value, close to 0.0
+//        //     * */
+//        //    double bias = 0.12345;
+//        //    bool ok = mind.parms._mech.momentum < bias;
 
-//            return ok ? 1.0d : 0.0d;
-//        }
+//        //    return ok ? 1.0d : 0.0d;
+//        //}
 
-//        public double Sigmoid()//sigmoid, limitter
-//        {
-//            double index = GetIndex();
+//        //public double Sigmoid()//sigmoid, limitter
+//        //{
+//        //    double index = GetIndex();
 
-//            double _x = mind.calc.NormalizeRange(index, min - 0.1d, max + 0.1d, -6.0d, 6.0d);
-//            double _y = 1.0d - mind.calc.Logistic(_x);
+//        //    double _x = mind.calc.NormalizeRange(index, min - 0.1d, max + 0.1d, -6.0d, 6.0d);
+//        //    double _y = 1.0d - mind.calc.Logistic(_x);
 
-//            if (double.IsNaN(_y))
-//                throw new Exception();
+//        //    if (double.IsNaN(_y))
+//        //        throw new Exception();
 
-//            limit_result = _y;
+//        //    limit_result = _y;
 
-//            //double res = mind.calc.NormalizeRange(_y, 0.0d, 1.0d, mind.parms.base_friction / 2, mind.parms.base_friction);
+//        //    //double res = mind.calc.NormalizeRange(_y, 0.0d, 1.0d, mind.parms.base_friction / 2, mind.parms.base_friction);
 
-//            //limit_result = res;
+//        //    //limit_result = res;
 
-//            return limit_result;
-//        }
+//        //    return limit_result;
+//        //}
 
-//        public double Chance()//sigmoid, elastic
-//        {
-//            double index = GetIndex();
+//        //public double Chance()//sigmoid, elastic
+//        //{
+//        //    double index = GetIndex();
 
-//            double _x = mind.calc.NormalizeRange(index, min - 0.1d, max + 0.1d, -6.0d, 6.0d);
-//            double _y = 1.0d - mind.calc.Logistic(_x);
+//        //    double _x = mind.calc.NormalizeRange(index, min - 0.1d, max + 0.1d, -6.0d, 6.0d);
+//        //    double _y = 1.0d - mind.calc.Logistic(_x);
 
-//            if (double.IsNaN(_y))
-//                throw new Exception();
+//        //    if (double.IsNaN(_y))
+//        //        throw new Exception();
 
-//            bool go_up = mind.calc.Chance0to1(_y, false);
+//        //    bool go_up = mind.calc.Chance0to1(_y, false);
 
-//            return go_up ? 1.0d : 0.0d;
-//        }
+//        //    return go_up ? 1.0d : 0.0d;
+//        //}
 
-//        public double LearningRate(double learningrate, double correction) //making learningrate variable
-//        {
-//            learn_result = learningrate * correction;
+//        //public double LearningRate(double learningrate, double correction) //making learningrate variable
+//        //{
+//        //    learn_result = learningrate * correction;
 
-//            if (learn_result > 1.0d)
-//                learn_result = 1.0d;
-//            if (learn_result < 0.0d)
-//                learn_result = 0.0d;
+//        //    if (learn_result > 1.0d)
+//        //        learn_result = 1.0d;
+//        //    if (learn_result < 0.0d)
+//        //        learn_result = 0.0d;
 
-//            return learn_result;
-//        }
+//        //    return learn_result;
+//        //}
 
 
 

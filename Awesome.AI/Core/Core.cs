@@ -19,12 +19,64 @@ namespace Awesome.AI.Core
              * this is the Go/NoGo class
              * actually not part of the algorithm
              * */
+
+            pain = 0.0d;
+            bool ok;
+            switch (mind.mech)
+            {
+                case MECHANICS.CONTEST: 
+                    ok = ReciprocalOK(mind.pos.Pos, out pain);
+                    return ok;
+                case MECHANICS.HILL: 
+                    ok = ReciprocalOK(mind.parms._mech.POS_XY, out pain);
+                    return ok;
+                case MECHANICS.GRAVITY:
+                    ok = EventHorizonOK(mind.pos.Pos, out pain);
+                    return ok;
+                default: throw new Exception();
+            }            
+        }
+
+        public double LimitterFriction(bool is_static, double credits, double shift)
+        {
+            /*
+             * friction coeficient
+             * should friction be calculated from position???
+             * */
+
+            if (is_static)
+                return mind.parms.base_friction;
+
+            Calc calc = mind.calc;
+
+            double x = 5.0d - credits + shift;
+            double friction = calc.Logistic(x);
+
+            return friction;
+        }
+
+        public double LimitterStandard(bool is_static, double credits, double shift)
+        {
+            if (is_static)
+                return mind.parms.base_friction;
+
+            Calc calc = mind.calc;
+
+            double x = 5.0d - credits + shift;
+            double limit = calc.Logistic(x);
+
+            return limit;
+        }
+
+        public bool ReciprocalOK(double pos, out double pain)
+        {
             try
             {
-                double _e = mind.parms._mech.Result();
+                double _e = pos;
+
                 pain = mind.calc.Reciprocal(_e);
 
-                if (pain > 1000.0)
+                if (pain > 10.0)
                     throw new Exception();
 
                 return pain < mind.parms.max_pain;
@@ -32,6 +84,26 @@ namespace Awesome.AI.Core
             catch (Exception e)//thats it
             {
                 pain = mind.parms.max_pain;
+                return false;
+            }
+        }
+
+        public bool EventHorizonOK(double pos, out double pain)
+        {
+            try
+            {
+                double _e = pos;
+
+                pain = mind.calc.EventHorizon(_e);
+
+                if (pain <= 0.0)
+                    throw new Exception();
+
+                return pain < mind.parms.max_pain;
+            }
+            catch (Exception e)//thats it
+            {
+                pain = 0.0d;
                 return false;
             }
         }
@@ -77,8 +149,8 @@ namespace Awesome.AI.Core
             }
 
             mind.curr_unit.credits -= 1.0d;
-            if (mind.curr_unit.credits < 0.0d)
-                mind.curr_unit.credits = 0.0d;
+            if (mind.curr_unit.credits < Constants.LOW_CREDIT)
+                mind.curr_unit.credits = Constants.LOW_CREDIT;
         }
         
         

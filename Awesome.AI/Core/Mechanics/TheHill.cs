@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.CoreHelpers;
 using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Web.AI.Common;
@@ -18,25 +17,44 @@ namespace Awesome.AI.Core.Mechanics
         public double posx_high { get; set; } = -1000.0d;
         public double posx_low { get; set; } = 1000.0d;
         
-        //private double a { get { return mind.parms.hill_a; } }//-0.1d;
-        //private double b { get { return mind.parms.hill_b; } }//0.0d;
-        //private double c { get { return mind.parms.hill_c; } }//10.0d;
         public double res_x_prev { get; set; } = 0;
-
-        public double POS_X { get; set; }
-        public Direction dir { get; set; }
-
+                
         private TheMind mind;
         private _TheHill() { }
-        public _TheHill(Params parms)
+        public _TheHill(TheMind mind, Params parms)
         {
-            this.mind = parms.mind;
-            dir = new Direction(parms.mind) { d_momentum = 0.0d };
+            this.mind = mind;
             
-            POS_X = parms.pos_x_start;//10;
+            posxy = Constants.STARTXY;//10;
+        }        
+
+        private double posxy { get; set; }
+        public double POS_XY
+        {
+            get
+            {
+                //its a hack, yes its cheating..
+                double boost = mind.parms.boost;
+
+                if (mind.goodbye.IsNo())
+                    posxy = Constants.STARTXY + (boost * momentum);
+                else
+                    posxy += (boost * momentum);
+
+                //POS_X = 10.0d + (boost * momentum);
+
+                if (posxy < Constants.LOWXY)
+                    posxy = Constants.LOWXY;
+                if (posxy > Constants.HIGHXY)
+                    posxy = Constants.HIGHXY;
+
+                if (posxy <= posx_low) posx_low = posxy;
+                if (posxy > posx_high) posx_high = posxy;
+
+                return 10.0d - posxy;
+            }
         }
 
-        
         //Weight
         public double Variable(UNIT _c)
         {
@@ -54,44 +72,12 @@ namespace Awesome.AI.Core.Mechanics
 
             double earth_gravity = Constants.GRAVITY;
             double mass = mind.parms.mass;
-            double percent = mind.calc.NormalizeRange(_c.HighAtZero, 0.0d, mind.parms.max_index, 0.0d, 1.0d);
+            double percent = _c.HighAtZero / 100.0d;
+            //double percent = mind.calc.NormalizeRange(_c.HighAtZero, 0.0d, 100.0d, 0.0d, 1.0d);
 
             double res = (mass * earth_gravity) * percent;
 
             return res;
-        }
-
-        public double Result()
-        {
-            double res = 10.0d - POS_X;
-
-            return res;
-        }
-
-        public void Position()
-        {
-            //its a hack, yes its cheating..
-            double boost = mind.parms.boost;
-
-            if(mind.goodbye.IsNo())
-                POS_X = mind.parms.pos_x_start + (boost * momentum);
-            else
-                POS_X += (boost * momentum);
-
-            //POS_X = 10.0d + (boost * momentum);
-
-            if (POS_X < mind.parms.pos_x_low)
-                POS_X = mind.parms.pos_x_low;
-            if (POS_X > mind.parms.pos_x_high)
-                POS_X = mind.parms.pos_x_high;
-
-            if (POS_X <= posx_low) posx_low = POS_X;
-            if (POS_X > posx_high) posx_high = POS_X;
-
-            dir.d_momentum = momentum;
-            dir.d_pos_x = POS_X;
-            
-            dir.Stat();
         }
 
         private double SlopeInDegrees(double x)
@@ -117,7 +103,7 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D calc = new Vector2D();
             Vector2D res, sta = new Vector2D(), dyn = new Vector2D();
 
-            double res_x_save = mind.parms.pos_x_start + res_x_prev;
+            double res_x_save = Constants.STARTXY + res_x_prev;
             double acc_degree = SlopeInDegrees(res_x_save);
 
             sta = ApplyStatic(acc_degree);
@@ -136,8 +122,12 @@ namespace Awesome.AI.Core.Mechanics
             //double acc = res.magnitude;
 
             double m = mind.parms.mass;
-            double dt = DeltaT();
-            double dv = DeltaV(acc, dt);
+            double dt = mind.parms.delta_time;
+
+            //F=m*a
+            //a=dv/dt
+            //dv=a*dt
+            double dv = acc * dt;
 
             //momentum: p = m * v
             momentum = m * dv;
@@ -167,7 +157,7 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D _fN = calc.ToPolar((calc.Add(_static, _N)));
 
             double m = mind.parms.mass;
-            double u = mind.calc.FrictionCoefficient(true, 0.0d, mind.parms.shift);
+            double u = mind.core.LimitterFriction(true, 0.0d, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -197,7 +187,7 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D _dynamic = new Vector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
 
             double m = mind.parms.mass;
-            double u = mind.calc.FrictionCoefficient(false, curr_unit_th.credits, mind.parms.shift);
+            double u = mind.core.LimitterFriction(false, curr_unit_th.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -209,21 +199,21 @@ namespace Awesome.AI.Core.Mechanics
             return _res;
         }
 
-        private double DeltaV(double a, double dt)
-        {
-            //F=m*a
-            //a=dv/dt
-            //dv=a*dt
-            double dv = a * dt;
-            return dv;
-        }
+        //private double DeltaV(double a, double dt)
+        //{
+        //    //F=m*a
+        //    //a=dv/dt
+        //    //dv=a*dt
+        //    double dv = a * dt;
+        //    return dv;
+        //}
 
-        private double DeltaT()
-        {
-            //most of the time this is true
+        //private double DeltaT()
+        //{
+        //    //most of the time this is true
 
-            return 0.002d;
-        }
+        //    return 0.002d;
+        //}
 
         private bool Check(double _a, double _b, double _c)
         {

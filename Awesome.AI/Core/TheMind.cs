@@ -5,7 +5,6 @@ using Awesome.AI.Interfaces;
 using Awesome.AI.Systems;
 using Awesome.AI.Web.AI.Common;
 using Awesome.AI.Web.Helpers;
-using System;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Core
@@ -33,7 +32,9 @@ namespace Awesome.AI.Core
         public Location loc;
         public ChatAnswer chatans;
         public ChatAsk chatask;
-
+        public Direction dir;
+        public Position pos;
+        
         public HUB curr_hub;
         public UNIT curr_unit;
         public UNIT theanswer;
@@ -68,8 +69,6 @@ namespace Awesome.AI.Core
         {
             try
             {
-                Console.BackgroundColor = ConsoleColor.DarkGray;
-
                 this.mech = mech;
                 this.mindtype = mindtype;
 
@@ -87,9 +86,10 @@ namespace Awesome.AI.Core
                 loc = new Location(this, _location);
                 chatans = new ChatAnswer(this, "");
                 chatask = new ChatAsk(this, "");
-
+                dir = new Direction(this);
+                pos = new Position(this);
                 mem = new Memory(this, parms.number_of_units);
-
+                
                 parms.UpdateLowCut();
 
                 //if (mindtype == MINDS.STANDARD)
@@ -104,7 +104,7 @@ namespace Awesome.AI.Core
                 PreRun(true);
                 PostRun(true);
 
-                theanswer = UNIT.Create(this, -1.0d, "I dont Know", "null", "SPECIAL", TYPE.JUSTAUNIT);//set it to "It does not", and the program terminates
+                theanswer = UNIT.Create(this, -1.0d, "I dont Know", "null", "SPECIAL", UNITTYPE.JUSTAUNIT);//set it to "It does not", and the program terminates
             
                 ProcessPass();
                         
@@ -192,7 +192,7 @@ namespace Awesome.AI.Core
 
         private void PreRun(bool _pro)
         {
-            rand.SaveMomentum(parms._mech.dir.d_momentum);
+            rand.SaveMomentum(parms._mech.momentum);
 
             if (_pro)
                 common.Reset();            
@@ -226,11 +226,14 @@ namespace Awesome.AI.Core
                 return true;
 
             mech.Calculate();
-            mech.Position();
+            //mech.Position();//Enums.POSITION.OLD
+
+            dir.Update();
+            pos.Update(_pro);//Enums.POSITION.NEW
 
             //if (curr_hub.IsIDLE())
             //    core.SetTheme(_pro);
-            
+
             if (!core.OK(out pain))
                 return false;
             return true;
@@ -239,14 +242,14 @@ namespace Awesome.AI.Core
         private void TheSoup() 
         {
             curr_hub = curr_unit.HUB;
-            curr_unit = matrix.NextUnit(curr_unit, parms._mech.dir);
+            curr_unit = matrix.NextUnit(curr_unit, dir);
         }
 
         private void Process(bool _pro)
         {
-            process.History(this);
-            process.CommonUnit(this);
-            process.Stats(this, _pro);
+            process.History();
+            process.Common();
+            process.Stats(_pro);
         }
 
         private void Systems(bool _pro)

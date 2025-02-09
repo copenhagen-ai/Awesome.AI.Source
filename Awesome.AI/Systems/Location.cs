@@ -73,7 +73,7 @@ namespace Awesome.AI.Systems
 
             if (hub.subject == "location_what_decision" && LocationState == 1)
             {
-                LocationFinal = mind.parms._mech.dir.Choise.IsNo() ? current.data : LocationFinal;
+                LocationFinal = mind.dir.Choise.IsNo() ? current.data : LocationFinal;
                 LocationFinal = LocationFinal.Replace("WHAT", "");
                 LocationState = 0;
             }

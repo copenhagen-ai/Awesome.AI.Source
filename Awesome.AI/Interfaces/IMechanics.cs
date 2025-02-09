@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.CoreHelpers;
 
 namespace Awesome.AI.Interfaces
 {
@@ -12,14 +11,11 @@ namespace Awesome.AI.Interfaces
         double out_low { get; set; }
         double posx_high { get; set; }
         double posx_low { get; set; }
-        double POS_X { get; set; }
         double momentum { get; set; }
+                
+        double POS_XY { get; }
 
-        Direction dir { get; set; }
-        
         void Calculate();//do calculations
-        void Position();//calculate position of x
-        double Result();//get result of position
         double Variable(UNIT c);//the force, mass, distance, acceleration etc
     }
 }

@@ -62,23 +62,11 @@ namespace Awesome.AI.Common
              * >> this is the hack/cheat <<
              * */
 
-            bool do_hack = mind.parms.hack1 == HACKMODES.HACK;
+            bool do_hack = mind.parms.hack == HACKMODES.HACK;
             if (do_hack)
                 return !_b;
             return _b;
-        }
-
-        public static bool TheHack2(this bool _b, TheMind mind)
-        {
-            /*
-             * >> this is the hack/cheat <<
-             * */
-
-            bool do_hack = mind.parms.hack2 == HACKMODES.HACK;
-            if (do_hack)
-                return !_b;
-            return _b;
-        }
+        }        
 
         public static bool IsYes(this THECHOISE q)
         {
@@ -88,26 +76,6 @@ namespace Awesome.AI.Common
         public static bool IsNo(this THECHOISE q)
         {
             return q == THECHOISE.NO;
-        }
-
-        public static bool IsNOT(this OPINION q)
-        {
-            return q == OPINION.NOT;
-        }
-
-        public static bool IsOK(this OPINION q)
-        {
-            return q == OPINION.OK;
-        }
-
-        public static bool IsNONE(this OPINION q)
-        {
-            return q == OPINION.NONE;
-        }
-
-        public static bool IsEITHER(this OPINION q)
-        {
-            return q == OPINION.NOT || q == OPINION.OK;
         }
 
         //public static string Data(this string value)

@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.CoreHelpers;
 using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
 
@@ -12,35 +11,47 @@ namespace Awesome.AI.Core.Mechanics
          * -  gaspedal/wheel analogy in docs
          * */
 
-        public double velocity { get; set; } = 0.0d;
-
         public double momentum { get; set; } = 0.0d;
-        public double limit_result { get; set; } = 0.0d;
-        public double learn_result { get; set; } = 0.0d;
         public double Fsta { get; set; } = 0.0d;
         public double Fdyn { get; set; } = 0.0d;
         public double out_high { get; set; } = -1000.0d;
         public double out_low { get; set; } = 1000.0d;
         public double posx_high { get; set; } = -1000.0d;
         public double posx_low { get; set; } = 1000.0d;
-        public double res_x { get; set; } = -1.0d;
-        private double min { get; set; } = 1000.0d;
-        private double max { get; set; } = -1000.0d;
-
-        public double POS_X { get; set; } = 10.0d;
-        public Direction dir { get; set; }
-        //public Limitters lim { get; set; }
-
+        
         private TheMind mind;
         private _TheGravity() { }
-        public _TheGravity(Params parms)
+        public _TheGravity(TheMind mind, Params parms)
         {
-            this.mind = parms.mind;
-            dir = new Direction(parms.mind) { d_momentum = 0.0d };
-            //lim = new Limitters(parms.mind);
+            this.mind = mind;
+
+            posxy = Constants.STARTXY;//10;
         }
         
-        //NewtonForce
+        private double posxy { get; set; }
+        public double POS_XY
+        {
+            get 
+            {
+                //its a hack, yes its cheating..
+                double boost = mind.parms.boost;
+
+                posxy = 10.0d + (boost * momentum);//dosnt seem right
+                //posx = posx + (boost * velocity);
+                //posx = 10.0d + (boost * momentum);
+
+                if (posxy < Constants.LOWXY)
+                    posxy = Constants.LOWXY;
+                if (posxy > Constants.HIGHXY)
+                    posxy = Constants.HIGHXY;
+
+                if (posxy <= posx_low) posx_low = posxy;
+                if (posxy > posx_high) posx_high = posxy;
+
+                return posxy;
+            }
+        }
+
         public double Variable(UNIT curr)
         {
             /*
@@ -53,13 +64,12 @@ namespace Awesome.AI.Core.Mechanics
             if (curr.IsIDLE())
                 throw new Exception();
 
-            double dist = curr.LowAtZero;
-            dist = dist == 0.0d ? 1.0E-50 : dist;// jajajaa
-            double mass_m = Vars.zero_mass;
-            double mass_M = mind.parms.mass;
+            double dist = mind.calc.NormalizeRange(curr.LowAtZero, 0.0d, 100.0d, 100000.0d, 1000100.0d);//dist mercury -> sun
+            double mass_M = Vars.zero_mass;
+            double mass_m = mind.parms.mass;
 
             //Gravitational Constant (G)
-            double G = 6.674E-11d;
+            double G = Constants.GRAV_CONST;
 
             // FORMEL: ~F = (G * (m * M) / r^2) * ~r
             double grav = G * ((mass_m * mass_M) / (dist * dist));
@@ -67,143 +77,300 @@ namespace Awesome.AI.Core.Mechanics
             return grav;
         }
 
-        public double Result()
-        {
-            double res = POS_X;
-
-            return res;
-        }
-
-        public void Position()
-        {
-            //its a hack, yes its cheating..
-            double boost = mind.parms.boost;
-
-            POS_X = 10.0d + (boost * momentum);//dosnt seem right
-            //POS_X = POS_X + (boost * velocity);
-            //POS_X = 10.0d + (boost * momentum);
-
-            if (POS_X < mind.parms.pos_x_low)
-                POS_X = mind.parms.pos_x_low;
-            if (POS_X > mind.parms.pos_x_high)
-                POS_X = mind.parms.pos_x_high;
-
-            if (POS_X <= posx_low) posx_low = POS_X;
-            if (POS_X > posx_high) posx_high = POS_X;
-
-            dir.d_momentum = momentum;
-            dir.d_pos_x = POS_X;
-
-            dir.Stat();
-        }
-
-
+        private List<double> cred = new List<double>();
+        private List<double> lim = new List<double>();
+        private double velocity = 0;
         public void Calculate()
         {
-            bool reset = velocity >= 0.0d; //maybe 0.666 * max_velocity
+            /*
+             * I know its not using a black hole, but it should be the same principle outside the event horizon???
+             * */
 
-            //if(reset)
-            //    velocity = 0.0d;
+            double max = mind.common.HighestForce().Variable;
+            double sta_lim = mind.core.LimitterStandard(true, 0.0d, 0.0d);
+            double dyn_lim = mind.core.LimitterStandard(false, mind.curr_unit.credits, mind.parms.shift);
+            double sta_force = 10E-10 * max;
+            double dyn_force = 10E-10 * (max - mind.curr_unit.Variable);
 
-            //if (reset)  //car left
-            Fsta = ApplyStatic();
+            double Fnet = (sta_force * sta_lim) - (dyn_force * dyn_lim);
+            double m = mind.parms.mass;
+            double dt = mind.parms.delta_time;      //delta time
 
-            //car right
-            if (mind.goodbye.IsNo())
-                Fdyn = ApplyDynamic();
+            //F=m*a
+            //a=dv/dt
+            //F=(m*dv)/dt
+            //F*dt=m*dv
+            //dv=(F*dt)/m
+            double dv = (Fnet * dt) / m;            //delta velocity
+
+            velocity = dv;
 
             //momentum: p = m * v
-            momentum = (mind.parms.mass * 2) * velocity;
+            momentum = (m) * velocity;
 
             if (momentum <= out_low) out_low = momentum;
             if (momentum > out_high) out_high = momentum;
 
             if (double.IsNaN(velocity))
                 throw new Exception();
+
+            cred.Add(mind.curr_unit.credits);
+            lim.Add(dyn_lim);
+
+            if (cred.Count > 50)
+                cred.RemoveAt(0);
+
+            if (lim.Count > 50)
+                lim.RemoveAt(0);
+
+
+
+
+
+            ////car left
+            //Fsta = ApplyStatic();
+
+            ////car right
+            //Fdyn = ApplyDynamic();
+
+            //double Fnet = mind.goodbye.IsNo() ? -Fsta + Fdyn : -Fsta;
+            //double m = mind.parms.mass;
+            //double dt = mind.parms.delta_time;                             //delta time, 1sec/500cyc
+
+            ////F=m*a
+            ////a=dv/dt
+            ////F=(m*dv)/dt
+            ////F*dt=m*dv
+            ////dv=(F*dt)/m
+            //double dv = (Fnet * dt) / m;
+
+            //velocity += dv;
+
+            ////momentum: p = m * v
+            //momentum = (m) * velocity;
+
+            //if (momentum <= out_low) out_low = momentum;
+            //if (momentum > out_high) out_high = momentum;
+
+            //if (double.IsNaN(velocity))
+            //    throw new Exception();
+
+
+
+
+
+
+
+            ////car left
+            //Fsta = ApplyStatic();
+
+            ////car right
+            //if (mind.goodbye.IsNo())
+            //    Fdyn = ApplyDynamic();
+
+            ////momentum: p = m * v
+            //momentum = (mind.parms.mass * 2) * velocity;
+
+            //if (momentum <= out_low) out_low = momentum;
+            //if (momentum > out_high) out_high = momentum;
+
+            //if (double.IsNaN(velocity))
+            //    throw new Exception();
         }
 
-        /*
-         * car left
-         * */
-        public double ApplyStatic()
-        {
-            double force = mind.common.HighestForce().Variable;
-            //double limit = lim.Limit(true);
+        /////*
+        //// * car left
+        //// * */
+        //public double ApplyStatic()
+        //{
+        //    double force = mind.common.HighestForce().Variable;
+        //    //double limit = lim.Limit(true);
 
-            double F = force;                       //force, left
-            double m = mind.parms.mass;
-            double dt = DeltaT();                   //delta time
-            double dv = DeltaV(F, m, dt) * 0.5d;// limit;   //delta velocity
+        //    double F = force * mind.calc.ForceLimit(true, 0.0d, 0.0d);                       //force, left
+        //    double m = Vars.zero_mass;
+        //    double dt = mind.parms.delta_time;                                               //delta time
 
-            velocity -= dv;
-
-            return dv;
-        }
-
-        /*
-         * car right
-         * */
-        public double ApplyDynamic()
-        {
-            UNIT curr_unit_th = mind.curr_unit;
+        //    //F=m*a
+        //    //a=dv/dt
+        //    //F=(m*dv)/dt
+        //    //F*dt=m*dv
+        //    //dv=(F*dt)/m
+        //    double dv = (F * dt) / m;                                                        //delta velocity
             
-            if (curr_unit_th.IsNull())
-                throw new Exception();
+        //    //velocity -= dv;
 
-            bool first_run = false;
-            if (mind.cycles_all <= mind.parms.first_run)
-                first_run = true;
+        //    return dv;
+        //}
 
-            double max = mind.common.HighestForce().Variable;
-            double force = max - curr_unit_th.Variable;
-            //double limit = first_run ? 0.5d : lim.Limit(false);
+        ///*
+        // * car right
+        // * */
+        //public double ApplyDynamic()
+        //{
+        //    UNIT curr_unit_th = mind.curr_unit;
 
-            double F = force;                       //force, right
-            double m = mind.parms.mass;
-            double dt = DeltaT();                   //delta time
-            double dv = DeltaV(F, m, dt) * 0.5d;// limit;   //delta velocity
+        //    if (curr_unit_th.IsNull())
+        //        throw new Exception();
 
-            //if (goodbye.IsNo())
-            //if (goodbye.IsNo() && momentum < 0.0d)
-                velocity += dv;
+        //    //bool first_run = false;
+        //    //if (mind.cycles_all <= mind.parms.first_run)
+        //    //    first_run = true;
 
-            return dv;
-        }/**/
+        //    double max = mind.common.HighestForce().Variable;
+        //    double force = max - curr_unit_th.Variable * mind.calc.ForceLimit(false, curr_unit_th.credits, mind.parms.shift);
+        //    //double limit = first_run ? 0.5d : lim.Limit(false);
 
-        private double DeltaV(double F, double m, double dt)
-        {
-            //F=m*a
-            //a=dv/dt
-            //F=(m*dv)/dt
-            //F*dt=m*dv
-            //dv=(F*dt)/m
-            double dv = (F * dt) / m;
-            return dv;
-        }
+        //    double F = force;                       //force, right
+        //    double m = mind.parms.mass;
+        //    double dt = mind.parms.delta_time;      //delta time
 
-        private double DeltaT()
-        {
-            //most of the time this is true
+        //    //F=m*a
+        //    //a=dv/dt
+        //    //F=(m*dv)/dt
+        //    //F*dt=m*dv
+        //    //dv=(F*dt)/m
+        //    double dv = (F * dt) / m;               //delta velocity
 
-            double x = mind.parms.micro_sec;
-            double dt = x / 1000000.0d;
-            return dt;
-        }
+        //    //if (goodbye.IsNo())
+        //    //if (goodbye.IsNo() && momentum < 0.0d)
+        //    //velocity += dv;
 
-        private void Reset(TheMind mind)
-        {
-            if (mind.cycles_all % 25000 != 0)
-                return;
+        //    return dv;
+        //}/**/
 
-            out_low *= 0.5d;
-            out_high *= 0.5d;
+        //NewtonForce
+        //public double Variable(UNIT curr)
+        //{
+        //    /*
+        //     * I guess this is a changeable function, for now it is just the one I know to calculate force
+        //     * */
 
-            posx_low *= 0.5d;
-            posx_high *= 0.5d;
+        //    if (curr.IsNull())
+        //        throw new Exception();
 
-            min *= 0.5d;
-            max *= 0.5d;
-        }
+        //    if (curr.IsIDLE())
+        //        throw new Exception();
+
+        //    double dist = curr.LowAtZero;
+        //    dist = dist == 0.0d ? 1.0E-50 : dist;// jajajaa
+        //    double mass_m = Vars.zero_mass;
+        //    double mass_M = mind.parms.mass;
+
+        //    //Gravitational Constant (G)
+        //    double G = 6.674E-11d;
+
+        //    // FORMEL: ~F = (G * (m * M) / r^2) * ~r
+        //    double grav = G * ((mass_m * mass_M) / (dist * dist));
+
+        //    return grav;
+        //}
+
+        //public void Calculate()
+        //{
+        //    bool reset = velocity >= 0.0d; //maybe 0.666 * max_velocity
+
+        //    //if(reset)
+        //    //    velocity = 0.0d;
+
+        //    //if (reset)  //car left
+        //    Fsta = ApplyStatic();
+
+        //    //car right
+        //    if (mind.goodbye.IsNo())
+        //        Fdyn = ApplyDynamic();
+
+        //    //momentum: p = m * v
+        //    momentum = (mind.parms.mass * 2) * velocity;
+
+        //    if (momentum <= out_low) out_low = momentum;
+        //    if (momentum > out_high) out_high = momentum;
+
+        //    if (double.IsNaN(velocity))
+        //        throw new Exception();
+        //}
+
+        ///*
+        // * car left
+        // * */
+        //public double ApplyStatic()
+        //{
+        //    double force = mind.common.HighestForce().Variable;
+        //    //double limit = lim.Limit(true);
+
+        //    double F = force;                       //force, left
+        //    double m = mind.parms.mass;
+        //    double dt = DeltaT();                   //delta time
+        //    double dv = DeltaV(F, m, dt) * 0.5d;// limit;   //delta velocity
+
+        //    velocity -= dv;
+
+        //    return dv;
+        //}
+
+        ///*
+        // * car right
+        // * */
+        //public double ApplyDynamic()
+        //{
+        //    UNIT curr_unit_th = mind.curr_unit;
+
+        //    if (curr_unit_th.IsNull())
+        //        throw new Exception();
+
+        //    bool first_run = false;
+        //    if (mind.cycles_all <= mind.parms.first_run)
+        //        first_run = true;
+
+        //    double max = mind.common.HighestForce().Variable;
+        //    double force = max - curr_unit_th.Variable;
+        //    //double limit = first_run ? 0.5d : lim.Limit(false);
+
+        //    double F = force;                       //force, right
+        //    double m = mind.parms.mass;
+        //    double dt = DeltaT();                   //delta time
+        //    double dv = DeltaV(F, m, dt) * 0.5d;// limit;   //delta velocity
+
+        //    //if (goodbye.IsNo())
+        //    //if (goodbye.IsNo() && momentum < 0.0d)
+        //        velocity += dv;
+
+        //    return dv;
+        //}/**/
+
+        //private double DeltaV(double F, double m, double dt)
+        //{
+        //    //F=m*a
+        //    //a=dv/dt
+        //    //F=(m*dv)/dt
+        //    //F*dt=m*dv
+        //    //dv=(F*dt)/m
+        //    double dv = (F * dt) / m;
+        //    return dv;
+        //}
+
+        //private double DeltaT()
+        //{
+        //    //most of the time this is true
+
+        //    double x = mind.parms.micro_sec;
+        //    double dt = x / 1000000.0d;
+        //    return dt;
+        //}
+
+        //private void Reset(TheMind mind)
+        //{
+        //    if (mind.cycles_all % 25000 != 0)
+        //        return;
+
+        //    out_low *= 0.5d;
+        //    out_high *= 0.5d;
+
+        //    posx_low *= 0.5d;
+        //    posx_high *= 0.5d;
+
+        //    min *= 0.5d;
+        //    max *= 0.5d;
+        //}
     }
 }
 

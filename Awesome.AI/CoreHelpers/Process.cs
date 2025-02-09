@@ -5,12 +5,11 @@ namespace Awesome.AI.CoreHelpers
 {
     public class Process
     {
-        //public List<HUB> h_history = new List<HUB>();
-        //public HUB[] most_common_hubs = new HUB[3];// this is statistics
-        //public List<UNIT> stream = new List<UNIT>();// this is the upfront stream
+        public UNIT most_common_unit;
 
-        public List<UNIT> u_history = new List<UNIT>();
-        public UNIT most_common_unit = null;// this is statistics
+        private List<UNIT> u_history = new List<UNIT>();
+        private List<string> remember = new List<string>();
+        private Dictionary<string, int> hits = new Dictionary<string, int>();
 
         private TheMind mind;
         private Process() { }
@@ -19,50 +18,41 @@ namespace Awesome.AI.CoreHelpers
             this.mind = mind;
         }
 
-        public void History(TheMind mind)
+        public void History()
         {
-            if (mind == null)
-                throw new ArgumentNullException();
-
-            //if (mind.curr_unit.IsLEARNINGorPERSUE())
-            //    return;
-
             if (mind.curr_unit.IsIDLE())
                 return;
 
-            //if (mind.curr_unit.IsDECISION())
-            //    return;
-
-            //AddHistoryHUB(mind.curr_unit.HUB);
-            //AddHistoryUnít(mind.curr_unit);
+            if (!u_history.Any())
+            {
+                u_history.Add(mind.mem.UNIT_RND(1));
+                u_history.Add(mind.mem.UNIT_RND(2));
+                u_history.Add(mind.mem.UNIT_RND(3));
+            }
 
             u_history.Insert(0, mind.curr_unit);
             if (u_history.Count > mind.parms.hist_total)
                 u_history.RemoveAt(u_history.Count - 1);
         }
 
-        public void CommonUnit(TheMind mind)
+        public void Common()
         {
-            if (mind == null)
-                throw new Exception();
-
-            if (u_history == null)
-                throw new Exception();
-
-            most_common_unit = u_history.GroupBy(x => x).OrderByDescending(x => x.Count()).Select(x => x.Key).FirstOrDefault();
-        }
-
-        private List<string> remember = new List<string>();
-        private Dictionary<string, int> hits = new Dictionary<string, int>();
-        public void Stats(TheMind mind, bool _pro)
-        {
-            if (mind.IsNull())
-                throw new Exception();
-
-            if (most_common_unit.IsNull())
+            if (u_history.IsNullOrEmpty())
                 return;
 
+            most_common_unit = u_history
+                .GroupBy(x => x)
+                .OrderByDescending(x => x.Count())
+                .Select(x => x.Key)
+                .First();
+        }
+
+        public void Stats(bool _pro)
+        {
             if (!_pro)
+                return;
+
+            if (most_common_unit.IsNull())
                 return;
 
             Stats stats = new Stats();
