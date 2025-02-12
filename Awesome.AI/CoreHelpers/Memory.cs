@@ -165,23 +165,23 @@ namespace Awesome.AI.CoreHelpers
             int count2 = 1;
 
             TONE tone;
-            tone = mind.mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
             count1 = UnitsDecide(location_should_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[0], location_should_decision, UNITTYPE.DECISION, count2, tone);
 
-            tone = mind.mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.POSITIVE;
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.POSITIVE;
             count1 = UnitsDecide(location_what_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[1], location_what_decision, UNITTYPE.DECISION, count2, tone);
 
-            tone = mind.mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
             count1 = UnitsDecide(answer_should_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[2], answer_should_decision, UNITTYPE.DECISION, count2, tone);
 
-            tone = mind.mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.NEGATIVE;
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.NEGATIVE;
             count1 = UnitsDecide(answer_what_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[3], answer_what_decision, UNITTYPE.DECISION, count2, tone);
 
-            tone = mind.mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
             count1 = UnitsDecide(ask_should_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[4], ask_should_decision, UNITTYPE.DECISION, count2, tone);
 

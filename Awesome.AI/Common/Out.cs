@@ -52,14 +52,14 @@ namespace Awesome.AI.Web.AI.Common
         {
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            momentum = $"{mind.parms._mech.momentum.ToString("E3")}";
+            momentum = $"{mind.mech.momentum.ToString("E3")}";
 
             pain = $"{mind.pain}";
-            if (mind.mech == MECHANICS.HILL)
-                position = $"{mind.parms._mech.POS_XY}";
-            if (mind.mech == MECHANICS.CONTEST)
+            if (mind._mech == MECHANICS.HILL)
+                position = $"{mind.mech.POS_XY}";
+            if (mind._mech == MECHANICS.CONTEST)
                 position = $"{mind.pos.Pos}";
-            if (mind.mech == MECHANICS.GRAVITY)
+            if (mind._mech == MECHANICS.GRAVITY)
                 position = $"{mind.pos.Pos}";
             ratio_yes = $"{mind.dir.Count(THECHOISE.YES)}";
             ratio_no = $"{mind.dir.Count(THECHOISE.NO)}";

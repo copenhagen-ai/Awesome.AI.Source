@@ -40,7 +40,7 @@ namespace Awesome.AI.Common
                 if (_f != -1d)
                     return _f;
 
-                IMechanics _mech = mind.parms.GetMechanics();
+                IMechanics _mech = mind.mech;
                 _f = _mech.Variable(this);
                 return _f;
             }

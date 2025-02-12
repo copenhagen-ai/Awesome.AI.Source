@@ -38,13 +38,13 @@ namespace Awesome.AI.Systems
              *         OCCU = OCCU
              */
 
-            if (!mind.curr_unit.IsDECISION())
+            if (!_pro)
                 return;
 
             if (mind.epochs < 5)
                 return;
 
-            if (!_pro)
+            if (!mind.curr_unit.IsDECISION())
                 return;
 
             UNIT current = mind.curr_unit;

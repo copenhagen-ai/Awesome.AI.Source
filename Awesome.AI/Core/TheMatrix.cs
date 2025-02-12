@@ -111,7 +111,7 @@ namespace Awesome.AI.Core
 
         private double NearEnergy(Direction dir)
         {
-            IMechanics mech = mind.parms.GetMechanics(MECHANICS.NONE);
+            IMechanics mech = mind.mech;
             double f_h = mind.common.HighestForce().Variable;
             double f_l = mind.common.LowestForce().Variable;
 
@@ -126,7 +126,7 @@ namespace Awesome.AI.Core
 
         private double NearPercent(Direction dir)
         {
-            IMechanics mech = mind.parms.GetMechanics(MECHANICS.NONE);
+            IMechanics mech = mind.mech;
 
             double _v = mech.momentum;
             double v_h = mech.out_high;

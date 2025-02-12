@@ -31,7 +31,7 @@ namespace Awesome.AI.CoreHelpers
              * "NO", is to say no to going downwards
              * */
             
-            bool is_low = mind.parms._mech.momentum <= 0.0d;
+            bool is_low = mind.mech.momentum <= 0.0d;
 
             Choise = is_low.TheHack1(mind) ? THECHOISE.NO : THECHOISE.YES;
         }

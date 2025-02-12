@@ -1,7 +1,4 @@
-﻿using Awesome.AI.CoreHelpers;
-using static Awesome.AI.Helpers.Enums;
-
-namespace Awesome.AI.Helpers
+﻿namespace Awesome.AI.Helpers
 {
     public class Constants
     {

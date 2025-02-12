@@ -22,13 +22,13 @@ namespace Awesome.AI.Core
 
             pain = 0.0d;
             bool ok;
-            switch (mind.mech)
+            switch (mind._mech)
             {
                 case MECHANICS.CONTEST: 
                     ok = ReciprocalOK(mind.pos.Pos, out pain);
                     return ok;
                 case MECHANICS.HILL: 
-                    ok = ReciprocalOK(mind.parms._mech.POS_XY, out pain);
+                    ok = ReciprocalOK(mind.mech.POS_XY, out pain);
                     return ok;
                 case MECHANICS.GRAVITY:
                     ok = EventHorizonOK(mind.pos.Pos, out pain);
@@ -132,7 +132,6 @@ namespace Awesome.AI.Core
 
         public void UpdateCredit()
         {
-            //List<UNIT> list = mind.mem.UNITS_VAL();
             List<UNIT> list = mind.mem.UNITS_ALL();
 
             //this could be a problem with many hubs

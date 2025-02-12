@@ -39,8 +39,10 @@ namespace Awesome.AI.Core
         public UNIT curr_unit;
         public UNIT theanswer;
 
+        public IMechanics mech = null;
+
         public MINDS mindtype;
-        public MECHANICS mech;
+        public MECHANICS _mech;
         public THECHOISE goodbye = THECHOISE.NO;
 
         private bool do_process = false;
@@ -65,14 +67,14 @@ namespace Awesome.AI.Core
         public List<KeyValuePair<string, int>> themes_stat = new List<KeyValuePair<string, int>>();
         public Stats stats = new Stats();
         
-        public TheMind(MECHANICS mech, MINDS mindtype, string _location)
+        public TheMind(MECHANICS m, MINDS mindtype, string _location)
         {
             try
             {
-                this.mech = mech;
+                this._mech = m;
                 this.mindtype = mindtype;
 
-                parms = new Params(this, mech);
+                parms = new Params(this);
                 common = new Common.Common(this);
                 matrix = new TheMatrix(this);
                 calc = new Calc(this);
@@ -90,6 +92,7 @@ namespace Awesome.AI.Core
                 pos = new Position(this);
                 mem = new Memory(this, parms.number_of_units);
                 
+                mech = parms.GetMechanics(_mech);
                 parms.UpdateLowCut();
 
                 //if (mindtype == MINDS.STANDARD)
@@ -192,7 +195,7 @@ namespace Awesome.AI.Core
 
         private void PreRun(bool _pro)
         {
-            rand.SaveMomentum(parms._mech.momentum);
+            rand.SaveMomentum(mech.momentum);
 
             if (_pro)
                 common.Reset();            
@@ -217,8 +220,6 @@ namespace Awesome.AI.Core
             cycles++;
             cycles_all++;
 
-            IMechanics mech = parms.GetMechanics(MECHANICS.NONE);
-
             core.UpdateCredit();
             core.AnswerQuestion();
             
@@ -226,8 +227,6 @@ namespace Awesome.AI.Core
                 return true;
 
             mech.Calculate();
-            //mech.Position();//Enums.POSITION.OLD
-
             dir.Update();
             pos.Update(_pro);//Enums.POSITION.NEW
 
