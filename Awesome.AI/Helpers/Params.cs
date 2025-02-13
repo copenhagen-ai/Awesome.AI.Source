@@ -68,8 +68,7 @@ namespace Awesome.AI.Helpers
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
                     case_occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
-                    hack = HACKMODES.NOHACK;
-                    mech = MECHANICS.GRAVITY;
+                    hack = HACKMODES.NOHACK;                                            //not used any more
                     matrix_type = MATRIX.GPT;
 
                     //earth mass:               5.972×10^24 kg
@@ -104,9 +103,8 @@ namespace Awesome.AI.Helpers
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                    case_occupasion = OCCUPASION.DYNAMIC;                                 //used with OCCU and BOTH
-                    hack = HACKMODES.NOHACK;
-                    mech = MECHANICS.CONTEST;
+                    case_occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
+                    hack = HACKMODES.NOHACK;                                            //not used any more
                     matrix_type = MATRIX.GPT;
                                                                                                 
                     high_at_zero = true;
@@ -134,8 +132,7 @@ namespace Awesome.AI.Helpers
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS
                     case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
                     case_occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
-                    hack = HACKMODES.HACK;
-                    mech = MECHANICS.HILL;
+                    hack = HACKMODES.NOHACK;                                            //not used any more
                     matrix_type = MATRIX.GPT;
 
                     Vars.var_a = -0.1d;
@@ -183,8 +180,7 @@ namespace Awesome.AI.Helpers
         public VALIDATION validation;      
         public TAGS case_tags;                                               //used with WORLD and BOTH
         public OCCUPASION case_occupasion;                                   //used with SELF and BOTH
-        public HACKMODES hack;        
-        public MECHANICS mech;
+        public HACKMODES hack;
         public MATRIX matrix_type;
 
 

@@ -17,7 +17,7 @@ namespace Awesome.AI.Core.Mechanics
         public double posx_high { get; set; } = -1000.0d;
         public double posx_low { get; set; } = 1000.0d;
         
-        public double res_x_prev { get; set; } = 0;
+        public double res_x { get; set; } = 5.0d;
                 
         private TheMind mind;
         private _TheHill() { }
@@ -103,8 +103,8 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D calc = new Vector2D();
             Vector2D res, sta = new Vector2D(), dyn = new Vector2D();
 
-            double res_x_save = Constants.STARTXY + res_x_prev;
-            double acc_degree = SlopeInDegrees(res_x_save);
+            //double res_x_save = Constants.STARTXY + res_x_prev;
+            double acc_degree = SlopeInDegrees(res_x);
 
             sta = ApplyStatic(acc_degree);
             
@@ -112,8 +112,11 @@ namespace Awesome.AI.Core.Mechanics
                 dyn = ApplyDynamic(acc_degree);
 
             res = calc.Add(sta, dyn);
-            res_x_prev = res.xx;
+            res_x = res.xx;
             res = calc.ToPolar(res);
+
+            if (res_x < 0.0d) res_x = 0.0d;
+            if (res_x > 10.0d) res_x = 10.0d;
 
             double acc = res.yy < 0.0d ? res.magnitude : -res.magnitude;
             //double acc = res.theta_in_degrees < 0.0d ? res.magnitude : -res.magnitude;
@@ -129,8 +132,10 @@ namespace Awesome.AI.Core.Mechanics
             //dv=a*dt
             double dv = acc * dt;
 
-            //momentum: p = m * v
             momentum = m * dv;
+
+            //velocity = dv;
+            //momentum: p = m * v
             //momentum += m * velocity;
             //momentum += m * dv;
             //velocity += dv;
@@ -187,7 +192,7 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D _dynamic = new Vector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
 
             double m = mind.parms.mass;
-            double u = mind.core.LimitterFriction(false, curr_unit_th.credits, mind.parms.shift);
+            double u = mind.core.LimitterFriction(false, curr_unit_th.credits, 2.0d);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
