@@ -130,7 +130,7 @@ namespace Awesome.AI.Systems
                             occu = areas[index[0]];
 
                             if (occu == null)
-                                throw new Exception();
+                                throw new Exception("Occu");
 
                             //if (occu.name == "should_decision")
                             //    throw new Exception();
@@ -144,7 +144,7 @@ namespace Awesome.AI.Systems
 
                             break;
                         default:
-                            throw new Exception();
+                            throw new Exception("Occu");
                     }
 
                     epoch_count++;
@@ -157,7 +157,7 @@ namespace Awesome.AI.Systems
         public bool Valid(UNIT _u)
         {
             if (_u.IsNull())
-                throw new Exception();
+                throw new Exception("Valid");
 
             //if (_u.IsLEARNINGorPERSUE())
             //    return true;
@@ -193,11 +193,11 @@ namespace Awesome.AI.Systems
         public void AddHUB(HUB hub, string name)
         {
             if (hub.IsNull())
-                throw new Exception();
+                throw new Exception("AddHUB");
 
             Area _a = areas.Where(x => x.name == name).FirstOrDefault();
             if (_a.IsNull())
-                throw new Exception();
+                throw new Exception("AddHUB");
 
             _a.values.Add(hub);
         }
@@ -210,7 +210,7 @@ namespace Awesome.AI.Systems
              * */
 
             if (last.IsNull())
-                throw new Exception();
+                throw new Exception("Setup");
 
             HUB location_should_decision = mind.mem.HUBS_SUB("location_should_decision");
             HUB answer_should_decision = mind.mem.HUBS_SUB("answer_should_decision");
@@ -325,7 +325,7 @@ namespace Awesome.AI.Systems
         public bool Valid(UNIT _u)
         {
             if (_u.ticket.IsNull())
-                throw new Exception();
+                throw new Exception("Valid");
 
             tags = tags.Where(x => x != null).ToList();
 
@@ -375,7 +375,7 @@ namespace Awesome.AI.Systems
                 {
                     case TAGS.ALL: Setup(mind.mindtype, mind.parms.number_of_units, false); break;
                     case TAGS.EVEN: Setup(mind.mindtype, mind.parms.number_of_units, true); break;
-                    default: throw new Exception();
+                    default: throw new Exception("Reset");
                 }
             }
         }

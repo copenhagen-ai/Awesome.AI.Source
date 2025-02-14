@@ -7,12 +7,15 @@ namespace Awesome.AI.Interfaces
         double Fsta { get; set; }
         double Fdyn { get; set; }
 
-        double out_high { get; set; }
-        double out_low { get; set; }
+        double m_out_high { get; set; }
+        double m_out_low { get; set; }
+        double d_out_high { get; set; }
+        double d_out_low { get; set; }
         double posx_high { get; set; }
         double posx_low { get; set; }
         double momentum { get; set; }
-                
+        double deltaMom { get; set; }
+
         double POS_XY { get; }
 
         void Calculate();//do calculations

@@ -11,14 +11,17 @@ namespace Awesome.AI.Core.Mechanics
          * -  gaspedal/wheel analogy in docs
          * */
 
-        public double velocity { get; set; } = 0.0d;
+        //public double velocity { get; set; } = 0.0d;
         public double momentum { get; set; } = 0.0d;
+        public double deltaMom { get; set; } = 0.0d;
         public double limit_result { get; set; } = 0.0d;
         public double learn_result { get; set; } = 0.0d;
         public double Fsta { get; set; } = 0.0d;
         public double Fdyn { get; set; } = 0.0d;
-        public double out_high { get; set; } = -1000.0d;
-        public double out_low { get; set; } = 1000.0d;
+        public double m_out_high { get; set; } = -1000.0d;
+        public double m_out_low { get; set; } = 1000.0d;
+        public double d_out_high { get; set; } = -1000.0d;
+        public double d_out_low { get; set; } = 1000.0d;
         public double posx_high { get; set; } = -1000.0d;
         public double posx_low { get; set; } = 1000.0d;
         public double res_x { get; set; } = -1.0d;
@@ -43,10 +46,10 @@ namespace Awesome.AI.Core.Mechanics
                 //its a hack, yes its cheating..
                 double boost = mind.goodbye.IsNo() ? mind.parms.boost : 1.0d;
 
-                posxy = 10.0d + (boost * momentum);//dosnt seem right
-                //posx += (boost * momentum);
-                //posx = posx + (boost * velocity);
-                //posx = 10.0d + (boost * momentum);
+                //posxy = 10.0d + (boost * momentum);//dosnt seem right
+                posxy += (boost * deltaMom);
+                //posxy = posx + (boost * velocity);
+                //posxy = 10.0d + (boost * momentum);
 
                 if (posxy < Constants.LOWXY)
                     posxy = Constants.LOWXY;
@@ -68,10 +71,10 @@ namespace Awesome.AI.Core.Mechanics
              * */
 
             if (curr.IsNull())
-                throw new Exception();
+                throw new Exception("Variable");
 
             if (curr.IsIDLE())
-                throw new Exception();
+                throw new Exception("Variable");
 
             double acc = curr.HighAtZero;
             acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
@@ -89,25 +92,29 @@ namespace Awesome.AI.Core.Mechanics
 
             double Fnet = mind.goodbye.IsNo() ? -Fsta + Fdyn : -Fsta;
             double m = mind.parms.mass;
-            double dt = mind.parms.delta_time;                             //delta time, 1sec/500cyc
+            //double dt = mind.parms.delta_time;                             //delta time, 1sec/500cyc
+            double deltaT = mind.parms.delta_time;
 
             //F=m*a
             //a=dv/dt
             //F=(m*dv)/dt
             //F*dt=m*dv
             //dv=(F*dt)/m
-            double dv = (Fnet * dt) / m;
-
-            velocity += dv;
+            //double dv = (Fnet * dt) / m;
+            double deltaVel = (Fnet * deltaT) / m;
 
             //momentum: p = m * v
-            momentum = (m * 2) * velocity;
+            deltaMom = (m * 2) * deltaVel;
+            momentum += deltaMom;
 
-            if (momentum <= out_low) out_low = momentum;
-            if (momentum > out_high) out_high = momentum;
+            if (momentum <= m_out_low) m_out_low = momentum;
+            if (momentum > m_out_high) m_out_high = momentum;
 
-            if (double.IsNaN(velocity))
-                throw new Exception();
+            if (deltaMom <= d_out_low) d_out_low = deltaMom;
+            if (deltaMom > d_out_high) d_out_high = deltaMom;
+
+            //if (double.IsNaN(velocity))
+            //    throw new Exception();
         }
 
         /*
@@ -139,7 +146,7 @@ namespace Awesome.AI.Core.Mechanics
             UNIT curr_unit_th = mind.curr_unit;
 
             if (curr_unit_th.IsNull())
-                throw new Exception();
+                throw new Exception("ApplyDynamic");
 
             double max = mind.common.HighestForce().Variable / 10; //divided by 10 for aprox acc
             double acc = max - curr_unit_th.Variable / 10; //divided by 10 for aprox acc

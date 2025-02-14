@@ -28,7 +28,7 @@ namespace Awesome.AI.Systems
                 //case "UNIT": _in.input = (UNIT)o; break;
                 //case "D_UNIT": _in.input = (UNIT[,])o; break;
                 default:
-                    throw new Exception();
+                    throw new Exception("Create");
             }
             return _in;
         }
@@ -39,7 +39,7 @@ namespace Awesome.AI.Systems
                 case "STRING": return (string)input;
                 case "D_STRING": return (string[,])input;
                 default:
-                    throw new Exception();
+                    throw new Exception("Get");
             }
         }
     }
@@ -57,7 +57,7 @@ namespace Awesome.AI.Systems
                 case "A_UNIT": com.input = (UNIT[])o; break;
                 case "L_D_UNIT": com.input = (List<UNIT[,]>)o; break;
                 default:
-                    throw new Exception();
+                    throw new Exception("Create");
             }
             return com;
         }
@@ -70,7 +70,7 @@ namespace Awesome.AI.Systems
                 case "A_UNIT": return (UNIT[])input;
                 case "L_D_UNIT": return (List<UNIT[,]>)input;
                 default:
-                    throw new Exception();
+                    throw new Exception("Get");
             }
         }
     }

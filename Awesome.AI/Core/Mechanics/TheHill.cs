@@ -7,13 +7,16 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class _TheHill : IMechanics
     {
-        public double velocity { get; set; } = 0.0d;
+        //public double velocity { get; set; } = 0.0d;
         public double momentum { get; set; } = 0.0d;
-                
+        public double deltaMom { get; set; } = 0.0d;
+
         public double Fsta { get; set; } = 0.0d;
         public double Fdyn { get; set; } = 0.0d;
-        public double out_high { get; set; } = -1000.0d;
-        public double out_low { get; set; } = 1000.0d;
+        public double m_out_high { get; set; } = -1000.0d;
+        public double m_out_low { get; set; } = 1000.0d;
+        public double d_out_high { get; set; } = -1000.0d;
+        public double d_out_low { get; set; } = 1000.0d;
         public double posx_high { get; set; } = -1000.0d;
         public double posx_low { get; set; } = 1000.0d;
         
@@ -36,10 +39,15 @@ namespace Awesome.AI.Core.Mechanics
                 //its a hack, yes its cheating..
                 double boost = mind.parms.boost;
 
+                //if (mind.goodbye.IsNo())
+                //    posxy = Constants.STARTXY + (boost * momentum);
+                //else
+                //    posxy += (boost * momentum);
+
                 if (mind.goodbye.IsNo())
-                    posxy = Constants.STARTXY + (boost * momentum);
+                    posxy = Constants.STARTXY + (boost * deltaMom);
                 else
-                    posxy += (boost * momentum);
+                    posxy += (boost * deltaMom);
 
                 //POS_X = 10.0d + (boost * momentum);
 
@@ -65,17 +73,15 @@ namespace Awesome.AI.Core.Mechanics
              * W = m * g
              * */
             if (_c.IsNull())
-                throw new Exception();
+                throw new Exception("Variable");
 
             if (_c.IsIDLE())
-                throw new Exception();// return Params.idle_val;
+                throw new Exception("Variable");
 
             double earth_gravity = Constants.GRAVITY;
             double mass = mind.parms.mass;
-            double percent = _c.HighAtZero / 100.0d;
-            //double percent = mind.calc.NormalizeRange(_c.HighAtZero, 0.0d, 100.0d, 0.0d, 1.0d);
-
-            double res = (mass * earth_gravity) * percent;
+            
+            double res = (mass * earth_gravity) * (_c.HighAtZero / 100.0d);
 
             return res;
         }
@@ -119,29 +125,36 @@ namespace Awesome.AI.Core.Mechanics
             if (res_x > 10.0d) res_x = 10.0d;
 
             double acc = res.yy < 0.0d ? res.magnitude : -res.magnitude;
-            //double acc = res.theta_in_degrees < 0.0d ? res.magnitude : -res.magnitude;
-            //double acc = dyn.magnitude > sta.magnitude ? -res.magnitude : res.magnitude;
-            //double acc = sta.magnitude - dyn.magnitude;
-            //double acc = res.magnitude;
 
             double m = mind.parms.mass;
-            double dt = mind.parms.delta_time;
+            //double dt = mind.parms.delta_time;
+            double deltaT = mind.parms.delta_time;
 
             //F=m*a
             //a=dv/dt
             //dv=a*dt
-            double dv = acc * dt;
+            //double dv = acc * dt;
+            double deltaVel = acc * deltaT;
+            
+            deltaMom = m * deltaVel;
+            momentum += deltaMom;
 
-            momentum = m * dv;
+            if (momentum <= m_out_low) m_out_low = momentum;
+            if (momentum > m_out_high) m_out_high = momentum;
+
+            if (deltaMom <= d_out_low) d_out_low = deltaMom;
+            if (deltaMom > d_out_high) d_out_high = deltaMom;
+
+            //double acc = res.theta_in_degrees < 0.0d ? res.magnitude : -res.magnitude;
+            //double acc = dyn.magnitude > sta.magnitude ? -res.magnitude : res.magnitude;
+            //double acc = sta.magnitude - dyn.magnitude;
+            //double acc = res.magnitude;
 
             //velocity = dv;
             //momentum: p = m * v
             //momentum += m * velocity;
             //momentum += m * dv;
             //velocity += dv;
-
-            if (momentum <= out_low) out_low = momentum;
-            if (momentum > out_high) out_high = momentum;
         }
 
         //private double shift = -3.0d;
@@ -180,7 +193,7 @@ namespace Awesome.AI.Core.Mechanics
             UNIT curr_unit_th = mind.curr_unit;
                         
             if (curr_unit_th.IsNull())
-                throw new Exception();
+                throw new Exception("ApplyDynamic");
 
             double acc_degree_positive = acc_degree < 0.0d ? -acc_degree : acc_degree;
             double angle_dyn = 90.0d + acc_degree_positive;
@@ -192,7 +205,7 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D _dynamic = new Vector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
 
             double m = mind.parms.mass;
-            double u = mind.core.LimitterFriction(false, curr_unit_th.credits, 2.0d);
+            double u = mind.core.LimitterFriction(false, curr_unit_th.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -228,7 +241,7 @@ namespace Awesome.AI.Core.Mechanics
             bool ok = _x1 == -10.0d & _x2 == 10.0d;
 
             if (!ok)
-                throw new Exception();
+                throw new Exception("Check");
 
             return ok;
         }

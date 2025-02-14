@@ -142,7 +142,7 @@ namespace Awesome.AI.Helpers
                     high_at_zero = true;
                     mass = 0.5d;
                     update_cred = 0.050d;
-                    shift = -3.0d;
+                    shift = 2.0d;
                     delta_time = 0.002d;
 
                     /*
@@ -154,7 +154,7 @@ namespace Awesome.AI.Helpers
                     boost = 1.0E1d;
 
                     break;
-                default: throw new Exception();
+                default: throw new Exception("GetMechanics");
             }
                     
             return _mech;

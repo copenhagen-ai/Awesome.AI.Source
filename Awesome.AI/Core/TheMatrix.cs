@@ -32,9 +32,9 @@ namespace Awesome.AI.Core
         public UNIT NextUnit(UNIT curr, Direction dir)
         {
             if (curr == null)
-                throw new Exception();
+                throw new Exception("NextUnit");
             if (dir == null)
-                throw new Exception();
+                throw new Exception("Variable");
 
             if (!curr.IsIDLE())
             {
@@ -73,7 +73,7 @@ namespace Awesome.AI.Core
                 ).ToList();
 
             if (units == null)
-                throw new Exception();
+                throw new Exception("Unit");
 
             UNIT _u = Jump(curr, dir, units);
             //_u = Filters.Neighbor(_u, units);
@@ -115,9 +115,13 @@ namespace Awesome.AI.Core
             double f_h = mind.common.HighestForce().Variable;
             double f_l = mind.common.LowestForce().Variable;
 
-            double _v = mech.momentum;
-            double v_h = mech.out_high;
-            double v_l = mech.out_low;
+            //double _v = mech.momentum;
+            //double v_h = mech.m_out_high;
+            //double v_l = mech.m_out_low;
+
+            double _v = mech.deltaMom;
+            double v_h = mech.d_out_high;
+            double v_l = mech.d_out_low;
 
             double nrg = mind.calc.NormalizeRange(_v, v_l, v_h, f_l, f_h);
 
@@ -128,9 +132,13 @@ namespace Awesome.AI.Core
         {
             IMechanics mech = mind.mech;
 
-            double _v = mech.momentum;
-            double v_h = mech.out_high;
-            double v_l = mech.out_low;
+            //double _v = mech._momentum;
+            //double v_h = mech.m_out_high;
+            //double v_l = mech.m_out_low;
+
+            double _v = mech.deltaMom;
+            double v_h = mech.d_out_high;
+            double v_l = mech.d_out_low;
 
             double pct = mind.calc.NormalizeRange(_v, v_l, v_h, 0.0d, 100.0d);
 

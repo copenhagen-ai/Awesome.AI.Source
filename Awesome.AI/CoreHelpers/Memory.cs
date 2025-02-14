@@ -261,7 +261,7 @@ namespace Awesome.AI.CoreHelpers
         public HUB HUBS_DEX(int index)
         {
             if (index < 0 || index >= hubs.Count)
-                throw new Exception();
+                throw new Exception("HUBS_DEX");
 
             HUB _h = hubs[index];
             

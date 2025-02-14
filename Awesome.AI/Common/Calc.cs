@@ -145,10 +145,10 @@ namespace Awesome.AI.Common
         public double Reciprocal(double x)
         {
             if (x < 0.0d)
-                throw new Exception();
+                throw new Exception("Reciprocal");
             
             if (x == 0.0d)
-                throw new Exception();
+                throw new Exception("Reciprocal");
 
             return 1 / x;
         }        
@@ -160,10 +160,10 @@ namespace Awesome.AI.Common
              * */
 
             if (r < 0.0d)
-                throw new Exception();
+                throw new Exception("EventHorizon");
 
             if (r == 0.0d)
-                throw new Exception();
+                throw new Exception("EventHorizon");
 
             double t_observer = 0.0d;
             double t_distant = 1.0d;
@@ -181,7 +181,7 @@ namespace Awesome.AI.Common
         public double Linear(double x, double a, double b)
         {
             if (x < 0.0d)
-                throw new Exception();
+                throw new Exception("Linear");
 
             double y = a * x + b;                       //y er mass
 
@@ -226,9 +226,9 @@ namespace Awesome.AI.Common
         public double Pyth(double _a, double _b)
         {
             if (_a <= 0.0d)
-                throw new Exception();
+                throw new Exception("Pyth");
             if (_b <= 0.0d)
-                throw new Exception();
+                throw new Exception("Pyth");
 
             double _dist = Math.Sqrt(_a * _a + _b * _b);
 
@@ -243,11 +243,11 @@ namespace Awesome.AI.Common
              * tan(v) = modstående katete / hosliggende katete
              * */
             if (theta > 180.0d)
-                throw new Exception();
+                throw new Exception("PythNear");
             if (theta < -180.0d)
-                throw new Exception();
+                throw new Exception("PythNear");
             if (hypotenuse <= 0.0d)
-                throw new Exception();
+                throw new Exception("PythNear");
 
             double _rad = ToRadiansFromDegrees(theta);
             double _cos = Math.Cos(_rad);
@@ -264,11 +264,11 @@ namespace Awesome.AI.Common
              * tan(v) = modstående katete / hosliggende katete
              * */
             if (theta >= 90.0d)
-                throw new Exception();
+                throw new Exception("PythFar");
             if (theta <= 0.0d)
-                throw new Exception();
+                throw new Exception("PythFar");
             if (hypotenuse <= 0.0d)
-                throw new Exception();
+                throw new Exception("PythFar");
 
             double _rad = ToRadiansFromDegrees(theta);
             double _sin = Math.Sin(_rad);

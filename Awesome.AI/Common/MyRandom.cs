@@ -17,10 +17,10 @@ namespace Awesome.AI.Common
         public void SaveMomentum(double momentum)
         {
             if (double.IsNaN(momentum))
-                throw new Exception();
+                throw new Exception("SaveMomentum");
 
             if (double.IsInfinity(momentum))
-                throw new Exception();
+                throw new Exception("SaveMomentum");
 
             if (mind.cycles_all < mind.parms.first_run)
                 momentum = RandomDouble(0.0d, 1.0d);
@@ -49,14 +49,16 @@ namespace Awesome.AI.Common
                 {
                     string rand = Rand(i);
 
-                    res[i] = double.Parse($"0.{rand[..10]}", CultureInfo.InvariantCulture);
+                    int index = rand.Length < 10 ? rand.Length : 10;
+
+                    res[i] = double.Parse($"0.{rand[..index]}", CultureInfo.InvariantCulture);
                 }
 
                 return res;
             }
-            catch
+            catch (Exception _e)
             {
-                throw new Exception();
+                throw new Exception("MyRandomDouble");
             }
         }
 
@@ -70,7 +72,7 @@ namespace Awesome.AI.Common
                  */
 
                 if (i_max > 999)
-                    throw new Exception();
+                    throw new Exception("MyRandomInt");
 
                 int[] res = new int[count];
 
@@ -86,7 +88,7 @@ namespace Awesome.AI.Common
             }
             catch
             {
-                throw new Exception();
+                throw new Exception("MyRandomInt");
             }
         }
 
@@ -95,7 +97,7 @@ namespace Awesome.AI.Common
             try
             {
                 if (index + 1 > saves.Count)
-                    throw new Exception();
+                    throw new Exception("Rand");
 
                 //get momentum
                 string rand = "" + saves[index];
@@ -114,7 +116,7 @@ namespace Awesome.AI.Common
             }
             catch
             {
-                throw new Exception();
+                throw new Exception("Rand");
             }
         }
 

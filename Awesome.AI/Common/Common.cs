@@ -20,7 +20,7 @@ namespace Awesome.AI.Common
             UNIT unit = mind.mem.UNITS_VAL().Where(x => !mind.filters.LowCut(x)).OrderByDescending(x=>x.Variable).FirstOrDefault();
 
             if (unit == null)
-                throw new Exception();
+                throw new Exception("HighestForceHighPass");
 
             highest_filter = unit;
             return highest_filter;
@@ -35,7 +35,7 @@ namespace Awesome.AI.Common
             UNIT unit = mind.mem.UNITS_VAL().OrderByDescending(x => x.Variable).FirstOrDefault();
 
             if (unit == null)
-                throw new Exception();
+                throw new Exception("HighestForce");
             
             highest_force = unit;
             return highest_force;
@@ -50,7 +50,7 @@ namespace Awesome.AI.Common
             UNIT unit = mind.mem.UNITS_VAL().OrderBy(x => x.Variable).FirstOrDefault();
 
             if (unit == null)
-                throw new Exception();
+                throw new Exception("LowestForce");
 
             lowest_force = unit;
             return lowest_force;

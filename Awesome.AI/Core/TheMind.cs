@@ -195,7 +195,8 @@ namespace Awesome.AI.Core
 
         private void PreRun(bool _pro)
         {
-            rand.SaveMomentum(mech.momentum);
+            //rand.SaveMomentum(mech.momentum);
+            rand.SaveMomentum(mech.deltaMom);
 
             if (_pro)
                 common.Reset();            

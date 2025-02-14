@@ -18,6 +18,7 @@ namespace Awesome.AI.Web.AI.Common
         public string cycles { get; set; }
         public string cycles_total { get; set; }
         public string momentum { get; set; }
+        public string deltaMom { get; set; }
 
         public string pain { get; set; }
         public string position { get; set; }
@@ -53,6 +54,7 @@ namespace Awesome.AI.Web.AI.Common
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
             momentum = $"{mind.mech.momentum.ToString("E3")}";
+            deltaMom = $"{mind.mech.deltaMom.ToString("E3")}";
 
             pain = $"{mind.pain}";
             if (mind._mech == MECHANICS.HILL)

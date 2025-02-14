@@ -59,7 +59,7 @@ namespace Awesome.AI.Common
                     case VALIDATION.INTERNAL:
                         return mind._internal.Valid(this);
                     default:
-                        throw new Exception();
+                        throw new Exception("IsValid");
                 }
             }
         }

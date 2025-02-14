@@ -33,7 +33,7 @@ namespace Awesome.AI.Core
                 case MECHANICS.GRAVITY:
                     ok = EventHorizonOK(mind.pos.Pos, out pain);
                     return ok;
-                default: throw new Exception();
+                default: throw new Exception("OK");
             }            
         }
 
@@ -77,7 +77,7 @@ namespace Awesome.AI.Core
                 pain = mind.calc.Reciprocal(_e);
 
                 if (pain > 10.0)
-                    throw new Exception();
+                    throw new Exception("ReciprocalOK");
 
                 return pain < mind.parms.max_pain;
             }
@@ -97,7 +97,7 @@ namespace Awesome.AI.Core
                 pain = mind.calc.EventHorizon(_e);
 
                 if (pain <= 0.0)
-                    throw new Exception();
+                    throw new Exception("EventHorizonOK");
 
                 return pain < mind.parms.max_pain;
             }

@@ -12,10 +12,13 @@ namespace Awesome.AI.Core.Mechanics
          * */
 
         public double momentum { get; set; } = 0.0d;
+        public double deltaMom { get; set; } = 0.0d;
         public double Fsta { get; set; } = 0.0d;
         public double Fdyn { get; set; } = 0.0d;
-        public double out_high { get; set; } = -1000.0d;
-        public double out_low { get; set; } = 1000.0d;
+        public double m_out_high { get; set; } = -1000.0d;
+        public double m_out_low { get; set; } = 1000.0d;
+        public double d_out_high { get; set; } = -1000.0d;
+        public double d_out_low { get; set; } = 1000.0d;
         public double posx_high { get; set; } = -1000.0d;
         public double posx_low { get; set; } = 1000.0d;
         
@@ -36,7 +39,8 @@ namespace Awesome.AI.Core.Mechanics
                 //its a hack, yes its cheating..
                 double boost = mind.parms.boost;
 
-                posxy = 10.0d + (boost * momentum);//dosnt seem right
+                //posxy = 10.0d + (boost * momentum);//dosnt seem right
+                posxy = 10.0d + (boost * deltaMom);//dosnt seem right
                 //posx = posx + (boost * velocity);
                 //posx = 10.0d + (boost * momentum);
 
@@ -59,10 +63,10 @@ namespace Awesome.AI.Core.Mechanics
              * */
 
             if (curr.IsNull())
-                throw new Exception();
+                throw new Exception("Variable");
 
             if (curr.IsIDLE())
-                throw new Exception();
+                throw new Exception("Variable");
 
             double dist = mind.calc.NormalizeRange(curr.LowAtZero, 0.0d, 100.0d, 100000.0d, 1000100.0d);//dist mercury -> sun
             double mass_M = Vars.zero_mass;
@@ -108,11 +112,14 @@ namespace Awesome.AI.Core.Mechanics
             //momentum: p = m * v
             momentum = (m) * velocity;
 
-            if (momentum <= out_low) out_low = momentum;
-            if (momentum > out_high) out_high = momentum;
+            if (momentum <= m_out_low) m_out_low = momentum;
+            if (momentum > m_out_high) m_out_high = momentum;
+
+            if (deltaMom <= d_out_low) d_out_low = deltaMom;
+            if (deltaMom > d_out_high) d_out_high = deltaMom;
 
             if (double.IsNaN(velocity))
-                throw new Exception();
+                throw new Exception("Calculate");
 
             cred.Add(mind.curr_unit.credits);
             lim.Add(dyn_lim);
