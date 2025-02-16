@@ -18,6 +18,9 @@ namespace Awesome.AI.Interfaces
 
         double POS_XY { get; }
 
+        double HighestVar { get; }
+        double LowestVar { get; }
+
         void Calculate();//do calculations
         double Variable(UNIT c);//the force, mass, distance, acceleration etc
     }

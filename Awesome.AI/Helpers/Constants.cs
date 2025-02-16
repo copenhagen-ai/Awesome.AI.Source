@@ -56,6 +56,7 @@
         public const double GRAV_CONST = 6.674E-11d;
         public const double MAX_CREDIT = 10.0d;
         public const double LOW_CREDIT = 0.0d;
+        public const double MAX_PAIN = 10.0d;
 
         public static readonly string[] subject_decision = new string[]
         { 

@@ -76,22 +76,14 @@ namespace Awesome.AI.CoreHelpers
 
             remember.Insert(0, nam);
             if (remember.Count > mind.parms.remember)
-                remember.RemoveAt(remember.Count - 1);
-
-            int test2 = hits.Sum(x => x.Value);
-
-            if (remember.Count >= mind.parms.remember)
             {
-                foreach (Stat _s in mind.stats.list)
-                {
-                    if (_s.name == remember.LastOrDefault())
-                    {
-                        hits[_s.name] -= 1;
+                string name = remember.LastOrDefault() ?? "";
+                hits[name] -= 1;
 
-                        mind.stats.reset_name = _s.name;
-                        mind.stats.reset_value = hits[_s.name];
-                    }
-                }
+                mind.stats.reset_name = name;
+                mind.stats.reset_value = hits[name];
+
+                remember.RemoveAt(remember.Count - 1);
             }
         }
 

@@ -49,7 +49,8 @@ namespace Awesome.AI.Core
 
             Calc calc = mind.calc;
 
-            double x = 5.0d - credits + shift;
+            double _c = 10.0d - credits;
+            double x = 5.0d - _c + shift;
             double friction = calc.Logistic(x);
 
             return friction;
@@ -76,14 +77,14 @@ namespace Awesome.AI.Core
 
                 pain = mind.calc.Reciprocal(_e);
 
-                if (pain > 10.0)
+                if (pain >= Constants.MAX_PAIN)
                     throw new Exception("ReciprocalOK");
 
-                return pain < mind.parms.max_pain;
+                return true;
             }
             catch (Exception e)//thats it
             {
-                pain = mind.parms.max_pain;
+                pain = Constants.MAX_PAIN;
                 return false;
             }
         }
@@ -99,7 +100,7 @@ namespace Awesome.AI.Core
                 if (pain <= 0.0)
                     throw new Exception("EventHorizonOK");
 
-                return pain < mind.parms.max_pain;
+                return true;
             }
             catch (Exception e)//thats it
             {

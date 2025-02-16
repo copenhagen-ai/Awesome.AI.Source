@@ -66,11 +66,10 @@ namespace Awesome.AI.Helpers
                     _mech = new _TheGravity(this.mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                    case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                    case_occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
+                    tags = TAGS.ALL;                                               //used with TAGS and BOTH
+                    occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
                     hack = HACKMODES.NOHACK;                                            //not used any more
-                    matrix_type = MATRIX.GPT;
-
+                    
                     //earth mass:               5.972×10^24 kg
                     //sun mass:                 1.989×10^30 kg
                     //earth gravity:                  9.807 m/s²
@@ -102,11 +101,10 @@ namespace Awesome.AI.Helpers
                     _mech = new _TheContest(this.mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                    case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                    case_occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
+                    tags = TAGS.ALL;                                               //used with TAGS and BOTH
+                    occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
                     hack = HACKMODES.NOHACK;                                            //not used any more
-                    matrix_type = MATRIX.GPT;
-                                                                                                
+                                                                                                                    
                     high_at_zero = true;
                     mass = 500.0d;
                     update_cred = 0.030d;
@@ -130,11 +128,10 @@ namespace Awesome.AI.Helpers
                     _mech = new _TheHill(this.mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS
-                    case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                    case_occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
+                    tags = TAGS.ALL;                                               //used with TAGS and BOTH
+                    occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
                     hack = HACKMODES.NOHACK;                                            //not used any more
-                    matrix_type = MATRIX.GPT;
-
+                    
                     Vars.var_a = -0.1d;
                     Vars.var_b = 0.0d;
                     Vars.var_c = 10.0d;
@@ -142,8 +139,8 @@ namespace Awesome.AI.Helpers
                     high_at_zero = true;
                     mass = 0.5d;
                     update_cred = 0.050d;
-                    shift = 2.0d;
-                    delta_time = 0.002d;
+                    shift = 0.0d;
+                    delta_time = 0.5d;
 
                     /*
                         * boost is life span?
@@ -151,7 +148,7 @@ namespace Awesome.AI.Helpers
                         * boost should be as close 1.0, without dying to fast
                         * */
 
-                    boost = 1.0E1d;
+                    boost = 1.0E0d;
 
                     break;
                 default: throw new Exception("GetMechanics");
@@ -178,11 +175,10 @@ namespace Awesome.AI.Helpers
          * */
 
         public VALIDATION validation;      
-        public TAGS case_tags;                                               //used with WORLD and BOTH
-        public OCCUPASION case_occupasion;                                   //used with SELF and BOTH
+        public TAGS tags;                                               //used with WORLD and BOTH
+        public OCCUPASION occupasion;                                   //used with SELF and BOTH
         public HACKMODES hack;
-        public MATRIX matrix_type;
-
+        
 
         //BOTH      WORLD       SELF
         //public double[,] update_nrg_vals = {
@@ -240,7 +236,6 @@ namespace Awesome.AI.Helpers
         public double update_cred;
         public double boost;                                              //dimm the fluctuations
         public double shift;
-        public double max_pain = 999.99d;
         public double delta_time;
 
         public int first_run = 5;

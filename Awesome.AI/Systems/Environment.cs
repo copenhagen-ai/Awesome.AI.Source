@@ -108,7 +108,7 @@ namespace Awesome.AI.Systems
                 epoch_old = mind.epochs;
                 if (run)
                 {
-                    switch (mind.parms.case_occupasion)
+                    switch (mind.parms.occupasion)
                     {
                         case OCCUPASION.FIXED:
                             occu = new Area() { name = mind.hobby, max_epochs = -1, values = null }; ;
@@ -371,7 +371,7 @@ namespace Awesome.AI.Systems
                 //mind.stats.Reset();
 
                 tags = new List<Tag>();
-                switch (mind.parms.case_tags)
+                switch (mind.parms.tags)
                 {
                     case TAGS.ALL: Setup(mind.mindtype, mind.parms.number_of_units, false); break;
                     case TAGS.EVEN: Setup(mind.mindtype, mind.parms.number_of_units, true); break;

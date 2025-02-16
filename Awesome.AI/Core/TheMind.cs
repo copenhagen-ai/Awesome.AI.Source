@@ -28,13 +28,12 @@ namespace Awesome.AI.Core
         public Out _out;
         public MyInternal _internal;
         public MyExternal _external;
-        public Common.Common common;
         public Location loc;
         public ChatAnswer chatans;
         public ChatAsk chatask;
         public Direction dir;
         public Position pos;
-        
+                
         public HUB curr_hub;
         public UNIT curr_unit;
         public UNIT theanswer;
@@ -53,7 +52,7 @@ namespace Awesome.AI.Core
         public int correct_thinking = 0;
         public int not_correct_thinking = 0;
         public int _near_death = 0;
-        public double pain = 0.0f;
+        public double pain = 0.0d;
         public int valid_units = 0;
 
         public bool chat_answer { get; set; }
@@ -75,7 +74,6 @@ namespace Awesome.AI.Core
                 this.mindtype = mindtype;
 
                 parms = new Params(this);
-                common = new Common.Common(this);
                 matrix = new TheMatrix(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
@@ -91,7 +89,7 @@ namespace Awesome.AI.Core
                 dir = new Direction(this);
                 pos = new Position(this);
                 mem = new Memory(this, parms.number_of_units);
-                
+                                
                 mech = parms.GetMechanics(_mech);
                 parms.UpdateLowCut();
 
@@ -181,15 +179,17 @@ namespace Awesome.AI.Core
                 //Output(_pro);
 
                 if (_pro) _out.Set();
-                if (_pro) cycles = 0;   
-
-                run = true;
+                if (_pro) cycles = 0;
             }
             catch (Exception _e) 
             {
                 string msg = "run - " + _e.Message + "\n";
                 msg += _e.StackTrace;
                 XmlHelper.WriteError(msg);
+            }
+            finally
+            {
+                run = true;
             }
         }
 
@@ -198,8 +198,8 @@ namespace Awesome.AI.Core
             //rand.SaveMomentum(mech.momentum);
             rand.SaveMomentum(mech.deltaMom);
 
-            if (_pro)
-                common.Reset();            
+            //if (_pro)
+            //    common.Reset();            
         }
 
         private void PostRun(bool _pro)

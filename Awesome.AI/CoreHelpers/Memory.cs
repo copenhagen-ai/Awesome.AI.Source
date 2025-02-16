@@ -169,7 +169,7 @@ namespace Awesome.AI.CoreHelpers
             count1 = UnitsDecide(location_should_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[0], location_should_decision, UNITTYPE.DECISION, count2, tone);
 
-            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.POSITIVE;
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.HIGH;
             count1 = UnitsDecide(location_what_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[1], location_what_decision, UNITTYPE.DECISION, count2, tone);
 
@@ -177,11 +177,11 @@ namespace Awesome.AI.CoreHelpers
             count1 = UnitsDecide(answer_should_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[2], answer_should_decision, UNITTYPE.DECISION, count2, tone);
 
-            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.NEGATIVE;
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.LOW;
             count1 = UnitsDecide(answer_what_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[3], answer_what_decision, UNITTYPE.DECISION, count2, tone);
 
-            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.MID;
             count1 = UnitsDecide(ask_should_decision, UNITTYPE.DECISION, count1, tone);
             count2 = HubsDecide(Constants.subject_decision[4], ask_should_decision, UNITTYPE.DECISION, count2, tone);
 
@@ -296,42 +296,27 @@ namespace Awesome.AI.CoreHelpers
             hubs = hubs.OrderBy(x=>x.GetSubject()).ToList();
         }
 
-        private double GetIndex(TONE tone, double _r, double i, double j, Calc calc)
+        private double GetIndex(TONE tone, double _rand)
         {
-            double _rand = 0.0d;
-            double _t = 0.0d;
             switch (tone)
             {
-                case TONE.NEGATIVE:
-                    _t = (10.0d - i) * 10.0d;
-                    _rand = _r;
-                    _rand = calc.NormalizeRange(_rand, 0.0d, 1.0d, 0.0d, _t);
+                case TONE.HIGH:
+                    _rand = mind.calc.NormalizeRange(_rand, 0.0d, 1.0d, 50.0d, 100.0d);
                     _rand = _rand.Convert(mind);
                     break;
-                case TONE.POSITIVE:
-                    _t = i * 10.0d;
-                    _rand = _r;
-                    _rand = calc.NormalizeRange(_rand, 0.0d, 1.0d, _t, 100.0d);
+                case TONE.LOW:
+                    _rand = mind.calc.NormalizeRange(_rand, 0.0d, 1.0d, 0.0d, 50.0d);
+                    _rand = _rand.Convert(mind);
+                    break;
+                case TONE.MID:
+                    _rand = mind.calc.NormalizeRange(_rand, 0.0d, 1.0d, 25.0d, 75.0d);
                     _rand = _rand.Convert(mind);
                     break;
                 case TONE.RANDOM:
-                    _rand = _r;
-                    _rand = calc.NormalizeRange(_rand, 0.0d, 1.0d, 0.0d, 100.0d);
-                    _rand = _rand.Convert(mind);
-                    break;
-                case TONE.NEUTRAL:
-                    _t = (j * 2) * 10.0d;
-                    _rand = _r;
-                    _rand = calc.NormalizeRange(_rand, 0.0d, 1.0d, _t, 100.0d);
+                    _rand = mind.calc.NormalizeRange(_rand, 0.0d, 1.0d, 0.0d, 100.0d);
                     _rand = _rand.Convert(mind);
                     break;
             }
-
-            if (_rand < 0.0d)
-                ;
-
-            if (_rand > 100.0d)
-                ;
 
             return _rand;
         }
@@ -350,7 +335,7 @@ namespace Awesome.AI.CoreHelpers
             double j = 0;
             foreach (UNIT _u in hub.units)
             {
-                _u.Index = GetIndex(hub.tone, doubles[index], i, j, calc);
+                _u.Index = GetIndex(hub.tone, doubles[index]);
                 index++;
                 i += bit;
                 j = i <= 5 ? j + bit : j - bit;
@@ -383,7 +368,7 @@ namespace Awesome.AI.CoreHelpers
                     units.Add(
                         UNIT.Create(
                             mind,
-                            GetIndex(tone, rand, i, j, mind.calc),//value
+                            GetIndex(tone, rand),//value
                             "_" + s + i,//root
                             null,
                             "" + s + ticket[i - 1],//ticket
@@ -415,7 +400,7 @@ namespace Awesome.AI.CoreHelpers
                 units.Add(
                     UNIT.Create(
                         mind,
-                        GetIndex(tone, rand, i, j, mind.calc),//value
+                        GetIndex(tone, rand),//value
                         "_" + type.ToString().ToLower() + count,//root
                         s,
                         "SPECIAL",//ticket

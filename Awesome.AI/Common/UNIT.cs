@@ -37,6 +37,9 @@ namespace Awesome.AI.Common
         {
             get 
             {
+                if (root == "_decision42")
+                    ;
+
                 if (_f != -1d)
                     return _f;
 
@@ -155,6 +158,21 @@ namespace Awesome.AI.Common
             _w.credits = Constants.MAX_CREDIT;
 
             return _w;
+        }
+
+        public static UNIT GetHigh
+        {
+            get
+            {
+                return UNIT.Create(null, Constants.MAX, "MAX", "DATA", "TICKET", Enums.UNITTYPE.MAX);
+            }
+        }
+        public static UNIT GetLow
+        {
+            get
+            {
+                return UNIT.Create(null, Constants.MIN, "MIN", "DATA", "TICKET", Enums.UNITTYPE.MIN);
+            }
         }
 
         public static UNIT IDLE_UNIT(TheMind mind)

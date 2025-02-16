@@ -112,8 +112,8 @@ namespace Awesome.AI.Core
         private double NearEnergy(Direction dir)
         {
             IMechanics mech = mind.mech;
-            double f_h = mind.common.HighestForce().Variable;
-            double f_l = mind.common.LowestForce().Variable;
+            double f_h = mind.mech.HighestVar;
+            double f_l = mind.mech.LowestVar;
 
             //double _v = mech.momentum;
             //double v_h = mech.m_out_high;

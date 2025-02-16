@@ -30,7 +30,17 @@ namespace Awesome.AI.Core.Mechanics
 
             posxy = Constants.STARTXY;//10;
         }
-        
+
+        public double HighestVar
+        {
+            get { return Variable(UNIT.GetHigh); }
+        }
+
+        public double LowestVar
+        {
+            get { return Variable(UNIT.GetLow); }
+        }
+
         private double posxy { get; set; }
         public double POS_XY
         {
@@ -90,7 +100,7 @@ namespace Awesome.AI.Core.Mechanics
              * I know its not using a black hole, but it should be the same principle outside the event horizon???
              * */
 
-            double max = mind.common.HighestForce().Variable;
+            double max = HighestVar;
             double sta_lim = mind.core.LimitterStandard(true, 0.0d, 0.0d);
             double dyn_lim = mind.core.LimitterStandard(false, mind.curr_unit.credits, mind.parms.shift);
             double sta_force = 10E-10 * max;

@@ -29,7 +29,17 @@ namespace Awesome.AI.Core.Mechanics
             this.mind = mind;
             
             posxy = Constants.STARTXY;//10;
-        }        
+        }
+
+        public double HighestVar
+        {
+            get { return Variable(UNIT.GetLow); }
+        }
+
+        public double LowestVar
+        {
+            get { return Variable(UNIT.GetHigh); }
+        }
 
         private double posxy { get; set; }
         public double POS_XY
@@ -145,6 +155,9 @@ namespace Awesome.AI.Core.Mechanics
             if (deltaMom <= d_out_low) d_out_low = deltaMom;
             if (deltaMom > d_out_high) d_out_high = deltaMom;
 
+            //if (momentum <= 0.0d)
+            //    throw new Exception("momentum less than 0.0");
+
             //double acc = res.theta_in_degrees < 0.0d ? res.magnitude : -res.magnitude;
             //double acc = dyn.magnitude > sta.magnitude ? -res.magnitude : res.magnitude;
             //double acc = sta.magnitude - dyn.magnitude;
@@ -165,7 +178,7 @@ namespace Awesome.AI.Core.Mechanics
             double angle_com_y_vec = -90.0d - acc_degree_positive;//-135
             double angle_com_y_pyth = 90.0d - acc_degree_positive;//-135
 
-            double force_sta = mind.common.HighestForce().Variable;
+            double force_sta = HighestVar;
             double force_com_y = mind.calc.PythNear(angle_com_y_pyth, force_sta);
 
             Vector2D calc = new Vector2D();
@@ -182,6 +195,9 @@ namespace Awesome.AI.Core.Mechanics
             double Fapplied = _fN.magnitude;
             double Fnet = Fapplied - Ffriction;
 
+            if (Fnet <= Constants.VERY_LOW)
+                Fnet = Constants.VERY_LOW;
+
             //Vector2D _res = calc.ToCart(calc.Flip360(new Vector2D(null, null, Fnet, _fN.theta_in_radians)));
             Vector2D _res = calc.ToCart(new Vector2D(null, null, Fnet, _fN.theta_in_radians));
 
@@ -190,28 +206,33 @@ namespace Awesome.AI.Core.Mechanics
 
         public Vector2D ApplyDynamic(double acc_degree)
         {
-            UNIT curr_unit_th = mind.curr_unit;
-                        
-            if (curr_unit_th.IsNull())
+            UNIT curr_unit = mind.curr_unit;
+            
+            if (curr_unit.IsNull())
                 throw new Exception("ApplyDynamic");
 
             double acc_degree_positive = acc_degree < 0.0d ? -acc_degree : acc_degree;
             double angle_dyn = 90.0d + acc_degree_positive;
 
-            double max = mind.common.HighestForce().Variable;
-            double force_dyn = max - curr_unit_th.Variable;
+            double max = HighestVar;
+            double force_dyn = max - curr_unit.Variable;
 
             Vector2D calc = new Vector2D();
-            Vector2D _dynamic = new Vector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
+            Vector2D dynamic = new Vector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
 
             double m = mind.parms.mass;
-            double u = mind.core.LimitterFriction(false, curr_unit_th.credits, mind.parms.shift);
+            double u = mind.core.LimitterFriction(false, curr_unit.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
-            double Fapplied = _dynamic.magnitude;
-            double Fnet = Fapplied - Ffriction;
-            
+            double Fapplied = dynamic.magnitude;
+            double Fnet = Fapplied - Ffriction / 2.0d;
+
+            if (Fnet <= Constants.VERY_LOW)
+                Fnet = Constants.VERY_LOW;
+            else
+                ;
+
             Vector2D _res = calc.ToCart(new Vector2D(null, null, Fnet, calc.ToRadians(angle_dyn)));
 
             return _res;

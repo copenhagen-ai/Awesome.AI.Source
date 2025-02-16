@@ -38,6 +38,16 @@ namespace Awesome.AI.Core.Mechanics
             posxy = Constants.STARTXY;
         }
 
+        public double HighestVar
+        {
+            get { return Variable(UNIT.GetLow); }
+        }
+
+        public double LowestVar
+        {
+            get { return Variable(UNIT.GetHigh); }
+        }
+
         private double posxy { get; set; }
         public double POS_XY
         {
@@ -76,8 +86,7 @@ namespace Awesome.AI.Core.Mechanics
             if (curr.IsIDLE())
                 throw new Exception("Variable");
 
-            double acc = curr.HighAtZero;
-            acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
+            double acc = curr.HighAtZero / 10;
 
             return acc;
         }
@@ -123,7 +132,7 @@ namespace Awesome.AI.Core.Mechanics
         //private double shift = -2.0d;
         public double ApplyStatic()
         {
-            double acc = mind.common.HighestForce().Variable / 10; //divided by 10 for aprox acc
+            double acc = HighestVar; //divided by 10 for aprox acc
             double m = mind.parms.mass;
             double u = mind.core.LimitterFriction(true, 0.0d, mind.parms.shift);
             double N = m * Constants.GRAVITY;
@@ -133,7 +142,7 @@ namespace Awesome.AI.Core.Mechanics
             double Fnet = Fapplied - Ffriction;
 
             if (Fnet <= 0.0d)
-                Fnet = 0.0d;
+                Fnet = Constants.VERY_LOW;
 
             return Fnet;
         }
@@ -148,18 +157,22 @@ namespace Awesome.AI.Core.Mechanics
             if (curr_unit_th.IsNull())
                 throw new Exception("ApplyDynamic");
 
-            double max = mind.common.HighestForce().Variable / 10; //divided by 10 for aprox acc
-            double acc = max - curr_unit_th.Variable / 10; //divided by 10 for aprox acc
+            double max = HighestVar; //divided by 10 for aprox acc
+            double acc = max - curr_unit_th.Variable; //divided by 10 for aprox acc
             double m = mind.parms.mass;
             double u = mind.core.LimitterFriction(false, curr_unit_th.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
+
+            acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
 
             double Ffriction = u * N;
             double Fapplied = m * acc; //force, left
             double Fnet = Fapplied - Ffriction;
 
             if (Fnet <= 0.0d)
-                Fnet = 0.0d;
+                Fnet = Constants.VERY_LOW;
+            else
+                ;
 
             return Fnet;
         }
