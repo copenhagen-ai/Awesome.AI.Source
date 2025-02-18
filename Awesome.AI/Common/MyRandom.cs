@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Helpers;
 using System.Globalization;
 
 namespace Awesome.AI.Common
@@ -22,7 +23,7 @@ namespace Awesome.AI.Common
             if (double.IsInfinity(momentum))
                 throw new Exception("SaveMomentum");
 
-            if (mind.cycles_all < mind.parms.first_run)
+            if (mind.cycles_all < Constants.FIRST_RUN)
                 momentum = RandomDouble(0.0d, 1.0d);
 
             if (momentum == 0.0d)

@@ -88,7 +88,7 @@ namespace Awesome.AI.Core
                 chatask = new ChatAsk(this, "");
                 dir = new Direction(this);
                 pos = new Position(this);
-                mem = new Memory(this, parms.number_of_units);
+                mem = new Memory(this, Constants.NUMBER_OF_UNITS);
                                 
                 mech = parms.GetMechanics(_mech);
                 parms.UpdateLowCut();

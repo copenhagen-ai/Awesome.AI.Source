@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Helpers;
 
 namespace Awesome.AI.CoreHelpers
 {
@@ -31,7 +32,7 @@ namespace Awesome.AI.CoreHelpers
             }
 
             u_history.Insert(0, mind.curr_unit);
-            if (u_history.Count > mind.parms.hist_total)
+            if (u_history.Count > Constants.HIST_TOTAL)
                 u_history.RemoveAt(u_history.Count - 1);
         }
 
@@ -75,7 +76,7 @@ namespace Awesome.AI.CoreHelpers
             mind.stats.curr_value = hits[nam];
 
             remember.Insert(0, nam);
-            if (remember.Count > mind.parms.remember)
+            if (remember.Count > Constants.REMEMBER)
             {
                 string name = remember.LastOrDefault() ?? "";
                 hits[name] -= 1;

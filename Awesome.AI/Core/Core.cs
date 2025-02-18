@@ -33,40 +33,9 @@ namespace Awesome.AI.Core
                 case MECHANICS.GRAVITY:
                     ok = EventHorizonOK(mind.pos.Pos, out pain);
                     return ok;
-                default: throw new Exception("OK");
+                default: 
+                    throw new Exception("OK");
             }            
-        }
-
-        public double LimitterFriction(bool is_static, double credits, double shift)
-        {
-            /*
-             * friction coeficient
-             * should friction be calculated from position???
-             * */
-
-            if (is_static)
-                return mind.parms.base_friction;
-
-            Calc calc = mind.calc;
-
-            double _c = 10.0d - credits;
-            double x = 5.0d - _c + shift;
-            double friction = calc.Logistic(x);
-
-            return friction;
-        }
-
-        public double LimitterStandard(bool is_static, double credits, double shift)
-        {
-            if (is_static)
-                return mind.parms.base_friction;
-
-            Calc calc = mind.calc;
-
-            double x = 5.0d - credits + shift;
-            double limit = calc.Logistic(x);
-
-            return limit;
         }
 
         public bool ReciprocalOK(double pos, out double pain)
@@ -119,7 +88,7 @@ namespace Awesome.AI.Core
 
             for (int i = 0; i <= 10; i++)
             {
-                if ((mind.epochs - i) == (60 * mind.parms.runtime))
+                if ((mind.epochs - i) == (60 * Constants.RUNTIME))
                     mind.theanswer.root = "It does not";
             }
             

@@ -50,13 +50,32 @@
         public const double LOWXY = 0.0d;
         public const double HIGHXY = 10.0d;
         public const double STARTXY = 5.0d;
+        public const double MAX_CREDIT = 10.0d;
+        public const double LOW_CREDIT = 0.0d;
 
         public const double VERY_LOW = 1.0E-50;
         public const double GRAVITY = 9.81d;
         public const double GRAV_CONST = 6.674E-11d;
-        public const double MAX_CREDIT = 10.0d;
-        public const double LOW_CREDIT = 0.0d;
         public const double MAX_PAIN = 10.0d;
+
+        public const double BASE_FRICTION = 2d / 3d; // needs to be this otherwise position keeps going down
+        public const double LAPSES_TOTAL = 99d;      // yesno ratio : reaction time in cycles
+        public const double RATIO = 50d;
+        public const int FIRST_RUN = 5;
+        public const int NUMBER_OF_UNITS = 10;
+        public const int RUNTIME = 2;                //minutes
+
+        /*
+         * these seem to be related
+         * hist_total
+         * - my guess is: unlike normal AI algorithms, here we want to hit local minimas, so not to much memory
+         * - does hist_total increase with the number of HUBS/UNITS?
+         * - hist_total seems to have impact on "thought patterns"
+         * - I rarely change these variables anymore
+         * */
+        public const int MICRO_SEC = 4000; //call micro timer every 1000µs (1ms)
+        public const int HIST_TOTAL = 100; //the number of UNITS???
+        public const int REMEMBER = 200;
 
         public static readonly string[] subject_decision = new string[]
         { 

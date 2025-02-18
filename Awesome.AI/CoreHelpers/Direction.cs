@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Helpers;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.CoreHelpers
@@ -46,7 +47,7 @@ namespace Awesome.AI.CoreHelpers
 
             ratio.Add(Choise);
 
-            if (ratio.Count > mind.parms.lapses_total)
+            if (ratio.Count > Constants.LAPSES_TOTAL)
                 ratio.RemoveAt(0);
         }
 

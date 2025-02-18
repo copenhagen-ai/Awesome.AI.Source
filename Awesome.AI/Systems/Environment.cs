@@ -373,8 +373,8 @@ namespace Awesome.AI.Systems
                 tags = new List<Tag>();
                 switch (mind.parms.tags)
                 {
-                    case TAGS.ALL: Setup(mind.mindtype, mind.parms.number_of_units, false); break;
-                    case TAGS.EVEN: Setup(mind.mindtype, mind.parms.number_of_units, true); break;
+                    case TAGS.ALL: Setup(mind.mindtype, Constants.NUMBER_OF_UNITS, false); break;
+                    case TAGS.EVEN: Setup(mind.mindtype, Constants.NUMBER_OF_UNITS, true); break;
                     default: throw new Exception("Reset");
                 }
             }

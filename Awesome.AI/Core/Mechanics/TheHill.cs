@@ -7,18 +7,17 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class _TheHill : IMechanics
     {
-        //public double velocity { get; set; } = 0.0d;
-        public double momentum { get; set; } = 0.0d;
-        public double deltaMom { get; set; } = 0.0d;
+        public double momentum { get; set; }
+        public double deltaMom { get; set; }
 
-        public double Fsta { get; set; } = 0.0d;
-        public double Fdyn { get; set; } = 0.0d;
-        public double m_out_high { get; set; } = -1000.0d;
-        public double m_out_low { get; set; } = 1000.0d;
-        public double d_out_high { get; set; } = -1000.0d;
-        public double d_out_low { get; set; } = 1000.0d;
-        public double posx_high { get; set; } = -1000.0d;
-        public double posx_low { get; set; } = 1000.0d;
+        public double Fsta { get; set; }
+        public double Fdyn { get; set; }
+        public double m_out_high { get; set; }
+        public double m_out_low { get; set; }
+        public double d_out_high { get; set; }
+        public double d_out_low { get; set; }
+        public double posx_high { get; set; }
+        public double posx_low { get; set; }
         
         public double res_x { get; set; } = 5.0d;
                 
@@ -29,6 +28,13 @@ namespace Awesome.AI.Core.Mechanics
             this.mind = mind;
             
             posxy = Constants.STARTXY;//10;
+
+            m_out_high = -1000.0d;
+            m_out_low = 1000.0d;
+            d_out_high = -1000.0d;
+            d_out_low = 1000.0d;
+            posx_high = -1000.0d;
+            posx_low = 1000.0d;
         }
 
         public double HighestVar
@@ -188,7 +194,7 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D _fN = calc.ToPolar((calc.Add(_static, _N)));
 
             double m = mind.parms.mass;
-            double u = mind.core.LimitterFriction(true, 0.0d, mind.parms.shift);
+            double u = Friction(true, 0.0d, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -221,12 +227,12 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D dynamic = new Vector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
 
             double m = mind.parms.mass;
-            double u = mind.core.LimitterFriction(false, curr_unit.credits, mind.parms.shift);
+            double u = Friction(false, curr_unit.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
             double Fapplied = dynamic.magnitude;
-            double Fnet = Fapplied - Ffriction / 2.0d;
+            double Fnet = Fapplied - Ffriction;
 
             if (Fnet <= Constants.VERY_LOW)
                 Fnet = Constants.VERY_LOW;
@@ -236,6 +242,25 @@ namespace Awesome.AI.Core.Mechanics
             Vector2D _res = calc.ToCart(new Vector2D(null, null, Fnet, calc.ToRadians(angle_dyn)));
 
             return _res;
+        }
+
+        public double Friction(bool is_static, double credits, double shift)
+        {
+            /*
+             * friction coeficient
+             * should friction be calculated from position???
+             * */
+
+            if (is_static)
+                return Constants.BASE_FRICTION;
+
+            Calc calc = mind.calc;
+
+            double _c = 10.0d - credits;
+            double x = 5.0d - _c + shift;
+            double friction = calc.Logistic(x);
+
+            return friction / 2.0d;
         }
 
         //private double DeltaV(double a, double dt)

@@ -11,16 +11,16 @@ namespace Awesome.AI.Core.Mechanics
          * -  gaspedal/wheel analogy in docs
          * */
 
-        public double momentum { get; set; } = 0.0d;
-        public double deltaMom { get; set; } = 0.0d;
-        public double Fsta { get; set; } = 0.0d;
-        public double Fdyn { get; set; } = 0.0d;
-        public double m_out_high { get; set; } = -1000.0d;
-        public double m_out_low { get; set; } = 1000.0d;
-        public double d_out_high { get; set; } = -1000.0d;
-        public double d_out_low { get; set; } = 1000.0d;
-        public double posx_high { get; set; } = -1000.0d;
-        public double posx_low { get; set; } = 1000.0d;
+        public double momentum { get; set; }
+        public double deltaMom { get; set; }
+        public double Fsta { get; set; }
+        public double Fdyn { get; set; }
+        public double m_out_high { get; set; }
+        public double m_out_low { get; set; }
+        public double d_out_high { get; set; }
+        public double d_out_low { get; set; }
+        public double posx_high { get; set; }
+        public double posx_low { get; set; }
         
         private TheMind mind;
         private _TheGravity() { }
@@ -29,6 +29,13 @@ namespace Awesome.AI.Core.Mechanics
             this.mind = mind;
 
             posxy = Constants.STARTXY;//10;
+
+            m_out_high = -1000.0d;
+            m_out_low = 1000.0d;
+            d_out_high = -1000.0d;
+            d_out_low = 1000.0d;
+            posx_high = -1000.0d;
+            posx_low = 1000.0d;
         }
 
         public double HighestVar
@@ -97,12 +104,13 @@ namespace Awesome.AI.Core.Mechanics
         public void Calculate()
         {
             /*
+             * still experimental..
              * I know its not using a black hole, but it should be the same principle outside the event horizon???
              * */
 
             double max = HighestVar;
-            double sta_lim = mind.core.LimitterStandard(true, 0.0d, 0.0d);
-            double dyn_lim = mind.core.LimitterStandard(false, mind.curr_unit.credits, mind.parms.shift);
+            double sta_lim = Limitter(true, 0.0d, 0.0d);
+            double dyn_lim = Limitter(false, mind.curr_unit.credits, mind.parms.shift);
             double sta_force = 10E-10 * max;
             double dyn_force = 10E-10 * (max - mind.curr_unit.Variable);
 
@@ -195,6 +203,25 @@ namespace Awesome.AI.Core.Mechanics
             //    throw new Exception();
         }
 
+        public double Limitter(bool is_static, double credits, double shift)
+        {
+            /*
+             * friction coeficient
+             * should friction be calculated from position???
+             * */
+
+            if (is_static)
+                return Constants.BASE_FRICTION;
+
+            Calc calc = mind.calc;
+
+            double _c = 10.0d - credits;
+            double x = 5.0d - _c + shift;
+            double friction = calc.Logistic(x);
+
+            return friction;
+        }
+
         /////*
         //// * car left
         //// * */
@@ -213,7 +240,7 @@ namespace Awesome.AI.Core.Mechanics
         //    //F*dt=m*dv
         //    //dv=(F*dt)/m
         //    double dv = (F * dt) / m;                                                        //delta velocity
-            
+
         //    //velocity -= dv;
 
         //    return dv;

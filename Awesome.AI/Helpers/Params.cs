@@ -14,10 +14,7 @@ namespace Awesome.AI.Helpers
         {
             this.mind = mind;            
         }
-
-        //public int selector;
-        //public IMechanics _mech = null;
-        private bool high_at_zero {  get; set; }
+               
         
         public IMechanics GetMechanics(MECHANICS run = MECHANICS.NONE)
         {
@@ -139,7 +136,7 @@ namespace Awesome.AI.Helpers
                     high_at_zero = true;
                     mass = 0.5d;
                     update_cred = 0.050d;
-                    shift = 0.0d;
+                    shift = 0.05d;
                     delta_time = 0.5d;
 
                     /*
@@ -179,43 +176,6 @@ namespace Awesome.AI.Helpers
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
         public HACKMODES hack;
         
-
-        //BOTH      WORLD       SELF
-        //public double[,] update_nrg_vals = {
-        //    { 0.040d,   0.000d,     0.000d },//TheWheel
-        //    { 0.030d,   0.000d,     0.000d },//TheContest
-        //    { 0.050d,   0.000d,     0.000d } //TheHill
-        //};
-
-        //must be between 1.0 and 2.0
-        //BOTH      WORLD       SELF
-        //public double[,] lim_correction_vals = {
-        //    { 1.20d,    0.00d,      0.00d },//TheWheel
-        //    { 1.20d,    0.00d,      0.00d },//TheContest
-        //    { 1.80d,    0.00d,      0.00d } //TheHill
-        //};
-
-        //public double update_nrg
-        //{                                               // curve adjustment, spike the "U" form, lower -> flatter "U"
-        //    get
-        //    {
-        //        return
-        //            validation == VALIDATION.BOTH ? update_nrg_vals[selector, 0] :
-        //            validation == VALIDATION.EXTERNAL ? update_nrg_vals[selector, 1] :
-        //            validation == VALIDATION.INTERNAL ? update_nrg_vals[selector, 2] : -1d;
-        //    }
-        //}
-
-        //public double lim_correction {                                           // yesno ratio, curve adjustment, tip the "U" form, MAX: 2.0 MIN: 0.1, lower -> more yes
-        //    get
-        //    {
-        //        return
-        //            validation == VALIDATION.BOTH ? lim_correction_vals[selector, 0] :
-        //            validation == VALIDATION.EXTERNAL ? lim_correction_vals[selector, 1] :
-        //            validation == VALIDATION.INTERNAL ? lim_correction_vals[selector, 2] : -1d;
-        //    }
-        //}
-
         /*
          * FIXED parameters
          * 
@@ -225,22 +185,15 @@ namespace Awesome.AI.Helpers
          * 0.555 = 5 / 9
          * */
 
-        public double base_friction = 2d / 3d;                                      // COMMENT NEEDS UPDATE: needs to be this otherwise position keeps going down
-        public double lapses_total = 99d;                                           // yesno ratio : reaction time in cycles
-        public double ratio = 50d;
-        //public double slope = 0.666d;
-
         // should it be 200, 1000 or more???
         public double mass;
         public double low_cut;
         public double update_cred;
-        public double boost;                                              //dimm the fluctuations
+        public double boost;//dimm the fluctuations
         public double shift;
         public double delta_time;
-
-        public int first_run = 5;
-        public int number_of_units = 10;
-        public int runtime = 2; //minutes
+        
+        private bool high_at_zero {  get; set; }
 
         public double schedule_low { get; set; }
         public double schedule_mid { get; set; }
@@ -251,9 +204,6 @@ namespace Awesome.AI.Helpers
         //public double pos_x_low;
         //public double pos_x_start;
         //public double scale;
-        //public double hill_a;
-        //public double hill_b;
-        //public double hill_c;
         //public double dir_learningrate;
         //public double lim_bias = 0.0d;                                            // approx start, then it auto adjusts
         //public double lim_learningrate;                                           // I call it learningrate, but really it is just an adjustment
@@ -261,17 +211,5 @@ namespace Awesome.AI.Helpers
         //public bool debug = true;
         //public bool is_accord = true;
         //public int learning_epochs = 100;
-
-        /*
-         * these seem to be related
-         * hist_total
-         * - my guess is: unlike normal AI algorithms, here we want to hit local minimas, so not to much memory
-         * - does hist_total increase with the number of HUBS/UNITS?
-         * - hist_total seems to have impact on "thought patterns"
-         * - I rarely change these variables anymore
-         * */
-        public int micro_sec = 4000;                                       //call micro timer every 1000µs (1ms)
-        public int hist_total = 100;                                       //the number of UNITS???
-        public int remember = 200;
     }
 }

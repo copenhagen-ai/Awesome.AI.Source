@@ -10,24 +10,17 @@ namespace Awesome.AI.Core.Mechanics
          * >> THE HACK <<
          * -  gaspedal/wheel analogy in docs
          * */
-
-        //public double velocity { get; set; } = 0.0d;
-        public double momentum { get; set; } = 0.0d;
-        public double deltaMom { get; set; } = 0.0d;
-        public double limit_result { get; set; } = 0.0d;
-        public double learn_result { get; set; } = 0.0d;
-        public double Fsta { get; set; } = 0.0d;
-        public double Fdyn { get; set; } = 0.0d;
-        public double m_out_high { get; set; } = -1000.0d;
-        public double m_out_low { get; set; } = 1000.0d;
-        public double d_out_high { get; set; } = -1000.0d;
-        public double d_out_low { get; set; } = 1000.0d;
-        public double posx_high { get; set; } = -1000.0d;
-        public double posx_low { get; set; } = 1000.0d;
-        public double res_x { get; set; } = -1.0d;
-        private double min { get; set; } = 1000.0d;
-        private double max { get; set; } = -1000.0d;
-
+                
+        public double momentum { get; set; }
+        public double deltaMom { get; set; }
+        public double Fsta { get; set; }
+        public double Fdyn { get; set; }
+        public double m_out_high { get; set; }
+        public double m_out_low { get; set; }
+        public double d_out_high { get; set; }
+        public double d_out_low { get; set; }
+        public double posx_high { get; set; }
+        public double posx_low { get; set; }
         
         private TheMind mind;
         private _TheContest() { }
@@ -36,6 +29,13 @@ namespace Awesome.AI.Core.Mechanics
             this.mind = mind;
 
             posxy = Constants.STARTXY;
+
+            m_out_high = -1000.0d;
+            m_out_low = 1000.0d;
+            d_out_high = -1000.0d;
+            d_out_low = 1000.0d;
+            posx_high = -1000.0d;
+            posx_low = 1000.0d;
         }
 
         public double HighestVar
@@ -134,7 +134,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             double acc = HighestVar; //divided by 10 for aprox acc
             double m = mind.parms.mass;
-            double u = mind.core.LimitterFriction(true, 0.0d, mind.parms.shift);
+            double u = Friction(true, 0.0d, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -160,7 +160,7 @@ namespace Awesome.AI.Core.Mechanics
             double max = HighestVar; //divided by 10 for aprox acc
             double acc = max - curr_unit_th.Variable; //divided by 10 for aprox acc
             double m = mind.parms.mass;
-            double u = mind.core.LimitterFriction(false, curr_unit_th.credits, mind.parms.shift);
+            double u = Friction(false, curr_unit_th.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
@@ -175,6 +175,25 @@ namespace Awesome.AI.Core.Mechanics
                 ;
 
             return Fnet;
+        }
+
+        public double Friction(bool is_static, double credits, double shift)
+        {
+            /*
+             * friction coeficient
+             * should friction be calculated from position???
+             * */
+
+            if (is_static)
+                return Constants.BASE_FRICTION;
+
+            Calc calc = mind.calc;
+
+            double _c = 10.0d - credits;
+            double x = 5.0d - _c + shift;
+            double friction = calc.Logistic(x);
+
+            return friction;
         }
 
         //public void CALC()
@@ -228,7 +247,7 @@ namespace Awesome.AI.Core.Mechanics
         //public double ApplyDynamic()
         //{
         //    UNIT curr_unit_th = mind.curr_unit;
-            
+
         //    if (curr_unit_th.IsNull())
         //        throw new Exception();
 
