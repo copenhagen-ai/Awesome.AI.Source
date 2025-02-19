@@ -7,74 +7,38 @@ namespace Awesome.AI.CoreHelpers
 {
     public class Direction
     {
-        TheMind mind;
+        public HARDCHOICE ChoiceHard { get { return mind.mech.TheChoice; } }
+        public SOFTCHOICE ChoiceSoft { get { return mind.mech.FuzzyMom; } }
+        public bool ChoicePeriod { get { return Ratio.NoOverTime(mind); } }
+
+        public List<HARDCHOICE> Ratio { get; set; }
+
+        private TheMind mind;
         private Direction() { }
         public Direction(TheMind mind)
         {
             this.mind = mind;
+            Ratio = new List<HARDCHOICE>();
         }
-
-        public THECHOISE Choise { get; set; } = THECHOISE.NO;
-        public List<THECHOISE> ratio { get; set; } = new List<THECHOISE>();
-        //public int all_yes { get; set; } = 0;
-        //public int all_no { get; set; } = 0;
-
+        
         public void Update()
         {
-            SetChoise();                       
-            UpdateRatio();
+            Ratio.Add(ChoiceHard);
+
+            if (Ratio.Count > Constants.LAPSES_TOTAL)
+                Ratio.RemoveAt(0);
         }
 
-        private void SetChoise()
-        {
-            /*
-             * >> this is the hack/cheat <<
-             * "NO", is to say no to going downwards
-             * */
-
-            //bool is_low = mind.mech._momentum <= 0.0d;
-            bool is_low = mind.mech.deltaMom <= 0.0d;
-
-            Choise = is_low.TheHack1(mind) ? THECHOISE.NO : THECHOISE.YES;
-        }
-
-        public void UpdateRatio()
-        {
-            //if (Choise.IsYes())
-            //    all_yes++;
-            //else
-            //    all_no++;
-
-            ratio.Add(Choise);
-
-            if (ratio.Count > Constants.LAPSES_TOTAL)
-                ratio.RemoveAt(0);
-        }
-
-        public int Count(THECHOISE choise)
+        public int Count(HARDCHOICE choise)
         {
             int count = 0;
             switch (choise)
             {
-                case THECHOISE.YES: count = ratio.Where(z => z.IsYes()).Count(); break;
-                case THECHOISE.NO:  count = ratio.Where(z => z.IsNo()).Count(); break;
+                case HARDCHOICE.YES: count = Ratio.Where(z => !z.IsNo()).Count(); break;
+                case HARDCHOICE.NO:  count = Ratio.Where(z => z.IsNo()).Count(); break;
             }
 
             return count;
-        }
-
-        /*
-         * I call it SayNo, because GoRight/GoLeft is specific for the mechanics
-         * ..and SayNo is indifferent of the direction
-         * */
-        //public bool SayNo()
-        //{
-        //    int count_no = ratio.CountNo();
-        //    int count_yes = ratio.CountYes();
-
-        //    bool say_no = count_no <= mind.parms.ratio;    //true: more no, false: less no
-
-        //    return say_no.TheHack2(mind);
-        //}
+        }        
     }
 }

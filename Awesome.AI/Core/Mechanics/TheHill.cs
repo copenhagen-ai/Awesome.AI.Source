@@ -2,6 +2,7 @@
 using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Web.AI.Common;
+using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
@@ -35,6 +36,16 @@ namespace Awesome.AI.Core.Mechanics
             d_out_low = 1000.0d;
             posx_high = -1000.0d;
             posx_low = 1000.0d;
+        }
+
+        public SOFTCHOICE FuzzyMom
+        {
+            get { return deltaMom.ToFuzzy(mind); }
+        }
+
+        public HARDCHOICE TheChoice
+        {
+            get { return deltaMom.ToChoise(mind); }
         }
 
         public double HighestVar

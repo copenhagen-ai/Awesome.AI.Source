@@ -19,7 +19,7 @@ namespace Awesome.AI.CoreHelpers
             if (_b == null)
                 throw new ArgumentNullException();
 
-            bool is_no = dir.Choise.IsNo();
+            bool is_no = dir.ChoiceHard.IsNo();
             bool hello = mind.goodbye.IsNo();
 
             bool dir_up = hello && is_no;

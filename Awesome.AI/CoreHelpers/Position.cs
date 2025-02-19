@@ -62,7 +62,7 @@ namespace Awesome.AI.CoreHelpers
         
         private void Schedule()
         {
-            if (mind.goodbye.IsYes()) {
+            if (!mind.goodbye.IsNo()) {
                 is_no = false;
                 return;
             }
@@ -75,7 +75,7 @@ namespace Awesome.AI.CoreHelpers
 
             if (pos < mind.parms.schedule_mid) {
                 if (!is_no)
-                    is_no = mind.dir.Choise.IsNo();
+                    is_no = mind.dir.ChoiceHard.IsNo();
                 return;
             }
 

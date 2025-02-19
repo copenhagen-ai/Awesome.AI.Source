@@ -124,10 +124,10 @@ namespace Awesome.AI.Helpers
                 case MECHANICS.HILL: 
                     _mech = new _TheHill(this.mind, this);
 
-                    validation = VALIDATION.BOTH;                                       //BOTH or TAGS
-                    tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                    occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
-                    hack = HACKMODES.NOHACK;                                            //not used any more
+                    validation = VALIDATION.BOTH;       //BOTH or TAGS
+                    tags = TAGS.ALL;                    //used with TAGS and BOTH
+                    occupasion = OCCUPASION.DYNAMIC;    //used with OCCU and BOTH
+                    hack = HACKMODES.NOHACK;            //obsolete
                     
                     Vars.var_a = -0.1d;
                     Vars.var_b = 0.0d;

@@ -63,9 +63,9 @@ namespace Awesome.AI.Web.AI.Common
                 position = $"{mind.pos.Pos}";
             if (mind._mech == MECHANICS.GRAVITY)
                 position = $"{mind.pos.Pos}";
-            ratio_yes = $"{mind.dir.Count(THECHOISE.YES)}";
-            ratio_no = $"{mind.dir.Count(THECHOISE.NO)}";
-            the_choise = $"{(mind.dir.Choise.IsNo() ? "NO" : "YES")}";
+            ratio_yes = $"{mind.dir.Count(HARDCHOICE.YES)}";
+            ratio_no = $"{mind.dir.Count(HARDCHOICE.NO)}";
+            the_choise = $"{(mind.dir.ChoiceHard.IsNo() ? "NO" : "YES")}";
             epochs = $"{mind.epochs}";
             runtime = $"{Constants.RUNTIME}";
             occu = $"{mind._internal.Occu}";

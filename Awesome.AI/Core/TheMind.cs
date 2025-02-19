@@ -42,7 +42,7 @@ namespace Awesome.AI.Core
 
         public MINDS mindtype;
         public MECHANICS _mech;
-        public THECHOISE goodbye = THECHOISE.NO;
+        public HARDCHOICE goodbye = HARDCHOICE.NO;
 
         private bool do_process = false;
                 

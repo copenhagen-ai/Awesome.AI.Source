@@ -1,6 +1,8 @@
 ﻿using Awesome.AI.Core;
 using Awesome.AI.Helpers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Awesome.AI.Helpers.Enums;
+using static Google.Protobuf.WellKnownTypes.Field.Types;
 
 namespace Awesome.AI.Common
 {
@@ -56,38 +58,79 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        public static bool TheHack1(this bool _b, TheMind mind)
+        //public static bool TheHack(this bool _b, TheMind mind)
+        //{
+        //    /*
+        //     * >> this is the hack/cheat <<
+        //     * */
+        //    bool do_hack = mind.parms.hack == HACKMODES.HACK;
+        //    if (do_hack)
+        //        return !_b;
+        //    return _b;
+        //}
+
+        public static SOFTCHOICE ToFuzzy(this double deltaMom, TheMind mind)
+        {
+            double high = mind.mech.d_out_high;
+            double low = mind.mech.d_out_low;
+
+            double norm = mind.calc.NormalizeRange(deltaMom, low, high, 0.0d, 100.0d);
+
+            if (mind.parms.hack == HACKMODES.HACK)
+                norm = 100.0d - norm;
+
+            switch (norm)
+            {
+                case < 20.0d: return SOFTCHOICE.VERYYES;
+                case < 40.0d: return SOFTCHOICE.YES;
+                case < 60.0d: return SOFTCHOICE.DUNNO;
+                case < 80.0d: return SOFTCHOICE.NO;
+                case < 100.0d: return SOFTCHOICE.VERYNO;
+                default: throw new NotSupportedException("ToFuzzy");
+            }
+        }
+
+        public static bool NoOverTime(this List<HARDCHOICE> Ratio, TheMind mind)
+        {
+            /*
+             * indifferent of the direction
+             * */
+
+            int count_no = Ratio.Count(x=>x == HARDCHOICE.NO);
+            int count_yes = Ratio.Count(x=>x == HARDCHOICE.YES);
+
+            bool res = count_no >= count_yes;    //true: more no, false: less no
+
+            if (mind.parms.hack == HACKMODES.HACK)
+                res = !res;
+
+            return res;
+        }
+
+        public static HARDCHOICE ToChoise(this double deltaMom, TheMind mind)
         {
             /*
              * >> this is the hack/cheat <<
+             * "NO", is to say no to going downwards
              * */
 
-            bool do_hack = mind.parms.hack == HACKMODES.HACK;
-            if (do_hack)
-                return !_b;
-            return _b;
-        }        
+            //bool is_low = mind.mech._momentum <= 0.0d;
+            bool res = mind.mech.deltaMom <= 0.0d;
 
-        public static bool IsYes(this THECHOISE q)
-        {
-            return q == THECHOISE.YES;
+            if (mind.parms.hack == HACKMODES.HACK)
+                res = !res;
+
+            return res ? HARDCHOICE.NO : HARDCHOICE.YES;
         }
 
-        public static bool IsNo(this THECHOISE q)
+        public static HARDCHOICE IsNo(this bool _q)
         {
-            return q == THECHOISE.NO;
+            return _q ? HARDCHOICE.NO : HARDCHOICE.YES;
         }
 
-        //public static string Data(this string value)
-        //{
-        //    return value.Split(':')[0];
-        //}
-
-        //public static string Class(this string value)
-        //{
-        //    if (!value.Contains(":"))
-        //        return "null";
-        //    return value.Split(':')[1];
-        //}
+        public static bool IsNo(this HARDCHOICE _q)
+        {
+            return _q == HARDCHOICE.NO;
+        }
     }
 }

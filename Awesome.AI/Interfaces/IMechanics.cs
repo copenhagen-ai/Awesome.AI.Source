@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Common;
+using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Interfaces
 {
@@ -15,6 +16,9 @@ namespace Awesome.AI.Interfaces
         double posx_low { get; set; }
         double momentum { get; set; }
         double deltaMom { get; set; }
+
+        SOFTCHOICE FuzzyMom { get; }
+        HARDCHOICE TheChoice { get; }
 
         double POS_XY { get; }
 
