@@ -243,7 +243,7 @@ namespace Awesome.AI.Core.Mechanics
 
             double Ffriction = u * N;
             double Fapplied = dynamic.magnitude;
-            double Fnet = Fapplied - Ffriction;
+            double Fnet = Fapplied - Ffriction / 2.0d;
 
             if (Fnet <= Constants.VERY_LOW)
                 Fnet = Constants.VERY_LOW;

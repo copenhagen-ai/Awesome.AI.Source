@@ -81,16 +81,16 @@ namespace Awesome.AI.Common
 
             switch (norm)
             {
-                case < 20.0d: return SOFTCHOICE.VERYYES;
-                case < 40.0d: return SOFTCHOICE.YES;
+                case < 20.0d: return SOFTCHOICE.VERYNO;
+                case < 40.0d: return SOFTCHOICE.NO;
                 case < 60.0d: return SOFTCHOICE.DUNNO;
-                case < 80.0d: return SOFTCHOICE.NO;
-                case < 100.0d: return SOFTCHOICE.VERYNO;
+                case < 80.0d: return SOFTCHOICE.YES;
+                case < 100.0d: return SOFTCHOICE.VERYYES;
                 default: throw new NotSupportedException("ToFuzzy");
             }
         }
 
-        public static bool NoOverTime(this List<HARDCHOICE> Ratio, TheMind mind)
+        public static bool PeriodNO(this List<HARDCHOICE> Ratio, TheMind mind)
         {
             /*
              * indifferent of the direction
@@ -99,7 +99,7 @@ namespace Awesome.AI.Common
             int count_no = Ratio.Count(x=>x == HARDCHOICE.NO);
             int count_yes = Ratio.Count(x=>x == HARDCHOICE.YES);
 
-            bool res = count_no >= count_yes;    //true: more no, false: less no
+            bool res = count_no >= count_yes;
 
             if (mind.parms.hack == HACKMODES.HACK)
                 res = !res;
@@ -110,21 +110,21 @@ namespace Awesome.AI.Common
         public static HARDCHOICE ToChoise(this double deltaMom, TheMind mind)
         {
             /*
-             * >> this is the hack/cheat <<
              * "NO", is to say no to going downwards
              * */
 
-            //bool is_low = mind.mech._momentum <= 0.0d;
-            bool res = mind.mech.deltaMom <= 0.0d;
+            bool res = deltaMom <= 0.0d;
 
             if (mind.parms.hack == HACKMODES.HACK)
                 res = !res;
 
+            //is this a hack or ok???
             return res ? HARDCHOICE.NO : HARDCHOICE.YES;
         }
 
-        public static HARDCHOICE IsNo(this bool _q)
+        public static HARDCHOICE ToChoice(this bool _q)
         {
+            //is this a hack or ok???
             return _q ? HARDCHOICE.NO : HARDCHOICE.YES;
         }
 

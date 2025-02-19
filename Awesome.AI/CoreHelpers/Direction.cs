@@ -9,7 +9,7 @@ namespace Awesome.AI.CoreHelpers
     {
         public HARDCHOICE ChoiceHard { get { return mind.mech.TheChoice; } }
         public SOFTCHOICE ChoiceSoft { get { return mind.mech.FuzzyMom; } }
-        public bool ChoicePeriod { get { return Ratio.NoOverTime(mind); } }
+        public bool ChoicePeriod { get { return Ratio.PeriodNO(mind); } }
 
         public List<HARDCHOICE> Ratio { get; set; }
 
@@ -25,7 +25,7 @@ namespace Awesome.AI.CoreHelpers
         {
             Ratio.Add(ChoiceHard);
 
-            if (Ratio.Count > Constants.LAPSES_TOTAL)
+            if (Ratio.Count > Constants.LAPSES)
                 Ratio.RemoveAt(0);
         }
 

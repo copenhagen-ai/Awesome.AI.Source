@@ -59,7 +59,7 @@
         public const double MAX_PAIN = 10.0d;
 
         public const double BASE_FRICTION = 2d / 3d; // needs to be this otherwise position keeps going down
-        public const double LAPSES_TOTAL = 99d;      // yesno ratio : reaction time in cycles
+        public const double LAPSES = 99d;      // yesno ratio : reaction time in cycles
         public const double RATIO = 50d;
         public const int FIRST_RUN = 5;
         public const int NUMBER_OF_UNITS = 10;
