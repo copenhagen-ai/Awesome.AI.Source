@@ -10,6 +10,7 @@ namespace Awesome.AI.Core.Mechanics
     {
         public double momentum { get; set; }
         public double deltaMom { get; set; }
+        private double deltaMomPrev {  get; set; }
 
         public double Fsta { get; set; }
         public double Fdyn { get; set; }
@@ -38,14 +39,15 @@ namespace Awesome.AI.Core.Mechanics
             posx_low = 1000.0d;
         }
 
-        public SOFTCHOICE FuzzyMom
+        public SOFTDOWN SoftMom
         {
             get { return deltaMom.ToFuzzy(mind); }
         }
 
-        public HARDCHOICE TheChoice
+        public HARDDOWN HardMom
         {
-            get { return deltaMom.ToChoise(mind); }
+            //get { return deltaMom.ToDownZero(mind); }
+            get { return deltaMom.ToDownPrev(deltaMomPrev, mind); }
         }
 
         public double HighestVar
@@ -125,7 +127,7 @@ namespace Awesome.AI.Core.Mechanics
             _y = acc_slope;
             _slope = calc.ToPolar(new Vector2D(_x, _y, null, null));
             double acc_degree = _slope.theta_in_degrees;
-                        
+            
             return acc_degree;
         }
         
@@ -162,7 +164,8 @@ namespace Awesome.AI.Core.Mechanics
             //dv=a*dt
             //double dv = acc * dt;
             double deltaVel = acc * deltaT;
-            
+
+            deltaMomPrev = deltaMom;
             deltaMom = m * deltaVel;
             momentum += deltaMom;
 
@@ -243,7 +246,7 @@ namespace Awesome.AI.Core.Mechanics
 
             double Ffriction = u * N;
             double Fapplied = dynamic.magnitude;
-            double Fnet = Fapplied - Ffriction / 2.0d;
+            double Fnet = Fapplied - Ffriction;
 
             if (Fnet <= Constants.VERY_LOW)
                 Fnet = Constants.VERY_LOW;

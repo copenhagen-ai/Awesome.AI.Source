@@ -17,8 +17,8 @@ namespace Awesome.AI.Interfaces
         double momentum { get; set; }
         double deltaMom { get; set; }
 
-        SOFTCHOICE FuzzyMom { get; }
-        HARDCHOICE TheChoice { get; }
+        SOFTDOWN SoftMom { get; }
+        HARDDOWN HardMom { get; }
 
         double POS_XY { get; }
 

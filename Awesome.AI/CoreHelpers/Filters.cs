@@ -12,23 +12,21 @@ namespace Awesome.AI.CoreHelpers
             this.mind = mind;
         }
 
-        public bool Direction(UNIT _a, UNIT _b, Direction dir)
+        public bool TheChoice(UNIT _x)
         {
-            if (_a == null)
+            if (_x == null)
                 throw new ArgumentNullException();
-            if (_b == null)
-                throw new ArgumentNullException();
-
-            bool is_no = dir.ChoiceHard.IsNo();
-            bool hello = mind.goodbye.IsNo();
-
-            bool dir_up = hello && is_no;
-
-            double f_a = _a.Variable;
-            double f_b = _b.Variable;
             
-            return dir_up ? f_a < f_b : f_a >= f_b;//dir == true -> up
-        }            
+            bool go_up = !mind.dir.DownHard.IsYes();
+            bool hello = mind.goodbye.IsNo();
+            bool dir_up = hello && go_up;
+
+            double f_a = _x.Variable;
+            double f_b = mind.curr_unit.Variable;
+            
+            //remember static: high, dynamic: low.. at zero
+            return dir_up ? f_a < f_b: f_a >= f_b;
+        }
 
         public bool UnitIsValid(UNIT _u)
         {
@@ -53,8 +51,8 @@ namespace Awesome.AI.CoreHelpers
             double force = _u.Variable;
 
             if (force < lower_border)
-                return false;
-            return true;
+                return true;
+            return false;
         }
 
         public bool Credits(UNIT unit)

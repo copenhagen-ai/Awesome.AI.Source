@@ -69,7 +69,7 @@ namespace Awesome.AI.Common
         //    return _b;
         //}
 
-        public static SOFTCHOICE ToFuzzy(this double deltaMom, TheMind mind)
+        public static SOFTDOWN ToFuzzy(this double deltaMom, TheMind mind)
         {
             double high = mind.mech.d_out_high;
             double low = mind.mech.d_out_low;
@@ -81,56 +81,76 @@ namespace Awesome.AI.Common
 
             switch (norm)
             {
-                case < 20.0d: return SOFTCHOICE.VERYNO;
-                case < 40.0d: return SOFTCHOICE.NO;
-                case < 60.0d: return SOFTCHOICE.DUNNO;
-                case < 80.0d: return SOFTCHOICE.YES;
-                case < 100.0d: return SOFTCHOICE.VERYYES;
+                case < 20.0d: return SOFTDOWN.VERYNO;
+                case < 40.0d: return SOFTDOWN.NO;
+                case < 60.0d: return SOFTDOWN.DUNNO;
+                case < 80.0d: return SOFTDOWN.YES;
+                case < 100.0d: return SOFTDOWN.VERYYES;
                 default: throw new NotSupportedException("ToFuzzy");
             }
         }
 
-        public static bool PeriodNO(this List<HARDCHOICE> Ratio, TheMind mind)
+        public static bool PeriodDown(this List<HARDDOWN> Ratio, TheMind mind)
         {
             /*
              * indifferent of the direction
              * */
 
-            int count_no = Ratio.Count(x=>x == HARDCHOICE.NO);
-            int count_yes = Ratio.Count(x=>x == HARDCHOICE.YES);
+            int count_no = Ratio.Count(x=>x == HARDDOWN.NO);
+            int count_yes = Ratio.Count(x=>x == HARDDOWN.YES);
 
             bool res = count_no >= count_yes;
 
-            if (mind.parms.hack == HACKMODES.HACK)
-                res = !res;
+            //if (mind.parms.hack == HACKMODES.HACK)
+            //    res = !res;
 
             return res;
         }
 
-        public static HARDCHOICE ToChoise(this double deltaMom, TheMind mind)
+        public static HARDDOWN ToDownZero(this double deltaMom, TheMind mind)
         {
             /*
-             * "NO", is to say no to going downwards
+             * <<obsolete>>"NO", is to say no to going downwards
              * */
 
             bool res = deltaMom <= 0.0d;
 
-            if (mind.parms.hack == HACKMODES.HACK)
-                res = !res;
+            //if (mind.parms.hack == HACKMODES.HACK)
+            //    res = !res;
 
             //is this a hack or ok???
-            return res ? HARDCHOICE.NO : HARDCHOICE.YES;
+            return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
-        public static HARDCHOICE ToChoice(this bool _q)
+        public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
         {
+            /*
+             * <<obsolete>>"NO", is to say no to going downwards
+             * */
+
+            bool res = deltaMom <= prev;
+
+            //if (mind.parms.hack == HACKMODES.HACK)
+            //    res = !res;
+
             //is this a hack or ok???
-            return _q ? HARDCHOICE.NO : HARDCHOICE.YES;
+            return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
-        public static bool IsNo(this HARDCHOICE _q)
+        //public static HARDDOWN ToDown(this bool _q)
+        //{
+        //    //is this a hack or ok???
+        //    return _q ? HARDDOWN.NO : HARDDOWN.YES;
+        //}
+
+        public static bool IsYes(this HARDDOWN _q)
         {
-            return _q == HARDCHOICE.NO;
+            return _q == HARDDOWN.YES;
+        }
+
+        public static bool IsNo(this HARDDOWN _q)
+        {
+            return _q == HARDDOWN.NO;
         }
     }
 }

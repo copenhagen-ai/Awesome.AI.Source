@@ -97,7 +97,7 @@ namespace Awesome.AI.Core
             if (answer == null)
                 throw new ArgumentNullException();
 
-            mind.goodbye = answer == "It does not" ? HARDCHOICE.YES : HARDCHOICE.NO;
+            mind.goodbye = answer == "It does not" ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         public void UpdateCredit()

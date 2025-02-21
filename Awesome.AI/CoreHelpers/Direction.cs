@@ -7,35 +7,35 @@ namespace Awesome.AI.CoreHelpers
 {
     public class Direction
     {
-        public HARDCHOICE ChoiceHard { get { return mind.mech.TheChoice; } }
-        public SOFTCHOICE ChoiceSoft { get { return mind.mech.FuzzyMom; } }
-        public bool ChoicePeriod { get { return Ratio.PeriodNO(mind); } }
+        public HARDDOWN DownHard { get { return mind.mech.HardMom; } }
+        public SOFTDOWN DownSoft { get { return mind.mech.SoftMom; } }
+        public bool DownPeriod { get { return Ratio.PeriodDown(mind); } }
 
-        public List<HARDCHOICE> Ratio { get; set; }
+        public List<HARDDOWN> Ratio { get; set; }
 
         private TheMind mind;
         private Direction() { }
         public Direction(TheMind mind)
         {
             this.mind = mind;
-            Ratio = new List<HARDCHOICE>();
+            Ratio = new List<HARDDOWN>();
         }
         
         public void Update()
         {
-            Ratio.Add(ChoiceHard);
+            Ratio.Add(DownHard);
 
             if (Ratio.Count > Constants.LAPSES)
                 Ratio.RemoveAt(0);
         }
 
-        public int Count(HARDCHOICE choise)
+        public int Count(HARDDOWN choise)
         {
             int count = 0;
             switch (choise)
             {
-                case HARDCHOICE.YES: count = Ratio.Where(z => !z.IsNo()).Count(); break;
-                case HARDCHOICE.NO:  count = Ratio.Where(z => z.IsNo()).Count(); break;
+                case HARDDOWN.YES: count = Ratio.Where(z => z.IsYes()).Count(); break;
+                case HARDDOWN.NO:  count = Ratio.Where(z => z.IsNo()).Count(); break;
             }
 
             return count;

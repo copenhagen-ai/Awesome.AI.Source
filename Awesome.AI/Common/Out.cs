@@ -24,7 +24,7 @@ namespace Awesome.AI.Web.AI.Common
         public string position { get; set; }
         public string ratio_yes { get; set; }
         public string ratio_no { get; set; }
-        public string the_choise { get; set; }
+        public string going_down { get; set; }
         public string epochs { get; set; }
         public string runtime { get; set; }
         public string occu { get; set; }
@@ -63,9 +63,9 @@ namespace Awesome.AI.Web.AI.Common
                 position = $"{mind.pos.Pos}";
             if (mind._mech == MECHANICS.GRAVITY)
                 position = $"{mind.pos.Pos}";
-            ratio_yes = $"{mind.dir.Count(HARDCHOICE.YES)}";
-            ratio_no = $"{mind.dir.Count(HARDCHOICE.NO)}";
-            the_choise = $"{(mind.dir.ChoiceHard.IsNo() ? "NO" : "YES")}";
+            ratio_yes = $"{mind.dir.Count(HARDDOWN.YES)}";
+            ratio_no = $"{mind.dir.Count(HARDDOWN.NO)}";
+            going_down = $"{(mind.dir.DownHard.IsNo() ? "NO" : "YES")}";
             epochs = $"{mind.epochs}";
             runtime = $"{Constants.RUNTIME}";
             occu = $"{mind._internal.Occu}";

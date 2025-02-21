@@ -75,7 +75,7 @@ namespace Awesome.AI.CoreHelpers
 
             if (pos < mind.parms.schedule_mid) {
                 if (!is_no)
-                    is_no = mind.dir.ChoiceHard.IsNo();
+                    is_no = mind.dir.DownHard.IsNo();
                 return;
             }
 

@@ -42,7 +42,7 @@ namespace Awesome.AI.Core
 
         public MINDS mindtype;
         public MECHANICS _mech;
-        public HARDCHOICE goodbye = HARDCHOICE.NO;
+        public HARDDOWN goodbye = HARDDOWN.NO;
 
         private bool do_process = false;
                 
@@ -137,7 +137,7 @@ namespace Awesome.AI.Core
 
             List<UNIT> list1 = list.OrderBy(x => x.Index).ToList();
             List<UNIT> list2 = list.OrderBy(x => x.Variable).ToList();
-            List<UNIT> list3 = list.Where(x => !filters.LowCut(x)).OrderBy(x => x.Variable).ToList();
+            List<UNIT> list3 = list.Where(x => filters.LowCut(x)).OrderBy(x => x.Variable).ToList();
 
             valid_units = units_force.Count;
 
@@ -242,7 +242,7 @@ namespace Awesome.AI.Core
         private void TheSoup() 
         {
             curr_hub = curr_unit.HUB;
-            curr_unit = matrix.NextUnit(curr_unit, dir);
+            curr_unit = matrix.NextUnit();
         }
 
         private void Process(bool _pro)

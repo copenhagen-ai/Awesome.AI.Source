@@ -12,7 +12,7 @@
         public enum HACKMODES { HACK, NOHACK }
         public enum LIMITTYPE { SIMPLE, SIGMOID, CHANCE }
         public enum MOOD { GOOD, BAD }
-        public enum HARDCHOICE { YES, NO }
-        public enum SOFTCHOICE { VERYYES, YES, DUNNO, NO, VERYNO }
+        public enum HARDDOWN { YES, NO }
+        public enum SOFTDOWN { VERYYES, YES, DUNNO, NO, VERYNO }
     }
 }

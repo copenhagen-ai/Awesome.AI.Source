@@ -1,7 +1,5 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.CoreHelpers;
 using Awesome.AI.Interfaces;
-using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Core
 {
@@ -29,16 +27,11 @@ namespace Awesome.AI.Core
             this.mind = mind;
         }
 
-        public UNIT NextUnit(UNIT curr, Direction dir)
+        public UNIT NextUnit()
         {
-            if (curr == null)
-                throw new Exception("NextUnit");
-            if (dir == null)
-                throw new Exception("Variable");
-
-            if (!curr.IsIDLE())
+            if (!mind.curr_unit.IsIDLE())
             {
-                UNIT w_act = Unit(curr, dir);
+                UNIT w_act = Unit();
 
                 if (w_act != null)
                     return w_act;                
@@ -54,41 +47,36 @@ namespace Awesome.AI.Core
         /*
          * priority 1
          * */
-        private UNIT Unit(UNIT curr, Direction dir)
+        private UNIT Unit()
         {
-            if (curr == null)
-                throw new ArgumentNullException();
-            
             List<UNIT> units = mind.mem.UNITS_VAL();
 
             units = units.Where(x =>
-                   mind.filters.UnitIsValid(x)                   //comment to turn off
-                && mind.filters.Direction(x, curr, dir)       //comment to turn off
-                && !mind.filters.LowCut(x)                      //comment to turn off
-                && mind.filters.Credits(x)                        //comment to turn off
-                //&& mind.filters.Theme(x)                         //comment to turn off
-                //&& Filters.Elastic2(dir)                  //comment to turn off
-                //&& Filters.Ideal(x)                       //comment to turn off
+                   mind.filters.TheChoice(x)       //comment to turn off
+                && mind.filters.LowCut(x)         //comment to turn off
+                && mind.filters.Credits(x)         //comment to turn off
+                //   mind.filters.UnitIsValid(x)     //comment to turn off
+                //&& mind.filters.Theme(x)         //comment to turn off
+                //&& Filters.Elastic2(dir)         //comment to turn off
+                //&& Filters.Ideal(x)              //comment to turn off
                 //&& Filters.Neighbor(x)
                 ).ToList();
 
             if (units == null)
                 throw new Exception("Unit");
 
-            UNIT _u = Jump(curr, dir, units);
+            UNIT _u = Jump(units);
             //_u = Filters.Neighbor(_u, units);
 
             return _u;
         }
 
-        private UNIT Jump(UNIT curr, Direction dir, List<UNIT> units)
+        private UNIT Jump(List<UNIT> units)
         {
-            if (curr == null)
-                throw new ArgumentNullException();
             if (units == null)
                 throw new ArgumentNullException();
 
-            double near = NearEnergy(dir);
+            double near = NearEnergy();
 
             units = units.OrderByDescending(x => x.Variable).ToList();
 
@@ -109,7 +97,7 @@ namespace Awesome.AI.Core
             return res;
         }
 
-        private double NearEnergy(Direction dir)
+        private double NearEnergy()
         {
             IMechanics mech = mind.mech;
             double f_h = mind.mech.HighestVar;
@@ -128,7 +116,7 @@ namespace Awesome.AI.Core
             return nrg;
         }
 
-        private double NearPercent(Direction dir)
+        private double NearPercent()
         {
             IMechanics mech = mind.mech;
 
@@ -158,7 +146,7 @@ namespace Awesome.AI.Core
             List<UNIT> units = mind.mem.UNITS_VAL().Where(x => 
                                 mind.filters.UnitIsValid(x) 
                                 && mind.filters.Credits(x) 
-                                && !mind.filters.LowCut(x)
+                                && mind.filters.LowCut(x)
                                 ).OrderByDescending(x => x.Variable).ToList();
             
             int[] rand = mind.rand.MyRandomInt(1,units.Count - 1);
