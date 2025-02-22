@@ -14,5 +14,6 @@
         public enum MOOD { GOOD, BAD }
         public enum HARDDOWN { YES, NO }
         public enum SOFTDOWN { VERYYES, YES, DUNNO, NO, VERYNO }
+        public enum LOGICERROR { TYPE1, TYPE2, TYPE3, QUANTUM }
     }
 }

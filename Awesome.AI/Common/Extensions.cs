@@ -1,6 +1,7 @@
 ﻿using Awesome.AI.Core;
 using Awesome.AI.Helpers;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text.RegularExpressions;
 using static Awesome.AI.Helpers.Enums;
 using static Google.Protobuf.WellKnownTypes.Field.Types;
 
@@ -110,7 +111,7 @@ namespace Awesome.AI.Common
         public static HARDDOWN ToDownZero(this double deltaMom, TheMind mind)
         {
             /*
-             * <<obsolete>>"NO", is to say no to going downwards
+             * "NO", is to say no to going downwards
              * */
 
             bool res = deltaMom <= 0.0d;
@@ -118,14 +119,25 @@ namespace Awesome.AI.Common
             //if (mind.parms.hack == HACKMODES.HACK)
             //    res = !res;
 
-            //is this a hack or ok???
-            return res ? HARDDOWN.YES : HARDDOWN.NO;
+            //introducing logical error.. or hack
+            if (Constants.LogicError == LOGICERROR.TYPE1)
+                return res ? HARDDOWN.NO : HARDDOWN.YES;
+
+            if (Constants.LogicError == LOGICERROR.TYPE2)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
+
+            if (Constants.LogicError == LOGICERROR.TYPE3)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
+
+            //not tested
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM)
+                return mind.quantum.Superposition().Result ? HARDDOWN.NO : HARDDOWN.YES;
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
         {
             /*
-             * <<obsolete>>"NO", is to say no to going downwards
+             * "NO", is to say no to going downwards
              * */
 
             bool res = deltaMom <= prev;
@@ -133,15 +145,25 @@ namespace Awesome.AI.Common
             //if (mind.parms.hack == HACKMODES.HACK)
             //    res = !res;
 
-            //is this a hack or ok???
-            return res ? HARDDOWN.YES : HARDDOWN.NO;
+            //introducing logical error..or hack
+            if (Constants.LogicError == LOGICERROR.TYPE1)
+                return res ? HARDDOWN.NO : HARDDOWN.YES;
+
+            if (Constants.LogicError == LOGICERROR.TYPE2)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
+
+            if (Constants.LogicError == LOGICERROR.TYPE3)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
+
+            //not tested, very experimental
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM)
+                return res ? mind.quantum.Superposition().Result.ToDirection() : HARDDOWN.NO;
         }
 
-        //public static HARDDOWN ToDown(this bool _q)
-        //{
-        //    //is this a hack or ok???
-        //    return _q ? HARDDOWN.NO : HARDDOWN.YES;
-        //}
+        public static HARDDOWN ToDirection(this bool _q)
+        {
+            return _q ? HARDDOWN.YES : HARDDOWN.NO;
+        }
 
         public static bool IsYes(this HARDDOWN _q)
         {

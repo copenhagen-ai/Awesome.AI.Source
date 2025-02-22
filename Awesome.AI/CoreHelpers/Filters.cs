@@ -1,5 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Helpers;
+using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.CoreHelpers
 {
@@ -14,18 +16,37 @@ namespace Awesome.AI.CoreHelpers
 
         public bool TheChoice(UNIT _x)
         {
+            /*
+             * this filter can be on or off, just have to tweek HardMom and ToDownZero/ToDownPrev
+             * personally i think its nice to not have words like choice in the algorithm
+             * */
+
             if (_x == null)
                 throw new ArgumentNullException();
-            
-            bool go_up = !mind.dir.DownHard.IsYes();
-            bool hello = mind.goodbye.IsNo();
-            bool dir_up = hello && go_up;
 
+            bool hello = mind.goodbye.IsNo();
+            bool go_down = mind.dir.DownHard.IsYes();
+            bool go_up;
+            
+            //introduce logic error.. or hack
+            if (Constants.LogicError == LOGICERROR.TYPE1)
+                return true;
+
+            if (Constants.LogicError == LOGICERROR.TYPE2)
+                go_up = hello && !go_down;
+
+            if (Constants.LogicError == LOGICERROR.TYPE3)
+                go_up = hello && go_down;
+
+            //not tested
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM)
+                return true;
+            
             double f_a = _x.Variable;
             double f_b = mind.curr_unit.Variable;
             
             //remember static: high, dynamic: low.. at zero
-            return dir_up ? f_a < f_b: f_a >= f_b;
+            return go_up ? /*up*/f_a < f_b : /*down*/f_a >= f_b;
         }
 
         public bool UnitIsValid(UNIT _u)

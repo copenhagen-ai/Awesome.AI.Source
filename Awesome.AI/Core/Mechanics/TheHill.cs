@@ -2,6 +2,7 @@
 using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Web.AI.Common;
+using System.Text.RegularExpressions;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Core.Mechanics
@@ -46,8 +47,21 @@ namespace Awesome.AI.Core.Mechanics
 
         public HARDDOWN HardMom
         {
-            //get { return deltaMom.ToDownZero(mind); }
-            get { return deltaMom.ToDownPrev(deltaMomPrev, mind); }
+            
+            get 
+            {
+                if (Constants.LogicError == LOGICERROR.TYPE1)
+                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
+
+                if (Constants.LogicError == LOGICERROR.TYPE2)
+                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
+
+                if (Constants.LogicError == LOGICERROR.TYPE3)
+                    return deltaMom.ToDownZero(mind);
+
+                if (false && Constants.LogicError == LOGICERROR.QUANTUM)
+                    throw new NotImplementedException();
+            }
         }
 
         public double HighestVar

@@ -136,7 +136,7 @@ namespace Awesome.AI.Helpers
                     high_at_zero = true;
                     mass = 0.5d;
                     update_cred = 0.050d;
-                    shift = 0.05d;
+                    shift = 0.0d;
                     delta_time = 0.5d;
 
                     /*

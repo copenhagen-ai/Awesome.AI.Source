@@ -1,4 +1,6 @@
-﻿namespace Awesome.AI.Helpers
+﻿using static Awesome.AI.Helpers.Enums;
+
+namespace Awesome.AI.Helpers
 {
     public class Constants
     {
@@ -64,6 +66,8 @@
         public const int FIRST_RUN = 5;
         public const int NUMBER_OF_UNITS = 10;
         public const int RUNTIME = 2;                //minutes
+
+        public const LOGICERROR LogicError = LOGICERROR.TYPE1;
 
         /*
          * these seem to be related
