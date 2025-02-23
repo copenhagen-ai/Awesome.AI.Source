@@ -33,7 +33,7 @@ namespace Awesome.AI.Core
         public ChatAsk chatask;
         public Direction dir;
         public Position pos;
-        public MyQuantum quantum;
+        public MyQubit quantum;
 
         public HUB curr_hub;
         public UNIT curr_unit;
@@ -89,7 +89,7 @@ namespace Awesome.AI.Core
                 chatask = new ChatAsk(this, "");
                 dir = new Direction(this);
                 pos = new Position(this);
-                quantum = new MyQuantum(this);
+                quantum = new MyQubit(this);
                 mem = new Memory(this, Constants.NUMBER_OF_UNITS);
                                 
                 mech = parms.GetMechanics(_mech);

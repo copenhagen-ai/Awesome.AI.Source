@@ -59,13 +59,20 @@ namespace Awesome.AI.Core.Mechanics
                 if (Constants.LogicError == LOGICERROR.TYPE3)
                     return deltaMom.ToDownZero(mind);
 
-                //not tested, very experimental
-                if (false && Constants.LogicError == LOGICERROR.QUANTUM1)
-                    throw new NotImplementedException();
+                if (Constants.LogicError == LOGICERROR.RANDOM)
+                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
 
                 //not tested, very experimental
-                if (false && Constants.LogicError == LOGICERROR.QUANTUM2)
-                    throw new NotImplementedException();
+                if (Constants.LogicError == LOGICERROR.QUANTUM1)
+                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
+                    //return deltaMom.ToDownZero(mind);
+
+                //not tested, very experimental
+                if (Constants.LogicError == LOGICERROR.QUANTUM2)
+                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
+                    //return deltaMom.ToDownZero(mind);
+
+                throw new Exception("HardMom");
             }
         }
 

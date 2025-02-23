@@ -129,13 +129,18 @@ namespace Awesome.AI.Common
             if (Constants.LogicError == LOGICERROR.TYPE3)
                 return res ? HARDDOWN.YES : HARDDOWN.NO;
 
-            //not tested, very experimental
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM1)
-                return res ? mind.quantum.Superposition().Result.ToDirection() : HARDDOWN.NO;
+            if (Constants.LogicError == LOGICERROR.RANDOM)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
 
             //not tested, very experimental
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM2)
+            if (Constants.LogicError == LOGICERROR.QUANTUM1)
+                return res ? mind.quantum.MySuperposition().Result.ToDirection() : HARDDOWN.NO;
+
+            //not tested, very experimental
+            if (Constants.LogicError == LOGICERROR.QUANTUM2)
                 return res ? HARDDOWN.YES : HARDDOWN.NO;
+
+            throw new Exception("ToDownZero");
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
@@ -159,13 +164,18 @@ namespace Awesome.AI.Common
             if (Constants.LogicError == LOGICERROR.TYPE3)
                 return res ? HARDDOWN.YES : HARDDOWN.NO;
 
-            //not tested, very experimental
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM1)
-                return res ? mind.quantum.Superposition().Result.ToDirection() : HARDDOWN.NO;
+            if (Constants.LogicError == LOGICERROR.RANDOM)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
 
             //not tested, very experimental
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM2)
+            if (Constants.LogicError == LOGICERROR.QUANTUM1)
+                return res ? mind.quantum.MySuperposition().Result.ToDirection() : HARDDOWN.NO;
+
+            //not tested, very experimental
+            if (Constants.LogicError == LOGICERROR.QUANTUM2)
                 return res ? HARDDOWN.YES : HARDDOWN.NO;
+
+            throw new Exception("ToDownPrev");
         }
 
         public static HARDDOWN ToDirection(this bool _q)

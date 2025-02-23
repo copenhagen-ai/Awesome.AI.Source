@@ -67,7 +67,7 @@ namespace Awesome.AI.Helpers
         public const int NUMBER_OF_UNITS = 10;
         public const int RUNTIME = 2;                //minutes
 
-        public const LOGICERROR LogicError = LOGICERROR.TYPE1;
+        public const LOGICERROR LogicError = LOGICERROR.QUANTUM1;
 
         /*
          * these seem to be related

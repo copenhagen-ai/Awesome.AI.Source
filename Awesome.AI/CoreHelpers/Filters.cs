@@ -26,7 +26,10 @@ namespace Awesome.AI.CoreHelpers
 
             bool hello = mind.goodbye.IsNo();
             bool go_down = mind.dir.DownHard.IsYes();
-            bool go_up;
+            bool? go_up = null;
+
+            double[] rand = mind.rand.MyRandomDouble(1);
+            bool down = rand[0] < 0.5d;
             
             //introduce logic error.. or hack
             if (Constants.LogicError == LOGICERROR.TYPE1)
@@ -38,19 +41,25 @@ namespace Awesome.AI.CoreHelpers
             if (Constants.LogicError == LOGICERROR.TYPE3)
                 go_up = hello && go_down;
 
+            if (Constants.LogicError == LOGICERROR.RANDOM)
+                go_up = !down ? hello && go_down : hello && !go_down;
+
             //not tested, very experimental
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM1)
+            if (Constants.LogicError == LOGICERROR.QUANTUM1)
                 return true;
 
             //not tested, very experimental
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM2)
-                go_up = hello && mind.quantum.XOR(go_down, go_down).Result;
+            if (Constants.LogicError == LOGICERROR.QUANTUM2)
+                go_up = hello && mind.quantum.MyXOR(go_down, go_down).Result;
 
             double f_a = _x.Variable;
             double f_b = mind.curr_unit.Variable;
-            
+
+            if(go_up == null)
+                throw new Exception("TheChoice");
+
             //remember static: high, dynamic: low.. at zero
-            return go_up ? /*up*/f_a < f_b : /*down*/f_a >= f_b;
+            return (bool)go_up ? /*up*/f_a < f_b : /*down*/f_a >= f_b;
         }
 
         public bool UnitIsValid(UNIT _u)
