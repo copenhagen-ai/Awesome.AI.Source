@@ -129,9 +129,13 @@ namespace Awesome.AI.Common
             if (Constants.LogicError == LOGICERROR.TYPE3)
                 return res ? HARDDOWN.YES : HARDDOWN.NO;
 
-            //not tested
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM)
-                return mind.quantum.Superposition().Result ? HARDDOWN.NO : HARDDOWN.YES;
+            //not tested, very experimental
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM1)
+                return res ? mind.quantum.Superposition().Result.ToDirection() : HARDDOWN.NO;
+
+            //not tested, very experimental
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM2)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
@@ -156,8 +160,12 @@ namespace Awesome.AI.Common
                 return res ? HARDDOWN.YES : HARDDOWN.NO;
 
             //not tested, very experimental
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM)
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM1)
                 return res ? mind.quantum.Superposition().Result.ToDirection() : HARDDOWN.NO;
+
+            //not tested, very experimental
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM2)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         public static HARDDOWN ToDirection(this bool _q)

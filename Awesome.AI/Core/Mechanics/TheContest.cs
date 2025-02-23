@@ -58,7 +58,12 @@ namespace Awesome.AI.Core.Mechanics
                 if (Constants.LogicError == LOGICERROR.TYPE3)
                     return deltaMom.ToDownZero(mind);
 
-                if (false && Constants.LogicError == LOGICERROR.QUANTUM)
+                //not tested, very experimental
+                if (false && Constants.LogicError == LOGICERROR.QUANTUM1)
+                    throw new NotImplementedException();
+
+                //not tested, very experimental
+                if (false && Constants.LogicError == LOGICERROR.QUANTUM2)
                     throw new NotImplementedException();
             }            
         }

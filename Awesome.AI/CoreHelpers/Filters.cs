@@ -38,10 +38,14 @@ namespace Awesome.AI.CoreHelpers
             if (Constants.LogicError == LOGICERROR.TYPE3)
                 go_up = hello && go_down;
 
-            //not tested
-            if (false && Constants.LogicError == LOGICERROR.QUANTUM)
+            //not tested, very experimental
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM1)
                 return true;
-            
+
+            //not tested, very experimental
+            if (false && Constants.LogicError == LOGICERROR.QUANTUM2)
+                go_up = hello && mind.quantum.XOR(go_down, go_down).Result;
+
             double f_a = _x.Variable;
             double f_b = mind.curr_unit.Variable;
             
