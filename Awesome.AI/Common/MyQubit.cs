@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Core;
-using Microsoft.Quantum.Simulation.Core;
 
 public class MyQubit
 {
@@ -17,7 +16,7 @@ public class MyQubit
         beta = new Complex(0, 0);
     }
 
-    public async Task<bool> MySuperposition()
+    public bool MySuperposition()
     {
         MyQubit qubit1 = new MyQubit();
 
@@ -25,24 +24,10 @@ public class MyQubit
         
         int measurement1 = qubit1.Measure();
 
-        //MyQubit qubit1 = new MyQubit();
-
-        //Console.WriteLine("Initial State:");
-        //Console.WriteLine($"Qubit 1: {qubit1}");
-
-        // Apply Hadamard to put qubit1 into superposition
-        //qubit1.ApplySuperposition();
-        //Console.WriteLine("\nAfter Superposition:");
-        //Console.WriteLine($"Qubit 1: {qubit1}");
-
-        // Measure both qubits
-        //int measurement1 = qubit1.Measure();
-        //Console.WriteLine($"\nMeasurement results: Qubit 1 = {measurement1}");
-
         return measurement1 > 0;
     }
 
-    public async Task<bool> MyXOR(bool _a, bool _b)
+    public bool MyXOR(bool _a, bool _b)
     {
         MyQubit qubit1 = new MyQubit();
         MyQubit qubit2 = new MyQubit();
@@ -52,28 +37,6 @@ public class MyQubit
         
         int measurement1 = qubit1.Measure();
         int measurement2 = qubit2.Measure();
-
-        //MyQubit qubit1 = new MyQubit();
-        //MyQubit qubit2 = new MyQubit();
-
-        //Console.WriteLine("Initial State:");
-        //Console.WriteLine($"Qubit 1: {qubit1}");
-        //Console.WriteLine($"Qubit 2: {qubit2}");
-
-        // Apply Hadamard to put qubit1 into superposition
-        //qubit1.ApplySuperposition();
-        //Console.WriteLine("\nAfter Superposition:");
-        //Console.WriteLine($"Qubit 1: {qubit1}");
-
-        // Apply XOR gate
-        //qubit1.ApplyXOR(qubit2);
-        //Console.WriteLine("\nAfter XOR with Qubit 2:");
-        //Console.WriteLine($"Qubit 1: {qubit1}");
-
-        // Measure both qubits
-        //int measurement1 = qubit1.Measure();
-        //int measurement2 = qubit2.Measure();
-        //Console.WriteLine($"\nMeasurement results: Qubit 1 = {measurement1}, Qubit 2 = {measurement2}");
 
         return measurement1 > 0;
     }
@@ -88,49 +51,50 @@ public class MyQubit
 
     public void ApplyPauliX()
     {
-        // Swaps alpha and beta
         var temp = alpha;
         alpha = beta;
         beta = temp;
     }
 
-    public void ApplyPauliY()
+    public void ApplyCNOT(MyQubit control)
     {
-        // Multiplies beta by i and alpha by -i and swaps
-        var temp = alpha;
-        alpha = Complex.Multiply(new Complex(0, -1), beta);
-        beta = Complex.Multiply(new Complex(0, 1), temp);
+        Complex newAlpha = alpha;
+        Complex newBeta = Complex.Add(Complex.Multiply(beta, control.alpha.MagnitudeSquared()), Complex.Multiply(alpha, control.beta.MagnitudeSquared()));
+        alpha = newAlpha;
+        beta = newBeta;
     }
 
-    public void ApplyPauliZ()
+    public void ApplyToffoli(MyQubit control1, MyQubit control2)
     {
-        // Multiplies beta by -1
-        beta = Complex.Negate(beta);
-    }
-
-    public void ApplyAND(MyQubit other)
-    {
-        alpha = Complex.Multiply(alpha, other.alpha);
-        beta = new Complex(0, 0);
-    }
-
-    public void ApplyOR(MyQubit other)
-    {
-        alpha = Complex.Subtract(Complex.Add(alpha, other.alpha), Complex.Multiply(alpha, other.alpha));
-        beta = Complex.Subtract(new Complex(1, 0), alpha);
-    }
-
-    public void ApplyXOR(MyQubit other)
-    {
-        Complex tempAlpha = Complex.Add(Complex.Multiply(alpha, other.beta), Complex.Multiply(beta, other.alpha));
-        Complex tempBeta = Complex.Add(Complex.Multiply(alpha, other.alpha), Complex.Multiply(beta, other.beta));
-        alpha = tempAlpha;
-        beta = tempBeta;
+        if (control1.alpha.MagnitudeSquared() < 0.5 && control2.alpha.MagnitudeSquared() < 0.5)
+        {
+            ApplyPauliX();
+        }
     }
 
     public void ApplySuperposition()
     {
         ApplyHadamard();
+    }
+
+    public void ApplyAND(MyQubit control1, MyQubit control2)
+    {
+        ApplyToffoli(control1, control2);
+    }
+
+    public void ApplyOR(MyQubit control1, MyQubit control2)
+    {
+        control1.ApplyPauliX();
+        control2.ApplyPauliX();
+        ApplyToffoli(control1, control2);
+        ApplyPauliX();
+        control1.ApplyPauliX();
+        control2.ApplyPauliX();
+    }
+
+    public void ApplyXOR(MyQubit control)
+    {
+        ApplyCNOT(control);
     }
 
     public int Measure()

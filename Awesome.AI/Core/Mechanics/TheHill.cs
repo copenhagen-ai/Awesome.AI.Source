@@ -69,8 +69,8 @@ namespace Awesome.AI.Core.Mechanics
 
                 //not tested, very experimental
                 if (Constants.LogicError == LOGICERROR.QUANTUM2)
-                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    //return deltaMom.ToDownZero(mind);
+                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
+                    return deltaMom.ToDownZero(mind);
 
                 throw new Exception("HardMom");
             }

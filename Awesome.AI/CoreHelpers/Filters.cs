@@ -50,7 +50,7 @@ namespace Awesome.AI.CoreHelpers
 
             //not tested, very experimental
             if (Constants.LogicError == LOGICERROR.QUANTUM2)
-                go_up = hello && mind.quantum.MyXOR(go_down, go_down).Result;
+                go_up = hello && mind.quantum.MyXOR(go_down, go_down);
 
             double f_a = _x.Variable;
             double f_b = mind.curr_unit.Variable;
