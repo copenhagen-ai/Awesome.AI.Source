@@ -15,28 +15,28 @@ public class MyQubit
         alpha = new Complex(1, 0);
         beta = new Complex(0, 0);
     }
-
+    
     public bool MySuperposition()
     {
-        MyQubit qubit1 = new MyQubit();
+        MyQubit qubit = new MyQubit();
+        qubit.ApplySuperposition();
 
-        qubit1.ApplySuperposition();
-        
-        int measurement1 = qubit1.Measure();
+        int measurement1 = qubit.Measure();
 
         return measurement1 > 0;
     }
 
-    public bool MyXOR(bool _a, bool _b)
+    public bool MyXOR(bool a, bool b)
     {
-        MyQubit qubit1 = new MyQubit();
-        MyQubit qubit2 = new MyQubit();
+        MyQubit qubitA = new MyQubit();
+        MyQubit qubitB = new MyQubit();
 
-        qubit1.ApplySuperposition();
-        qubit1.ApplyXOR(qubit2);
-        
-        int measurement1 = qubit1.Measure();
-        int measurement2 = qubit2.Measure();
+        if (a) qubitA.ApplyPauliX(); // Set to |1> if a is true
+        if (b) qubitB.ApplyPauliX(); // Set to |1> if b is true
+
+        qubitA.ApplyXOR(qubitB);
+
+        int measurement1 = qubitA.Measure();
 
         return measurement1 > 0;
     }
