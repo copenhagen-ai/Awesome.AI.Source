@@ -50,27 +50,23 @@ namespace Awesome.AI.Core.Mechanics
             
             get 
             {
-                if (Constants.LogicError == LOGICERROR.TYPE1)
-                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
-
-                if (Constants.LogicError == LOGICERROR.TYPE2)
-                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
-
-                if (Constants.LogicError == LOGICERROR.TYPE3)
+                if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
                     return deltaMom.ToDownZero(mind);
 
-                if (Constants.LogicError == LOGICERROR.RANDOM)
-                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
-
-                //not tested, very experimental
-                if (Constants.LogicError == LOGICERROR.QUANTUM1)
+                if (Constants.Logic == LOGICTYPE.RANDOM)
                     return deltaMom.ToDownPrev(deltaMomPrev, mind);
                     //return deltaMom.ToDownZero(mind);
 
                 //not tested, very experimental
-                if (Constants.LogicError == LOGICERROR.QUANTUM2)
-                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    return deltaMom.ToDownZero(mind);
+                if (Constants.Logic == LOGICTYPE.QUANTUM1)
+                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
+                    //return deltaMom.ToDownZero(mind);
+
+                //not tested, very experimental
+                if (Constants.Logic == LOGICTYPE.QUANTUM2)
+                    return deltaMom.ToDownPrev(deltaMomPrev, mind);
+                    //return deltaMom.ToDownZero(mind);
 
                 throw new Exception("HardMom");
             }

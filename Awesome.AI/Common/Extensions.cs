@@ -108,6 +108,59 @@ namespace Awesome.AI.Common
             return res;
         }
 
+        //public static bool TheChoice(this TheMind mind)
+        //{
+        //    /*
+        //     * this filter can be on or off, just have to tweek HardMom and ToDownZero/ToDownPrev
+        //     * personally i think its nice to not have words like choice in the algorithm
+        //     * */
+
+        //    bool hello = mind.goodbye.IsNo();
+        //    bool go_down = mind.dir.DownHard.IsYes();
+        //    bool? go_up = null;
+
+        //    double[] rand = mind.rand.MyRandomDouble(1);
+        //    bool down = rand[0] < 0.5d;
+
+        //    //introduce logic error.. or hack
+        //    if (Constants.LogicError == LOGICERROR.TYPE1)
+        //        return true;
+
+        //    if (Constants.LogicError == LOGICERROR.TYPE2)
+        //        go_up = hello && !go_down;
+
+        //    //if (Constants.LogicError == LOGICERROR.TYPE3)
+        //    //    go_up = hello && go_down;
+
+        //    if (Constants.LogicError == LOGICERROR.RANDOM)
+        //        go_up = !down ? hello && go_down : hello && !go_down;
+
+        //    //not tested, very experimental
+        //    if (Constants.LogicError == LOGICERROR.QUANTUM1)
+        //        return true;
+
+        //    //not tested, very experimental
+        //    if (Constants.LogicError == LOGICERROR.QUANTUM2)
+        //        go_up = hello && mind.quantum.MyXOR(go_down, go_down);
+
+        //    if (go_up == null)
+        //        throw new Exception("TheChoice");
+
+        //    return (bool)go_up;
+        //}
+
+        public static bool Direction(this TheMind mind)
+        {
+            /*
+             * this filter can be on or off, just have to tweek HardMom and ToDownZero/ToDownPrev
+             * */
+
+            bool hello = mind.goodbye.IsNo();
+            bool go_up = hello && mind.dir.DownHard.IsNo();
+
+            return go_up;
+        }
+
         public static HARDDOWN ToDownZero(this double deltaMom, TheMind mind)
         {
             /*
@@ -116,31 +169,10 @@ namespace Awesome.AI.Common
 
             bool res = deltaMom <= 0.0d;
 
-            //if (mind.parms.hack == HACKMODES.HACK)
-            //    res = !res;
+            double[] rand = mind.rand.MyRandomDouble(1);
+            bool down = rand[0] < 0.5d;
 
-            //introducing logical error.. or hack
-            if (Constants.LogicError == LOGICERROR.TYPE1)
-                return res ? HARDDOWN.NO : HARDDOWN.YES;
-
-            if (Constants.LogicError == LOGICERROR.TYPE2)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
-
-            if (Constants.LogicError == LOGICERROR.TYPE3)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
-
-            if (Constants.LogicError == LOGICERROR.RANDOM)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
-
-            //not tested, very experimental
-            if (Constants.LogicError == LOGICERROR.QUANTUM1)
-                return res ? mind.quantum.MySuperposition().ToDirection() : HARDDOWN.NO;
-
-            //not tested, very experimental
-            if (Constants.LogicError == LOGICERROR.QUANTUM2)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
-
-            throw new Exception("ToDownZero");
+            return Logic(res, down, mind);
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
@@ -151,29 +183,29 @@ namespace Awesome.AI.Common
 
             bool res = deltaMom <= prev;
 
-            //if (mind.parms.hack == HACKMODES.HACK)
-            //    res = !res;
+            double[] rand = mind.rand.MyRandomDouble(1);
+            bool down = rand[0] < 0.5d;
 
-            //introducing logical error..or hack
-            if (Constants.LogicError == LOGICERROR.TYPE1)
+            return Logic(res, down, mind);
+        }
+
+        public static HARDDOWN Logic(bool res, bool down, TheMind mind)
+        {
+            //works
+            if (Constants.Logic == LOGICTYPE.BOOLEAN)
                 return res ? HARDDOWN.NO : HARDDOWN.YES;
 
-            if (Constants.LogicError == LOGICERROR.TYPE2)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
+            //wrong logic, experimental
+            if (Constants.Logic == LOGICTYPE.RANDOM)
+                return res ? down.ToDirection() : HARDDOWN.NO;
 
-            if (Constants.LogicError == LOGICERROR.TYPE3)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
-
-            if (Constants.LogicError == LOGICERROR.RANDOM)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
-
-            //not tested, very experimental
-            if (Constants.LogicError == LOGICERROR.QUANTUM1)
+            //wrong logic, experimental
+            if (Constants.Logic == LOGICTYPE.QUANTUM1)
                 return res ? mind.quantum.MySuperposition().ToDirection() : HARDDOWN.NO;
 
-            //not tested, very experimental
-            if (Constants.LogicError == LOGICERROR.QUANTUM2)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
+            //wrong logic, experimental
+            if (Constants.Logic == LOGICTYPE.QUANTUM2)
+                return res ? mind.quantum.MyXOR(res, res).ToDirection() : HARDDOWN.NO;
 
             throw new Exception("ToDownPrev");
         }

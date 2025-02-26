@@ -60,25 +60,17 @@ namespace Awesome.AI.Helpers
         public const double GRAV_CONST = 6.674E-11d;
         public const double MAX_PAIN = 10.0d;
 
-        public const double BASE_FRICTION = 2d / 3d; // needs to be this otherwise position keeps going down
-        public const double LAPSES = 99d;      // yesno ratio : reaction time in cycles
+        public const double BASE_FRICTION = 2d / 3d;        //needs to be this otherwise position keeps going down
+        public const double LAPSES = 99d;                   //yesno ratio : reaction time in cycles
         public const double RATIO = 50d;
         public const int FIRST_RUN = 5;
         public const int NUMBER_OF_UNITS = 10;
-        public const int RUNTIME = 2;                //minutes
+        public const int RUNTIME = 2;                       //minutes
 
-        public const LOGICERROR LogicError = LOGICERROR.QUANTUM1;
+        public const LOGICTYPE Logic = LOGICTYPE.RANDOM;
 
-        /*
-         * these seem to be related
-         * hist_total
-         * - my guess is: unlike normal AI algorithms, here we want to hit local minimas, so not to much memory
-         * - does hist_total increase with the number of HUBS/UNITS?
-         * - hist_total seems to have impact on "thought patterns"
-         * - I rarely change these variables anymore
-         * */
-        public const int MICRO_SEC = 4000; //call micro timer every 1000µs (1ms)
-        public const int HIST_TOTAL = 100; //the number of UNITS???
+        public const int MICRO_SEC = 4000;                  //call micro timer every 1000µs (1ms)
+        public const int HIST_TOTAL = 100;                  //the number of UNITS???
         public const int REMEMBER = 200;
 
         public static readonly string[] subject_decision = new string[]
@@ -86,8 +78,6 @@ namespace Awesome.AI.Helpers
             "location_should_decision", "location_what_decision",
             "answer_should_decision", "answer_what_decision",
             "ask_should_decision",
-        };
-
-        //public const POSITION position = POSITION.NEW;
+        };        
     }
 }
