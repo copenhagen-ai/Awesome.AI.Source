@@ -76,18 +76,7 @@
 
             return res;
         }
-
-        //public Vector2D Flip360(Vector2D v1)
-        //{
-        //    if (v1.theta_in_degrees > 0.0d)
-        //        throw new Exception();
-
-        //    double degrees = -v1.theta_in_degrees;
-        //    double radians = Radians(360.0d - degrees);
-
-        //    return new Vector2D(null, null, v1.magnitude, radians);
-        //}
-
+        
         public Vector2D ToPolar(Vector2D v1)
         {
             /*
