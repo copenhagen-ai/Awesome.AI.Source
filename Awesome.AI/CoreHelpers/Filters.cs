@@ -24,15 +24,6 @@ namespace Awesome.AI.CoreHelpers
             if (_x == null)
                 throw new ArgumentNullException();
 
-            if (Constants.Logic == LOGICTYPE.RANDOM)
-                return true;
-
-            if (Constants.Logic == LOGICTYPE.QUANTUM1)
-                return true;
-
-            if (Constants.Logic == LOGICTYPE.QUANTUM2)
-                return true;
-
             double f_a = _x.Variable;
             double f_b = mind.curr_unit.Variable;
 

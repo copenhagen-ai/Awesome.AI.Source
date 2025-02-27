@@ -156,7 +156,13 @@ namespace Awesome.AI.Common
              * */
 
             bool hello = mind.goodbye.IsNo();
-            bool go_up = hello && mind.dir.DownHard.IsNo();
+            bool go_up = mind.dir.DownHard.IsNo();
+
+            if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                go_up = hello && go_up;
+
+            if (Constants.Logic == LOGICTYPE.QUBIT)
+                go_up = hello && mind.quantum.MyXOR(go_up, go_up);
 
             return go_up;
         }
@@ -195,17 +201,9 @@ namespace Awesome.AI.Common
             if (Constants.Logic == LOGICTYPE.BOOLEAN)
                 return res ? HARDDOWN.NO : HARDDOWN.YES;
 
-            //wrong logic, experimental
-            if (Constants.Logic == LOGICTYPE.RANDOM)
-                return res ? down.ToDirection() : HARDDOWN.NO;
-
-            //wrong logic, experimental
-            if (Constants.Logic == LOGICTYPE.QUANTUM1)
-                return res ? mind.quantum.MySuperposition().ToDirection() : HARDDOWN.NO;
-
-            //wrong logic, experimental
-            if (Constants.Logic == LOGICTYPE.QUANTUM2)
-                return res ? mind.quantum.MyXOR(res, res).ToDirection() : HARDDOWN.NO;
+            //works, experimental
+            if (Constants.Logic == LOGICTYPE.QUBIT)
+                return res ? HARDDOWN.YES : HARDDOWN.NO;
 
             throw new Exception("ToDownPrev");
         }

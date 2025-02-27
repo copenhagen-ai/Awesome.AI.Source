@@ -67,7 +67,7 @@ namespace Awesome.AI.Helpers
         public const int NUMBER_OF_UNITS = 10;
         public const int RUNTIME = 2;                       //minutes
 
-        public const LOGICTYPE Logic = LOGICTYPE.RANDOM;
+        public const LOGICTYPE Logic = LOGICTYPE.QUBIT;
 
         public const int MICRO_SEC = 4000;                  //call micro timer every 1000µs (1ms)
         public const int HIST_TOTAL = 100;                  //the number of UNITS???

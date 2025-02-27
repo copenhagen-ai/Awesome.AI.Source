@@ -14,6 +14,6 @@
         public enum MOOD { GOOD, BAD }
         public enum HARDDOWN { YES, NO }
         public enum SOFTDOWN { VERYYES, YES, DUNNO, NO, VERYNO }
-        public enum LOGICTYPE { BOOLEAN, RANDOM, QUANTUM1, QUANTUM2 }
+        public enum LOGICTYPE { BOOLEAN, QUBIT }
     }
 }
