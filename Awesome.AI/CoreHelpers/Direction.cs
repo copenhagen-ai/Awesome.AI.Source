@@ -8,8 +8,8 @@ namespace Awesome.AI.CoreHelpers
     public class Direction
     {
         public HARDDOWN DownHard { get { return mind.mech.HardMom; } }
-        public SOFTDOWN DownSoft { get { return mind.mech.SoftMom; } }
-        public bool DownPeriod { get { return Ratio.PeriodDown(mind); } }
+        public FUZZYDOWN DownFuzzy { get { return mind.mech.FuzzyMom; } }
+        public PERIODDOWN DownPeriod { get { return Ratio.PeriodDown(mind); } }
 
         public List<HARDDOWN> Ratio { get; set; }
 

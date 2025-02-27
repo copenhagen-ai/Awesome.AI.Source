@@ -9,11 +9,13 @@
         public enum TAGS { ALL, EVEN }
         public enum OCCUPASION { FIXED, DYNAMIC }
         public enum MECHANICS { NONE, GRAVITY, CONTEST, WHEEL, HILL }
-        public enum HACKMODES { HACK, NOHACK }
         public enum LIMITTYPE { SIMPLE, SIGMOID, CHANCE }
         public enum MOOD { GOOD, BAD }
         public enum HARDDOWN { YES, NO }
-        public enum SOFTDOWN { VERYYES, YES, DUNNO, NO, VERYNO }
+        public enum FUZZYDOWN { VERYYES, YES, DUNNO, NO, VERYNO }
+        public enum PERIODDOWN { YES, NO }
         public enum LOGICTYPE { BOOLEAN, QUBIT }
+
+        //public enum HACKMODES { HACK, NOHACK }
     }
 }

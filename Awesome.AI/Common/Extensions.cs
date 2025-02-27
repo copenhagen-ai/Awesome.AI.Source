@@ -70,28 +70,28 @@ namespace Awesome.AI.Common
         //    return _b;
         //}
 
-        public static SOFTDOWN ToFuzzy(this double deltaMom, TheMind mind)
+        public static FUZZYDOWN ToFuzzy(this double deltaMom, TheMind mind)
         {
             double high = mind.mech.d_out_high;
             double low = mind.mech.d_out_low;
 
             double norm = mind.calc.NormalizeRange(deltaMom, low, high, 0.0d, 100.0d);
 
-            if (mind.parms.hack == HACKMODES.HACK)
-                norm = 100.0d - norm;
+            //if (mind.parms.hack == HACKMODES.HACK)
+            //    norm = 100.0d - norm;
 
             switch (norm)
             {
-                case < 20.0d: return SOFTDOWN.VERYNO;
-                case < 40.0d: return SOFTDOWN.NO;
-                case < 60.0d: return SOFTDOWN.DUNNO;
-                case < 80.0d: return SOFTDOWN.YES;
-                case < 100.0d: return SOFTDOWN.VERYYES;
+                case < 20.0d: return FUZZYDOWN.VERYNO;
+                case < 40.0d: return FUZZYDOWN.NO;
+                case < 60.0d: return FUZZYDOWN.DUNNO;
+                case < 80.0d: return FUZZYDOWN.YES;
+                case < 100.0d: return FUZZYDOWN.VERYYES;
                 default: throw new NotSupportedException("ToFuzzy");
             }
         }
 
-        public static bool PeriodDown(this List<HARDDOWN> Ratio, TheMind mind)
+        public static PERIODDOWN PeriodDown(this List<HARDDOWN> Ratio, TheMind mind)
         {
             /*
              * indifferent of the direction
@@ -100,54 +100,15 @@ namespace Awesome.AI.Common
             int count_no = Ratio.Count(x=>x == HARDDOWN.NO);
             int count_yes = Ratio.Count(x=>x == HARDDOWN.YES);
 
-            bool res = count_no >= count_yes;
+            PERIODDOWN res = count_no >= count_yes ? 
+                PERIODDOWN.NO : 
+                PERIODDOWN.YES;
 
             //if (mind.parms.hack == HACKMODES.HACK)
             //    res = !res;
 
             return res;
         }
-
-        //public static bool TheChoice(this TheMind mind)
-        //{
-        //    /*
-        //     * this filter can be on or off, just have to tweek HardMom and ToDownZero/ToDownPrev
-        //     * personally i think its nice to not have words like choice in the algorithm
-        //     * */
-
-        //    bool hello = mind.goodbye.IsNo();
-        //    bool go_down = mind.dir.DownHard.IsYes();
-        //    bool? go_up = null;
-
-        //    double[] rand = mind.rand.MyRandomDouble(1);
-        //    bool down = rand[0] < 0.5d;
-
-        //    //introduce logic error.. or hack
-        //    if (Constants.LogicError == LOGICERROR.TYPE1)
-        //        return true;
-
-        //    if (Constants.LogicError == LOGICERROR.TYPE2)
-        //        go_up = hello && !go_down;
-
-        //    //if (Constants.LogicError == LOGICERROR.TYPE3)
-        //    //    go_up = hello && go_down;
-
-        //    if (Constants.LogicError == LOGICERROR.RANDOM)
-        //        go_up = !down ? hello && go_down : hello && !go_down;
-
-        //    //not tested, very experimental
-        //    if (Constants.LogicError == LOGICERROR.QUANTUM1)
-        //        return true;
-
-        //    //not tested, very experimental
-        //    if (Constants.LogicError == LOGICERROR.QUANTUM2)
-        //        go_up = hello && mind.quantum.MyXOR(go_down, go_down);
-
-        //    if (go_up == null)
-        //        throw new Exception("TheChoice");
-
-        //    return (bool)go_up;
-        //}
 
         public static bool Direction(this TheMind mind)
         {
@@ -169,34 +130,30 @@ namespace Awesome.AI.Common
 
         public static HARDDOWN ToDownZero(this double deltaMom, TheMind mind)
         {
-            /*
-             * "NO", is to say no to going downwards
-             * */
-
             bool res = deltaMom <= 0.0d;
 
-            double[] rand = mind.rand.MyRandomDouble(1);
-            bool down = rand[0] < 0.5d;
+            //if (mind.parms.hack == HACKMODES.HACK)
+            //    res = !res;
 
-            return Logic(res, down, mind);
+            return Logic(res, mind);
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
         {
+            bool res = deltaMom <= prev;
+
+            //if (mind.parms.hack == HACKMODES.HACK)
+            //    res = !res;
+
+            return Logic(res, mind);
+        }
+
+        public static HARDDOWN Logic(bool res, TheMind mind)
+        {
             /*
              * "NO", is to say no to going downwards
              * */
 
-            bool res = deltaMom <= prev;
-
-            double[] rand = mind.rand.MyRandomDouble(1);
-            bool down = rand[0] < 0.5d;
-
-            return Logic(res, down, mind);
-        }
-
-        public static HARDDOWN Logic(bool res, bool down, TheMind mind)
-        {
             //works
             if (Constants.Logic == LOGICTYPE.BOOLEAN)
                 return res ? HARDDOWN.NO : HARDDOWN.YES;
@@ -205,7 +162,7 @@ namespace Awesome.AI.Common
             if (Constants.Logic == LOGICTYPE.QUBIT)
                 return res ? HARDDOWN.YES : HARDDOWN.NO;
 
-            throw new Exception("ToDownPrev");
+            throw new Exception("Logic");
         }
 
         public static HARDDOWN ToDirection(this bool _q)

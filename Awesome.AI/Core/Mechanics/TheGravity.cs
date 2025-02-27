@@ -40,7 +40,7 @@ namespace Awesome.AI.Core.Mechanics
             posx_low = 1000.0d;
         }
 
-        public SOFTDOWN SoftMom
+        public FUZZYDOWN FuzzyMom
         {
             get { return deltaMom.ToFuzzy(mind); }
         }

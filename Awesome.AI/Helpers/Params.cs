@@ -63,9 +63,9 @@ namespace Awesome.AI.Helpers
                     _mech = new _TheGravity(this.mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                    tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                    occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
-                    hack = HACKMODES.NOHACK;                                            //not used any more
+                    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
+                    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
+                    //hack = HACKMODES.NOHACK;                                          //not used any more
                     
                     //earth mass:               5.972×10^24 kg
                     //sun mass:                 1.989×10^30 kg
@@ -98,9 +98,9 @@ namespace Awesome.AI.Helpers
                     _mech = new _TheContest(this.mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                    tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                    occupasion = OCCUPASION.DYNAMIC;                               //used with OCCU and BOTH
-                    hack = HACKMODES.NOHACK;                                            //not used any more
+                    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
+                    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
+                    //hack = HACKMODES.NOHACK;                                          //not used any more
                                                                                                                     
                     high_at_zero = true;
                     mass = 500.0d;
@@ -124,10 +124,10 @@ namespace Awesome.AI.Helpers
                 case MECHANICS.HILL: 
                     _mech = new _TheHill(this.mind, this);
 
-                    validation = VALIDATION.BOTH;       //BOTH or TAGS
-                    tags = TAGS.ALL;                    //used with TAGS and BOTH
-                    occupasion = OCCUPASION.DYNAMIC;    //used with OCCU and BOTH
-                    hack = HACKMODES.NOHACK;            //obsolete
+                    validation = VALIDATION.BOTH;                                       //BOTH or TAGS
+                    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
+                    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
+                    //hack = HACKMODES.NOHACK;                                          //obsolete
                     
                     Vars.var_a = -0.1d;
                     Vars.var_b = 0.0d;
@@ -174,7 +174,7 @@ namespace Awesome.AI.Helpers
         public VALIDATION validation;      
         public TAGS tags;                                               //used with WORLD and BOTH
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
-        public HACKMODES hack;
+        //public HACKMODES hack;
         
         /*
          * FIXED parameters
