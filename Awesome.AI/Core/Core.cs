@@ -13,29 +13,29 @@ namespace Awesome.AI.Core
             this.mind = mind;
         }
 
-        public bool OK(out double pain)
+        public bool OK(out double user_var)
         {
             /*
              * this is the Go/NoGo class
              * actually not part of the algorithm
              * */
 
-            pain = 0.0d;
+            user_var = 0.0d;
             bool ok;
             switch (mind._mech)
             {
                 case MECHANICS.CONTEST: 
-                    ok = ReciprocalOK(mind.pos.Pos, out pain);
+                    ok = ReciprocalOK(mind.pos.Pos, out user_var);
                     return ok;
                 case MECHANICS.HILL: 
-                    ok = ReciprocalOK(mind.mech.POS_XY, out pain);
+                    ok = ReciprocalOK(mind.mech.POS_XY, out user_var);
                     return ok;
                 case MECHANICS.GRAVITY:
-                    ok = EventHorizonOK(mind.pos.Pos, out pain);
+                    ok = EventHorizonOK(mind.pos.Pos, out user_var);
                     return ok;
                 default: 
                     throw new Exception("OK");
-            }            
+            }
         }
 
         public bool ReciprocalOK(double pos, out double pain)
@@ -58,22 +58,22 @@ namespace Awesome.AI.Core
             }
         }
 
-        public bool EventHorizonOK(double pos, out double pain)
+        public bool EventHorizonOK(double pos, out double time)
         {
             try
             {
                 double _e = pos;
 
-                pain = mind.calc.EventHorizon(_e);
+                time = mind.calc.EventHorizon(_e);
 
-                if (pain <= 0.0)
+                if (time <= 0.0)
                     throw new Exception("EventHorizonOK");
 
                 return true;
             }
             catch (Exception e)//thats it
             {
-                pain = 0.0d;
+                time = 0.0d;
                 return false;
             }
         }

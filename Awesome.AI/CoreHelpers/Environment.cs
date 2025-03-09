@@ -3,7 +3,7 @@ using Awesome.AI.Core;
 using Awesome.AI.Helpers;
 using static Awesome.AI.Helpers.Enums;
 
-namespace Awesome.AI.Systems
+namespace Awesome.AI.CoreHelpers
 {
     class Agent
     {
@@ -158,14 +158,11 @@ namespace Awesome.AI.Systems
         {
             if (_u.IsNull())
                 throw new Exception("Valid");
-
-            //if (_u.IsLEARNINGorPERSUE())
-            //    return true;
-
-            //if (_u.HUB.IsLEARNING())
-            //    return true;
-
+                        
             if (_u.IsDECISION())
+                return true;
+
+            if (_u.IsQUICKDECISION())
                 return true;
 
             Area area = SetArea().Result;
@@ -190,17 +187,17 @@ namespace Awesome.AI.Systems
             return area;
         }
 
-        public void AddHUB(HUB hub, string name)
-        {
-            if (hub.IsNull())
-                throw new Exception("AddHUB");
+        //public void AddHUB(HUB hub, string name)
+        //{
+        //    if (hub.IsNull())
+        //        throw new Exception("AddHUB");
 
-            Area _a = areas.Where(x => x.name == name).FirstOrDefault();
-            if (_a.IsNull())
-                throw new Exception("AddHUB");
+        //    Area _a = areas.Where(x => x.name == name).FirstOrDefault();
+        //    if (_a.IsNull())
+        //        throw new Exception("AddHUB");
 
-            _a.values.Add(hub);
-        }
+        //    _a.values.Add(hub);
+        //}
 
         //process occupation
         public void Setup(HUB last, MINDS mindtype)
@@ -212,27 +209,27 @@ namespace Awesome.AI.Systems
             if (last.IsNull())
                 throw new Exception("Setup");
 
-            HUB location_should_decision = mind.mem.HUBS_SUB("location_should_decision");
-            HUB answer_should_decision = mind.mem.HUBS_SUB("answer_should_decision");
-            HUB ask_should_decision = mind.mem.HUBS_SUB("ask_should_decision");
+            //HUB location_should_decision = mind.mem.HUBS_SUB("location_should_decision");
+            //HUB answer_should_decision = mind.mem.HUBS_SUB("answer_should_decision");
+            //HUB ask_should_decision = mind.mem.HUBS_SUB("ask_should_decision");
 
             if (mindtype == MINDS.ANDREW)
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in andrew1)
                     list.Add(mind.mem.HUBS_SUB(s));
-                list.Add(location_should_decision);
-                list.Add(answer_should_decision);
-                list.Add(ask_should_decision);
+                //list.Add(location_should_decision);
+                //list.Add(answer_should_decision);
+                //list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in andrew2)
                     list.Add(mind.mem.HUBS_SUB(s));
-                list.Add(location_should_decision);
-                list.Add(answer_should_decision);
-                list.Add(ask_should_decision);
+                //list.Add(location_should_decision);
+                //list.Add(answer_should_decision);
+                //list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
 
@@ -243,18 +240,18 @@ namespace Awesome.AI.Systems
                 List<HUB> list = new List<HUB>();
                 foreach (string s in roberta1)
                     list.Add(mind.mem.HUBS_SUB(s));
-                list.Add(location_should_decision);
-                list.Add(answer_should_decision);
-                list.Add(ask_should_decision);
+                //list.Add(location_should_decision);
+                //list.Add(answer_should_decision);
+                //list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in roberta2)
                     list.Add(mind.mem.HUBS_SUB(s));
-                list.Add(location_should_decision);
-                list.Add(answer_should_decision);
-                list.Add(ask_should_decision);
+                //list.Add(location_should_decision);
+                //list.Add(answer_should_decision);
+                //list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
             }
@@ -327,14 +324,20 @@ namespace Awesome.AI.Systems
             if (_u.ticket.IsNull())
                 throw new Exception("Valid");
 
+            if (_u.IsDECISION())
+                return true;
+
+            if (_u.IsQUICKDECISION())
+                return true;
+
             tags = tags.Where(x => x != null).ToList();
 
             double scale = 0.0d;
 
-            bool t_name = _u.ticket.t_name == "SPECIAL";
+            //bool t_name = _u.ticket.t_name == "SPECIAL";
             bool tags_hit = tags.Where(x => x.t_name == _u.ticket.t_name).Any();
 
-            bool hit = t_name || tags_hit;// || focus;
+            bool hit = /*t_name || */tags_hit;// || focus;
 
             return hit;
         }

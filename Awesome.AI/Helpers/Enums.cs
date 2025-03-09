@@ -2,9 +2,10 @@
 {
     public class Enums
     {
+        public enum STATE { JUSTRUNNING, QUICKDECISION }
         public enum TONE { HIGH, LOW, MID, RANDOM }
         public enum MINDS { ROBERTA, ANDREW }
-        public enum UNITTYPE { JUSTAUNIT, DECISION, IDLE, MIN, MAX }
+        public enum UNITTYPE { JUSTAUNIT, DECISION, QDECISION, IDLE, MIN, MAX }
         public enum VALIDATION { BOTH, EXTERNAL, INTERNAL }
         public enum TAGS { ALL, EVEN }
         public enum OCCUPASION { FIXED, DYNAMIC }

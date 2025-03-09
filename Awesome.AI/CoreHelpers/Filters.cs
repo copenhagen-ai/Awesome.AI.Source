@@ -1,6 +1,5 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Helpers;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.CoreHelpers
@@ -18,11 +17,13 @@ namespace Awesome.AI.CoreHelpers
         {
             /*
              * this filter can be on or off, just have to tweek HardMom and ToDownZero/ToDownPrev
-             * personally i think its nice to not have words like choice in the algorithm
              * */
 
             if (_x == null)
                 throw new ArgumentNullException();
+
+            if (mind.parms.state == STATE.QUICKDECISION)
+                return true;
 
             double f_a = _x.Variable;
             double f_b = mind.curr_unit.Variable;
@@ -52,6 +53,9 @@ namespace Awesome.AI.CoreHelpers
             if (_u == null)
                 throw new ArgumentNullException();
 
+            if(mind.parms.state == STATE.QUICKDECISION)
+                return true;
+
             double lower_border = mind.parms.low_cut;
             double force = _u.Variable;
 
@@ -64,6 +68,9 @@ namespace Awesome.AI.CoreHelpers
         {
             if (unit == null)
                 throw new ArgumentNullException();
+
+            if (mind.parms.state == STATE.QUICKDECISION)
+                return true;
 
             return unit.credits > 1.0d;
         }

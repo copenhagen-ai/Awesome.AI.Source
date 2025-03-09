@@ -1,8 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
 using Awesome.AI.Helpers;
-using Microsoft.AspNetCore.SignalR;
-using System.Collections.Generic;
+using Microsoft.Quantum.ResourceEstimation;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.CoreHelpers
@@ -136,9 +135,20 @@ namespace Awesome.AI.CoreHelpers
             //Constants.should_decision_u2,//NO
         };
 
-        private List<UNIT> units { get; set; }
-        private List<HUB> hubs { get; set; }
-        
+        private List<string> whistle_should_decision = new List<string>()
+        {
+            Constants.whistle_decision_u1,
+            Constants.whistle_decision_u1,
+            Constants.whistle_decision_u1,
+            Constants.whistle_decision_u1,
+            Constants.whistle_decision_u1,            
+        };
+
+        private List<UNIT> units_running { get; set; }
+        private List<UNIT> units_decision { get; set; }
+        private List<HUB> hubs_running { get; set; }
+        private List<HUB> hubs_decision { get; set; }
+
         public List<UNIT> learning = new List<UNIT>();
 
         private TheMind mind;
@@ -148,8 +158,10 @@ namespace Awesome.AI.CoreHelpers
         {
             this.mind = mind;
 
-            units = new List<UNIT>();
-            hubs = new List<HUB>();
+            units_running = new List<UNIT>();
+            units_decision = new List<UNIT>();
+            hubs_running = new List<HUB>();
+            hubs_decision = new List<HUB>();
 
             List<string> commen = mind.mindtype == MINDS.ROBERTA ? roberta : andrew;
             List<string> location_should_decision = this.location_should_decision;
@@ -166,24 +178,29 @@ namespace Awesome.AI.CoreHelpers
 
             TONE tone;
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
-            count1 = UnitsDecide(location_should_decision, UNITTYPE.DECISION, count1, tone);
-            count2 = HubsDecide(Constants.subject_decision[0], location_should_decision, UNITTYPE.DECISION, count2, tone);
+            count1 = UnitsDecide(STATE.JUSTRUNNING, location_should_decision, UNITTYPE.DECISION, count1, tone);
+            count2 = HubsDecide(STATE.JUSTRUNNING, Constants.subject_decision[0], location_should_decision, UNITTYPE.DECISION, count2, tone);
 
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.HIGH;
-            count1 = UnitsDecide(location_what_decision, UNITTYPE.DECISION, count1, tone);
-            count2 = HubsDecide(Constants.subject_decision[1], location_what_decision, UNITTYPE.DECISION, count2, tone);
+            count1 = UnitsDecide(STATE.JUSTRUNNING, location_what_decision, UNITTYPE.DECISION, count1, tone);
+            count2 = HubsDecide(STATE.JUSTRUNNING, Constants.subject_decision[1], location_what_decision, UNITTYPE.DECISION, count2, tone);
 
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
-            count1 = UnitsDecide(answer_should_decision, UNITTYPE.DECISION, count1, tone);
-            count2 = HubsDecide(Constants.subject_decision[2], answer_should_decision, UNITTYPE.DECISION, count2, tone);
+            count1 = UnitsDecide(STATE.JUSTRUNNING, answer_should_decision, UNITTYPE.DECISION, count1, tone);
+            count2 = HubsDecide(STATE.JUSTRUNNING, Constants.subject_decision[2], answer_should_decision, UNITTYPE.DECISION, count2, tone);
 
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.LOW;
-            count1 = UnitsDecide(answer_what_decision, UNITTYPE.DECISION, count1, tone);
-            count2 = HubsDecide(Constants.subject_decision[3], answer_what_decision, UNITTYPE.DECISION, count2, tone);
+            count1 = UnitsDecide(STATE.JUSTRUNNING, answer_what_decision, UNITTYPE.DECISION, count1, tone);
+            count2 = HubsDecide(STATE.JUSTRUNNING, Constants.subject_decision[3], answer_what_decision, UNITTYPE.DECISION, count2, tone);
 
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.MID;
-            count1 = UnitsDecide(ask_should_decision, UNITTYPE.DECISION, count1, tone);
-            count2 = HubsDecide(Constants.subject_decision[4], ask_should_decision, UNITTYPE.DECISION, count2, tone);
+            count1 = UnitsDecide(STATE.JUSTRUNNING, ask_should_decision, UNITTYPE.DECISION, count1, tone);
+            count2 = HubsDecide(STATE.JUSTRUNNING, Constants.subject_decision[4], ask_should_decision, UNITTYPE.DECISION, count2, tone);
+
+
+            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
+            UnitsQuick(whistle_should_decision, UNITTYPE.QDECISION, 0, tone);
+            HubsQuick(Constants.subject_decision[5], whistle_should_decision, UNITTYPE.QDECISION, 0, tone);
 
 
             /*
@@ -217,12 +234,12 @@ namespace Awesome.AI.CoreHelpers
 
             if (mind.cycles_all % 10000 == 0)
             {
-                units = new List<UNIT>();
+                units_running = new List<UNIT>();
                 
-                foreach (HUB h in hubs)
-                    units = units.Concat(h.units).ToList();
+                foreach (HUB h in hubs_running)
+                    units_running = units_running.Concat(h.units).ToList();
 
-                units = units.OrderBy(x => x.Index).ToList();
+                units_running = units_running.OrderBy(x => x.Index).ToList();
             }
             
             _c = mind.cycles_all;
@@ -232,49 +249,96 @@ namespace Awesome.AI.CoreHelpers
         {
             Reset();
 
-            return units;
+            switch (mind.parms.state)
+            {
+                case STATE.JUSTRUNNING: return units_running;
+                case STATE.QUICKDECISION: return units_decision;
+                default: throw new NotImplementedException();
+            }
         }
 
         public List<UNIT> UNITS_VAL()
         {
             Reset();
 
-            List<UNIT> res = units.Where(x => x.IsValid).ToList();
+            List<UNIT> res;
+
+            switch (mind.parms.state)
+            {
+                case STATE.JUSTRUNNING: res = units_running.Where(x => x.IsValid).ToList(); break;
+                case STATE.QUICKDECISION: res = units_decision.ToList(); break;//all are valid
+                default: throw new NotImplementedException();
+            }
 
             return res;
         }
 
         public UNIT UNIT_RND(int index)
         {
-            int[] rand = mind.rand.MyRandomInt(index, units.Count() - 1);
+            int[] rand;
+            UNIT _u;
 
-            UNIT _u = units[rand[index - 1]];
+            switch (mind.parms.state)
+            {
+                case STATE.JUSTRUNNING:
+                    rand = mind.rand.MyRandomInt(index, units_running.Count() - 1);
+                    _u = units_running[rand[index - 1]];
+                    break;
+                case STATE.QUICKDECISION:
+                    rand = mind.rand.MyRandomInt(index, units_decision.Count() - 1);
+                    _u = units_decision[rand[index - 1]];
+                    break;
+                default : throw new NotImplementedException();
+            }
 
             return _u;
         }
 
         public List<HUB> HUBS_ALL()
         {
-            return hubs.ToList();
+            switch (mind.parms.state)
+            {
+                case STATE.JUSTRUNNING: return hubs_running.ToList();
+                case STATE.QUICKDECISION: return hubs_decision.ToList();
+                default: throw new NotImplementedException();
+            }
         }
 
         public HUB HUBS_DEX(int index)
         {
-            if (index < 0 || index >= hubs.Count)
+            if (mind.parms.state == STATE.JUSTRUNNING && (index < 0 || index >= hubs_running.Count))
                 throw new Exception("HUBS_DEX");
 
-            HUB _h = hubs[index];
-            
-            return _h;
+            if (mind.parms.state == STATE.QUICKDECISION && (index < 0 || index >= hubs_decision.Count))
+                throw new Exception("HUBS_DEX");
+
+            HUB _h;
+
+            switch (mind.parms.state)
+            {
+                case STATE.JUSTRUNNING: _h = hubs_running[index]; return _h;
+                case STATE.QUICKDECISION: _h = hubs_decision[index]; return _h;
+                default: throw new NotImplementedException();
+            }
         }
 
         public HUB HUBS_RND()
         {
-            int[] rand = mind.rand.MyRandomInt(1, hubs.Count() - 1);
-            
-            HUB _h = hubs[rand[0]];
-            
-            return _h;
+            int[] rand;
+            HUB _h;
+
+            switch (mind.parms.state)
+            {
+                case STATE.JUSTRUNNING:
+                    rand = mind.rand.MyRandomInt(1, hubs_running.Count() - 1);
+                    _h = hubs_running[rand[0]];
+                    return _h;
+                case STATE.QUICKDECISION:
+                    rand = mind.rand.MyRandomInt(1, hubs_decision.Count() - 1);
+                    _h = hubs_decision[rand[0]];
+                    return _h;
+                default: throw new NotImplementedException();
+            }
         }
 
         public HUB HUBS_SUB(string subject)
@@ -282,19 +346,58 @@ namespace Awesome.AI.CoreHelpers
             if (subject == null)
                 throw new ArgumentNullException();
 
-            HUB _h = hubs.Where(x=>x.GetSubject() == subject).FirstOrDefault();
+            if(mind.parms.state == STATE.QUICKDECISION)
+                return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);
+
+            HUB _h;
+
+            switch (mind.parms.state)
+            {
+                case STATE.JUSTRUNNING: _h = hubs_running.Where(x => x.GetSubject() == subject).First(); break;
+                case STATE.QUICKDECISION: _h = hubs_decision.Where(x => x.GetSubject() == subject).First(); break;
+                default: throw new NotImplementedException();
+            }
             
             return _h;
         }
 
-        public void HUBS_ADD(HUB h)
+        public void HUBS_ADD(STATE state, HUB h)
         {
             if (h == null)
                 throw new ArgumentNullException();
 
-            hubs.Add(h);
-            hubs = hubs.OrderBy(x=>x.GetSubject()).ToList();
+            switch(state) {
+                case STATE.JUSTRUNNING:
+                    hubs_running.Add(h);
+                    hubs_running = hubs_running.OrderBy(x => x.GetSubject()).ToList();
+                    break;
+                case STATE.QUICKDECISION:
+                    hubs_decision.Add(h);
+                    hubs_decision = hubs_decision.OrderBy(x => x.GetSubject()).ToList();
+                    break;
+                default: throw new NotImplementedException();
+            }            
         }
+
+        public void QDREMOVE(UNIT curr)
+        {
+            if (curr == null)
+                throw new ArgumentNullException();
+
+            units_decision.Remove(curr);
+        }
+
+        public void QDRESET()
+        {
+            units_decision = new List<UNIT>();
+            hubs_decision = new List<HUB>();
+        }
+
+        public int QDCOUNT()
+        {
+            return units_decision.Count();
+        }
+
 
         private double GetIndex(TONE tone, double _rand)
         {
@@ -329,16 +432,11 @@ namespace Awesome.AI.CoreHelpers
             int count = hub.units.Count;
             double[] doubles = rand.MyRandomDouble(count);
 
-            double bit = 10.0d / hub.units.Count;
             int index = 0;
-            double i = 0;
-            double j = 0;
             foreach (UNIT _u in hub.units)
             {
                 _u.Index = GetIndex(hub.tone, doubles[index]);
-                index++;
-                i += bit;
-                j = i <= 5 ? j + bit : j - bit;
+                index++;                
             }
         }
 
@@ -360,60 +458,31 @@ namespace Awesome.AI.CoreHelpers
 
                 ticket.Shuffle<int>();
 
-                int j = 5;
+                int _count = 0;
                 for (int i = 1; i <= u_count; i++)
                 {
-                    double rand = random.NextDouble();
-                    
-                    units.Add(
-                        UNIT.Create(
-                            mind,
-                            GetIndex(tone, rand),//value
-                            "_" + s + i,//root
-                            null,
-                            "" + s + ticket[i - 1],//ticket
-                            type
-                        ));
+                    double rand = mind.cycles < Constants.FIRST_RUN ?
+                    random.NextDouble() :
+                    mind.rand.MyRandomDouble(list.Count())[_count];
 
-                    j = i <= 5 ? j-- : j++;
+                    switch (mind.parms.state)
+                    {
+                        case STATE.JUSTRUNNING:
+                            units_running.Add(UNIT.Create(mind,/*value*/ GetIndex(tone, rand),/*root*/ "_" + s + i,/*data*/  null,/*ticket*/ "" + s + ticket[i - 1], type));
+                            break;
+
+                        case STATE.QUICKDECISION:
+                            units_decision.Add(UNIT.Create(mind,/*value*/ GetIndex(tone, rand),/*root*/ "_" + s + i,/*data*/  null,/*ticket*/ "" + s + ticket[i - 1], type));
+                            break;
+
+                        default: throw new NotImplementedException();
+                    }
+
+                    _count++;
                 }
             }
         }
 
-        public int UnitsDecide(List<string> list, UNITTYPE type, int count, TONE tone)
-        {
-            //XElement xdoc;
-            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
-            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
-            //else
-            //    throw new Exception();
-
-            Random random = new Random();
-
-            double bit = 10.0d / list.Count;
-            double i = bit;
-            double j = bit * 5;
-            foreach (string s in list)
-            {
-                double rand = random.NextDouble();
-                
-                units.Add(
-                    UNIT.Create(
-                        mind,
-                        GetIndex(tone, rand),//value
-                        "_" + type.ToString().ToLower() + count,//root
-                        s,
-                        "SPECIAL",//ticket
-                        type
-                    ));
-
-                i += bit;
-                j = i <= bit * 5 ? j - bit : j + bit;
-                count++;
-            }
-
-            return count;
-        }
 
         public void HubsCommon(int u_count, List<string> list, TONE tone)
         {
@@ -429,17 +498,60 @@ namespace Awesome.AI.CoreHelpers
 
                 for (int i = 1; i <= u_count; i++)
                 {
-                    UNIT _un = units.Where(x => x.root == "_" + s + i).FirstOrDefault();
+                    UNIT _un;
+
+                    switch (mind.parms.state)
+                    {
+                        case STATE.JUSTRUNNING: _un = units_running.Where(x => x.root == "_" + s + i).First(); break;
+                        case STATE.QUICKDECISION: _un = units_decision.Where(x => x.root == "_" + s + i).First(); break;
+                        default: throw new NotImplementedException();
+                    }
                     _u.Add(_un);
                 }
 
                 HUB _h = HUB.Create(s, _u, tone);
 
-                HUBS_ADD(_h);
+                HUBS_ADD(mind.parms.state, _h);
             }
         }
+        public int UnitsDecide(STATE state, List<string> list, UNITTYPE type, int count, TONE tone)
+        {
+            //XElement xdoc;
+            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
+            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
+            //else
+            //    throw new Exception();
 
-        public int HubsDecide(string subject, List<string> list, UNITTYPE type, int count, TONE tone)
+            Random random = new Random();
+
+            int _count = 0;
+            foreach (string s in list)
+            {
+                double rand = mind.cycles < Constants.FIRST_RUN ?
+                random.NextDouble() :
+                mind.rand.MyRandomDouble(list.Count())[_count];
+
+                switch (state)
+                {
+                    case STATE.JUSTRUNNING:
+                        units_running.Add(UNIT.Create(mind,/*value*/ GetIndex(tone, rand),/*root*/ "_" + type.ToString().ToLower() + count,/*data*/  s,/*ticket*/ "NONE", type));
+                        break;
+
+                    case STATE.QUICKDECISION:
+                        units_decision.Add(UNIT.Create(mind,/*value*/ GetIndex(tone, rand),/*root*/ "_" + s.ToLower() + count,/*data*/  s,/*ticket*/ "NONE", type));
+                        break;
+
+                    default: throw new NotImplementedException();
+                }
+
+                _count++;
+                count++;
+            }
+
+            return count;
+        }
+
+        public int HubsDecide(STATE state, string subject, List<string> list, UNITTYPE type, int count, TONE tone)
         {
             //XElement xdoc;
             //if (mind.parms.setup_tags == TAGSETUP.PRIME)
@@ -451,15 +563,73 @@ namespace Awesome.AI.CoreHelpers
 
             foreach (string s in list)
             {
-                UNIT _un = units.Where(x => x.root == "_" + type.ToString().ToLower() + count).FirstOrDefault();
+                UNIT _un;
+
+                switch (state)
+                {
+                    case STATE.JUSTRUNNING: _un = units_running.Where(x => x.root == "_" + type.ToString().ToLower() + count).First(); break;
+                    case STATE.QUICKDECISION: _un = units_decision.Where(x => x.root == "_" + s.ToLower() + count).First(); break;
+                    default: throw new NotImplementedException();
+                }
                 _u.Add(_un);
 
                 count++;
             }
-            
+
             HUB _h = HUB.Create(subject, _u, tone);
-            
-            HUBS_ADD(_h);
+
+            HUBS_ADD(state, _h);
+
+            return count;
+        }
+
+        public int UnitsQuick(List<string> list, UNITTYPE type, int count, TONE tone)
+        {
+            //XElement xdoc;
+            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
+            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
+            //else
+            //    throw new Exception();
+
+            Random random = new Random();
+
+            int _count = 0;
+            foreach (string s in list)
+            {
+                double rand = mind.cycles < Constants.FIRST_RUN ?
+                random.NextDouble() :
+                mind.rand.MyRandomDouble(list.Count())[_count];
+
+                units_running.Add(UNIT.Create(mind,/*value*/ GetIndex(tone, rand),/*root*/ "_" + s.ToLower() + count,/*data*/ s,/*ticket*/ "NONE", type));
+
+                _count++;
+                count++;
+            }
+
+            return count;
+        }
+
+        public int HubsQuick(string subject, List<string> list, UNITTYPE type, int count, TONE tone)
+        {
+            //XElement xdoc;
+            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
+            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
+            //else
+            //    throw new Exception();
+
+            List<UNIT> _u = new List<UNIT>();
+
+            foreach (string s in list)
+            {
+                UNIT _un = units_running.Where(x => x.root == "_" + s.ToLower() + count).First();
+                _u.Add(_un);
+
+                count++;
+            }
+
+            HUB _h = HUB.Create(subject, _u, tone);
+
+            HUBS_ADD(STATE.JUSTRUNNING, _h);
 
             return count;
         }

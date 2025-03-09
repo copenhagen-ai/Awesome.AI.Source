@@ -20,7 +20,7 @@ namespace Awesome.AI.Web.AI.Common
         public string momentum { get; set; }
         public string deltaMom { get; set; }
 
-        public string pain { get; set; }
+        public string user_var { get; set; }
         public string position { get; set; }
         public string ratio_yes { get; set; }
         public string ratio_no { get; set; }
@@ -34,6 +34,7 @@ namespace Awesome.AI.Web.AI.Common
         public string chat_answer { get; set; }
         public string chat_subject { get; set; }
         public string common_hub { get; set; }
+        public string whistle { get; set; }
 
         //public string chat_index { get; set; }
         public UNIT common_unit { get; set; }
@@ -49,14 +50,19 @@ namespace Awesome.AI.Web.AI.Common
             return count >= 59 ? ":COMEAGAIN" : chat_answer;
         }
 
+        private string[] arr = { "[..??]", "[.??.]", "[??..]", "[.??.]" };
+        private int count = 0;
         public void Set()
         {
+            if (count > 3)
+                count = 0;
+
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
             momentum = $"{mind.mech.momentum.ToString("E3")}";
             deltaMom = $"{mind.mech.deltaMom.ToString("E3")}";
 
-            pain = $"{mind.pain}";
+            user_var = $"{mind.user_var}";
             if (mind._mech == MECHANICS.HILL)
                 position = $"{mind.mech.POS_XY}";
             if (mind._mech == MECHANICS.CONTEST)
@@ -72,6 +78,8 @@ namespace Awesome.AI.Web.AI.Common
             location = $"{mind.loc.LocationFinal}";
             loc_state = mind.loc.LocationState > 0 ? "making a decision" : "just thinking";
             chat_state = mind.chatans.ChatState > 0 ? "thinking" : "just thinking";
+
+            whistle = mind.quick.Result ? "[Whistling to my self..]" : arr[count];
 
             if (mind.chatans.Answer != "") {
                 chat_answer = $"{mind.chatans.Answer}";
@@ -92,6 +100,8 @@ namespace Awesome.AI.Web.AI.Common
                 return;
                        
             common_hub = common_unit.HUB.GetSubject();
+
+            count++;
         }
     }
 }

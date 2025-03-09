@@ -47,6 +47,11 @@ namespace Awesome.AI.Helpers
         public const string ask_should_decision_u1 = "ASKYES";
         public const string ask_should_decision_u2 = "ASKNO";
 
+        public const string should_decision_u1 = "DYES";
+        public const string should_decision_u2 = "DNO";
+
+        public const string whistle_decision_u1 = "WHISTLE";
+
         public const double MIN = 0.5d;
         public const double MAX = 99.5d;
         public const double LOWXY = 0.0d;
@@ -77,7 +82,8 @@ namespace Awesome.AI.Helpers
         { 
             "location_should_decision", "location_what_decision",
             "answer_should_decision", "answer_what_decision",
-            "ask_should_decision",
+            "ask_should_decision", 
+            "whistle_should_decision",
         };        
     }
 }

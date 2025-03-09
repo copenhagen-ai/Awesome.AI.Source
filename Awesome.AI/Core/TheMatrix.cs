@@ -144,8 +144,8 @@ namespace Awesome.AI.Core
              * */
                         
             List<UNIT> units = mind.mem.UNITS_VAL().Where(x => 
-                                mind.filters.UnitIsValid(x) 
-                                && mind.filters.Credits(x) 
+                                //mind.filters.UnitIsValid(x) 
+                                   mind.filters.Credits(x) 
                                 && mind.filters.LowCut(x)
                                 ).OrderByDescending(x => x.Variable).ToList();
             

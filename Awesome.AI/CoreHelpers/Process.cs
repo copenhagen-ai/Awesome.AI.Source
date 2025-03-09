@@ -1,6 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
 using Awesome.AI.Helpers;
+using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.CoreHelpers
 {
@@ -24,6 +25,15 @@ namespace Awesome.AI.CoreHelpers
             if (mind.curr_unit.IsIDLE())
                 return;
 
+            //if (mind.curr_unit.IsDECISION())
+            //    return;
+
+            //if (mind.curr_unit.IsQUICKDECISION())
+            //    return;
+
+            //if (mind.parms.state == STATE.QUICKDECISION)
+            //    return;
+
             if (!u_history.Any())
             {
                 u_history.Add(mind.mem.UNIT_RND(1));
@@ -41,6 +51,12 @@ namespace Awesome.AI.CoreHelpers
             if (u_history.IsNullOrEmpty())
                 return;
 
+            //if (mind.curr_unit.IsQUICKDECISION())
+            //    return;
+
+            //if (mind.parms.state == STATE.QUICKDECISION)
+            //    return;
+
             most_common_unit = u_history
                 .GroupBy(x => x)
                 .OrderByDescending(x => x.Count())
@@ -54,6 +70,12 @@ namespace Awesome.AI.CoreHelpers
                 return;
 
             if (most_common_unit.IsNull())
+                return;
+
+            if (mind.curr_unit.IsQUICKDECISION())
+                return;
+
+            if (mind.parms.state == STATE.QUICKDECISION)
                 return;
 
             List<UNIT> units = mind.mem.UNITS_ALL();

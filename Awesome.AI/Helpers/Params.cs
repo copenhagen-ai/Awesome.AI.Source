@@ -65,6 +65,7 @@ namespace Awesome.AI.Helpers
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
+                    state = STATE.JUSTRUNNING;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
                     
                     //earth mass:               5.972×10^24 kg
@@ -100,6 +101,7 @@ namespace Awesome.AI.Helpers
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
+                    state = STATE.JUSTRUNNING;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
                                                                                                                     
                     high_at_zero = true;
@@ -127,6 +129,7 @@ namespace Awesome.AI.Helpers
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
+                    state = STATE.JUSTRUNNING;
                     //hack = HACKMODES.NOHACK;                                          //obsolete
                     
                     Vars.var_a = -0.1d;
@@ -174,6 +177,7 @@ namespace Awesome.AI.Helpers
         public VALIDATION validation;      
         public TAGS tags;                                               //used with WORLD and BOTH
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
+        public STATE state;
         //public HACKMODES hack;
         
         /*

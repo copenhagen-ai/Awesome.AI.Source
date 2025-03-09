@@ -20,6 +20,7 @@ namespace Awesome.AI.Core
         public TheMatrix matrix;
         public Core core;
         public Memory mem;
+        public QuickDecision quick;
         public Params parms;
         public Calc calc;
         public MyRandom rand;
@@ -53,7 +54,7 @@ namespace Awesome.AI.Core
         public int correct_thinking = 0;
         public int not_correct_thinking = 0;
         public int _near_death = 0;
-        public double pain = 0.0d;
+        public double user_var = 0.0d;
         public int valid_units = 0;
 
         public bool chat_answer { get; set; }
@@ -91,7 +92,8 @@ namespace Awesome.AI.Core
                 pos = new Position(this);
                 quantum = new MyQubit(this);
                 mem = new Memory(this, Constants.NUMBER_OF_UNITS);
-                                
+                quick = new QuickDecision(this);
+
                 mech = parms.GetMechanics(_mech);
                 parms.UpdateLowCut();
 
@@ -132,10 +134,6 @@ namespace Awesome.AI.Core
             List<Tuple<string, bool, double>> units_mass = new List<Tuple<string, bool, double>>();
             foreach (UNIT u in list.OrderBy(x => x.HighAtZero).ToList())
                 units_mass.Add(new Tuple<string, bool, double>(u.root, u.IsValid, u.HighAtZero));
-
-            Dictionary<string, double> units_dist = new Dictionary<string, double>();
-            foreach (UNIT u in list.OrderBy(x => x.LengthFromZero).ToList())
-                units_dist.Add(u.root, u.LengthFromZero);
 
             List<UNIT> list1 = list.OrderBy(x => x.Index).ToList();
             List<UNIT> list2 = list.OrderBy(x => x.Variable).ToList();
@@ -199,7 +197,8 @@ namespace Awesome.AI.Core
         {
             //rand.SaveMomentum(mech.momentum);
             rand.SaveMomentum(mech.deltaMom);
-
+            quick.Run(_pro, curr_unit);
+            
             //if (_pro)
             //    common.Reset();            
         }
@@ -236,7 +235,7 @@ namespace Awesome.AI.Core
             //if (curr_hub.IsIDLE())
             //    core.SetTheme(_pro);
 
-            if (!core.OK(out pain))
+            if (!core.OK(out user_var))
                 return false;
             return true;
         }
@@ -256,6 +255,9 @@ namespace Awesome.AI.Core
 
         private void Systems(bool _pro)
         {
+            if (parms.state == STATE.QUICKDECISION)
+                return;
+
             loc.Decide(_pro);
             chatans.Decide(_pro);
             chatask.Decide(_pro);
