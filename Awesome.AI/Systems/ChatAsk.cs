@@ -39,7 +39,7 @@ namespace Awesome.AI.Systems
             UNIT current = mind.curr_unit;
             HUB hub = current.HUB;
 
-            HUB _1 = mind.mem.HUBS_SUB(Constants.subject_decision[4]);
+            HUB _1 = mind.mem.HUBS_SUB(mind.parms.state, Constants.subject_decision[4]);
 
             MyRandom rand = mind.rand;
             int[] _rand = rand.MyRandomInt(1, 5);
@@ -55,7 +55,7 @@ namespace Awesome.AI.Systems
                 if (current.data == "ASKYES")
                 {
                     HUB _hub = null;
-                    List<HUB> list = mind.mem.HUBS_ALL();
+                    List<HUB> list = mind.mem.HUBS_ALL(mind.parms.state);
                     int count = list.Count;
                     int i = 0;
                     int[] _r = mind.rand.MyRandomInt(100, count - 1);

@@ -66,11 +66,15 @@ namespace Awesome.AI.CoreHelpers
             if (!curr.IsQUICKDECISION())
                 return;
 
-            if (_pro && curr.data == Constants.whistle_decision_u1)
-                Setup(10, 5);
+            Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? Constants.DECISIONS_R : Constants.DECISIONS_A;
+            foreach (var kv in dict)
+            {
+                if (_pro && curr.data == kv.Key)
+                    Setup(kv.Value[0], 5);
 
-            if(Go)
-                Start(_pro);
+                if (Go)
+                    Start(_pro);
+            }
         }
 
         private void Setup(int count, int period)
@@ -81,13 +85,14 @@ namespace Awesome.AI.CoreHelpers
 
             List<string> should_decision = new List<string>();
 
-            for (int i = 0; i < count / 2; i++)
+            for (int i = 0; i < count; i++)
                 should_decision.Add(/*YES*/Constants.should_decision_u1);
 
-            for (int i = 0; i < count / 2; i++)
+            for (int i = 0; i < count; i++)
                 should_decision.Add(/*NO*/Constants.should_decision_u2);
 
-            mind.mem.QDRESET();
+            mind.mem.QDRESETU();
+            mind.mem.QDRESETH();
 
             TONE tone = TONE.RANDOM;
             mind.mem.UnitsDecide(STATE.QUICKDECISION, should_decision, UNITTYPE.QDECISION, 0, tone);

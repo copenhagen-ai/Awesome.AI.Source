@@ -50,7 +50,15 @@ namespace Awesome.AI.Helpers
         public const string should_decision_u1 = "DYES";
         public const string should_decision_u2 = "DNO";
 
-        public const string whistle_decision_u1 = "WHISTLE";
+        public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
+        {
+            { "WHISTLE", new int[]{ 5, 5 } },
+        };
+
+        public static readonly Dictionary<string, int[]> DECISIONS_R = new Dictionary<string, int[]>
+        {
+            { "WHISTLE", new int[]{ 5, 15 } },
+        };
 
         public const double MIN = 0.5d;
         public const double MAX = 99.5d;
@@ -72,7 +80,7 @@ namespace Awesome.AI.Helpers
         public const int NUMBER_OF_UNITS = 10;
         public const int RUNTIME = 2;                       //minutes
 
-        public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
+        public const LOGICTYPE Logic = LOGICTYPE.QUBIT;
 
         public const int MICRO_SEC = 4000;                  //call micro timer every 1000µs (1ms)
         public const int HIST_TOTAL = 100;                  //the number of UNITS???

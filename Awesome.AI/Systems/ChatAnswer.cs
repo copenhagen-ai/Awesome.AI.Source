@@ -39,8 +39,8 @@ namespace Awesome.AI.Systems
             UNIT current = mind.curr_unit;
             HUB hub = current.HUB;
 
-            HUB _1 = mind.mem.HUBS_SUB(Constants.subject_decision[2]);
-            HUB _2 = mind.mem.HUBS_SUB(Constants.subject_decision[3]);
+            HUB _1 = mind.mem.HUBS_SUB(mind.parms.state, Constants.subject_decision[2]);
+            HUB _2 = mind.mem.HUBS_SUB(mind.parms.state, Constants.subject_decision[3]);
 
             MyRandom rand = mind.rand;
             int[] _rand = rand.MyRandomInt(1, 5);

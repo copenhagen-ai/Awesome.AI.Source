@@ -49,7 +49,7 @@ namespace Awesome.AI.Core.Mechanics
             
             get 
             {
-                if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                if (Constants.Logic == LOGICTYPE.BOOLEAN_ERROR)
                     //return deltaMom.ToDownPrev(deltaMomPrev, mind);
                     return deltaMom.ToDownZero(mind);
 

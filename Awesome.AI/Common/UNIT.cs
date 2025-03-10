@@ -118,7 +118,7 @@ namespace Awesome.AI.Common
                 if(this.IsIDLE())
                     return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);
 
-                hub = mind.mem.HUBS_ALL().Where(x => x.units.Contains(this)).FirstOrDefault();
+                hub = mind.mem.HUBS_ALL(mind.parms.state).Where(x => x.units.Contains(this)).FirstOrDefault();
                 
                 if (hub == null)
                     return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);

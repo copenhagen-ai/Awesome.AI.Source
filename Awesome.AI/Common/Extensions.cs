@@ -113,17 +113,19 @@ namespace Awesome.AI.Common
         public static bool Direction(this TheMind mind)
         {
             /*
-             * this filter can be on or off, just have to tweek HardMom and ToDownZero/ToDownPrev
+             * this function could also be called Choice
+             * NO is to say no to going downwards
+             * 
+             * up is true 
              * */
-
-            bool hello = mind.goodbye.IsNo();
+             
             bool go_up = mind.dir.DownHard.IsNo();
 
-            if (Constants.Logic == LOGICTYPE.BOOLEAN)
-                go_up = hello && go_up;
+            if (Constants.Logic == LOGICTYPE.BOOLEAN_ERROR)
+                go_up = !go_up;//we flip direction
 
             if (Constants.Logic == LOGICTYPE.QUBIT)
-                go_up = hello && mind.quantum.MyXOR(go_up, go_up);
+                go_up = mind.quantum.MyXOR(go_up, go_up);//we decide direction
 
             return go_up;
         }
@@ -135,7 +137,7 @@ namespace Awesome.AI.Common
             //if (mind.parms.hack == HACKMODES.HACK)
             //    res = !res;
 
-            return Logic(res, mind);
+            return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
@@ -145,30 +147,13 @@ namespace Awesome.AI.Common
             //if (mind.parms.hack == HACKMODES.HACK)
             //    res = !res;
 
-            return Logic(res, mind);
+            return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
-        public static HARDDOWN Logic(bool res, TheMind mind)
-        {
-            /*
-             * "NO", is to say no to going downwards
-             * */
-
-            //works
-            if (Constants.Logic == LOGICTYPE.BOOLEAN)
-                return res ? HARDDOWN.NO : HARDDOWN.YES;
-
-            //works, experimental
-            if (Constants.Logic == LOGICTYPE.QUBIT)
-                return res ? HARDDOWN.YES : HARDDOWN.NO;
-
-            throw new Exception("Logic");
-        }
-
-        public static HARDDOWN ToDirection(this bool _q)
-        {
-            return _q ? HARDDOWN.YES : HARDDOWN.NO;
-        }
+        //public static HARDDOWN ToDirection(this bool _q)
+        //{
+        //    return _q ? HARDDOWN.YES : HARDDOWN.NO;
+        //}
 
         public static bool IsYes(this HARDDOWN _q)
         {

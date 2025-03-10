@@ -51,8 +51,8 @@ namespace Awesome.AI.Systems
             HUB hub = current.HUB;
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
-            HUB _1 = mind.mem.HUBS_SUB(Constants.subject_decision[0]);
-            HUB _2 = mind.mem.HUBS_SUB(Constants.subject_decision[1]);
+            HUB _1 = mind.mem.HUBS_SUB(mind.parms.state, Constants.subject_decision[0]);
+            HUB _2 = mind.mem.HUBS_SUB(mind.parms.state, Constants.subject_decision[1]);
 
             MyRandom rand = mind.rand;
             int[] _rand = rand.MyRandomInt(1, 5);

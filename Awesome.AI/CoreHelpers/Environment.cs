@@ -217,7 +217,7 @@ namespace Awesome.AI.CoreHelpers
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in andrew1)
-                    list.Add(mind.mem.HUBS_SUB(s));
+                    list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
                 //list.Add(location_should_decision);
                 //list.Add(answer_should_decision);
                 //list.Add(ask_should_decision);
@@ -226,7 +226,7 @@ namespace Awesome.AI.CoreHelpers
 
                 list = new List<HUB>();
                 foreach (string s in andrew2)
-                    list.Add(mind.mem.HUBS_SUB(s));
+                    list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
                 //list.Add(location_should_decision);
                 //list.Add(answer_should_decision);
                 //list.Add(ask_should_decision);
@@ -239,7 +239,7 @@ namespace Awesome.AI.CoreHelpers
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in roberta1)
-                    list.Add(mind.mem.HUBS_SUB(s));
+                    list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
                 //list.Add(location_should_decision);
                 //list.Add(answer_should_decision);
                 //list.Add(ask_should_decision);
@@ -248,7 +248,7 @@ namespace Awesome.AI.CoreHelpers
 
                 list = new List<HUB>();
                 foreach (string s in roberta2)
-                    list.Add(mind.mem.HUBS_SUB(s));
+                    list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
                 //list.Add(location_should_decision);
                 //list.Add(answer_should_decision);
                 //list.Add(ask_should_decision);
