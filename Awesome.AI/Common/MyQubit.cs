@@ -1,48 +1,22 @@
-﻿using Awesome.AI.Core;
-
-namespace Awesome.AI.Common
+﻿namespace Awesome.AI.Common
 {
     public class MyQubit
     {
         private Complex alpha;
         private Complex beta;
-        private static Random random = new Random();
+        private Random random = new Random();
 
-        private TheMind mind;
-        private MyQubit() { }
-        public MyQubit(TheMind mind)
+        public QUsage usage;
+
+        public MyQubit()
         {
-            this.mind = mind;
+            usage = new QUsage();
+
             // Initialize to |0> state
             alpha = new Complex(1, 0);
             beta = new Complex(0, 0);
         }
     
-        public bool MySuperposition()
-        {
-            MyQubit qubit = new MyQubit();
-            qubit.ApplySuperposition();
-
-            int measurement1 = qubit.Measure();
-
-            return measurement1 > 0;
-        }
-
-        public bool MyXOR(bool a, bool b)
-        {
-            MyQubit qubitA = new MyQubit();
-            MyQubit qubitB = new MyQubit();
-
-            if (a) qubitA.ApplyPauliX(); // Set to |1> if a is true
-            if (b) qubitB.ApplyPauliX(); // Set to |1> if b is true
-
-            qubitA.ApplyXOR(qubitB);
-
-            int measurement1 = qubitA.Measure();
-
-            return measurement1 > 0;
-        }
-
         public void ApplyHadamard()
         {
             Complex newAlpha = Complex.Divide(Complex.Add(alpha, beta), Math.Sqrt(2));
@@ -187,29 +161,81 @@ namespace Awesome.AI.Common
     }
 
     // Example Usage
-    public class QProgram
+    public class QUsage
     {
-        public QProgram()
+        public QUsage()
         {
-            MyQubit helper = new MyQubit(null);
+            //var superpositionQubit = MySuperposition();
+            //Console.WriteLine("Superposition Qubit: " + superpositionQubit);
 
-            var superpositionQubit = helper.MySuperposition();
-            Console.WriteLine("Superposition Qubit: " + superpositionQubit);
+            //var xorResult = MyXOR(true, false);
+            //Console.WriteLine("XOR Result (true XOR false): " + xorResult);
 
-            var xorResult = helper.MyXOR(true, false);
-            Console.WriteLine("XOR Result (true XOR false): " + xorResult);
+            //var (phiPlus1, phiPlus2) = MyQubit.Entanglement.CreatePhiPlus();
+            //Console.WriteLine("|Φ+⟩ State:");
+            //Console.WriteLine("Qubit 1: " + phiPlus1);
+            //Console.WriteLine("Qubit 2: " + phiPlus2);
+            //Console.WriteLine("Measurement: " + phiPlus1.Measure() + " " + phiPlus2.Measure());
 
-            var (phiPlus1, phiPlus2) = MyQubit.Entanglement.CreatePhiPlus();
-            Console.WriteLine("|Φ+⟩ State:");
-            Console.WriteLine("Qubit 1: " + phiPlus1);
-            Console.WriteLine("Qubit 2: " + phiPlus2);
-            Console.WriteLine("Measurement: " + phiPlus1.Measure() + " " + phiPlus2.Measure());
+            //var (psiPlus1, psiPlus2) = MyQubit.Entanglement.CreatePsiPlus();
+            //Console.WriteLine("\n|Ψ+⟩ State:");
+            //Console.WriteLine("Qubit 1: " + psiPlus1);
+            //Console.WriteLine("Qubit 2: " + psiPlus2);
+            //Console.WriteLine("Measurement: " + psiPlus1.Measure() + " " + psiPlus2.Measure());
+        }
 
-            var (psiPlus1, psiPlus2) = MyQubit.Entanglement.CreatePsiPlus();
-            Console.WriteLine("\n|Ψ+⟩ State:");
-            Console.WriteLine("Qubit 1: " + psiPlus1);
-            Console.WriteLine("Qubit 2: " + psiPlus2);
-            Console.WriteLine("Measurement: " + psiPlus1.Measure() + " " + psiPlus2.Measure());
+        public (MyQubit, MyQubit) CreateEntangledPair()
+        {
+            MyQubit qubitA = new MyQubit();
+            MyQubit qubitB = new MyQubit();
+            qubitA.ApplyHadamard();
+            qubitB.ApplyCNOT(qubitA);
+            return (qubitA, qubitB);
+        }
+
+        // Quantum XOR using entangled qubits
+        public bool MyQuantumXOR(bool a, bool b)
+        {
+            var (qubitA, qubitB) = CreateEntangledPair();
+
+            // Set initial states based on inputs
+            if (a) qubitA.ApplyPauliX();
+            if (b) qubitB.ApplyPauliX();
+
+            // Measurement collapses the state, but entanglement ensures XOR behavior
+            int measurementA = qubitA.Measure();
+            int measurementB = qubitB.Measure();
+
+            // XOR logic: a ⊕ b
+            return measurementA != measurementB;
+        }
+
+        public bool MySuperposition()
+        {
+            MyQubit qubit = new MyQubit();
+
+            qubit.ApplySuperposition();
+
+            int measurement1 = qubit.Measure();
+
+            return measurement1 > 0;
+        }
+
+        public bool MyXOR(bool a, bool b)
+        {
+            MyQubit qubitA = new MyQubit();
+            MyQubit qubitB = new MyQubit();
+
+            if (a) qubitA.ApplyPauliX(); // Set to |1> if a is true
+            if (b) qubitB.ApplyPauliX(); // Set to |1> if b is true
+
+            //qubitA.ApplySuperposition();  // Superposition: (|0⟩ + |1⟩)/√2
+
+            qubitA.ApplyXOR(qubitB);
+
+            int measurement1 = qubitB.Measure();
+
+            return measurement1 > 0;
         }
     }
 }

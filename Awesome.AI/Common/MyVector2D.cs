@@ -1,6 +1,6 @@
-﻿namespace Awesome.AI.Web.AI.Common
+﻿namespace Awesome.AI.Common
 {
-    public struct Vector2D
+    public struct MyVector2D
     {
         public double xx { get; set; }
         public double yy { get; set; }
@@ -9,11 +9,11 @@
         public double theta_in_degrees { get { return ToDegrees(this); } }
         public double magnitude { get; set; }
 
-        public Vector2D()
+        public MyVector2D()
         {
         }
 
-        public Vector2D(double? x, double? y, double? mag, double? rad)
+        public MyVector2D(double? x, double? y, double? mag, double? rad)
         {
             xx = x == null ? double.NaN : (double)x;
             yy = y == null ? double.NaN : (double)y;
@@ -22,35 +22,35 @@
         }
 
 
-        public Vector2D Add(Vector2D v1, Vector2D v2)
+        public MyVector2D Add(MyVector2D v1, MyVector2D v2)
         {
-            return new Vector2D(v1.xx + v2.xx, v1.yy + v2.yy, null, null);
+            return new MyVector2D(v1.xx + v2.xx, v1.yy + v2.yy, null, null);
         }
 
-        public Vector2D Sub(Vector2D v1, Vector2D v2)
+        public MyVector2D Sub(MyVector2D v1, MyVector2D v2)
         {
-            return new Vector2D(v1.xx - v2.xx, v1.yy - v2.yy, null, null);
+            return new MyVector2D(v1.xx - v2.xx, v1.yy - v2.yy, null, null);
         }
 
-        public Vector2D Mul(Vector2D v1, double scalar)
+        public MyVector2D Mul(MyVector2D v1, double scalar)
         {
-            return new Vector2D(v1.xx * scalar, v1.yy * scalar, null, null);
+            return new MyVector2D(v1.xx * scalar, v1.yy * scalar, null, null);
         }
 
-        public Vector2D Div(Vector2D v1, double scalar)
+        public MyVector2D Div(MyVector2D v1, double scalar)
         {
             if (scalar == 0)
                 throw new DivideByZeroException("Cannot divide by zero.");
             
-            return new Vector2D(v1.xx / scalar, v1.yy / scalar, null, null);
+            return new MyVector2D(v1.xx / scalar, v1.yy / scalar, null, null);
         }
 
-        public double Dot(Vector2D v1, Vector2D v2)
+        public double Dot(MyVector2D v1, MyVector2D v2)
         {
             return v1.xx * v2.xx + v1.yy * v2.yy;
         }
 
-        public Vector2D Normalize()
+        public MyVector2D Normalize()
         {
             if (this.magnitude == 0)
                 throw new DivideByZeroException("Cannot divide by zero.");
@@ -60,7 +60,7 @@
             double _x = xx / magnitude;
             double _y = yy / magnitude;
 
-            return new Vector2D(_x, _y, null, null);
+            return new MyVector2D(_x, _y, null, null);
         }
 
         public double ToRadians(double angle)
@@ -70,14 +70,14 @@
             return res;
         }
 
-        public double ToDegrees(Vector2D v1)
+        public double ToDegrees(MyVector2D v1)
         {
             double res = v1.theta_in_radians * (180.0d / Math.PI);
 
             return res;
         }
         
-        public Vector2D ToPolar(Vector2D v1)
+        public MyVector2D ToPolar(MyVector2D v1)
         {
             /*
              * r = √ ( x2 + y2 )
@@ -100,7 +100,7 @@
             return v1;
         }
 
-        public Vector2D ToCart(Vector2D v1)
+        public MyVector2D ToCart(MyVector2D v1)
         {
             /*
              * x = r × cos( θ )

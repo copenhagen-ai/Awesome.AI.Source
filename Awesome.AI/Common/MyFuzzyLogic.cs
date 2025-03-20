@@ -2,37 +2,6 @@
 
 namespace Awesome.AI.Common
 {
-    /// <summary>
-    /// Represents different fuzzy set categories.
-    /// </summary>
-    //public enum FuzzySet
-    //{
-    //    /// <summary>
-    //    /// Represents a very strong membership value.
-    //    /// </summary>
-    //    VERYYES,
-
-    //    /// <summary>
-    //    /// Represents a strong membership value.
-    //    /// </summary>
-    //    YES,
-
-    //    /// <summary>
-    //    /// Represents an uncertain or neutral membership value.
-    //    /// </summary>
-    //    DUNNO,
-
-    //    /// <summary>
-    //    /// Represents a weak membership value.
-    //    /// </summary>
-    //    NO,
-
-    //    /// <summary>
-    //    /// Represents a very weak membership value.
-    //    /// </summary>
-    //    VERYNO
-    //}
-
     public class MyFuzzyLogic
     {
         /// <summary>
@@ -47,7 +16,7 @@ namespace Awesome.AI.Common
             {
                 FUZZYDOWN.VERYYES => TriangularMembership(x, 8, 10, 12),
                 FUZZYDOWN.YES => TriangularMembership(x, 6, 8, 10),
-                FUZZYDOWN.DUNNO => TriangularMembership(x, 4, 5, 6),
+                FUZZYDOWN.MAYBE => TriangularMembership(x, 4, 5, 6),
                 FUZZYDOWN.NO => TriangularMembership(x, 2, 3, 4),
                 FUZZYDOWN.VERYNO => TriangularMembership(x, 0, 1, 2),
                 _ => 0
@@ -107,25 +76,25 @@ namespace Awesome.AI.Common
     }
 
     // Example usage
-    public class FProgram
+    public class FUsage
     {
-        public FProgram()
+        public FUsage()
         {
-            double x = 5; // Input value to be evaluated
-            double membershipValue = MyFuzzyLogic.GetMembershipValue(FUZZYDOWN.DUNNO, x);
-            Console.WriteLine($"Fuzzy Membership of {x} in DUNNO: {membershipValue}");
+            //double x = 5; // Input value to be evaluated
+            //double membershipValue = MyFuzzyLogic.GetMembershipValue(FUZZYDOWN.DUNNO, x);
+            //Console.WriteLine($"Fuzzy Membership of {x} in DUNNO: {membershipValue}");
 
-            Dictionary<double, double> fuzzySet = new Dictionary<double, double>
-            {
-                {2, 0.2},
-                {4, 0.6},
-                {6, 0.8},
-                {8, 1.0},
-                {10, 0.5}
-            };
+            //Dictionary<double, double> fuzzySet = new Dictionary<double, double>
+            //{
+            //    {2, 0.2},
+            //    {4, 0.6},
+            //    {6, 0.8},
+            //    {8, 1.0},
+            //    {10, 0.5}
+            //};
 
-            double defuzzifiedValue = MyFuzzyLogic.CentroidDefuzzification(fuzzySet);
-            Console.WriteLine($"Defuzzified Value: {defuzzifiedValue}");
+            //double defuzzifiedValue = MyFuzzyLogic.CentroidDefuzzification(fuzzySet);
+            //Console.WriteLine($"Defuzzified Value: {defuzzifiedValue}");
         }
     }
 }

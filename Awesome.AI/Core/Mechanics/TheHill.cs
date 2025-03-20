@@ -1,7 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Web.AI.Common;
 using static Awesome.AI.Helpers.Enums;
 
 namespace Awesome.AI.Core.Mechanics
@@ -49,7 +48,7 @@ namespace Awesome.AI.Core.Mechanics
             
             get 
             {
-                if (Constants.Logic == LOGICTYPE.BOOLEAN_ERROR)
+                if (Constants.Logic == LOGICTYPE.BOOLEAN)
                     //return deltaMom.ToDownPrev(deltaMomPrev, mind);
                     return deltaMom.ToDownZero(mind);
 
@@ -130,13 +129,13 @@ namespace Awesome.AI.Core.Mechanics
         {
             double acc_slope, _x, _y;
 
-            Vector2D calc = new Vector2D();
-            Vector2D _slope;
+            MyVector2D calc = new MyVector2D();
+            MyVector2D _slope;
             
             acc_slope = mind.calc.SlopeCoefficient(x, Vars.var_a, Vars.var_b);
             _x = 1.0d;
             _y = acc_slope;
-            _slope = calc.ToPolar(new Vector2D(_x, _y, null, null));
+            _slope = calc.ToPolar(new MyVector2D(_x, _y, null, null));
             double acc_degree = _slope.theta_in_degrees;
             
             return acc_degree;
@@ -146,8 +145,8 @@ namespace Awesome.AI.Core.Mechanics
         {
             Check(Vars.var_a, Vars.var_b, Vars.var_c);
 
-            Vector2D calc = new Vector2D();
-            Vector2D res, sta = new Vector2D(), dyn = new Vector2D();
+            MyVector2D calc = new MyVector2D();
+            MyVector2D res, sta = new MyVector2D(), dyn = new MyVector2D();
 
             //double res_x_save = Constants.STARTXY + res_x_prev;
             double acc_degree = SlopeInDegrees(res_x);
@@ -201,8 +200,7 @@ namespace Awesome.AI.Core.Mechanics
             //velocity += dv;
         }
 
-        //private double shift = -3.0d;
-        public Vector2D ApplyStatic(double acc_degree)
+        public MyVector2D ApplyStatic(double acc_degree)
         {
             double acc_degree_positive = acc_degree < 0.0d ? -acc_degree : acc_degree;
             double angle_sta = -90.0d;
@@ -212,11 +210,10 @@ namespace Awesome.AI.Core.Mechanics
             double force_sta = HighestVar;
             double force_com_y = mind.calc.PythNear(angle_com_y_pyth, force_sta);
 
-            Vector2D calc = new Vector2D();
-            //Vector2D _static = calc.ToCart(calc.Flip360(new Vector2D(null, null, force_sta, mind.calc.ToRadiansFromDegrees(angle_sta))));
-            Vector2D _static = calc.ToCart(new Vector2D(null, null, force_sta, calc.ToRadians(angle_sta)));
-            Vector2D _N = calc.ToCart(new Vector2D(null, null, force_com_y, calc.ToRadians(angle_com_y_vec + 180.0d)));
-            Vector2D _fN = calc.ToPolar((calc.Add(_static, _N)));
+            MyVector2D calc = new MyVector2D();
+            MyVector2D _static = calc.ToCart(new MyVector2D(null, null, force_sta, calc.ToRadians(angle_sta)));
+            MyVector2D _N = calc.ToCart(new MyVector2D(null, null, force_com_y, calc.ToRadians(angle_com_y_vec + 180.0d)));
+            MyVector2D _fN = calc.ToPolar((calc.Add(_static, _N)));
 
             double m = mind.parms.mass;
             double u = Friction(true, 0.0d, mind.parms.shift);
@@ -229,13 +226,12 @@ namespace Awesome.AI.Core.Mechanics
             if (Fnet <= Constants.VERY_LOW)
                 Fnet = Constants.VERY_LOW;
 
-            //Vector2D _res = calc.ToCart(calc.Flip360(new Vector2D(null, null, Fnet, _fN.theta_in_radians)));
-            Vector2D _res = calc.ToCart(new Vector2D(null, null, Fnet, _fN.theta_in_radians));
+            MyVector2D _res = calc.ToCart(new MyVector2D(null, null, Fnet, _fN.theta_in_radians));
 
             return _res;
         }
 
-        public Vector2D ApplyDynamic(double acc_degree)
+        public MyVector2D ApplyDynamic(double acc_degree)
         {
             UNIT curr_unit = mind.curr_unit;
             
@@ -248,8 +244,8 @@ namespace Awesome.AI.Core.Mechanics
             double max = HighestVar;
             double force_dyn = max - curr_unit.Variable;
 
-            Vector2D calc = new Vector2D();
-            Vector2D dynamic = new Vector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
+            MyVector2D calc = new MyVector2D();
+            MyVector2D dynamic = new MyVector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
 
             double m = mind.parms.mass;
             double u = Friction(false, curr_unit.credits, mind.parms.shift);
@@ -261,10 +257,8 @@ namespace Awesome.AI.Core.Mechanics
 
             if (Fnet <= Constants.VERY_LOW)
                 Fnet = Constants.VERY_LOW;
-            else
-                ;
-
-            Vector2D _res = calc.ToCart(new Vector2D(null, null, Fnet, calc.ToRadians(angle_dyn)));
+            
+            MyVector2D _res = calc.ToCart(new MyVector2D(null, null, Fnet, calc.ToRadians(angle_dyn)));
 
             return _res;
         }

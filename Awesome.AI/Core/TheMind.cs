@@ -90,7 +90,7 @@ namespace Awesome.AI.Core
                 chatask = new ChatAsk(this, "");
                 dir = new Direction(this);
                 pos = new Position(this);
-                quantum = new MyQubit(this);
+                quantum = new MyQubit();
                 mem = new Memory(this, Constants.NUMBER_OF_UNITS);
                 quick = new QuickDecision(this);
 
@@ -131,9 +131,9 @@ namespace Awesome.AI.Core
             foreach (UNIT u in list.OrderBy(x => x.Variable).ToList())
                 units_force.Add(new Tuple<string, bool, double>(u.root, u.IsValid, u.Variable));
 
-            List<Tuple<string, bool, double>> units_mass = new List<Tuple<string, bool, double>>();
-            foreach (UNIT u in list.OrderBy(x => x.HighAtZero).ToList())
-                units_mass.Add(new Tuple<string, bool, double>(u.root, u.IsValid, u.HighAtZero));
+            //List<Tuple<string, bool, double>> units_mass = new List<Tuple<string, bool, double>>();
+            //foreach (UNIT u in list.OrderBy(x => x.HighAtZero).ToList())
+            //    units_mass.Add(new Tuple<string, bool, double>(u.root, u.IsValid, u.HighAtZero));
 
             List<UNIT> list1 = list.OrderBy(x => x.Index).ToList();
             List<UNIT> list2 = list.OrderBy(x => x.Variable).ToList();

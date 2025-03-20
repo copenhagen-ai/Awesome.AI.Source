@@ -84,7 +84,7 @@ namespace Awesome.AI.Common
             {
                 case < 20.0d: return FUZZYDOWN.VERYNO;
                 case < 40.0d: return FUZZYDOWN.NO;
-                case < 60.0d: return FUZZYDOWN.DUNNO;
+                case < 60.0d: return FUZZYDOWN.MAYBE;
                 case < 80.0d: return FUZZYDOWN.YES;
                 case < 100.0d: return FUZZYDOWN.VERYYES;
                 default: throw new NotSupportedException("ToFuzzy");
@@ -113,29 +113,27 @@ namespace Awesome.AI.Common
         public static bool Direction(this TheMind mind)
         {
             /*
-             * this function could also be called Choice
-             * NO is to say no to going downwards
-             * 
              * up is true 
              * */
              
             bool go_up = mind.dir.DownHard.IsNo();
-
-            if (Constants.Logic == LOGICTYPE.BOOLEAN_ERROR)
-                go_up = !go_up;//we flip direction
-
-            if (Constants.Logic == LOGICTYPE.QUBIT)
-                go_up = mind.quantum.MyXOR(go_up, go_up);//we decide direction
 
             return go_up;
         }
 
         public static HARDDOWN ToDownZero(this double deltaMom, TheMind mind)
         {
+            /*
+             * NO is to say no to going downwards
+             * */
+
             bool res = deltaMom <= 0.0d;
 
-            //if (mind.parms.hack == HACKMODES.HACK)
-            //    res = !res;
+            if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                res = !res;//we flip direction
+
+            if (Constants.Logic == LOGICTYPE.QUBIT)
+                res = mind.quantum.usage.MyQuantumXOR(res, res);
 
             return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
@@ -143,9 +141,6 @@ namespace Awesome.AI.Common
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
         {
             bool res = deltaMom <= prev;
-
-            //if (mind.parms.hack == HACKMODES.HACK)
-            //    res = !res;
 
             return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
