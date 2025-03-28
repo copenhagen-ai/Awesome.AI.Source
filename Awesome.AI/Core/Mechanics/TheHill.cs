@@ -1,7 +1,7 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
-using static Awesome.AI.Helpers.Enums;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {

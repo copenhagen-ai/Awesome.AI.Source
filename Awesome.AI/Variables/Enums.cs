@@ -1,4 +1,4 @@
-﻿namespace Awesome.AI.Helpers
+﻿namespace Awesome.AI.Variables
 {
     public class Enums
     {
@@ -6,6 +6,7 @@
         public enum TONE { HIGH, LOW, MID, RANDOM }
         public enum MINDS { ROBERTA, ANDREW }
         public enum UNITTYPE { JUSTAUNIT, DECISION, QDECISION, IDLE, MIN, MAX }
+        public enum LONGTYPE { LOCATION, ANSWER, ASK, NONE }
         public enum VALIDATION { BOTH, EXTERNAL, INTERNAL }
         public enum TAGS { ALL, EVEN }
         public enum OCCUPASION { FIXED, DYNAMIC }

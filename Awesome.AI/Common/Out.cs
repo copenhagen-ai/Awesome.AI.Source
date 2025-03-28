@@ -1,8 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Helpers;
-using Microsoft.CodeAnalysis.Elfie.Model.Strings;
-using static Awesome.AI.Helpers.Enums;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Web.AI.Common
 {
@@ -44,7 +43,7 @@ namespace Awesome.AI.Web.AI.Common
             chat_answer = "";
 
             int count = 0;
-            while((chat_answer == null || chat_answer == "") && count++ < 60)
+            while((chat_answer is null or "") && count++ < 60)
                 await Task.Delay(1000);
 
             return count >= 59 ? ":COMEAGAIN" : chat_answer;
@@ -75,20 +74,20 @@ namespace Awesome.AI.Web.AI.Common
             epochs = $"{mind.epochs}";
             runtime = $"{Constants.RUNTIME}";
             occu = $"{mind._internal.Occu}";
-            location = $"{mind.loc.LocationFinal}";
-            loc_state = mind.loc.LocationState > 0 ? "making a decision" : "just thinking";
-            chat_state = mind.chatans.ChatState > 0 ? "thinking" : "just thinking";
+            location = $"{mind._long.Result["location"]}";
+            loc_state = mind._long.State["location"] > 0 ? "making a decision" : "just thinking";
+            chat_state = mind._long.State["answer"] > 0 ? "thinking" : "just thinking";
 
-            whistle = mind.quick.Result ? "[Whistling to my self..]" : arr[count];
+            whistle = mind._quick.Result ? "[Whistling to my self..]" : arr[count];
 
-            if (mind.chatans.Answer != "") {
-                chat_answer = $"{mind.chatans.Answer}";
-                mind.chatans.Answer = "";
+            if (mind._long.Result["answer"] != "") {
+                chat_answer = $"{mind._long.Result["answer"]}";
+                mind._long.Result["answer"] = "";
             }
 
-            if(mind.chatask.Subject != "") {
-                chat_subject = $"{mind.chatask.Subject}";
-                mind.chatask.Subject = "";
+            if(mind._long.Result["ask"] != "") {
+                chat_subject = $"{mind._long.Result["ask"]}";
+                mind._long.Result["ask"] = "";
             }
             //chat_index= $"{mind.chatask.Index}";
 

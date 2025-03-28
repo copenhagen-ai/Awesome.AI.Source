@@ -1,8 +1,8 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using static Awesome.AI.Helpers.Enums;
+using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.CoreHelpers
+namespace Awesome.AI.CoreInternals
 {
     public class Filters
     {
@@ -43,7 +43,7 @@ namespace Awesome.AI.CoreHelpers
 
             return ok;
         }
-        
+
         public bool LowCut(UNIT _u)//aka SayNo
         {
             /*
@@ -53,7 +53,7 @@ namespace Awesome.AI.CoreHelpers
             if (_u == null)
                 throw new ArgumentNullException();
 
-            if(mind.parms.state == STATE.QUICKDECISION)
+            if (mind.parms.state == STATE.QUICKDECISION)
                 return true;
 
             double lower_border = mind.parms.low_cut;
@@ -158,7 +158,7 @@ namespace Awesome.AI.CoreHelpers
         //{
         //    if (unit == null)
         //        throw new ArgumentNullException();
-            
+
         //    if (mind.theme == "none")
         //        return true;
 

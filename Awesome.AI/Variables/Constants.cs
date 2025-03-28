@@ -1,6 +1,6 @@
-﻿using static Awesome.AI.Helpers.Enums;
+﻿using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Helpers
+namespace Awesome.AI.Variables
 {
     public class Constants
     {
@@ -26,29 +26,27 @@ namespace Awesome.AI.Helpers
         public const string roberta_s8 = "hobbys";
         public const string roberta_s9 = "the weather";
         public const string roberta_s10 = "having fun";
+        
 
-        //public const string make_decision_u1 = "MAKEYES";
-        //public const string make_decision_u2 = "MAKENO";
+        public const string location_should_yes = "AYES";
+        public const string location_should_no = "ANO";
 
-        public const string location_should_decision_u1 = "SHOULDYES";
-        public const string location_should_decision_u2 = "SHOULDNO";
+        public const string location_what_u1 = "WHATKITCHEN";
+        public const string location_what_u2 = "WHATBEDROOM";
+        public const string location_what_u3 = "WHATLIVINGROOM";
 
-        public const string location_what_decision_u1 = "WHATKITCHEN";
-        public const string location_what_decision_u2 = "WHATBEDROOM";
-        public const string location_what_decision_u3 = "WHATLIVINGROOM";
+        public const string answer_should_yes = "BYES";
+        public const string answer_should_no = "BNO";
 
-        public const string answer_should_decision_u1 = "ANSWERYES";
-        public const string answer_should_decision_u2 = "ANSWERNO";
+        public const string answer_what_u1 = "WHATim busy right now..";
+        public const string answer_what_u2 = "WHATnot right now..";
+        public const string answer_what_u3 = "WHATtalk later..";
 
-        public const string answer_what_decision_u1 = "WHATim busy right now..";
-        public const string answer_what_decision_u2 = "WHATnot right now..";
-        public const string answer_what_decision_u3 = "WHATtalk later..";
+        public const string ask_should_yes = "CYES";
+        public const string ask_should_no = "CNO";
 
-        public const string ask_should_decision_u1 = "ASKYES";
-        public const string ask_should_decision_u2 = "ASKNO";
-
-        public const string should_decision_u1 = "DYES";
-        public const string should_decision_u2 = "DNO";
+        public const string quick_deci_should_yes = "QYES";
+        public const string quick_deci_should_no = "QNO";
 
         public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
         {
@@ -59,6 +57,7 @@ namespace Awesome.AI.Helpers
         {
             { "WHISTLE", new int[]{ 5, 15 } },
         };
+
 
         public const double MIN = 0.5d;
         public const double MAX = 99.5d;
@@ -80,18 +79,27 @@ namespace Awesome.AI.Helpers
         public const int NUMBER_OF_UNITS = 10;
         public const int RUNTIME = 2;                       //minutes
 
-        public const LOGICTYPE Logic = LOGICTYPE.QUBIT;
+        public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
 
         public const int MICRO_SEC = 4000;                  //call micro timer every 1000µs (1ms)
         public const int HIST_TOTAL = 100;                  //the number of UNITS???
         public const int REMEMBER = 200;
 
-        public static readonly string[] subject_decision = new string[]
-        { 
-            "location_should_decision", "location_what_decision",
-            "answer_should_decision", "answer_what_decision",
-            "ask_should_decision", 
-            "whistle_should_decision",
+
+        public static readonly string[] deci_subject = { "long_decision_should", "long_decision_what", "quick_decision_should" };
+
+        public static readonly Dictionary<string, string> long_deci_roberta = new Dictionary<string, string>
+        {
+            { "location", "KITCHEN" },
+            { "answer", "" },
+            { "ask", "" }
+        };
+
+        public static readonly Dictionary<string, string> long_deci_andrew = new Dictionary<string, string>
+        {
+            { "location", "LIVINGROOM" },
+            { "answer", "" },
+            { "ask", "" }
         };        
     }
 }

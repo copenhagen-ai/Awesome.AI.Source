@@ -1,6 +1,6 @@
-﻿namespace Awesome.AI.Helpers
+﻿namespace Awesome.AI.Variables
 {
-    class Vars
+    public class Vars
     {
         //gravity, wheel
         public static double zero_mass { get; set; }

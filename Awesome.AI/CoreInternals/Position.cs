@@ -1,14 +1,14 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Helpers;
-using static Awesome.AI.Helpers.Enums;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.CoreHelpers
+namespace Awesome.AI.CoreInternals
 {
     public class Position
     {
         private bool is_no { get; set; }
-        
+
         private TheMind mind;
         private Position() { }
 
@@ -48,42 +48,46 @@ namespace Awesome.AI.CoreHelpers
 
         private double Up()
         {
-            double rand = (mind.rand.MyRandomDouble(2)[0] / 10.0d) * 2.0d;
+            double rand = mind.rand.MyRandomDouble(2)[0] / 10.0d * 2.0d;
 
             return rand;
         }
 
         private double Down()
         {
-            double rand = (mind.rand.MyRandomDouble(2)[1] / 10.0d) * 2.0d;
+            double rand = mind.rand.MyRandomDouble(2)[1] / 10.0d * 2.0d;
 
             return rand;
         }
-        
+
         private void Schedule()
         {
-            if (!mind.goodbye.IsNo()) {
+            if (!mind.goodbye.IsNo())
+            {
                 is_no = false;
                 return;
             }
 
-            if (pos < mind.parms.schedule_low) {
+            if (pos < mind.parms.schedule_low)
+            {
                 if (!is_no)
                     is_no = true;
                 return;
             }
 
-            if (pos < mind.parms.schedule_mid) {
+            if (pos < mind.parms.schedule_mid)
+            {
                 if (!is_no)
                     is_no = mind.dir.DownHard.IsNo();
                 return;
             }
 
-            if (pos >= mind.parms.schedule_high) {
+            if (pos >= mind.parms.schedule_high)
+            {
                 is_no = false;
                 down = 0.1d;
                 return;
             }
-        }        
+        }
     }
 }

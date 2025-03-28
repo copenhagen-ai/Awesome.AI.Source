@@ -1,5 +1,5 @@
 ﻿using Awesome.AI.Core;
-using Awesome.AI.Helpers;
+using Awesome.AI.Variables;
 using System.Globalization;
 
 namespace Awesome.AI.Common

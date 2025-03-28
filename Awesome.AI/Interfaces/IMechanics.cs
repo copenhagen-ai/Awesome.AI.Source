@@ -1,5 +1,5 @@
-﻿using Awesome.AI.Common;
-using static Awesome.AI.Helpers.Enums;
+﻿using Awesome.AI.Core;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Interfaces
 {

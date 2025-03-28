@@ -1,9 +1,9 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Helpers;
-using static Awesome.AI.Helpers.Enums;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.CoreHelpers
+namespace Awesome.AI.CoreInternals
 {
     public class Direction
     {
@@ -20,7 +20,7 @@ namespace Awesome.AI.CoreHelpers
             this.mind = mind;
             Ratio = new List<HARDDOWN>();
         }
-        
+
         public void Update()
         {
             Ratio.Add(DownHard);
@@ -35,10 +35,10 @@ namespace Awesome.AI.CoreHelpers
             switch (choise)
             {
                 case HARDDOWN.YES: count = Ratio.Where(z => z.IsYes()).Count(); break;
-                case HARDDOWN.NO:  count = Ratio.Where(z => z.IsNo()).Count(); break;
+                case HARDDOWN.NO: count = Ratio.Where(z => z.IsNo()).Count(); break;
             }
 
             return count;
-        }        
+        }
     }
 }

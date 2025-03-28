@@ -1,9 +1,9 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Helpers;
-using static Awesome.AI.Helpers.Enums;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.CoreHelpers
+namespace Awesome.AI.CoreInternals
 {
     public class Process
     {
@@ -80,14 +80,14 @@ namespace Awesome.AI.CoreHelpers
 
             List<UNIT> units = mind.mem.UNITS_ALL();
             Stats stats = new Stats();
-            
+
             foreach (UNIT u in units)
                 stats.list.Add(new Stat() { _name = u.root, _var = u.Variable, _index = u.Index });
-            
+
 
             string nam = most_common_unit.root;
-            Stat _s_curr = stats.list.Where(x=>x._name == nam).First();
-            
+            Stat _s_curr = stats.list.Where(x => x._name == nam).First();
+
             if (!hits.ContainsKey(nam))
                 hits.Add(nam, 0);
 
@@ -112,7 +112,7 @@ namespace Awesome.AI.CoreHelpers
 
                 remember.RemoveAt(remember.Count - 1);
             }
-                        
+
             mind.stats = stats;
         }
 
@@ -120,7 +120,7 @@ namespace Awesome.AI.CoreHelpers
         //{
         //    if (h_history == null)
         //        throw new Exception();
-            
+
         //    if (h == null)
         //        throw new Exception();
 
@@ -133,7 +133,7 @@ namespace Awesome.AI.CoreHelpers
         //{
         //    if (u_history == null)
         //        throw new Exception();
-            
+
         //    if (w == null)
         //        throw new Exception();
 
@@ -151,7 +151,7 @@ namespace Awesome.AI.CoreHelpers
         //        most_common_hubs[i] = null;
 
         //    List<HUB> hubs = mind.mem.HUBS_ALL().OrderByDescending(x => x.percent).Take(3).ToList();
-            
+
         //    most_common_hubs[0] = hubs[0];
         //    if (hubs[0].percent != hubs[1].percent) return;
         //    most_common_hubs[1] = hubs[1];
@@ -255,7 +255,7 @@ namespace Awesome.AI.CoreHelpers
         //{
         //    if (!_pro)
         //        return;
-            
+
         //    foreach (HUB h in mind.mem.HUBS_ALL().ToList())
         //        h.percent = (int)(h_history.Where(x => x.GetSubject() == h.GetSubject()).Count() / (double)((double)mind.parms.hist_total * 0.01d));
         //}
@@ -310,6 +310,6 @@ namespace Awesome.AI.CoreHelpers
         //        mind.states[state] = "answer";
         //    }
         //}
-        
+
     }
 }

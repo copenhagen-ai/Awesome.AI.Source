@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using static Awesome.AI.Helpers.Enums;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
 {

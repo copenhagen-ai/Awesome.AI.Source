@@ -1,7 +1,7 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.Helpers;
 using Awesome.AI.Interfaces;
-using static Awesome.AI.Helpers.Enums;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
@@ -32,12 +32,12 @@ namespace Awesome.AI.Core.Mechanics
 
             posxy = Constants.STARTXY;//10;
 
-            m_out_high = -1000.0d;
-            m_out_low = 1000.0d;
-            d_out_high = -1000.0d;
-            d_out_low = 1000.0d;
-            posx_high = -1000.0d;
-            posx_low = 1000.0d;
+            m_out_high = -1.0E20d;
+            m_out_low = 1.0E20d;
+            d_out_high = -1.0E20d;
+            d_out_low = 1.0E20d;
+            posx_high = -1.0E20d;
+            posx_low = 1.0E20d;
         }
 
         public FUZZYDOWN FuzzyMom
@@ -66,23 +66,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             get 
             {
-                //its a hack, yes its cheating..
-                double boost = mind.parms.boost;
-
-                //posxy = 10.0d + (boost * momentum);//dosnt seem right
-                posxy = 10.0d + (boost * deltaMom);//dosnt seem right
-                //posx = posx + (boost * velocity);
-                //posx = 10.0d + (boost * momentum);
-
-                if (posxy < Constants.LOWXY)
-                    posxy = Constants.LOWXY;
-                if (posxy > Constants.HIGHXY)
-                    posxy = Constants.HIGHXY;
-
-                if (posxy <= posx_low) posx_low = posxy;
-                if (posxy > posx_high) posx_high = posxy;
-
-                return posxy;
+                return -1d;
             }
         }
 
@@ -98,7 +82,7 @@ namespace Awesome.AI.Core.Mechanics
             if (curr.IsIDLE())
                 throw new Exception("Variable");
 
-            double dist = mind.calc.NormalizeRange(curr.LowAtZero, 0.0d, 100.0d, 100000.0d, 1000100.0d);//dist mercury -> sun
+            double dist = mind.calc.NormalizeRange(curr.LowAtZero, 0.0d, 100.0d, 0.0d, 50000000000.0d);
             double mass_M = Vars.zero_mass;
             double mass_m = mind.parms.mass;
 
@@ -111,9 +95,6 @@ namespace Awesome.AI.Core.Mechanics
             return grav;
         }
 
-        private List<double> cred = new List<double>();
-        private List<double> lim = new List<double>();
-        private double velocity = 0;
         public void Calculate()
         {
             /*
@@ -121,28 +102,22 @@ namespace Awesome.AI.Core.Mechanics
              * I know its not using a black hole, but it should be the same principle outside the event horizon???
              * */
 
-            double max = HighestVar;
-            double sta_lim = Limitter(true, 0.0d, 0.0d);
-            double dyn_lim = Limitter(false, mind.curr_unit.credits, mind.parms.shift);
-            double sta_force = 10E-10 * max;
-            double dyn_force = 10E-10 * (max - mind.curr_unit.Variable);
-
-            double Fnet = (sta_force * sta_lim) - (dyn_force * dyn_lim);
+            double mod = Modifier(mind.curr_unit.credits, mind.parms.shift);
             double m = mind.parms.mass;
-            double dt = mind.parms.delta_time;      //delta time
+            double dt = mind.parms.delta_time;    //delta time
+            double Fnet = mind.curr_unit.Variable * mod;
 
             //F=m*a
             //a=dv/dt
             //F=(m*dv)/dt
             //F*dt=m*dv
             //dv=(F*dt)/m
-            double dv = (Fnet * dt) / m;            //delta velocity
 
-            velocity = dv;
+            double deltaVel = (Fnet * dt) / m;            //delta velocity
 
             //momentum: p = m * v
             deltaMomPrev = deltaMom;
-            deltaMom = (m) * velocity;
+            deltaMom = (m) * deltaVel;
             momentum += deltaMom;
 
             if (momentum <= m_out_low) m_out_low = momentum;
@@ -151,90 +126,19 @@ namespace Awesome.AI.Core.Mechanics
             if (deltaMom <= d_out_low) d_out_low = deltaMom;
             if (deltaMom > d_out_high) d_out_high = deltaMom;
 
-            if (double.IsNaN(velocity))
+            if (double.IsNaN(deltaVel))
                 throw new Exception("Calculate");
-
-            cred.Add(mind.curr_unit.credits);
-            lim.Add(dyn_lim);
-
-            if (cred.Count > 50)
-                cred.RemoveAt(0);
-
-            if (lim.Count > 50)
-                lim.RemoveAt(0);
-
-
-
-
-
-            ////car left
-            //Fsta = ApplyStatic();
-
-            ////car right
-            //Fdyn = ApplyDynamic();
-
-            //double Fnet = mind.goodbye.IsNo() ? -Fsta + Fdyn : -Fsta;
-            //double m = mind.parms.mass;
-            //double dt = mind.parms.delta_time;                             //delta time, 1sec/500cyc
-
-            ////F=m*a
-            ////a=dv/dt
-            ////F=(m*dv)/dt
-            ////F*dt=m*dv
-            ////dv=(F*dt)/m
-            //double dv = (Fnet * dt) / m;
-
-            //velocity += dv;
-
-            ////momentum: p = m * v
-            //momentum = (m) * velocity;
-
-            //if (momentum <= out_low) out_low = momentum;
-            //if (momentum > out_high) out_high = momentum;
-
-            //if (double.IsNaN(velocity))
-            //    throw new Exception();
-
-
-
-
-
-
-
-            ////car left
-            //Fsta = ApplyStatic();
-
-            ////car right
-            //if (mind.goodbye.IsNo())
-            //    Fdyn = ApplyDynamic();
-
-            ////momentum: p = m * v
-            //momentum = (mind.parms.mass * 2) * velocity;
-
-            //if (momentum <= out_low) out_low = momentum;
-            //if (momentum > out_high) out_high = momentum;
-
-            //if (double.IsNaN(velocity))
-            //    throw new Exception();
         }
 
-        public double Limitter(bool is_static, double credits, double shift)
+        public double Modifier(double credits, double shift)
         {
-            /*
-             * friction coeficient
-             * should friction be calculated from position???
-             * */
-
-            if (is_static)
-                return Constants.BASE_FRICTION;
-
             Calc calc = mind.calc;
 
             double _c = 10.0d - credits;
             double x = 5.0d - _c + shift;
-            double friction = calc.Logistic(x);
+            double mod = calc.Logistic(x);
 
-            return friction;
+            return mod < 0.5 ? -1d : 1d;
         }
 
         /////*

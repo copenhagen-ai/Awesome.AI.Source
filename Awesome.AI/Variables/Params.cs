@@ -1,21 +1,20 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Core;
+﻿using Awesome.AI.Core;
 using Awesome.AI.Core.Mechanics;
 using Awesome.AI.Interfaces;
-using static Awesome.AI.Helpers.Enums;
+using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Helpers
+namespace Awesome.AI.Variables
 {
     public class Params
     {
         public TheMind mind;
         private Params() { }
-        public Params(TheMind mind) 
+        public Params(TheMind mind)
         {
-            this.mind = mind;            
+            this.mind = mind;
         }
-               
-        
+
+
         public IMechanics GetMechanics(MECHANICS run = MECHANICS.NONE)
         {
             IMechanics _mech = null;
@@ -59,15 +58,15 @@ namespace Awesome.AI.Helpers
                 //    boost = 1E9d;
 
                 //    break;
-                case MECHANICS.GRAVITY: 
-                    _mech = new _TheGravity(this.mind, this);
+                case MECHANICS.GRAVITY:
+                    _mech = new _TheGravity(mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
-                    
+
                     //earth mass:               5.972×10^24 kg
                     //sun mass:                 1.989×10^30 kg
                     //earth gravity:                  9.807 m/s²
@@ -77,10 +76,10 @@ namespace Awesome.AI.Helpers
                     //earth radius:                   6,371 km
                     Vars.zero_mass = 5.972E24d;
                     high_at_zero = false;
-                    shift = 1.5d;
+                    shift = 0.0d;
                     mass = 40000.0d;                                                 //millinium falken
-                    update_cred = 0.5d;
-                    delta_time = 10.0d;
+                    update_cred = 0.05d;
+                    delta_time = 100.0d;
 
                     schedule_low = 2.0d;
                     schedule_mid = 6.0d;
@@ -92,18 +91,18 @@ namespace Awesome.AI.Helpers
                         * boost should be as close 1.0, without dying to fast
                         * */
 
-                    boost = 1E-10d;
+                    boost = 1E-1d;
 
                     break;
-                case MECHANICS.CONTEST: 
-                    _mech = new _TheContest(this.mind, this);
+                case MECHANICS.CONTEST:
+                    _mech = new _TheContest(mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
-                                                                                                                    
+
                     high_at_zero = true;
                     mass = 500.0d;
                     update_cred = 0.030d;
@@ -123,15 +122,15 @@ namespace Awesome.AI.Helpers
                     boost = 1E-2d;
 
                     break;
-                case MECHANICS.HILL: 
-                    _mech = new _TheHill(this.mind, this);
+                case MECHANICS.HILL:
+                    _mech = new _TheHill(mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
                     //hack = HACKMODES.NOHACK;                                          //obsolete
-                    
+
                     Vars.var_a = -0.1d;
                     Vars.var_b = 0.0d;
                     Vars.var_c = 10.0d;
@@ -153,7 +152,7 @@ namespace Awesome.AI.Helpers
                     break;
                 default: throw new Exception("GetMechanics");
             }
-                    
+
             return _mech;
         }
 
@@ -166,20 +165,20 @@ namespace Awesome.AI.Helpers
                 units = units.OrderByDescending(x => x.Index).ToList();
 
             UNIT _u = units[3];
-                        
+
             low_cut = _u.Variable + 0.1d;
         }
-        
+
         /*
          * VARIABLE parameters
          * */
 
-        public VALIDATION validation;      
+        public VALIDATION validation;
         public TAGS tags;                                               //used with WORLD and BOTH
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
         public STATE state;
         //public HACKMODES hack;
-        
+
         /*
          * FIXED parameters
          * 
@@ -196,8 +195,8 @@ namespace Awesome.AI.Helpers
         public double boost;//dimm the fluctuations
         public double shift;
         public double delta_time;
-        
-        private bool high_at_zero {  get; set; }
+
+        private bool high_at_zero { get; set; }
 
         public double schedule_low { get; set; }
         public double schedule_mid { get; set; }

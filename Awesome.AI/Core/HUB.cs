@@ -1,6 +1,6 @@
-﻿using static Awesome.AI.Helpers.Enums;
+﻿using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Common
+namespace Awesome.AI.Core
 {
     public class HUB
     {
@@ -19,15 +19,15 @@ namespace Awesome.AI.Common
         private HUB(string subject, List<UNIT> units, TONE ton)
         {
             //CreateNet(is_accord, neurons, learningrate, momentum);
-                        
+
             //this.percent = 0.0d;
             this.subject = subject;
             this.units = units;
-            this.tone = ton;
+            tone = ton;
         }
 
         private HUB()
-        {            
+        {
         }
 
         public static HUB Create(string subject, List<UNIT> units, TONE ton)
@@ -43,7 +43,7 @@ namespace Awesome.AI.Common
 
             if (units == null)
                 units = new List<UNIT>();
-        
+
             units.Add(u);
         }
 
@@ -131,5 +131,5 @@ namespace Awesome.AI.Common
         //        _target[i] = .5d;
         //    net_kutza.EvaluateNet(_input, _target, out _out);
         //}
-    }    
+    }
 }

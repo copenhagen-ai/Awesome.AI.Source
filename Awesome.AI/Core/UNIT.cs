@@ -1,10 +1,9 @@
-﻿using Awesome.AI.Core;
-using Awesome.AI.Helpers;
+﻿using Awesome.AI.CoreInternals;
 using Awesome.AI.Interfaces;
-using Awesome.AI.CoreHelpers;
-using static Awesome.AI.Helpers.Enums;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Common
+namespace Awesome.AI.Core
 {
     public class UNIT
     {
@@ -13,7 +12,8 @@ namespace Awesome.AI.Common
          * */
 
         public Ticket ticket = new Ticket("NOTICKET");
-        private UNITTYPE type { get; set; }
+        private UNITTYPE unit_type { get; set; }
+        public LONGTYPE long_deci_type { get; set; }
         public string root { get; set; }//name
         public string data { get; set; }//data
         public double credits { get; set; }
@@ -24,7 +24,7 @@ namespace Awesome.AI.Common
         {
             this.mind = mind;
         }
-        
+
         private double dex = -1.0d;
         public double Index
         {
@@ -35,7 +35,7 @@ namespace Awesome.AI.Common
         double _f = -1d;
         public double Variable
         {
-            get 
+            get
             {
                 if (root == "_decision42")
                     ;
@@ -115,11 +115,11 @@ namespace Awesome.AI.Common
                 //if (hub != null)
                 //    return hub;
 
-                if(this.IsIDLE())
+                if (IsIDLE())
                     return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);
 
                 hub = mind.mem.HUBS_ALL(mind.parms.state).Where(x => x.units.Contains(this)).FirstOrDefault();
-                
+
                 if (hub == null)
                     return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);
 
@@ -141,9 +141,9 @@ namespace Awesome.AI.Common
             }
         }
 
-        public static UNIT Create(TheMind mind, double index, string root, string data, string ticket, UNITTYPE t)
+        public static UNIT Create(TheMind mind, double index, string root, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
         {
-            UNIT _w = new UNIT() { mind = mind, Index = index, root = root, data = data, type = t };
+            UNIT _w = new UNIT() { mind = mind, Index = index, root = root, data = data, unit_type = ut, long_deci_type = lt };
 
             if (ticket != "")
                 _w.ticket = new Ticket(ticket);
@@ -157,29 +157,31 @@ namespace Awesome.AI.Common
         {
             get
             {
-                return UNIT.Create(null, Constants.MAX, "MAX", "DATA", "TICKET", Enums.UNITTYPE.MAX);
+                return Create(null, Constants.MAX, "MAX", "DATA", "TICKET", UNITTYPE.MAX, LONGTYPE.NONE);
             }
         }
         public static UNIT GetLow
         {
             get
             {
-                return UNIT.Create(null, Constants.MIN, "MIN", "DATA", "TICKET", Enums.UNITTYPE.MIN);
+                return Create(null, Constants.MIN, "MIN", "DATA", "TICKET", UNITTYPE.MIN, LONGTYPE.NONE);
             }
         }
 
         public static UNIT IDLE_UNIT(TheMind mind)
         {
-            return UNIT.Create(mind, -1d, "XXXX", "XXXX", "", UNITTYPE.IDLE);
+            return Create(mind, -1d, "XXXX", "XXXX", "", UNITTYPE.IDLE, LONGTYPE.NONE);
         }
 
-        public bool IsUNIT() => type == UNITTYPE.JUSTAUNIT;
+        public bool IsUNIT() => unit_type == UNITTYPE.JUSTAUNIT;
 
-        public bool IsIDLE() => type == UNITTYPE.IDLE;
+        public bool IsIDLE() => unit_type == UNITTYPE.IDLE;
 
-        public bool IsDECISION() => type == UNITTYPE.DECISION;
+        public bool IsDECISION() => unit_type == UNITTYPE.DECISION;
 
-        public bool IsQUICKDECISION() => type == UNITTYPE.QDECISION;
+        public bool IsQUICKDECISION() => unit_type == UNITTYPE.QDECISION;
+
+        
 
         //UNIT next = null;
         //public UNIT Next

@@ -1,11 +1,11 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.CoreHelpers;
-using Awesome.AI.Helpers;
+using Awesome.AI.CoreInternals;
+using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Systems;
+using Awesome.AI.Variables;
 using Awesome.AI.Web.AI.Common;
 using Awesome.AI.Web.Helpers;
-using static Awesome.AI.Helpers.Enums;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core
 {
@@ -20,7 +20,8 @@ namespace Awesome.AI.Core
         public TheMatrix matrix;
         public Core core;
         public Memory mem;
-        public QuickDecision quick;
+        public QuickDecision _quick;
+        public LongDecision _long;
         public Params parms;
         public Calc calc;
         public MyRandom rand;
@@ -29,9 +30,6 @@ namespace Awesome.AI.Core
         public Out _out;
         public MyInternal _internal;
         public MyExternal _external;
-        public Location loc;
-        public ChatAnswer chatans;
-        public ChatAsk chatask;
         public Direction dir;
         public Position pos;
         public MyQubit quantum;
@@ -60,6 +58,8 @@ namespace Awesome.AI.Core
         public bool chat_answer { get; set; }
         public bool chat_asked { get; set; }
 
+        private Dictionary<string, string> long_deci {  get; set; }
+        
         //public bool theme_on = false;
         //public string theme = "none";
         //public string theme_old = "";
@@ -68,13 +68,14 @@ namespace Awesome.AI.Core
         public List<KeyValuePair<string, int>> themes_stat = new List<KeyValuePair<string, int>>();
         public Stats stats = new Stats();
         
-        public TheMind(MECHANICS m, MINDS mindtype, string _location)
+        public TheMind(MECHANICS m, MINDS mindtype, Dictionary<string, string> long_deci)
         {
             try
             {
                 this._mech = m;
                 this.mindtype = mindtype;
-
+                this.long_deci = long_deci;
+                
                 parms = new Params(this);
                 matrix = new TheMatrix(this);
                 calc = new Calc(this);
@@ -85,14 +86,12 @@ namespace Awesome.AI.Core
                 filters = new Filters(this);
                 core = new Core(this);
                 _out = new Out(this);
-                loc = new Location(this, _location);
-                chatans = new ChatAnswer(this, "");
-                chatask = new ChatAsk(this, "");
+                _long = new LongDecision(this, this.long_deci);
+                _quick = new QuickDecision(this);
                 dir = new Direction(this);
                 pos = new Position(this);
                 quantum = new MyQubit();
                 mem = new Memory(this, Constants.NUMBER_OF_UNITS);
-                quick = new QuickDecision(this);
 
                 mech = parms.GetMechanics(_mech);
                 parms.UpdateLowCut();
@@ -109,7 +108,7 @@ namespace Awesome.AI.Core
                 PreRun(true);
                 PostRun(true);
 
-                theanswer = UNIT.Create(this, -1.0d, "I dont Know", "null", "SPECIAL", UNITTYPE.JUSTAUNIT);//set it to "It does not", and the program terminates
+                theanswer = UNIT.Create(this, -1.0d, "I dont Know", "null", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
             
                 ProcessPass();
                         
@@ -197,7 +196,7 @@ namespace Awesome.AI.Core
         {
             //rand.SaveMomentum(mech.momentum);
             rand.SaveMomentum(mech.deltaMom);
-            quick.Run(_pro, curr_unit);
+            _quick.Run(_pro, curr_unit);
             
             //if (_pro)
             //    common.Reset();            
@@ -258,9 +257,8 @@ namespace Awesome.AI.Core
             if (parms.state == STATE.QUICKDECISION)
                 return;
 
-            loc.Decide(_pro);
-            chatans.Decide(_pro);
-            chatask.Decide(_pro);
+            foreach(var kv in this.long_deci)
+                _long.Decide(_pro, kv.Key);            
         }
 
         private async void ProcessPass()

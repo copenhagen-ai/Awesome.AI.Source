@@ -1,9 +1,9 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Helpers;
-using static Awesome.AI.Helpers.Enums;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.CoreHelpers
+namespace Awesome.AI.CoreInternals
 {
     class Agent
     {
@@ -158,7 +158,7 @@ namespace Awesome.AI.CoreHelpers
         {
             if (_u.IsNull())
                 throw new Exception("Valid");
-                        
+
             if (_u.IsDECISION())
                 return true;
 
@@ -209,27 +209,17 @@ namespace Awesome.AI.CoreHelpers
             if (last.IsNull())
                 throw new Exception("Setup");
 
-            //HUB location_should_decision = mind.mem.HUBS_SUB("location_should_decision");
-            //HUB answer_should_decision = mind.mem.HUBS_SUB("answer_should_decision");
-            //HUB ask_should_decision = mind.mem.HUBS_SUB("ask_should_decision");
-
             if (mindtype == MINDS.ANDREW)
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in andrew1)
                     list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
-                //list.Add(location_should_decision);
-                //list.Add(answer_should_decision);
-                //list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in andrew2)
                     list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
-                //list.Add(location_should_decision);
-                //list.Add(answer_should_decision);
-                //list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
 
@@ -240,18 +230,12 @@ namespace Awesome.AI.CoreHelpers
                 List<HUB> list = new List<HUB>();
                 foreach (string s in roberta1)
                     list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
-                //list.Add(location_should_decision);
-                //list.Add(answer_should_decision);
-                //list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in roberta2)
                     list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
-                //list.Add(location_should_decision);
-                //list.Add(answer_should_decision);
-                //list.Add(ask_should_decision);
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
             }

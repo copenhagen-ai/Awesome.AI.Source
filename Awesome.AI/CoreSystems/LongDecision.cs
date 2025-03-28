@@ -1,25 +1,29 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.Helpers;
+using Awesome.AI.Variables;
 
-namespace Awesome.AI.Systems
+namespace Awesome.AI.CoreSystems
 {
-    public class Location
+    public class LongDecision
     {
-        public string LocationFinal { get; set; }
-        public int LocationState { get; set; }
+        public Dictionary<string, string> Result = new Dictionary<string, string>();
+        public Dictionary<string, int> State = new Dictionary<string, int>();
 
         private TheMind mind;
-        private Location() { }
+        private LongDecision() { }
 
-        public Location(TheMind mind, string starting)
+        public LongDecision(TheMind mind, Dictionary<string, string> dec)
         {
             this.mind = mind;
-            LocationState = 0;
-            LocationFinal = starting.Replace("WHAT", "");
+
+            foreach (var kv in dec)
+            {
+                State.Add(kv.Key, 0);
+                Result.Add(kv.Key, kv.Value.Replace("WHAT", ""));
+            }
         }
 
-        public void Decide(bool _pro)
+        public void Decide(bool _pro, string type)
         {
             /*
              * OCCU = [ LivingroomHUB, KitchenHUB, BedroomHUB ]
@@ -47,12 +51,21 @@ namespace Awesome.AI.Systems
             if (!mind.curr_unit.IsDECISION())
                 return;
 
+            if (mind.curr_unit.long_deci_type.ToString() != type.ToUpper())
+                return;
+
+            if (type == "ask" && mind.chat_asked)
+                return;
+
+            if (type == "ask" && State["answer"] > 0)
+                return;
+
             UNIT current = mind.curr_unit;
             HUB hub = current.HUB;
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
-            HUB _1 = mind.mem.HUBS_SUB(mind.parms.state, Constants.subject_decision[0]);
-            HUB _2 = mind.mem.HUBS_SUB(mind.parms.state, Constants.subject_decision[1]);
+            HUB _1 = mind.mem.HUBS_SUB(mind.parms.state, Constants.deci_subject[0]);
+            HUB _2 = mind.mem.HUBS_SUB(mind.parms.state, Constants.deci_subject[1]);
 
             MyRandom rand = mind.rand;
             int[] _rand = rand.MyRandomInt(1, 5);
@@ -62,20 +75,46 @@ namespace Awesome.AI.Systems
                 mind.mem.Randomize(_2);
             }
 
-            if (hub.subject == "location_should_decision" && LocationState == 0)
+            if (hub.subject == "long_decision_should" && State[type] == 0)
             {
-                if (current.data == "SHOULDYES")
-                    LocationState++;
+                if (current.data == "AYES")
+                    State[type]++;
 
-                if (current.data == "SHOULDNO")
-                    LocationState = 0;
+                if (current.data == "ANO")
+                    State[type] = 0;
+
+                if (current.data == "BYES")
+                    Result[type] = ":YES";
+
+                if (current.data == "BNO")
+                    Result[type] = "Im busy right now..";
+                    //State[type]++;
+
+                if (current.data == "CYES")
+                {
+                    HUB _hub = null;
+                    List<HUB> list = mind.mem.HUBS_ALL(mind.parms.state);
+                    int count = list.Count;
+                    int i = 0;
+                    int[] _r = mind.rand.MyRandomInt(100, count - 1);
+                    
+                    do {
+                        _hub = list[_r[i]];
+                        i++;
+                    } while (Constants.deci_subject.Contains(_hub.subject));
+
+                    Result[type] = "" + _hub.subject;
+                    State[type] = 0;
+                }
             }
 
-            if (hub.subject == "location_what_decision" && LocationState == 1)
+            if (hub.subject == "long_decision_what" && State[type] == 1)
             {
-                LocationFinal = mind.dir.DownHard.IsNo() ? current.data : LocationFinal;
-                LocationFinal = LocationFinal.Replace("WHAT", "");
-                LocationState = 0;
+                Result[type] = mind.dir.DownHard.IsNo() ?
+                    current.data.Replace("WHAT", "") :
+                    Result[type];
+
+                State[type] = 0;
             }
 
             //if (hub.subject == "should_decision" && State == 0)

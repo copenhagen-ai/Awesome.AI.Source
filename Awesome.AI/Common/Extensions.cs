@@ -1,9 +1,6 @@
 ﻿using Awesome.AI.Core;
-using Awesome.AI.Helpers;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Text.RegularExpressions;
-using static Awesome.AI.Helpers.Enums;
-using static Google.Protobuf.WellKnownTypes.Field.Types;
+using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
 {
@@ -131,7 +128,7 @@ namespace Awesome.AI.Common
 
             if (Constants.Logic == LOGICTYPE.BOOLEAN)
                 res = !res;//we flip direction
-
+            
             if (Constants.Logic == LOGICTYPE.QUBIT)
                 res = mind.quantum.usage.MyQuantumXOR(res, res);
 
@@ -141,6 +138,12 @@ namespace Awesome.AI.Common
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
         {
             bool res = deltaMom <= prev;
+
+            if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                res = !res;//we flip direction
+
+            if (Constants.Logic == LOGICTYPE.QUBIT)
+                res = mind.quantum.usage.MyQuantumXOR(res, res);
 
             return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
