@@ -7,14 +7,10 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class _TheGravity : IMechanics
     {
-        /*
-         * >> THE HACK <<
-         * -  gaspedal/wheel analogy in docs
-         * */
-
         public double momentum { get; set; }
+        public double momentumPrev { get; set; }
         public double deltaMom { get; set; }
-        private double deltaMomPrev {  get; set; }
+        public double deltaMomPrev {  get; set; }
         public double Fsta { get; set; }
         public double Fdyn { get; set; }
         public double m_out_high { get; set; }
@@ -95,7 +91,7 @@ namespace Awesome.AI.Core.Mechanics
             return grav;
         }
 
-        public void Calculate()
+        public void CalculateOld()
         {
             /*
              * still experimental..
@@ -128,6 +124,11 @@ namespace Awesome.AI.Core.Mechanics
 
             if (double.IsNaN(deltaVel))
                 throw new Exception("Calculate");
+        }
+
+        public void CalculateNew(int cycles)
+        {
+            throw new NotImplementedException();
         }
 
         public double Modifier(double credits, double shift)

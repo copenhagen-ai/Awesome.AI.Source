@@ -19,7 +19,8 @@ namespace Awesome.AI.Common
 
         public double NormalizeRange(double val, double valmin, double valmax, double ranmin, double ranmax)
         {
-            return (((val - valmin) / (valmax - valmin)) * (ranmax - ranmin)) + ranmin;
+            double normalized = (((val - valmin) / (valmax - valmin)) * (ranmax - ranmin)) + ranmin;
+            return normalized;
         }
 
         public double Denormalize(double normalized, double min, double max)
@@ -28,58 +29,39 @@ namespace Awesome.AI.Common
             return denormalized;
         }
 
-        public bool MyChance0to100(double val, bool gt)
+        public bool MyChanceTo100(double val, bool gt = true)
         {
             int[] num = mind.rand.MyRandomInt(1, 100);
-            return gt ? num[0] > val : num[0] < val;
+            return gt ? val > num[0] : val < num[0];
         }
 
-        public bool Chance0to100(double val, bool gt)
+        public bool MyChanceTo1(double val, bool gt = true)
+        {
+            int[] num = mind.rand.MyRandomInt(1, 1);
+            return gt ? val > num[0] : val < num[0];
+        }
+
+        public bool ChanceTo100(double val, bool gt = true)
         {
             int num = mind.rand.RandomInt(100);
-            return gt ? num > val : num < val;
+            return gt ? val > num : val < num;
         }
 
-        public bool Chance0to1(double val, bool gt)
+        public bool ChanceTo1(double val, bool gt = true)
         {
             double num = mind.rand.RandomDouble(0.0d, 1.0d);
-            return gt ? num > val : num < val;
-        }
-
-        public string FormatDouble(double d, int decimals)
-        {
-            string s = "" + d;
-            string res = "";
-            if (s.Contains(','))
-            {
-                res = s.Split(',')[0];
-                char[] arr = s.Split(',')[1].ToCharArray();
-                if (decimals > 0)
-                    res += ",";
-                for (int i = 0; i < decimals; i++)
-                    res += i < arr.Length ? "" + arr[i] : "0";
-            }
-            else
-            {
-                if (decimals > 0)
-                    s += ",";
-                for (int i = 0; i < decimals; i++)
-                    s += "0";
-                res = s;
-            }
-
-            return res;
+            return gt ? val > num : val < num;
         }
 
         public double ToPercent(double num, double high)
         {
             double res = 0.0d;
-            res = mind.calc.Normalize(num, 0.0f, high) * 100.0d;
+            res = mind.calc.Normalize(num, 0.0d, high) * 100.0d;
 
             return res;
         }
 
-        public double GetPercentage(double num, double high)
+        public double Percentage(double num, double high)
         {
             /*
              * How many percent is 50 from 500? 	50 / 500 * 100% = 10%

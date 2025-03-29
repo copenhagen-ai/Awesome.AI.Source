@@ -2,6 +2,7 @@
 {
     public class Enums
     {
+        public enum MECHVERSION { OLD, NEW }
         public enum STATE { JUSTRUNNING, QUICKDECISION }
         public enum TONE { HIGH, LOW, MID, RANDOM }
         public enum MINDS { ROBERTA, ANDREW }

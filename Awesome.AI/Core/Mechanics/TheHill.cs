@@ -8,11 +8,10 @@ namespace Awesome.AI.Core.Mechanics
     public class _TheHill : IMechanics
     {
         public double momentum { get; set; }
+        public double momentumPrev { get; set; }
         public double deltaMom { get; set; }
-        private double deltaMomPrev {  get; set; }
+        public double deltaMomPrev {  get; set; }
 
-        public double Fsta { get; set; }
-        public double Fdyn { get; set; }
         public double m_out_high { get; set; }
         public double m_out_low { get; set; }
         public double d_out_high { get; set; }
@@ -141,7 +140,7 @@ namespace Awesome.AI.Core.Mechanics
             return acc_degree;
         }
         
-        public void Calculate()
+        public void CalculateOld()
         {
             Check(Vars.var_a, Vars.var_b, Vars.var_c);
 
@@ -198,6 +197,11 @@ namespace Awesome.AI.Core.Mechanics
             //momentum += m * velocity;
             //momentum += m * dv;
             //velocity += dv;
+        }
+
+        public void CalculateNew(int t)
+        {
+            throw new NotImplementedException();
         }
 
         public MyVector2D ApplyStatic(double acc_degree)
@@ -271,7 +275,7 @@ namespace Awesome.AI.Core.Mechanics
              * */
 
             if (is_static)
-                return Constants.BASE_FRICTION;
+                return Constants.BASE_REDUCTION;
 
             Calc calc = mind.calc;
 

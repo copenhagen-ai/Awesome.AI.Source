@@ -65,6 +65,7 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
+                    version = MECHVERSION.OLD;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     //earth mass:               5.972×10^24 kg
@@ -101,6 +102,7 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
+                    version = MECHVERSION.NEW;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = true;
@@ -129,6 +131,7 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
+                    version = MECHVERSION.OLD;
                     //hack = HACKMODES.NOHACK;                                          //obsolete
 
                     Vars.var_a = -0.1d;
@@ -177,6 +180,7 @@ namespace Awesome.AI.Variables
         public TAGS tags;                                               //used with WORLD and BOTH
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
         public STATE state;
+        public MECHVERSION version;
         //public HACKMODES hack;
 
         /*
