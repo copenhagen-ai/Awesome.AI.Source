@@ -1,11 +1,12 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
+using System;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
-    public class _TheGravity : IMechanics
+    public class Gravity : IMechanics
     {
         public double momentum { get; set; }
         public double momentumPrev { get; set; }
@@ -21,8 +22,8 @@ namespace Awesome.AI.Core.Mechanics
         public double posx_low { get; set; }
         
         private TheMind mind;
-        private _TheGravity() { }
-        public _TheGravity(TheMind mind, Params parms)
+        private Gravity() { }
+        public Gravity(TheMind mind, Params parms)
         {
             this.mind = mind;
 
@@ -91,14 +92,16 @@ namespace Awesome.AI.Core.Mechanics
             return grav;
         }
 
-        public void CalculateOld()
+        public void CalcPatternOld(MECHVERSION version)
         {
+            if (version != MECHVERSION.OLD)
+                return;
             /*
              * still experimental..
              * I know its not using a black hole, but it should be the same principle outside the event horizon???
              * */
 
-            double mod = Modifier(mind.curr_unit.credits, mind.parms.shift);
+            double mod = ModifierOld(mind.curr_unit.credits, mind.parms.shift);
             double m = mind.parms.mass;
             double dt = mind.parms.delta_time;    //delta time
             double Fnet = mind.curr_unit.Variable * mod;
@@ -126,12 +129,7 @@ namespace Awesome.AI.Core.Mechanics
                 throw new Exception("Calculate");
         }
 
-        public void CalculateNew(int cycles)
-        {
-            throw new NotImplementedException();
-        }
-
-        public double Modifier(double credits, double shift)
+        public double ModifierOld(double credits, double shift)
         {
             Calc calc = mind.calc;
 
@@ -141,6 +139,31 @@ namespace Awesome.AI.Core.Mechanics
 
             return mod < 0.5 ? -1d : 1d;
         }
+
+        public void CalcPattern1(MECHVERSION version, int cycles)
+        {
+            if (version != MECHVERSION.GENERAL)
+                return;
+
+            throw new NotImplementedException();
+        }
+
+        public void CalcPattern2(MECHVERSION version, int cycles)
+        {
+            if (version != MECHVERSION.MOODGOOD)
+                return;
+
+            throw new NotImplementedException();
+        }
+
+        public void CalcPattern3(MECHVERSION version, int cycles)
+        {
+            if (version != MECHVERSION.MOODBAD)
+                return;
+
+            throw new NotImplementedException();
+        }
+
 
         /////*
         //// * car left

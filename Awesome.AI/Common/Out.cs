@@ -64,7 +64,7 @@ namespace Awesome.AI.Web.AI.Common
             user_var = $"{mind.user_var}";
             if (mind._mech == MECHANICS.HILL)
                 position = $"{mind.mech.POS_XY}";
-            if (mind._mech == MECHANICS.CONTEST)
+            if (mind._mech == MECHANICS.TUGOFWAR)
                 position = $"{mind.pos.Pos}";
             if (mind._mech == MECHANICS.GRAVITY)
                 position = $"{mind.pos.Pos}";

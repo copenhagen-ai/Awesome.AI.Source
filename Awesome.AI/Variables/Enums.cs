@@ -2,7 +2,7 @@
 {
     public class Enums
     {
-        public enum MECHVERSION { OLD, NEW }
+        public enum MECHVERSION { OLD, GENERAL, MOODGOOD, MOODBAD }
         public enum STATE { JUSTRUNNING, QUICKDECISION }
         public enum TONE { HIGH, LOW, MID, RANDOM }
         public enum MINDS { ROBERTA, ANDREW }
@@ -11,7 +11,7 @@
         public enum VALIDATION { BOTH, EXTERNAL, INTERNAL }
         public enum TAGS { ALL, EVEN }
         public enum OCCUPASION { FIXED, DYNAMIC }
-        public enum MECHANICS { NONE, GRAVITY, CONTEST, WHEEL, HILL }
+        public enum MECHANICS { NONE, GRAVITY, TUGOFWAR, WHEEL, HILL }
         public enum LIMITTYPE { SIMPLE, SIGMOID, CHANCE }
         public enum MOOD { GOOD, BAD }
         public enum HARDDOWN { YES, NO }

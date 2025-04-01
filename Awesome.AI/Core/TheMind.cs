@@ -227,10 +227,10 @@ namespace Awesome.AI.Core
             if (curr_unit.IsIDLE())
                 return true;
 
-            if (parms.version == MECHVERSION.OLD)
-                mech.CalculateOld();
-            else
-                mech.CalculateNew(cycles);
+            mech.CalcPatternOld(parms.version);//mood old
+            mech.CalcPattern1(parms.version , cycles);//mood general
+            mech.CalcPattern2(parms.version, cycles);//mood good
+            mech.CalcPattern3(parms.version, cycles);//mood bad
 
             dir.Update();
             pos.Update(_pro);//Enums.POSITION.NEW

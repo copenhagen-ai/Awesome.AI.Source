@@ -5,7 +5,7 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
-    public class _TheHill : IMechanics
+    public class Hill : IMechanics
     {
         public double momentum { get; set; }
         public double momentumPrev { get; set; }
@@ -22,8 +22,8 @@ namespace Awesome.AI.Core.Mechanics
         public double res_x { get; set; } = 5.0d;
                 
         private TheMind mind;
-        private _TheHill() { }
-        public _TheHill(TheMind mind, Params parms)
+        private Hill() { }
+        public Hill(TheMind mind, Params parms)
         {
             this.mind = mind;
             
@@ -124,36 +124,24 @@ namespace Awesome.AI.Core.Mechanics
             return res;
         }
 
-        private double SlopeInDegrees(double x)
-        {
-            double acc_slope, _x, _y;
-
-            MyVector2D calc = new MyVector2D();
-            MyVector2D _slope;
-            
-            acc_slope = mind.calc.SlopeCoefficient(x, Vars.var_a, Vars.var_b);
-            _x = 1.0d;
-            _y = acc_slope;
-            _slope = calc.ToPolar(new MyVector2D(_x, _y, null, null));
-            double acc_degree = _slope.theta_in_degrees;
-            
-            return acc_degree;
-        }
         
-        public void CalculateOld()
+        public void CalcPatternOld(MECHVERSION version)
         {
-            Check(Vars.var_a, Vars.var_b, Vars.var_c);
+            if (version != MECHVERSION.OLD)
+                return;
+
+            CheckOld(Vars.var_a, Vars.var_b, Vars.var_c);
 
             MyVector2D calc = new MyVector2D();
             MyVector2D res, sta = new MyVector2D(), dyn = new MyVector2D();
 
             //double res_x_save = Constants.STARTXY + res_x_prev;
-            double acc_degree = SlopeInDegrees(res_x);
+            double acc_degree = SlopeInDegreesOld(res_x);
 
-            sta = ApplyStatic(acc_degree);
+            sta = ApplyStaticOld(acc_degree);
             
             if (mind.goodbye.IsNo())
-                dyn = ApplyDynamic(acc_degree);
+                dyn = ApplyDynamicOld(acc_degree);
 
             res = calc.Add(sta, dyn);
             res_x = res.xx;
@@ -199,12 +187,36 @@ namespace Awesome.AI.Core.Mechanics
             //velocity += dv;
         }
 
-        public void CalculateNew(int t)
+        private double SlopeInDegreesOld(double x)
         {
-            throw new NotImplementedException();
+            double acc_slope, _x, _y;
+
+            MyVector2D calc = new MyVector2D();
+            MyVector2D _slope;
+            
+            acc_slope = mind.calc.SlopeCoefficient(x, Vars.var_a, Vars.var_b);
+            _x = 1.0d;
+            _y = acc_slope;
+            _slope = calc.ToPolar(new MyVector2D(_x, _y, null, null));
+            double acc_degree = _slope.theta_in_degrees;
+            
+            return acc_degree;
         }
 
-        public MyVector2D ApplyStatic(double acc_degree)
+        private bool CheckOld(double _a, double _b, double _c)
+        {
+            double _x1, _x2;
+            mind.calc.Roots(null, _a, _b, _c, out _x1, out _x2);
+
+            bool ok = _x1 == -10.0d & _x2 == 10.0d;
+
+            if (!ok)
+                throw new Exception("Check");
+
+            return ok;
+        }
+
+        public MyVector2D ApplyStaticOld(double acc_degree)
         {
             double acc_degree_positive = acc_degree < 0.0d ? -acc_degree : acc_degree;
             double angle_sta = -90.0d;
@@ -220,7 +232,7 @@ namespace Awesome.AI.Core.Mechanics
             MyVector2D _fN = calc.ToPolar((calc.Add(_static, _N)));
 
             double m = mind.parms.mass;
-            double u = Friction(true, 0.0d, mind.parms.shift);
+            double u = FrictionOld(true, 0.0d, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -235,7 +247,7 @@ namespace Awesome.AI.Core.Mechanics
             return _res;
         }
 
-        public MyVector2D ApplyDynamic(double acc_degree)
+        public MyVector2D ApplyDynamicOld(double acc_degree)
         {
             UNIT curr_unit = mind.curr_unit;
             
@@ -252,7 +264,7 @@ namespace Awesome.AI.Core.Mechanics
             MyVector2D dynamic = new MyVector2D(null, null, force_dyn, calc.ToRadians(angle_dyn));
 
             double m = mind.parms.mass;
-            double u = Friction(false, curr_unit.credits, mind.parms.shift);
+            double u = FrictionOld(false, curr_unit.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -267,7 +279,7 @@ namespace Awesome.AI.Core.Mechanics
             return _res;
         }
 
-        public double Friction(bool is_static, double credits, double shift)
+        public double FrictionOld(bool is_static, double credits, double shift)
         {
             /*
              * friction coeficient
@@ -286,6 +298,30 @@ namespace Awesome.AI.Core.Mechanics
             return friction / 2.0d;
         }
 
+        public void CalcPattern1(MECHVERSION version, int t)
+        {
+            if (version != MECHVERSION.GENERAL)
+                return;
+
+            throw new NotImplementedException();
+        }
+
+        public void CalcPattern2(MECHVERSION version, int cycles)
+        {
+            if (version != MECHVERSION.MOODGOOD)
+                return;
+
+            throw new NotImplementedException();
+        }
+
+        public void CalcPattern3(MECHVERSION version, int cycles)
+        {
+            if (version != MECHVERSION.MOODBAD)
+                return;
+
+            throw new NotImplementedException();
+        }
+
         //private double DeltaV(double a, double dt)
         //{
         //    //F=m*a
@@ -302,18 +338,6 @@ namespace Awesome.AI.Core.Mechanics
         //    return 0.002d;
         //}
 
-        private bool Check(double _a, double _b, double _c)
-        {
-            double _x1, _x2;
-            mind.calc.Roots(null, _a, _b, _c, out _x1, out _x2);
-
-            bool ok = _x1 == -10.0d & _x2 == 10.0d;
-
-            if (!ok)
-                throw new Exception("Check");
-
-            return ok;
-        }
     }
 }
 

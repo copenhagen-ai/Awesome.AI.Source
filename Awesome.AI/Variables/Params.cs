@@ -59,7 +59,7 @@ namespace Awesome.AI.Variables
 
                 //    break;
                 case MECHANICS.GRAVITY:
-                    _mech = new _TheGravity(mind, this);
+                    _mech = new Gravity(mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
@@ -95,14 +95,14 @@ namespace Awesome.AI.Variables
                     boost = 1E-1d;
 
                     break;
-                case MECHANICS.CONTEST:
-                    _mech = new _TheContest(mind, this);
+                case MECHANICS.TUGOFWAR:
+                    _mech = new TugOfWar(mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
-                    version = MECHVERSION.NEW;
+                    version = MECHVERSION.GENERAL;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = true;
@@ -125,7 +125,7 @@ namespace Awesome.AI.Variables
 
                     break;
                 case MECHANICS.HILL:
-                    _mech = new _TheHill(mind, this);
+                    _mech = new Hill(mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH

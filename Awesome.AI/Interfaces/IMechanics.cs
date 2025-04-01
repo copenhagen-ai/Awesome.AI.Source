@@ -5,9 +5,6 @@ namespace Awesome.AI.Interfaces
 {
     public interface IMechanics
     {
-        //double Fsta { get; set; }
-        //double Fdyn { get; set; }
-
         double m_out_high { get; set; }
         double m_out_low { get; set; }
         double d_out_high { get; set; }
@@ -27,8 +24,12 @@ namespace Awesome.AI.Interfaces
         double HighestVar { get; }
         double LowestVar { get; }
 
-        void CalculateOld();//do calculations
-        void CalculateNew(int cycles);//do calculations
-        double Variable(UNIT c);//the force, mass, distance, acceleration etc
+        //these are thought patterns
+        void CalcPatternOld(MECHVERSION version);//do calculations
+        void CalcPattern1(MECHVERSION version, int cycles);//mood general
+        void CalcPattern2(MECHVERSION version, int cycles);//good mood
+        void CalcPattern3(MECHVERSION version, int cycles);//bad mood
+
+        double Variable(UNIT c);//force, mass, distance, acceleration etc
     }
 }

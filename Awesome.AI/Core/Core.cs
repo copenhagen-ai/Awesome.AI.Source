@@ -23,7 +23,7 @@ namespace Awesome.AI.Core
             bool ok;
             switch (mind._mech)
             {
-                case MECHANICS.CONTEST: 
+                case MECHANICS.TUGOFWAR: 
                     ok = ReciprocalOK(mind.pos.Pos, out user_var);
                     return ok;
                 case MECHANICS.HILL: 

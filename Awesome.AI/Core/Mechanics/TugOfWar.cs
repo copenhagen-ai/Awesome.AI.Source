@@ -5,7 +5,7 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
-    public class _TheContest : IMechanics
+    public class TugOfWar : IMechanics
     {
         public double momentum { get; set; }
         public double momentumPrev { get; set; }
@@ -19,8 +19,8 @@ namespace Awesome.AI.Core.Mechanics
         public double posx_low { get; set; }
         
         private TheMind mind;
-        private _TheContest() { }
-        public _TheContest(TheMind mind, Params parms)
+        private TugOfWar() { }
+        public TugOfWar(TheMind mind, Params parms)
         {
             this.mind = mind;
 
@@ -108,13 +108,16 @@ namespace Awesome.AI.Core.Mechanics
             return acc;
         }
 
-        public void CalculateOld()
+        public void CalcPatternOld(MECHVERSION version)
         {
+            if (version != MECHVERSION.OLD)
+                return;
+
             //car left
-            double Fsta = ApplyStatic();
+            double Fsta = ApplyStaticOld();
 
             //car right
-            double Fdyn = ApplyDynamic();
+            double Fdyn = ApplyDynamicOld();
 
             double Fnet = mind.goodbye.IsNo() ? -Fsta + Fdyn : -Fsta;
             double m = mind.parms.mass;
@@ -147,11 +150,11 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * car left
          * */
-        public double ApplyStatic()
+        public double ApplyStaticOld()
         {
             double acc = HighestVar; //divided by 10 for aprox acc
             double m = mind.parms.mass;
-            double u = Friction(true, 0.0d, mind.parms.shift);
+            double u = FrictionOld(true, 0.0d, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             double Ffriction = u * N;
@@ -167,7 +170,7 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * car right
          * */
-        public double ApplyDynamic()
+        public double ApplyDynamicOld()
         {
             UNIT curr_unit_th = mind.curr_unit;
 
@@ -177,7 +180,7 @@ namespace Awesome.AI.Core.Mechanics
             double max = HighestVar; //divided by 10 for aprox acc
             double acc = max - curr_unit_th.Variable; //divided by 10 for aprox acc
             double m = mind.parms.mass;
-            double u = Friction(false, curr_unit_th.credits, mind.parms.shift);
+            double u = FrictionOld(false, curr_unit_th.credits, mind.parms.shift);
             double N = m * Constants.GRAVITY;
 
             acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
@@ -192,7 +195,7 @@ namespace Awesome.AI.Core.Mechanics
             return Fnet;
         }
 
-        public double Friction(bool is_static, double credits, double shift)
+        public double FrictionOld(bool is_static, double credits, double shift)
         {
             /*
              * friction coeficient
@@ -213,10 +216,13 @@ namespace Awesome.AI.Core.Mechanics
 
         private double velocity = 0.0;
         private double timeStep = 0.0;
-        public void CalculateNew(int cycles)
+        public void CalcPattern1(MECHVERSION version, int cycles)
         {
-            if(cycles == 1)
-                Reset();
+            if (version != MECHVERSION.GENERAL)
+                return;
+
+            if (cycles == 1)
+                Reset1();
 
             double t = cycles / 10.0d;
 
@@ -232,8 +238,8 @@ namespace Awesome.AI.Core.Mechanics
             double g = Constants.GRAVITY;                                       // Gravity in m/s^2
             double frictionForce = mu * totalMass * g;
 
-            double F1 = ApplyStaticNew(Fmax);                                   // Constant force in Newtons (e.g., truck pulling)
-            double F2 = ApplyDynamicNew(Fmax, t, omega, eta);
+            double F1 = ApplyStatic1(Fmax);                                   // Constant force in Newtons (e.g., truck pulling)
+            double F2 = ApplyDynamic1(Fmax, t, omega, eta);
             double friction = frictionForce * Math.Sign(velocity);              // Friction opposes motion
             double Fnet = F1 - F2 - friction;                                   // Net force with F1 constant and F2 dynamic
 
@@ -258,7 +264,7 @@ namespace Awesome.AI.Core.Mechanics
             if (deltaMom > d_out_high) d_out_high = deltaMom;
         }
 
-        private void Reset()
+        private void Reset1()
         {
             timeStep = 0.0d;
             velocity = 0.0d;
@@ -267,7 +273,7 @@ namespace Awesome.AI.Core.Mechanics
             momentumPrev = 0.0d;
         }
 
-        private double GetRandomNoise()
+        private double GetRandomNoise1()
         {
             UNIT curr_unit = mind.curr_unit;
 
@@ -283,7 +289,7 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * car left
          * */
-        public double ApplyStaticNew(double Fmax)
+        public double ApplyStatic1(double Fmax)
         {
             double Fapplied = Fmax * Constants.BASE_REDUCTION;
 
@@ -293,14 +299,14 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * car right
          * */
-        public double ApplyDynamicNew(double Fmax, double t, double omega, double eta)
+        public double ApplyDynamic1(double Fmax, double t, double omega, double eta)
         {
-            double Fapplied = Fmax * (Math.Sin(omega * t) + eta * GetRandomNoise());  // Dynamic force
+            double Fapplied = Fmax * (Math.Sin(omega * t) + eta * GetRandomNoise1());  // Dynamic force
             
             return Fapplied;
         }
 
-        public double FrictionNew(double credits, double shift)
+        public double Friction1(double credits, double shift)
         {
             /*
              * friction coeficient
@@ -314,6 +320,22 @@ namespace Awesome.AI.Core.Mechanics
             double friction = calc.Logistic(x);
 
             return friction;
+        }
+
+        public void CalcPattern2(MECHVERSION version, int cycles)
+        {
+            if (version != MECHVERSION.MOODGOOD)
+                return;
+
+            throw new NotImplementedException();
+        }
+
+        public void CalcPattern3(MECHVERSION version, int cycles)
+        {
+            if (version != MECHVERSION.MOODBAD)
+                return;
+
+            throw new NotImplementedException();
         }
 
         //public void CALC()
