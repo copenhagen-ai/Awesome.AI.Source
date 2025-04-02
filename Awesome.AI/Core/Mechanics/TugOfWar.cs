@@ -7,10 +7,10 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class TugOfWar : IMechanics
     {
-        public double momentum { get; set; }
-        public double momentumPrev { get; set; }
-        public double deltaMom { get; set; }
-        public double deltaMomPrev { get; set; }
+        public double p_curr { get; set; }
+        public double p_prev { get; set; }
+        public double p_delta { get; set; }
+        public double p_delta_prev { get; set; }
         public double m_out_high { get; set; }
         public double m_out_low { get; set; }
         public double d_out_high { get; set; }
@@ -36,7 +36,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public FUZZYDOWN FuzzyMom 
         { 
-            get { return deltaMom.ToFuzzy(mind); } 
+            get { return p_delta.ToFuzzy(mind); } 
         }
 
         public HARDDOWN HardMom
@@ -45,11 +45,11 @@ namespace Awesome.AI.Core.Mechanics
             {
                 if (Constants.Logic == LOGICTYPE.BOOLEAN)
                     //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    return deltaMom.ToDownZero(mind);
+                    return p_delta.ToDownZero(mind);
 
                 if (Constants.Logic == LOGICTYPE.QUBIT)
                     //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    return deltaMom.ToDownZero(mind);
+                    return p_delta.ToDownZero(mind);
 
                 throw new Exception("HardMom");
             }            
@@ -74,7 +74,7 @@ namespace Awesome.AI.Core.Mechanics
                 double boost = mind.goodbye.IsNo() ? mind.parms.boost : 1.0d;
 
                 //posxy = 10.0d + (boost * momentum);//dosnt seem right
-                posxy += (boost * deltaMom);
+                posxy += (boost * p_delta);
                 //posxy = posx + (boost * velocity);
                 //posxy = 10.0d + (boost * momentum);
 
@@ -90,135 +90,24 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        //NewtonForce
         public double Variable(UNIT curr)
         {
-            /*
-             * I guess this is a changeable function, for now it is just the one I know to calculate force
-             * */
-
             if (curr.IsNull())
                 throw new Exception("Variable");
 
             if (curr.IsIDLE())
                 throw new Exception("Variable");
 
-            double acc = curr.HighAtZero;
+            double _var = curr.HighAtZero;
 
-            return acc;
-        }
-
-        public void CalcPatternOld(MECHVERSION version)
-        {
-            if (version != MECHVERSION.OLD)
-                return;
-
-            //car left
-            double Fsta = ApplyStaticOld();
-
-            //car right
-            double Fdyn = ApplyDynamicOld();
-
-            double Fnet = mind.goodbye.IsNo() ? -Fsta + Fdyn : -Fsta;
-            double m = mind.parms.mass;
-            //double dt = mind.parms.delta_time;                             //delta time, 1sec/500cyc
-            double deltaT = mind.parms.delta_time;
-
-            //F=m*a
-            //a=dv/dt
-            //F=(m*dv)/dt
-            //F*dt=m*dv
-            //dv=(F*dt)/m
-            //double dv = (Fnet * dt) / m;
-            double deltaVel = (Fnet * deltaT) / m;
-
-            //momentum: p = m * v
-            deltaMomPrev = deltaMom;
-            deltaMom = (m * 2) * deltaVel;
-            momentum += deltaMom;
-
-            if (momentum <= m_out_low) m_out_low = momentum;
-            if (momentum > m_out_high) m_out_high = momentum;
-
-            if (deltaMom <= d_out_low) d_out_low = deltaMom;
-            if (deltaMom > d_out_high) d_out_high = deltaMom;
-
-            //if (double.IsNaN(velocity))
-            //    throw new Exception();
-        }
-
-        /*
-         * car left
-         * */
-        public double ApplyStaticOld()
-        {
-            double acc = HighestVar; //divided by 10 for aprox acc
-            double m = mind.parms.mass;
-            double u = FrictionOld(true, 0.0d, mind.parms.shift);
-            double N = m * Constants.GRAVITY;
-
-            double Ffriction = u * N;
-            double Fapplied = m * acc; //force, left
-            double Fnet = Fapplied - Ffriction;
-
-            if (Fnet <= 0.0d)
-                Fnet = Constants.VERY_LOW;
-
-            return Fnet;
-        }
-
-        /*
-         * car right
-         * */
-        public double ApplyDynamicOld()
-        {
-            UNIT curr_unit_th = mind.curr_unit;
-
-            if (curr_unit_th.IsNull())
-                throw new Exception("ApplyDynamic");
-
-            double max = HighestVar; //divided by 10 for aprox acc
-            double acc = max - curr_unit_th.Variable; //divided by 10 for aprox acc
-            double m = mind.parms.mass;
-            double u = FrictionOld(false, curr_unit_th.credits, mind.parms.shift);
-            double N = m * Constants.GRAVITY;
-
-            acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
-
-            double Ffriction = u * N;
-            double Fapplied = m * acc; //force, left
-            double Fnet = Fapplied - Ffriction;
-
-            if (Fnet <= 0.0d)
-                Fnet = Constants.VERY_LOW;
-
-            return Fnet;
-        }
-
-        public double FrictionOld(bool is_static, double credits, double shift)
-        {
-            /*
-             * friction coeficient
-             * should friction be calculated from position???
-             * */
-
-            if (is_static)
-                return Constants.BASE_REDUCTION;
-
-            Calc calc = mind.calc;
-
-            double _c = 10.0d - credits;
-            double x = 5.0d - _c + shift;
-            double friction = calc.Logistic(x);
-
-            return friction;
+            return _var;
         }
 
         private double velocity = 0.0;
         private double timeStep = 0.0;
         public void CalcPattern1(MECHVERSION version, int cycles)
         {
-            if (version != MECHVERSION.GENERAL)
+            if (version != MECHVERSION.MOODGENERAL)
                 return;
 
             if (cycles == 1)
@@ -228,9 +117,9 @@ namespace Awesome.AI.Core.Mechanics
 
             double Fmax = 5000.0d;                                              // Max oscillating force for F2
             double omega = 2 * Math.PI * 0.5;                                   // Frequency (0.5 Hz)
-            double eta = 0.2;                                                   // Randomness factor
-            double m1 = mind.parms.mass;                                        // 1500;    // Mass of Car 1 in kg
-            double m2 = mind.parms.mass;                                        // 1300;    // Mass of Car 2 in kg
+            double eta = 0.2d;                                                  // Randomness factor
+            double m1 = 500.0d;                                        // 1500; // Mass of Car 1 in kg
+            double m2 = 500.0d;                                        // 1300; // Mass of Car 2 in kg
             double totalMass = m1 + m2;
                         
             // Friction parameters
@@ -238,7 +127,7 @@ namespace Awesome.AI.Core.Mechanics
             double g = Constants.GRAVITY;                                       // Gravity in m/s^2
             double frictionForce = mu * totalMass * g;
 
-            double F1 = ApplyStatic1(Fmax);                                   // Constant force in Newtons (e.g., truck pulling)
+            double F1 = ApplyStatic1(Fmax);                                     // Constant force in Newtons (e.g., truck pulling)
             double F2 = ApplyDynamic1(Fmax, t, omega, eta);
             double friction = frictionForce * Math.Sign(velocity);              // Friction opposes motion
             double Fnet = F1 - F2 - friction;                                   // Net force with F1 constant and F2 dynamic
@@ -253,24 +142,24 @@ namespace Awesome.AI.Core.Mechanics
             double acceleration = Fnet / totalMass;
             timeStep = cycles == 1 ? t : timeStep;                              // Time step in seconds
             velocity += acceleration * timeStep;                                // Integrate acceleration to get velocity
-            momentum = totalMass * velocity;
-            deltaMom = momentum - momentumPrev;                                 // Compute change in momentum
-            momentumPrev = momentum;                                            // Store current momentum for next iteration
+            p_curr = totalMass * velocity;
+            p_delta = p_curr - p_prev;                                 // Compute change in momentum
+            p_prev = p_curr;                                            // Store current momentum for next iteration
 
-            if (momentum <= m_out_low) m_out_low = momentum;
-            if (momentum > m_out_high) m_out_high = momentum;
+            if (p_curr <= m_out_low) m_out_low = p_curr;
+            if (p_curr > m_out_high) m_out_high = p_curr;
 
-            if (deltaMom <= d_out_low) d_out_low = deltaMom;
-            if (deltaMom > d_out_high) d_out_high = deltaMom;
+            if (p_delta <= d_out_low) d_out_low = p_delta;
+            if (p_delta > d_out_high) d_out_high = p_delta;
         }
 
         private void Reset1()
         {
             timeStep = 0.0d;
             velocity = 0.0d;
-            momentum = 0.0d;
-            deltaMom = 0.0d;
-            momentumPrev = 0.0d;
+            p_curr = 0.0d;
+            p_delta = 0.0d;
+            p_prev = 0.0d;
         }
 
         private double GetRandomNoise1()
@@ -336,118 +225,131 @@ namespace Awesome.AI.Core.Mechanics
                 return;
 
             throw new NotImplementedException();
-        }
+        }          
 
-        //public void CALC()
+        //NewtonForce
+        //public double Variable(UNIT curr)
         //{
-        //    bool reset = velocity >= 0.0d; //maybe 0.666 * max_velocity
+        //    /*
+        //     * I guess this is a changeable function, for now it is just the one I know to calculate force
+        //     * */
 
-        //    //if(reset)
-        //    //    velocity = 0.0d;
+        //    if (curr.IsNull())
+        //        throw new Exception("Variable");
 
-        //    //if (reset)  //car left
-        //    Fsta = ApplyStatic();
+        //    if (curr.IsIDLE())
+        //        throw new Exception("Variable");
+
+        //    double acc = curr.HighAtZero;
+
+        //    return acc;
+        //}
+
+        //public void CalcPatternOld(MECHVERSION version)
+        //{
+        //    if (version != MECHVERSION.OLD)
+        //        return;
+
+        //    //car left
+        //    double Fsta = ApplyStaticOld();
 
         //    //car right
-        //    if (mind.goodbye.IsNo())
-        //        Fdyn = ApplyDynamic();
+        //    double Fdyn = ApplyDynamicOld();
 
-        //    Calc calc = new Calc(mind);
+        //    double Fnet = mind.goodbye.IsNo() ? -Fsta + Fdyn : -Fsta;
+        //    double m = 500.0d;
+        //    //double dt = mind.parms.delta_time;                             //delta time, 1sec/500cyc
+        //    double deltaT = 0.002d;
 
-        //    //momentum: p = m * v
-        //    momentum = (mind.parms.mass * 2) * velocity;
-        //    //momentum += 12.0d;// calc.RoundOff((int)out_low);
-
-        //    if (momentum <= out_low) out_low = momentum;
-        //    if (momentum > out_high) out_high = momentum;
-
-        //    if (double.IsNaN(velocity))
-        //        throw new Exception();
-        //}
-
-        /*
-         * car left
-         * */
-        //public double ApplyStatic()
-        //{
-        //    double acc = mind.common.HighestForce().Variable;
-        //    double limit = lim.Limit(true);
-
-        //    double m = mind.parms.mass;
-        //    double F = m * acc;                       //force, left
-        //    double dt = DeltaT();                   //delta time
-        //    double dv = DeltaV(F, m, dt) * limit;   //delta velocity
-
-        //    velocity -= dv;
-
-        //    return dv;
-        //}
-
-        /*
-         * car right
-         * */
-        //public double ApplyDynamic()
-        //{
-        //    UNIT curr_unit_th = mind.curr_unit;
-
-        //    if (curr_unit_th.IsNull())
-        //        throw new Exception();
-
-        //    bool first_run = false;
-        //    if (mind.cycles_all <= mind.parms.first_run)
-        //        first_run = true;
-
-        //    double max = mind.common.HighestForce().Variable;
-        //    double acc = max - curr_unit_th.Variable;
-        //    double limit = first_run ? 0.5d : lim.Limit(false);
-
-        //    double m = mind.parms.mass;
-        //    double F = m * acc;                       //force, right
-        //    double dt = DeltaT();                   //delta time
-        //    double dv = DeltaV(F, m, dt) * limit;   //delta velocity
-
-        //    //if (goodbye.IsNo())
-        //    //if (goodbye.IsNo() && momentum < 0.0d)
-        //        velocity += dv;
-
-        //    return dv;
-        //}/**/
-
-
-        //private double DeltaV(double F, double m, double dt)
-        //{
         //    //F=m*a
         //    //a=dv/dt
         //    //F=(m*dv)/dt
         //    //F*dt=m*dv
         //    //dv=(F*dt)/m
-        //    double dv = (F * dt) / m;
-        //    return dv;
+        //    //double dv = (Fnet * dt) / m;
+        //    double deltaVel = (Fnet * deltaT) / m;
+
+        //    //momentum: p = m * v
+        //    p_delta_prev = p_delta;
+        //    p_delta = (m * 2) * deltaVel;
+        //    p_curr += p_delta;
+
+        //    if (p_curr <= m_out_low) m_out_low = p_curr;
+        //    if (p_curr > m_out_high) m_out_high = p_curr;
+
+        //    if (p_delta <= d_out_low) d_out_low = p_delta;
+        //    if (p_delta > d_out_high) d_out_high = p_delta;
+
+        //    //if (double.IsNaN(velocity))
+        //    //    throw new Exception();
         //}
 
-        //private double DeltaT()
+        ///*
+        // * car left
+        // * */
+        //public double ApplyStaticOld()
         //{
-        //    //most of the time this is true
+        //    double acc = HighestVar; //divided by 10 for aprox acc
+        //    double m = 500.0d;
+        //    double u = FrictionOld(true, 0.0d, mind.parms.shift);
+        //    double N = m * Constants.GRAVITY;
 
-        //    double x = mind.parms.micro_sec;
-        //    double dt = x / 1000000.0d;
-        //    return dt;
+        //    double Ffriction = u * N;
+        //    double Fapplied = m * acc; //force, left
+        //    double Fnet = Fapplied - Ffriction;
+
+        //    if (Fnet <= 0.0d)
+        //        Fnet = Constants.VERY_LOW;
+
+        //    return Fnet;
         //}
 
-        //private void Reset(TheMind mind)
+        ///*
+        // * car right
+        // * */
+        //public double ApplyDynamicOld()
         //{
-        //    if (mind.cycles_all % 25000 != 0)
-        //        return;
+        //    UNIT curr_unit_th = mind.curr_unit;
 
-        //    out_low *= 0.5d;
-        //    out_high *= 0.5d;
+        //    if (curr_unit_th.IsNull())
+        //        throw new Exception("ApplyDynamic");
 
-        //    posx_low *= 0.5d;
-        //    posx_high *= 0.5d;
+        //    double max = HighestVar; //divided by 10 for aprox acc
+        //    double acc = max - curr_unit_th.Variable; //divided by 10 for aprox acc
+        //    double m = 500.0d;
+        //    double u = FrictionOld(false, curr_unit_th.credits, mind.parms.shift);
+        //    double N = m * Constants.GRAVITY;
 
-        //    min *= 0.5d;
-        //    max *= 0.5d;
-        //}               
+        //    acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
+
+        //    double Ffriction = u * N;
+        //    double Fapplied = m * acc; //force, left
+        //    double Fnet = Fapplied - Ffriction;
+
+        //    if (Fnet <= 0.0d)
+        //        Fnet = Constants.VERY_LOW;
+
+        //    return Fnet;
+        //}
+
+        //public double FrictionOld(bool is_static, double credits, double shift)
+        //{
+        //    /*
+        //     * friction coeficient
+        //     * should friction be calculated from position???
+        //     * */
+
+        //    if (is_static)
+        //        return Constants.BASE_REDUCTION;
+
+        //    Calc calc = mind.calc;
+
+        //    double _c = 10.0d - credits;
+        //    double x = 5.0d - _c + shift;
+        //    double friction = calc.Logistic(x);
+
+        //    return friction;
+        //}
     }
 }
 

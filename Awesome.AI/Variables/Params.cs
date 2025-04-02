@@ -65,23 +65,13 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
-                    version = MECHVERSION.OLD;
+                    version = MECHVERSION.NONE;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
-                    //earth mass:               5.972×10^24 kg
-                    //sun mass:                 1.989×10^30 kg
-                    //earth gravity:                  9.807 m/s²
-                    //distance sun:             148.010.000 km
-                    //distance moon:             3.844×10^5 km 3.844e5;
-                    //distance mercury(avg):    ~58 million km (~0.39 AU)
-                    //earth radius:                   6,371 km
-                    Vars.zero_mass = 5.972E24d;
                     high_at_zero = false;
                     shift = 0.0d;
-                    mass = 40000.0d;                                                 //millinium falken
                     update_cred = 0.05d;
-                    delta_time = 100.0d;
-
+                    
                     schedule_low = 2.0d;
                     schedule_mid = 6.0d;
                     schedule_high = 9.0d;
@@ -102,24 +92,22 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
-                    version = MECHVERSION.GENERAL;
+                    version = MECHVERSION.MOODGENERAL;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = true;
-                    mass = 500.0d;
                     update_cred = 0.030d;
                     shift = -2.0d;
-                    delta_time = 0.002d;
-
+                    
                     schedule_low = 1.0d;
                     schedule_mid = 5.0d;
                     schedule_high = 8.0d;
 
                     /*
-                        * boost is life span
-                        * as it seem momentum seem to go towards below 0.0
-                        * boost should be as close 1.0, without dying to fast
-                        * */
+                     * boost is life span
+                     * as it seem momentum seem to go towards below 0.0
+                     * boost should be as close 1.0, without dying to fast
+                     * */
 
                     boost = 1E-2d;
 
@@ -131,18 +119,12 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
-                    version = MECHVERSION.OLD;
+                    version = MECHVERSION.MOODGENERAL;
                     //hack = HACKMODES.NOHACK;                                          //obsolete
 
-                    Vars.var_a = -0.1d;
-                    Vars.var_b = 0.0d;
-                    Vars.var_c = 10.0d;
-
                     high_at_zero = true;
-                    mass = 0.5d;
                     update_cred = 0.050d;
-                    shift = 0.0d;
-                    delta_time = 0.5d;
+                    shift = 0.0d;                    
 
                     /*
                         * boost is life span?
@@ -182,23 +164,12 @@ namespace Awesome.AI.Variables
         public STATE state;
         public MECHVERSION version;
         //public HACKMODES hack;
-
-        /*
-         * FIXED parameters
-         * 
-         * 0.888 = 8 / 9
-         * 0.777 = 7 / 9
-         * 0.666 = 2 / 3, hehe
-         * 0.555 = 5 / 9
-         * */
-
+        
         // should it be 200, 1000 or more???
-        public double mass;
         public double low_cut;
         public double update_cred;
         public double boost;//dimm the fluctuations
         public double shift;
-        public double delta_time;
 
         private bool high_at_zero { get; set; }
 
@@ -206,6 +177,8 @@ namespace Awesome.AI.Variables
         public double schedule_mid { get; set; }
         public double schedule_high { get; set; }
 
+        //public double delta_time;
+        //public double mass;
         //public double max_index;
         //public double pos_x_high;
         //public double pos_x_low;

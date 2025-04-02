@@ -107,7 +107,7 @@ namespace Awesome.AI.Core
             //double v_h = mech.m_out_high;
             //double v_l = mech.m_out_low;
 
-            double _v = mech.deltaMom;
+            double _v = mech.p_delta;
             double v_h = mech.d_out_high;
             double v_l = mech.d_out_low;
 
@@ -124,7 +124,7 @@ namespace Awesome.AI.Core
             //double v_h = mech.m_out_high;
             //double v_l = mech.m_out_low;
 
-            double _v = mech.deltaMom;
+            double _v = mech.p_delta;
             double v_h = mech.d_out_high;
             double v_l = mech.d_out_low;
 

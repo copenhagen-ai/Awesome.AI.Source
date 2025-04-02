@@ -11,10 +11,10 @@ namespace Awesome.AI.Interfaces
         double d_out_low { get; set; }
         double posx_high { get; set; }
         double posx_low { get; set; }
-        double momentum { get; set; }
-        double momentumPrev { get; set; }
-        double deltaMom { get; set; }
-        double deltaMomPrev { get; set; }
+        double p_curr { get; set; }
+        double p_prev { get; set; }
+        double p_delta { get; set; }
+        double p_delta_prev { get; set; }
 
         FUZZYDOWN FuzzyMom { get; }
         HARDDOWN HardMom { get; }
@@ -25,7 +25,7 @@ namespace Awesome.AI.Interfaces
         double LowestVar { get; }
 
         //these are thought patterns
-        void CalcPatternOld(MECHVERSION version);//do calculations
+        //void CalcPatternOld(MECHVERSION version);//do calculations
         void CalcPattern1(MECHVERSION version, int cycles);//mood general
         void CalcPattern2(MECHVERSION version, int cycles);//good mood
         void CalcPattern3(MECHVERSION version, int cycles);//bad mood

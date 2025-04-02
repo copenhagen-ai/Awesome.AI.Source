@@ -127,7 +127,7 @@ namespace Awesome.AI.Common
             bool res = deltaMom <= 0.0d;
 
             if (Constants.Logic == LOGICTYPE.BOOLEAN)
-                res = !res;//we flip direction
+                res = res;//we flip direction
             
             if (Constants.Logic == LOGICTYPE.QUBIT)
                 res = mind.quantum.usage.MyQuantumXOR(res, res);

@@ -2,6 +2,7 @@
 using Awesome.AI.Core;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace Awesome.AI.Web.AI.Common
 {
@@ -49,17 +50,21 @@ namespace Awesome.AI.Web.AI.Common
             return count >= 59 ? ":COMEAGAIN" : chat_answer;
         }
 
-        private string[] arr = { "[..??]", "[.??.]", "[??..]", "[.??.]" };
+        private string[] arr = { "[.??]", "[??.]" };
         private int count = 0;
         public void Set()
         {
-            if (count > 3)
+            int _rand = mind.rand.MyRandomInt(1, 800)[0];
+            bool rand_sample = _rand > 792;
+            if (!rand_sample) return;
+
+            if (count > 1)
                 count = 0;
 
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            momentum = $"{mind.mech.momentum.ToString("E3")}";
-            deltaMom = $"{mind.mech.deltaMom.ToString("E3")}";
+            momentum = $"{mind.mech.p_curr.ToString("E3")}";
+            deltaMom = $"{mind.mech.p_delta.ToString("E3")}";
 
             user_var = $"{mind.user_var}";
             if (mind._mech == MECHANICS.HILL)

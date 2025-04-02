@@ -175,9 +175,9 @@ namespace Awesome.AI.Core
                 PostRun(_pro);
                 Process(_pro);
                 Systems(_pro);
-                //Output(_pro);
+                
+                _out.Set();
 
-                if (_pro) _out.Set();
                 if (_pro) cycles = 0;
             }
             catch (Exception _e) 
@@ -195,7 +195,7 @@ namespace Awesome.AI.Core
         private void PreRun(bool _pro)
         {
             //rand.SaveMomentum(mech.momentum);
-            rand.SaveMomentum(mech.deltaMom);
+            rand.SaveMomentum(mech.p_delta);
             _quick.Run(_pro, curr_unit);
             
             //if (_pro)
@@ -227,7 +227,7 @@ namespace Awesome.AI.Core
             if (curr_unit.IsIDLE())
                 return true;
 
-            mech.CalcPatternOld(parms.version);//mood old
+            //mech.CalcPatternOld(parms.version);//mood old
             mech.CalcPattern1(parms.version , cycles);//mood general
             mech.CalcPattern2(parms.version, cycles);//mood good
             mech.CalcPattern3(parms.version, cycles);//mood bad

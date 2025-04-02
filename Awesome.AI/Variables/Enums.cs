@@ -2,7 +2,7 @@
 {
     public class Enums
     {
-        public enum MECHVERSION { OLD, GENERAL, MOODGOOD, MOODBAD }
+        public enum MECHVERSION { NONE, MOODGENERAL, MOODGOOD, MOODBAD }
         public enum STATE { JUSTRUNNING, QUICKDECISION }
         public enum TONE { HIGH, LOW, MID, RANDOM }
         public enum MINDS { ROBERTA, ANDREW }
