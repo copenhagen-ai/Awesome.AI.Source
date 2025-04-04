@@ -1,11 +1,13 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
+using Azure;
+using Microsoft.Quantum.Simulation.Simulators.NativeInterface;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
-    public class Hill : IMechanics
+    public class BallOnHill : IMechanics
     {
         public double p_curr { get; set; }
         public double p_prev { get; set; }
@@ -21,11 +23,11 @@ namespace Awesome.AI.Core.Mechanics
         
         
         private TheMind mind;
-        private Hill() { }
-        public Hill(TheMind mind, Params parms)
+        private BallOnHill() { }
+        public BallOnHill(TheMind mind, Params parms)
         {
             this.mind = mind;
-            
+
             posxy = Constants.STARTXY;//10;
 
             m_out_high = -1000.0d;
@@ -74,29 +76,20 @@ namespace Awesome.AI.Core.Mechanics
             get
             {
                 //its a hack, yes its cheating..
-                double boost = mind.parms.boost;
+                //double boost = mind.parms.boost;
 
-                //if (mind.goodbye.IsNo())
-                //    posxy = Constants.STARTXY + (boost * momentum);
-                //else
-                //    posxy += (boost * momentum);
+                posxy = x;
 
-                if (mind.goodbye.IsNo())
-                    posxy = Constants.STARTXY + (boost * p_delta);
-                else
-                    posxy += (boost * p_delta);
-
-                //POS_X = 10.0d + (boost * momentum);
-
-                if (posxy < Constants.LOWXY)
-                    posxy = Constants.LOWXY;
-                if (posxy > Constants.HIGHXY)
-                    posxy = Constants.HIGHXY;
+                if (posxy <= 0.1d && mind.goodbye.IsNo())
+                    posxy = Constants.VERY_LOW;
+                
+                if (posxy < Constants.LOWXY) posxy = Constants.LOWXY;
+                if (posxy > Constants.HIGHXY) posxy = Constants.HIGHXY;
 
                 if (posxy <= posx_low) posx_low = posxy;
                 if (posxy > posx_high) posx_high = posxy;
 
-                return 10.0d - posxy;
+                return posxy;
             }
         }
 
@@ -114,8 +107,7 @@ namespace Awesome.AI.Core.Mechanics
         }
 
         private double velocity = 0.0;
-        private double timeStep = 0.0;
-        private double x = 0.0;
+        private double x = 5.0;
         public void CalcPattern1(MECHVERSION version, int cycles)
         {
             if (version != MECHVERSION.MOODGENERAL)
@@ -128,23 +120,21 @@ namespace Awesome.AI.Core.Mechanics
             double a = 0.1d;                    // Parabola coefficient (hill steepness)
             double g = Constants.GRAVITY;       // Gravity (m/s^2)
             double F0 = 5.0d;                   // Wind force amplitude (N)
-            double omega = 2 * Math.PI * 0.5d;  // Wind frequency
+            double omega = Math.PI;             // Wind frequency
             double beta = 0.02d;                // Friction coefficient
             double dt = 0.1d;                   // Time step (s)
-            double noiseAmplitude = 0.5d;       // Random noise amplitude for wind force
+            double eta = 0.5d;                  // Random noise amplitude for wind force
             double m = 0.5d;                    // Ball mass (kg)
             
             double t = cycles * dt;
 
             // Compute forces
-            double Fx = F0 * (Math.Sin(omega * t) + GetRandomNoise1(noiseAmplitude)); // Wind force
-            double slope = 2 * a * x; // Slope dy/dx
-            double sinTheta = slope / Math.Sqrt(1 + slope * slope);
-            double gravityForce = m * g * sinTheta;
-            double frictionForce = -beta * velocity;
+            double Fx = ApplyDynamic(omega, t, F0, eta); // Wind force
+            double Fgravity = ApplyStatic(m, g, a, x);
+            double Ffriction = -beta * velocity;
 
             // Compute acceleration along the tangent
-            double a_tangent = (gravityForce + Fx + frictionForce) / m;
+            double a_tangent = (Fgravity + Fx + Ffriction) / m;
 
             // Update velocity and position
             velocity += a_tangent * dt;
@@ -159,6 +149,12 @@ namespace Awesome.AI.Core.Mechanics
 
             if (p_delta <= d_out_low) d_out_low = p_delta;
             if (p_delta > d_out_high) d_out_high = p_delta;
+
+            if (x >= 10.0d) x = 10.0d;
+            //else ;
+
+            if (x < 0.0d) x = 0.0d;
+            //else ;            
         }
 
         private void Reset1()
@@ -167,12 +163,20 @@ namespace Awesome.AI.Core.Mechanics
             bool rand_sample = _rand > 4;
             if (!rand_sample) return;
 
-            x = 2.5;
-            timeStep = 0.0d;
+            x = 5.0;
             velocity = 0.0d;
             p_curr = 0.0d;
             p_delta = 0.0d;
             p_prev = 0.0d;
+
+            posxy = Constants.STARTXY;//10;
+
+            m_out_high = -1000.0d;
+            m_out_low = 1000.0d;
+            d_out_high = -1000.0d;
+            d_out_low = 1000.0d;
+            posx_high = -1000.0d;
+            posx_low = 1000.0d;
         }
 
         private double GetRandomNoise1(double noiseAmplitude)
@@ -186,7 +190,29 @@ namespace Awesome.AI.Core.Mechanics
 
             double rand = mind.calc.NormalizeRange(_var, 0.0d, 100.0d, -1.0d, 1.0d);
             
-            return rand * noiseAmplitude;
+            return rand * noiseAmplitude;// Random value in range [-amplitude, amplitude]
+        }
+
+        private double ApplyStatic(double m, double g, double a, double x)
+        {
+            double slope = 2 * a * x; // Slope dy/dx
+            double sinTheta = slope / Math.Sqrt(1 + slope * slope);
+            double Fgravity = -(m * g) * sinTheta;
+
+            return Fgravity;
+        }
+
+        private double ApplyDynamic(double omega, double t, double F0, double eta)
+        {
+            if(mind.goodbye.IsYes())
+                return 0.0d;
+
+            double Fx = F0 * 0.5d * (Math.Sin(omega * t) + 1.0d) + GetRandomNoise1(eta); // Wind force
+
+            if (Fx < 0.0d)
+                Fx = 0.0d;
+            
+            return Fx;
         }
 
         public void CalcPattern2(MECHVERSION version, int cycles)

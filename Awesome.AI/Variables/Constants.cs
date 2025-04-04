@@ -67,12 +67,11 @@ namespace Awesome.AI.Variables
         public const double MAX_CREDIT = 10.0d;
         public const double LOW_CREDIT = 0.0d;
 
-        public const double VERY_LOW = 1.0E-50;
+        public const double VERY_LOW = 1.0E-2;
         public const double GRAVITY = 9.81d;
         public const double GRAV_CONST = 6.674E-11d;
-        public const double MAX_PAIN = 10.0d;
-
-        //BASE_REDUCTION: 0.666, hehe
+        public const double MAX_PAIN = 100.0d;
+                
         public const double BASE_REDUCTION = 2d / 3d;       //needs to be this otherwise position keeps going down
         public const double LAPSES = 99d;                   //yesno ratio : reaction time in cycles
         public const double RATIO = 50d;

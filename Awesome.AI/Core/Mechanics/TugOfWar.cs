@@ -24,7 +24,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            posxy = Constants.STARTXY;
+            posxy = Constants.STARTXY;//10;
 
             m_out_high = -1000.0d;
             m_out_low = 1000.0d;
@@ -104,7 +104,6 @@ namespace Awesome.AI.Core.Mechanics
         }
 
         private double velocity = 0.0;
-        private double timeStep = 0.0;
         public void CalcPattern1(MECHVERSION version, int cycles)
         {
             if (version != MECHVERSION.MOODGENERAL)
@@ -113,7 +112,6 @@ namespace Awesome.AI.Core.Mechanics
             if (cycles == 1)
                 Reset1();
 
-            double t = cycles / 10.0d;
 
             double Fmax = 5000.0d;                                              // Max oscillating force for F2
             double omega = 2 * Math.PI * 0.5;                                   // Frequency (0.5 Hz)
@@ -121,11 +119,14 @@ namespace Awesome.AI.Core.Mechanics
             double m1 = 500.0d;                                        // 1500; // Mass of Car 1 in kg
             double m2 = 500.0d;                                        // 1300; // Mass of Car 2 in kg
             double totalMass = m1 + m2;
-                        
+            double dt = 0.1d;                                                   // Time step (s)
+
             // Friction parameters
             double mu = 0.1;                                                    // Coefficient of kinetic friction
             double g = Constants.GRAVITY;                                       // Gravity in m/s^2
             double frictionForce = mu * totalMass * g;
+
+            double t = cycles * dt;
 
             double F1 = ApplyStatic1(Fmax);                                     // Constant force in Newtons (e.g., truck pulling)
             double F2 = ApplyDynamic1(Fmax, t, omega, eta);
@@ -140,11 +141,10 @@ namespace Awesome.AI.Core.Mechanics
             }
 
             double acceleration = Fnet / totalMass;
-            timeStep = cycles == 1 ? t : timeStep;                              // Time step in seconds
-            velocity += acceleration * timeStep;                                // Integrate acceleration to get velocity
+            velocity += acceleration * dt;                                      // Integrate acceleration to get velocity
             p_curr = totalMass * velocity;
-            p_delta = p_curr - p_prev;                                 // Compute change in momentum
-            p_prev = p_curr;                                            // Store current momentum for next iteration
+            p_delta = p_curr - p_prev;                                          // Compute change in momentum
+            p_prev = p_curr;                                                    // Store current momentum for next iteration
 
             if (p_curr <= m_out_low) m_out_low = p_curr;
             if (p_curr > m_out_high) m_out_high = p_curr;
@@ -155,11 +155,19 @@ namespace Awesome.AI.Core.Mechanics
 
         private void Reset1()
         {
-            timeStep = 0.0d;
             velocity = 0.0d;
             p_curr = 0.0d;
             p_delta = 0.0d;
             p_prev = 0.0d;
+
+            posxy = Constants.STARTXY;//10;
+
+            m_out_high = -1000.0d;
+            m_out_low = 1000.0d;
+            d_out_high = -1000.0d;
+            d_out_low = 1000.0d;
+            posx_high = -1000.0d;
+            posx_low = 1000.0d;
         }
 
         private double GetRandomNoise1()

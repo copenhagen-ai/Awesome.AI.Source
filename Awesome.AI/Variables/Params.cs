@@ -113,7 +113,7 @@ namespace Awesome.AI.Variables
 
                     break;
                 case MECHANICS.HILL:
-                    _mech = new Hill(mind, this);
+                    _mech = new BallOnHill(mind, this);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH

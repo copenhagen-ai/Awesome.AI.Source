@@ -45,7 +45,7 @@ namespace Awesome.AI.Core
 
                 pain = mind.calc.Reciprocal(_e);
 
-                if (pain >= Constants.MAX_PAIN)
+                if (pain > Constants.MAX_PAIN)
                     throw new Exception("ReciprocalOK");
 
                 return true;
