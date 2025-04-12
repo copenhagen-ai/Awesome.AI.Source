@@ -22,7 +22,7 @@ namespace Awesome.AI.CoreInternals
 
         public void History()
         {
-            if (mind.curr_unit.IsIDLE())
+            if (mind.unit[mind.current].IsIDLE())
                 return;
 
             //if (mind.curr_unit.IsDECISION())
@@ -41,7 +41,7 @@ namespace Awesome.AI.CoreInternals
                 u_history.Add(mind.mem.UNIT_RND(3));
             }
 
-            u_history.Insert(0, mind.curr_unit);
+            u_history.Insert(0, mind.unit[mind.current]);
             if (u_history.Count > Constants.HIST_TOTAL)
                 u_history.RemoveAt(u_history.Count - 1);
         }
@@ -66,16 +66,19 @@ namespace Awesome.AI.CoreInternals
 
         public void Stats(bool _pro)
         {
+            if (mind.current == "noise")
+                return;
+
             if (!_pro)
                 return;
 
             if (most_common_unit.IsNull())
                 return;
 
-            if (mind.curr_unit.IsQUICKDECISION())
+            if (mind.unit[mind.current].IsQUICKDECISION())
                 return;
 
-            if (mind.parms.state == STATE.QUICKDECISION)
+            if (mind.parms[mind.current].state == STATE.QUICKDECISION)
                 return;
 
             List<UNIT> units = mind.mem.UNITS_ALL();

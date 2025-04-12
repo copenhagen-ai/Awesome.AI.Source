@@ -43,7 +43,7 @@ namespace Awesome.AI.Core
                 if (_f != -1d)
                     return _f;
 
-                IMechanics _mech = mind.mech;
+                IMechanics _mech = mind.mech[mind.current];
                 _f = _mech.Variable(this);
                 return _f;
             }
@@ -53,7 +53,7 @@ namespace Awesome.AI.Core
         {
             get
             {
-                switch (mind.parms.validation)
+                switch (mind.parms[mind.current].validation)
                 {
                     case VALIDATION.BOTH:
                         return mind._internal.Valid(this) && mind._external.Valid(this);
@@ -118,7 +118,7 @@ namespace Awesome.AI.Core
                 if (IsIDLE())
                     return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);
 
-                hub = mind.mem.HUBS_ALL(mind.parms.state).Where(x => x.units.Contains(this)).FirstOrDefault();
+                hub = mind.mem.HUBS_ALL(mind.parms[mind.current].state).Where(x => x.units.Contains(this)).FirstOrDefault();
 
                 if (hub == null)
                     return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);

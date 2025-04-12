@@ -228,7 +228,7 @@ namespace Awesome.AI.CoreInternals
         {
             Reset();
 
-            switch (mind.parms.state)
+            switch (mind.parms[mind.current].state)
             {
                 case STATE.JUSTRUNNING: return units_running;
                 case STATE.QUICKDECISION: return units_decision;
@@ -242,7 +242,7 @@ namespace Awesome.AI.CoreInternals
 
             List<UNIT> res;
 
-            switch (mind.parms.state)
+            switch (mind.parms[mind.current].state)
             {
                 case STATE.JUSTRUNNING: res = units_running.Where(x => x.IsValid).ToList(); break;
                 case STATE.QUICKDECISION: res = units_decision.ToList(); break;//all are valid
@@ -257,7 +257,7 @@ namespace Awesome.AI.CoreInternals
             int[] rand;
             UNIT _u;
 
-            switch (mind.parms.state)
+            switch (mind.parms[mind.current].state)
             {
                 case STATE.JUSTRUNNING:
                     rand = mind.rand.MyRandomInt(index, units_running.Count() - 1);
@@ -431,7 +431,7 @@ namespace Awesome.AI.CoreInternals
                     random.NextDouble() :
                     mind.rand.MyRandomDouble(list.Count())[_count];
 
-                    switch (mind.parms.state)
+                    switch (mind.parms[mind.current].state)
                     {
                         case STATE.JUSTRUNNING:
                             units_running.Add(UNIT.Create(mind,/*value*/ GetIndex(tone, rand),/*root*/ "_" + s + i,/*data*/  null,/*ticket*/ "" + s + ticket[i - 1], utype, ltype));
@@ -466,7 +466,7 @@ namespace Awesome.AI.CoreInternals
                 {
                     UNIT _un;
 
-                    switch (mind.parms.state)
+                    switch (mind.parms[mind.current].state)
                     {
                         case STATE.JUSTRUNNING: _un = units_running.Where(x => x.root == "_" + s + i).First(); break;
                         case STATE.QUICKDECISION: _un = units_decision.Where(x => x.root == "_" + s + i).First(); break;
@@ -477,7 +477,7 @@ namespace Awesome.AI.CoreInternals
 
                 HUB _h = HUB.Create(s, _u, tone);
 
-                HUBS_ADD(mind.parms.state, _h);
+                HUBS_ADD(mind.parms[mind.current].state, _h);
             }
         }
         public int UnitsDecide(STATE state, List<string> list, UNITTYPE utype, LONGTYPE ltype, int count, TONE tone)

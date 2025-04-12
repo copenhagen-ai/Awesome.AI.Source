@@ -81,7 +81,7 @@ namespace Awesome.AI.Variables
 
         public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
 
-        public const int MICRO_SEC = 4000;                  //call micro timer every 1000µs (1ms)
+        public const int MICRO_SEC = 10000;                  //call micro timer every 1000µs (1ms)
         public const int HIST_TOTAL = 100;                  //the number of UNITS???
         public const int REMEMBER = 200;
 

@@ -22,11 +22,11 @@ namespace Awesome.AI.CoreInternals
             if (_x == null)
                 throw new ArgumentNullException();
 
-            if (mind.parms.state == STATE.QUICKDECISION)
+            if (mind.parms[mind.current].state == STATE.QUICKDECISION)
                 return true;
 
             double f_a = _x.Variable;
-            double f_b = mind.curr_unit.Variable;
+            double f_b = mind.unit[mind.current].Variable;
 
             bool go_up = mind.Direction();
 
@@ -53,10 +53,10 @@ namespace Awesome.AI.CoreInternals
             if (_u == null)
                 throw new ArgumentNullException();
 
-            if (mind.parms.state == STATE.QUICKDECISION)
+            if (mind.parms[mind.current].state == STATE.QUICKDECISION)
                 return true;
 
-            double lower_border = mind.parms.low_cut;
+            double lower_border = mind.parms[mind.current].low_cut;
             double force = _u.Variable;
 
             if (force < lower_border)
@@ -69,7 +69,7 @@ namespace Awesome.AI.CoreInternals
             if (unit == null)
                 throw new ArgumentNullException();
 
-            if (mind.parms.state == STATE.QUICKDECISION)
+            if (mind.parms[mind.current].state == STATE.QUICKDECISION)
                 return true;
 
             return unit.credits > 1.0d;

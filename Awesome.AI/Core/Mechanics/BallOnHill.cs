@@ -48,11 +48,11 @@ namespace Awesome.AI.Core.Mechanics
             
             get 
             {
-                if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                //if (Constants.Logic == LOGICTYPE.BOOLEAN)
                     //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    return p_delta.ToDownZero(mind);
+                    //return p_delta.ToDownZero(mind);
 
-                if (Constants.Logic == LOGICTYPE.QUBIT)
+                //if (Constants.Logic == LOGICTYPE.QUBIT)
                     //return deltaMom.ToDownPrev(deltaMomPrev, mind);
                     return p_delta.ToDownZero(mind);
 
@@ -110,6 +110,9 @@ namespace Awesome.AI.Core.Mechanics
         private double x = 5.0;
         public void CalcPattern1(MECHVERSION version, int cycles)
         {
+            if (mind.current != "current")
+                return;
+
             if (version != MECHVERSION.MOODGENERAL)
                 return;
 
@@ -181,7 +184,7 @@ namespace Awesome.AI.Core.Mechanics
 
         private double GetRandomNoise1(double noiseAmplitude)
         {
-            UNIT curr_unit = mind.curr_unit;
+            UNIT curr_unit = mind.unit["noise"];
 
             if (curr_unit == null)
                 throw new Exception("ApplyDynamic");
@@ -217,6 +220,9 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern2(MECHVERSION version, int cycles)
         {
+            if (mind.current != "current")
+                return;
+
             if (version != MECHVERSION.MOODGOOD)
                 return;
 
@@ -225,6 +231,9 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern3(MECHVERSION version, int cycles)
         {
+            if (mind.current != "current")
+                return;
+
             if (version != MECHVERSION.MOODBAD)
                 return;
 

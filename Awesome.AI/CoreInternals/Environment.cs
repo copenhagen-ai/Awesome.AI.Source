@@ -108,7 +108,7 @@ namespace Awesome.AI.CoreInternals
                 epoch_old = mind.epochs;
                 if (run)
                 {
-                    switch (mind.parms.occupasion)
+                    switch (mind.parms[mind.current].occupasion)
                     {
                         case OCCUPASION.FIXED:
                             occu = new Area() { name = mind.hobby, max_epochs = -1, values = null }; ;
@@ -156,6 +156,9 @@ namespace Awesome.AI.CoreInternals
 
         public bool Valid(UNIT _u)
         {
+            if (mind.current == "noise")
+                return true;
+
             if (_u.IsNull())
                 throw new Exception("Valid");
 
@@ -202,6 +205,9 @@ namespace Awesome.AI.CoreInternals
         //process occupation
         public void Setup(HUB last, MINDS mindtype)
         {
+            if (mind.current == "noise")
+                return;
+
             /*
              * these should be set according to hobbys, mood, location, interests etc..
              * */
@@ -213,13 +219,13 @@ namespace Awesome.AI.CoreInternals
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in andrew1)
-                    list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.parms[mind.current].state, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in andrew2)
-                    list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.parms[mind.current].state, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
 
@@ -229,13 +235,13 @@ namespace Awesome.AI.CoreInternals
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in roberta1)
-                    list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.parms[mind.current].state, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in roberta2)
-                    list.Add(mind.mem.HUBS_SUB(mind.parms.state, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.parms[mind.current].state, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
             }
@@ -243,12 +249,15 @@ namespace Awesome.AI.CoreInternals
 
         public void Reset()
         {
-            if (mind.parms.validation != VALIDATION.EXTERNAL)
+            if (mind.current == "noise")
+                return;
+
+            if (mind.parms[mind.current].validation != VALIDATION.EXTERNAL)
             {
                 //mind.stats.Reset();
 
                 areas = new List<Area>();
-                Setup(mind.curr_unit.HUB, mind.mindtype);
+                Setup(mind.unit[mind.current].HUB, mind.mindtype);
             }
         }
     }
@@ -305,6 +314,9 @@ namespace Awesome.AI.CoreInternals
 
         public bool Valid(UNIT _u)
         {
+            if (mind.current == "noise")
+                return true;
+
             if (_u.ticket.IsNull())
                 throw new Exception("Valid");
 
@@ -329,6 +341,9 @@ namespace Awesome.AI.CoreInternals
         //setup input
         private void Setup(MINDS mindtype, int u_count, bool onlyeven)
         {
+            if (mind.current == "noise")
+                return;
+
             tags = new List<Tag>();
             tags.Add(new Tag("SPECIAL"));
 
@@ -353,12 +368,15 @@ namespace Awesome.AI.CoreInternals
 
         public void Reset()
         {
-            if (mind.parms.validation != VALIDATION.INTERNAL)
+            if (mind.current == "noise")
+                return;
+
+            if (mind.parms[mind.current].validation != VALIDATION.INTERNAL)
             {
                 //mind.stats.Reset();
 
                 tags = new List<Tag>();
-                switch (mind.parms.tags)
+                switch (mind.parms[mind.current].tags)
                 {
                     case TAGS.ALL: Setup(mind.mindtype, Constants.NUMBER_OF_UNITS, false); break;
                     case TAGS.EVEN: Setup(mind.mindtype, Constants.NUMBER_OF_UNITS, true); break;

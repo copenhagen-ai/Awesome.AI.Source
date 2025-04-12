@@ -7,8 +7,8 @@ namespace Awesome.AI.CoreInternals
 {
     public class Direction
     {
-        public HARDDOWN DownHard { get { return mind.mech.HardMom; } }
-        public FUZZYDOWN DownFuzzy { get { return mind.mech.FuzzyMom; } }
+        public HARDDOWN DownHard { get { return mind.mech[mind.current].HardMom; } }
+        public FUZZYDOWN DownFuzzy { get { return mind.mech[mind.current].FuzzyMom; } }
         public PERIODDOWN DownPeriod { get { return Ratio.PeriodDown(mind); } }
 
         public List<HARDDOWN> Ratio { get; set; }

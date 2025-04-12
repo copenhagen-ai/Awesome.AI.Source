@@ -48,10 +48,10 @@ namespace Awesome.AI.CoreSystems
             if (mind.epochs < 5)
                 return;
 
-            if (!mind.curr_unit.IsDECISION())
+            if (!mind.unit[mind.current].IsDECISION())
                 return;
 
-            if (mind.curr_unit.long_deci_type.ToString() != type.ToUpper())
+            if (mind.unit[mind.current].long_deci_type.ToString() != type.ToUpper())
                 return;
 
             if (type == "ask" && mind.chat_asked)
@@ -60,12 +60,12 @@ namespace Awesome.AI.CoreSystems
             if (type == "ask" && State["answer"] > 0)
                 return;
 
-            UNIT current = mind.curr_unit;
+            UNIT current = mind.unit[mind.current];
             HUB hub = current.HUB;
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
-            HUB _1 = mind.mem.HUBS_SUB(mind.parms.state, Constants.deci_subject[0]);
-            HUB _2 = mind.mem.HUBS_SUB(mind.parms.state, Constants.deci_subject[1]);
+            HUB _1 = mind.mem.HUBS_SUB(mind.parms[mind.current].state, Constants.deci_subject[0]);
+            HUB _2 = mind.mem.HUBS_SUB(mind.parms[mind.current].state, Constants.deci_subject[1]);
 
             MyRandom rand = mind.rand;
             int[] _rand = rand.MyRandomInt(1, 5);
@@ -93,7 +93,7 @@ namespace Awesome.AI.CoreSystems
                 if (current.data == "CYES")
                 {
                     HUB _hub = null;
-                    List<HUB> list = mind.mem.HUBS_ALL(mind.parms.state);
+                    List<HUB> list = mind.mem.HUBS_ALL(mind.parms[mind.current].state);
                     int count = list.Count;
                     int i = 0;
                     int[] _r = mind.rand.MyRandomInt(100, count - 1);

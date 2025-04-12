@@ -73,6 +73,9 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern1(MECHVERSION version, int cycles)
         {
+            if (mind.current != "current")
+                return;
+
             if (version != MECHVERSION.MOODGENERAL)
                 return;
 
@@ -81,6 +84,9 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern2(MECHVERSION version, int cycles)
         {
+            if (mind.current != "current")
+                return;
+
             if (version != MECHVERSION.MOODGOOD)
                 return;
 
@@ -89,6 +95,9 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern3(MECHVERSION version, int cycles)
         {
+            if (mind.current != "current")
+                return;
+
             if (version != MECHVERSION.MOODBAD)
                 return;
 

@@ -54,8 +54,11 @@ namespace Awesome.AI.Web.AI.Common
         private int count = 0;
         public void Set()
         {
-            int _rand = mind.rand.MyRandomInt(1, 800)[0];
-            bool rand_sample = _rand > 792;
+            if(mind.current == "noise")
+                return;
+
+            int _rand = mind.rand.MyRandomInt(1, 200)[0];
+            bool rand_sample = _rand > 190;
             if (!rand_sample) return;
 
             if (count > 1)
@@ -63,12 +66,12 @@ namespace Awesome.AI.Web.AI.Common
 
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            momentum = $"{mind.mech.p_curr.ToString("E3")}";
-            deltaMom = $"{mind.mech.p_delta.ToString("E3")}";
+            momentum = $"{mind.mech[mind.current].p_curr.ToString("E3")}";
+            deltaMom = $"{mind.mech[mind.current].p_delta.ToString("E3")}";
 
             user_var = $"{mind.user_var}";
             if (mind._mech == MECHANICS.HILL)
-                position = $"{mind.mech.POS_XY}";
+                position = $"{mind.mech[mind.current].POS_XY}";
             if (mind._mech == MECHANICS.TUGOFWAR)
                 position = $"{mind.pos.Pos}";
             if (mind._mech == MECHANICS.GRAVITY)

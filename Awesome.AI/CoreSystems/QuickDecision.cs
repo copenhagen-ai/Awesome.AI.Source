@@ -48,13 +48,13 @@ namespace Awesome.AI.CoreSystems
             if (new_res)
                 return;
 
-            if (mind.parms.state == STATE.QUICKDECISION && mind.mem.QDCOUNT() > 0)
+            if (mind.parms[mind.current].state == STATE.QUICKDECISION && mind.mem.QDCOUNT() > 0)
             {
                 if (mind.mem.QDCOUNT() <= 1)
                 {
                     res = curr.data == "QYES";
                     new_res = true;
-                    mind.parms.state = STATE.JUSTRUNNING;
+                    mind.parms[mind.current].state = STATE.JUSTRUNNING;
                 }
 
                 mind.mem.QDREMOVE(curr);
@@ -105,7 +105,7 @@ namespace Awesome.AI.CoreSystems
             if (!_pro)
                 return;
 
-            mind.parms.state = STATE.QUICKDECISION;
+            mind.parms[mind.current].state = STATE.QUICKDECISION;
         }
     }
 }

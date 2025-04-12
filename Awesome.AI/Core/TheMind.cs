@@ -22,7 +22,6 @@ namespace Awesome.AI.Core
         public Memory mem;
         public QuickDecision _quick;
         public LongDecision _long;
-        public Params parms;
         public Calc calc;
         public MyRandom rand;
         public Process process;
@@ -34,12 +33,17 @@ namespace Awesome.AI.Core
         public Position pos;
         public MyQubit quantum;
 
-        public HUB curr_hub;
-        public UNIT curr_unit;
+        private List<string> list = new List<string>() { "current", "noise" };
+
+        public Dictionary<string, IMechanics> mech;
+        public Dictionary<string, Params> parms;
+
+        public string current { get; set; }
+        public Dictionary<string, HUB> hub;
+        public Dictionary<string, UNIT> unit;
         public UNIT theanswer;
 
-        public IMechanics mech = null;
-
+        
         public MINDS mindtype;
         public MECHANICS _mech;
         public HARDDOWN goodbye = HARDDOWN.NO;
@@ -75,8 +79,16 @@ namespace Awesome.AI.Core
                 this._mech = m;
                 this.mindtype = mindtype;
                 this.long_deci = long_deci;
-                
-                parms = new Params(this);
+                current = "current";
+
+                parms = new Dictionary<string, Params>();
+                foreach (string s in list)
+                    parms[s] = new Params(this);
+
+                mech = new Dictionary<string, IMechanics>();
+                mech["current"] = parms["current"].GetMechanics(_mech);
+                mech["noise"] = parms["noise"].GetMechanics(MECHANICS.NOISE);
+
                 matrix = new TheMatrix(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
@@ -93,26 +105,32 @@ namespace Awesome.AI.Core
                 quantum = new MyQubit();
                 mem = new Memory(this, Constants.NUMBER_OF_UNITS);
 
-                mech = parms.GetMechanics(_mech);
-                parms.UpdateLowCut();
+                unit = new Dictionary<string, UNIT>();
+                hub = new Dictionary<string, HUB>();
 
-                //if (mindtype == MINDS.STANDARD)
-                //    curr_unit = mem.UNITS_ALL().Where(x => x.root == "_love1").FirstOrDefault();
-                if (mindtype == MINDS.ANDREW)
-                    curr_unit = mem.UNITS_ALL().Where(x => x.root == "_fembots1").FirstOrDefault();
-                if (mindtype == MINDS.ROBERTA)
-                    curr_unit = mem.UNITS_ALL().Where(x => x.root == "_macho machines1").FirstOrDefault();
+                foreach (string s in list)
+                {
+                    if (mindtype == MINDS.ANDREW)
+                        unit[s] = mem.UNITS_ALL().Where(x => x.root == "_fembots1").FirstOrDefault();
+                    if (mindtype == MINDS.ROBERTA)
+                        unit[s] = mem.UNITS_ALL().Where(x => x.root == "_macho machines1").FirstOrDefault();
+                    
+                    hub[s] = unit[s].HUB;
+                }
 
-                curr_hub = curr_unit.HUB;
+                
 
-                PreRun(true);
+                parms["current"].UpdateLowCut();
+                parms["noise"].UpdateLowCut();
+
+                PreRun("noise", true);
                 PostRun(true);
 
                 theanswer = UNIT.Create(this, -1.0d, "I dont Know", "null", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
             
                 ProcessPass();
                         
-                Lists();
+                //Lists();
             }
             catch (Exception _e)
             {
@@ -124,6 +142,9 @@ namespace Awesome.AI.Core
         
         private void Lists()
         {
+            if (current == "noise")
+                return;
+
             List<UNIT> list = mem.UNITS_VAL();
 
             List<Tuple<string, bool, double>> units_force = new List<Tuple<string, bool, double>>();
@@ -147,40 +168,46 @@ namespace Awesome.AI.Core
         public bool ok = true;
         public void Run(object sender, MicroLibrary.MicroTimerEventArgs timerEventArgs)
         {
+            cycles++;
+            cycles_all++;
+
+            if (!ok)
+                return;
+                
+            if (!run)
+                return;
+
+            run = false;
+
+            Lists();
+
+            if (do_process)
+                epochs++;
+
+            bool _pro = do_process;
+            do_process = false;
+
             try
-            {                
-                if (!ok)
-                    return;
-                
-                if (!run)
-                    return;
+            {
+                foreach (string s in list)
+                {
+                    current = s;
 
-                run = false;
+                    //Randomize(_pro);
+                    PreRun(current, _pro);
 
-                Lists();
+                    if (!Core(_pro))//the basics
+                        ok = false;
 
-                if (do_process)
-                    epochs++;
+                    TheSoup();//find new curr_unit/curr_hub
+                    PostRun(_pro);
+                    Process(_pro);
+                    Systems(_pro);
 
-                bool _pro = do_process;
-                do_process = false;
-                
-                //Randomize(_pro);
-                PreRun(_pro);
-
-                if (!Core(_pro))//the basics
-                    ok = false;
-
-                TheSoup();//find new curr_unit/curr_hub
-                PostRun(_pro);
-                Process(_pro);
-                Systems(_pro);
-                
-                _out.Set();
-
-                if (_pro) cycles = 0;
+                    _out.Set();
+                }
             }
-            catch (Exception _e) 
+            catch (Exception _e)
             {
                 string msg = "run - " + _e.Message + "\n";
                 msg += _e.StackTrace;
@@ -188,18 +215,18 @@ namespace Awesome.AI.Core
             }
             finally
             {
+                if (_pro) 
+                    cycles = 0;
+
                 run = true;
             }
         }
 
-        private void PreRun(bool _pro)
+        private void PreRun(string current, bool _pro)
         {
-            //rand.SaveMomentum(mech.momentum);
-            rand.SaveMomentum(mech.p_delta);
-            _quick.Run(_pro, curr_unit);
-            
-            //if (_pro)
-            //    common.Reset();            
+            rand.SaveMomentum(current, mech[current].p_delta);
+
+            _quick.Run(_pro, unit[current]);            
         }
 
         private void PostRun(bool _pro)
@@ -218,22 +245,19 @@ namespace Awesome.AI.Core
              * - maybe Core() + TheSoup() could be made into at neural net all by it self, since "almost all" it does is choosing up or down 
              * */
 
-            cycles++;
-            cycles_all++;
-
             core.UpdateCredit();
             core.AnswerQuestion();
             
-            if (curr_unit.IsIDLE())
+            if (unit[current].IsIDLE())
                 return true;
 
-            //mech.CalcPatternOld(parms.version);//mood old
-            mech.CalcPattern1(parms.version , cycles);//mood general
-            mech.CalcPattern2(parms.version, cycles);//mood good
-            mech.CalcPattern3(parms.version, cycles);//mood bad
-
+            mech["noise"].CalcPattern1(MECHVERSION.NONE, 0);
+            mech["current"].CalcPattern1(parms[current].version , cycles);//mood general
+            mech["current"].CalcPattern2(parms[current].version, cycles);//mood good
+            mech["current"].CalcPattern3(parms[current].version, cycles);//mood bad
+            
             dir.Update();
-            pos.Update(_pro);//Enums.POSITION.NEW
+            pos.Update();
 
             //if (curr_hub.IsIDLE())
             //    core.SetTheme(_pro);
@@ -245,8 +269,8 @@ namespace Awesome.AI.Core
 
         private void TheSoup() 
         {
-            curr_hub = curr_unit.HUB;
-            curr_unit = matrix.NextUnit();
+            hub[current] = unit[current].HUB;
+            unit[current] = matrix.NextUnit();
         }
 
         private void Process(bool _pro)
@@ -258,7 +282,10 @@ namespace Awesome.AI.Core
 
         private void Systems(bool _pro)
         {
-            if (parms.state == STATE.QUICKDECISION)
+            if (current == "noise")
+                return;
+
+            if (parms[current].state == STATE.QUICKDECISION)
                 return;
 
             foreach(var kv in this.long_deci)
@@ -269,6 +296,9 @@ namespace Awesome.AI.Core
         {
             while (true)
             {
+                if (current == "noise")
+                    continue;
+
                 do_process = true;
                 await Task.Delay(2000);
             }

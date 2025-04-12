@@ -14,7 +14,6 @@ namespace Awesome.AI.Variables
             this.mind = mind;
         }
 
-
         public IMechanics GetMechanics(MECHANICS run = MECHANICS.NONE)
         {
             IMechanics _mech = null;
@@ -58,6 +57,34 @@ namespace Awesome.AI.Variables
                 //    boost = 1E9d;
 
                 //    break;
+                case MECHANICS.NOISE:
+                    _mech = new NoiseGenerator(mind, this);
+
+                    validation = VALIDATION.BOTH;                                       //BOTH or OCCU
+                    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
+                    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
+                    state = STATE.JUSTRUNNING;
+                    version = MECHVERSION.MOODGENERAL;
+
+                    high_at_zero = true;
+                    update_cred = 0.030d;
+
+                    //schedule_low = -1d;
+                    //schedule_mid = -1d;
+                    //schedule_high = -1d;
+
+                    //hack = HACKMODES.NOHACK;                                          //not used any more
+                    //shift = -2.0d;
+
+                    /*
+                     * boost is life span
+                     * as it seem momentum seem to go towards below 0.0
+                     * boost should be as close 1.0, without dying to fast
+                     * */
+
+                    boost = 1E-1d;
+
+                    break;
                 case MECHANICS.GRAVITY:
                     _mech = new Gravity(mind, this);
 
@@ -69,12 +96,13 @@ namespace Awesome.AI.Variables
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = false;
-                    shift = 0.0d;
                     update_cred = 0.05d;
                     
                     schedule_low = 2.0d;
                     schedule_mid = 6.0d;
                     schedule_high = 9.0d;
+
+                    //shift = 0.0d;
 
                     /*
                         * boost is life span
@@ -97,11 +125,12 @@ namespace Awesome.AI.Variables
 
                     high_at_zero = true;
                     update_cred = 0.030d;
-                    shift = -2.0d;
                     
-                    schedule_low = 1.0d;
+                    schedule_low = 2.0d;
                     schedule_mid = 5.0d;
                     schedule_high = 8.0d;
+
+                    //shift = -2.0d;
 
                     /*
                      * boost is life span
@@ -120,11 +149,12 @@ namespace Awesome.AI.Variables
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
                     version = MECHVERSION.MOODGENERAL;
-                    //hack = HACKMODES.NOHACK;                                          //obsolete
 
                     high_at_zero = true;
                     update_cred = 0.050d;
-                    shift = 0.0d;                    
+
+                    //hack = HACKMODES.NOHACK;                                          //obsolete
+                    //shift = 0.0d;                    
 
                     /*
                         * boost is life span?
@@ -164,12 +194,11 @@ namespace Awesome.AI.Variables
         public STATE state;
         public MECHVERSION version;
         //public HACKMODES hack;
-        
+
         // should it be 200, 1000 or more???
         public double low_cut;
         public double update_cred;
         public double boost;//dimm the fluctuations
-        public double shift;
 
         private bool high_at_zero { get; set; }
 
@@ -177,6 +206,7 @@ namespace Awesome.AI.Variables
         public double schedule_mid { get; set; }
         public double schedule_high { get; set; }
 
+        //public double shift;
         //public double delta_time;
         //public double mass;
         //public double max_index;

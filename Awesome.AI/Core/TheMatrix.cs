@@ -29,7 +29,7 @@ namespace Awesome.AI.Core
 
         public UNIT NextUnit()
         {
-            if (!mind.curr_unit.IsIDLE())
+            if (!mind.unit[mind.current].IsIDLE())
             {
                 UNIT w_act = Unit();
 
@@ -99,9 +99,9 @@ namespace Awesome.AI.Core
 
         private double NearEnergy()
         {
-            IMechanics mech = mind.mech;
-            double f_h = mind.mech.HighestVar;
-            double f_l = mind.mech.LowestVar;
+            IMechanics mech = mind.mech[mind.current];
+            double f_h = mech.HighestVar;
+            double f_l = mech.LowestVar;
 
             //double _v = mech.momentum;
             //double v_h = mech.m_out_high;
@@ -118,7 +118,7 @@ namespace Awesome.AI.Core
 
         private double NearPercent()
         {
-            IMechanics mech = mind.mech;
+            IMechanics mech = mind.mech[mind.current];
 
             //double _v = mech._momentum;
             //double v_h = mech.m_out_high;

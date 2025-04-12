@@ -15,8 +15,11 @@ namespace Awesome.AI.Common
 
         private List<double> saves { get; set; }
 
-        public void SaveMomentum(double momentum)
+        public void SaveMomentum(string current, double momentum)
         {
+            if (current != "noise")
+                return;
+
             if (double.IsNaN(momentum))
                 throw new Exception("SaveMomentum");
 

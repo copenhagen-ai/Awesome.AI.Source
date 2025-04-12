@@ -19,7 +19,12 @@ namespace Awesome.AI.Core
              * actually not part of the algorithm
              * */
 
+
             user_var = 0.0d;
+
+            if (mind.current == "noise")
+                return true;
+
             bool ok;
             switch (mind._mech)
             {
@@ -27,7 +32,7 @@ namespace Awesome.AI.Core
                     ok = ReciprocalOK(mind.pos.Pos, out user_var);
                     return ok;
                 case MECHANICS.HILL: 
-                    ok = ReciprocalOK(mind.mech.POS_XY, out user_var);
+                    ok = ReciprocalOK(mind.mech[mind.current].POS_XY, out user_var);
                     return ok;
                 case MECHANICS.GRAVITY:
                     ok = EventHorizonOK(mind.pos.Pos, out user_var);
@@ -85,6 +90,9 @@ namespace Awesome.AI.Core
              * should there be some procedure for this(unlocking)?
              * */
 
+            if (mind.current == "noise")
+                return;
+
             for (int i = 0; i <= 10; i++)
             {
                 if ((mind.epochs - i) == (60 * Constants.RUNTIME))
@@ -106,19 +114,19 @@ namespace Awesome.AI.Core
             //this could be a problem with many hubs
             foreach (UNIT _u in list)
             {
-                if (_u.root == mind.curr_unit.root)
+                if (_u.root == mind.unit[mind.current].root)
                     continue;
 
-                double cred = mind.parms.update_cred;
+                double cred = mind.parms[mind.current].update_cred;
                 _u.credits += cred;
 
                 if (_u.credits > Constants.MAX_CREDIT)
                     _u.credits = Constants.MAX_CREDIT;
             }
 
-            mind.curr_unit.credits -= 1.0d;
-            if (mind.curr_unit.credits < Constants.LOW_CREDIT)
-                mind.curr_unit.credits = Constants.LOW_CREDIT;
+            mind.unit[mind.current].credits -= 1.0d;
+            if (mind.unit[mind.current].credits < Constants.LOW_CREDIT)
+                mind.unit[mind.current].credits = Constants.LOW_CREDIT;
         }
         
         

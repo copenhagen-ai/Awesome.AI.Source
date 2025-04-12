@@ -69,8 +69,8 @@ namespace Awesome.AI.Common
 
         public static FUZZYDOWN ToFuzzy(this double deltaMom, TheMind mind)
         {
-            double high = mind.mech.d_out_high;
-            double low = mind.mech.d_out_low;
+            double high = mind.mech[mind.current].d_out_high;
+            double low = mind.mech[mind.current].d_out_low;
 
             double norm = mind.calc.NormalizeRange(deltaMom, low, high, 0.0d, 100.0d);
 
@@ -126,11 +126,16 @@ namespace Awesome.AI.Common
 
             bool res = deltaMom <= 0.0d;
 
-            if (Constants.Logic == LOGICTYPE.BOOLEAN)
-                res = res;//we flip direction
+            if (mind.current == "noise")
+                res = !res;
+            else
+            {
+                if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                    res = res;//we flip direction
             
-            if (Constants.Logic == LOGICTYPE.QUBIT)
-                res = mind.quantum.usage.MyQuantumXOR(res, res);
+                if (Constants.Logic == LOGICTYPE.QUBIT)
+                    res = mind.quantum.usage.MyQuantumXOR(res, res);
+            }
 
             return res ? HARDDOWN.YES : HARDDOWN.NO;
         }

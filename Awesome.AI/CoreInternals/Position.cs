@@ -18,22 +18,26 @@ namespace Awesome.AI.CoreInternals
         }
 
         private double up = 0.1d;
-        private double down = 0.1d;
+        private double down = 0.05d;
         private double pos = 5.0d;
         private double pos_prev = 0.0d;
         public MOOD Mood { get; set; }
         public double Pos { get { return pos == 0.0d ? Constants.VERY_LOW : pos; } }
 
-        public void Update(bool _pro)
+        public void Update()
         {
-            if (!_pro)
+            if (mind.current == "noise")
                 return;
+
+            int _rand = mind.rand.MyRandomInt(1, 200)[0];
+            bool rand_sample = _rand > 190;
+            if (!rand_sample) return;
 
             Schedule();
 
             pos += is_no ? up : -down;
-            up = Up();
-            down += Down() / 2;
+            //up = Up();
+            //down += Down() / 2;
 
             Mood = pos > pos_prev ? MOOD.GOOD : MOOD.BAD;
 
@@ -68,21 +72,21 @@ namespace Awesome.AI.CoreInternals
                 return;
             }
 
-            if (pos < mind.parms.schedule_low)
+            if (pos < mind.parms[mind.current].schedule_low)
             {
                 if (!is_no)
                     is_no = true;
                 return;
             }
 
-            if (pos < mind.parms.schedule_mid)
+            if (pos < mind.parms[mind.current].schedule_mid)
             {
                 if (!is_no)
                     is_no = mind.dir.DownHard.IsNo();
                 return;
             }
 
-            if (pos >= mind.parms.schedule_high)
+            if (pos >= mind.parms[mind.current].schedule_high)
             {
                 is_no = false;
                 down = 0.1d;
