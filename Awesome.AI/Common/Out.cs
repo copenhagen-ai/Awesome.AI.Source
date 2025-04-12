@@ -36,6 +36,9 @@ namespace Awesome.AI.Web.AI.Common
         public string common_hub { get; set; }
         public string whistle { get; set; }
 
+        public string mood {  get; set; }
+        public bool moodOK { get; set; }
+
         //public string chat_index { get; set; }
         public UNIT common_unit { get; set; }
 
@@ -87,6 +90,9 @@ namespace Awesome.AI.Web.AI.Common
             chat_state = mind._long.State["answer"] > 0 ? "thinking" : "just thinking";
 
             whistle = mind._quick.Result ? "[Whistling to my self..]" : arr[count];
+
+            mood = mind.parms[mind.current].version.ToString();
+            moodOK = mind.mood.Result == PATTERNCOLOR.GREEN;
 
             if (mind._long.Result["answer"] != "") {
                 chat_answer = $"{mind._long.Result["answer"]}";

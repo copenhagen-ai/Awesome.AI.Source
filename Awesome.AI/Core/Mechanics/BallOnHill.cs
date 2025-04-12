@@ -1,8 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
-using Azure;
-using Microsoft.Quantum.Simulation.Simulators.NativeInterface;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
@@ -96,26 +94,18 @@ namespace Awesome.AI.Core.Mechanics
         public double Variable(UNIT _c)
         {
             if (_c.IsNull())
-                throw new Exception("Variable");
+                throw new Exception("BallOnHill, Variable");
 
             if (_c.IsIDLE())
-                throw new Exception("Variable");
+                throw new Exception("BallOnHill, Variable");
 
             double _var = _c.HighAtZero;
 
             return _var;
         }
 
-        private double velocity = 0.0;
-        private double x = 5.0;
-        public void CalcPattern1(MECHVERSION version, int cycles)
+        private void Calc(PATTERN version, int cycles)
         {
-            if (mind.current != "current")
-                return;
-
-            if (version != MECHVERSION.MOODGENERAL)
-                return;
-
             if (cycles == 1)
                 Reset1();
 
@@ -128,11 +118,11 @@ namespace Awesome.AI.Core.Mechanics
             double dt = 0.1d;                   // Time step (s)
             double eta = 0.5d;                  // Random noise amplitude for wind force
             double m = 0.5d;                    // Ball mass (kg)
-            
+
             double t = cycles * dt;
 
             // Compute forces
-            double Fx = ApplyDynamic(omega, t, F0, eta); // Wind force
+            double Fx = ApplyDynamic(version, omega, t, F0, eta); // Wind force
             double Fgravity = ApplyStatic(m, g, a, x);
             double Ffriction = -beta * velocity;
 
@@ -157,7 +147,42 @@ namespace Awesome.AI.Core.Mechanics
             //else ;
 
             if (x < 0.0d) x = 0.0d;
-            //else ;            
+            //else ;
+        }
+
+        private double velocity = 0.0;
+        private double x = 5.0;
+        public void CalcPattern1(PATTERN version, int cycles)
+        {
+            if (mind.current != "current")
+                return;
+
+            if (version != PATTERN.MOODGENERAL)
+                return;
+
+            Calc(version, cycles);
+        }
+
+        public void CalcPattern2(PATTERN version, int cycles)
+        {
+            if (mind.current != "current")
+                return;
+
+            if (version != PATTERN.MOODGOOD)
+                return;
+
+            Calc(version, cycles);
+        }
+
+        public void CalcPattern3(PATTERN version, int cycles)
+        {
+            if (mind.current != "current")
+                return;
+
+            if (version != PATTERN.MOODBAD)
+                return;
+
+            Calc(version, cycles);
         }
 
         private void Reset1()
@@ -176,8 +201,8 @@ namespace Awesome.AI.Core.Mechanics
 
             m_out_high = -1000.0d;
             m_out_low = 1000.0d;
-            d_out_high = -1000.0d;
-            d_out_low = 1000.0d;
+            //d_out_high = -1000.0d;
+            //d_out_low = 1000.0d;
             posx_high = -1000.0d;
             posx_low = 1000.0d;
         }
@@ -196,6 +221,17 @@ namespace Awesome.AI.Core.Mechanics
             return rand * noiseAmplitude;// Random value in range [-amplitude, amplitude]
         }
 
+        private double Sine(PATTERN version, double t, double omega)
+        {
+            switch (version)
+            {
+                case PATTERN.MOODGENERAL: return (Math.Sin(omega * t) + 1.0d) / 2.0d;
+                case PATTERN.MOODGOOD: return 0.5d + (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.5d;
+                case PATTERN.MOODBAD: return (Math.Sin(omega * t) - 1.0d) / 2.0d * 0.5d;
+                default: throw new Exception("TugOfWar, Sine");
+            }
+        }
+
         private double ApplyStatic(double m, double g, double a, double x)
         {
             double slope = 2 * a * x; // Slope dy/dx
@@ -205,12 +241,12 @@ namespace Awesome.AI.Core.Mechanics
             return Fgravity;
         }
 
-        private double ApplyDynamic(double omega, double t, double F0, double eta)
+        private double ApplyDynamic(PATTERN version, double omega, double t, double F0, double eta)
         {
             if(mind.goodbye.IsYes())
                 return 0.0d;
 
-            double Fx = F0 * 0.5d * (Math.Sin(omega * t) + 1.0d) + GetRandomNoise1(eta); // Wind force
+            double Fx = F0 * Sine(version, t, omega) + GetRandomNoise1(eta); // Wind force
 
             if (Fx < 0.0d)
                 Fx = 0.0d;
@@ -218,27 +254,6 @@ namespace Awesome.AI.Core.Mechanics
             return Fx;
         }
 
-        public void CalcPattern2(MECHVERSION version, int cycles)
-        {
-            if (mind.current != "current")
-                return;
-
-            if (version != MECHVERSION.MOODGOOD)
-                return;
-
-            throw new NotImplementedException();
-        }
-
-        public void CalcPattern3(MECHVERSION version, int cycles)
-        {
-            if (mind.current != "current")
-                return;
-
-            if (version != MECHVERSION.MOODBAD)
-                return;
-
-            throw new NotImplementedException();
-        }        
 
         //Weight
         //public double Variable(UNIT _c)

@@ -71,34 +71,34 @@ namespace Awesome.AI.Core.Mechanics
             throw new NotImplementedException();
         }
 
-        public void CalcPattern1(MECHVERSION version, int cycles)
+        public void CalcPattern1(PATTERN version, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != MECHVERSION.MOODGENERAL)
+            if (version != PATTERN.MOODGENERAL)
                 return;
 
             throw new NotImplementedException();
         }
 
-        public void CalcPattern2(MECHVERSION version, int cycles)
+        public void CalcPattern2(PATTERN version, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != MECHVERSION.MOODGOOD)
+            if (version != PATTERN.MOODGOOD)
                 return;
 
             throw new NotImplementedException();
         }
 
-        public void CalcPattern3(MECHVERSION version, int cycles)
+        public void CalcPattern3(PATTERN version, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != MECHVERSION.MOODBAD)
+            if (version != PATTERN.MOODBAD)
                 return;
 
             throw new NotImplementedException();

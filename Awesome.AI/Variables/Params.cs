@@ -64,7 +64,7 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
-                    version = MECHVERSION.MOODGENERAL;
+                    version = PATTERN.MOODGENERAL;
 
                     high_at_zero = true;
                     update_cred = 0.030d;
@@ -92,7 +92,7 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
-                    version = MECHVERSION.NONE;
+                    version = PATTERN.NONE;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = false;
@@ -120,7 +120,7 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
-                    version = MECHVERSION.MOODGENERAL;
+                    version = PATTERN.MOODGENERAL;
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = true;
@@ -148,7 +148,7 @@ namespace Awesome.AI.Variables
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
-                    version = MECHVERSION.MOODGENERAL;
+                    version = PATTERN.MOODGENERAL;
 
                     high_at_zero = true;
                     update_cred = 0.050d;
@@ -192,7 +192,7 @@ namespace Awesome.AI.Variables
         public TAGS tags;                                               //used with WORLD and BOTH
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
         public STATE state;
-        public MECHVERSION version;
+        public PATTERN version;
         //public HACKMODES hack;
 
         // should it be 200, 1000 or more???

@@ -22,6 +22,7 @@ namespace Awesome.AI.Core
         public Memory mem;
         public QuickDecision _quick;
         public LongDecision _long;
+        public MoodGenerator mood;
         public Calc calc;
         public MyRandom rand;
         public Process process;
@@ -100,6 +101,7 @@ namespace Awesome.AI.Core
                 _out = new Out(this);
                 _long = new LongDecision(this, this.long_deci);
                 _quick = new QuickDecision(this);
+                mood = new MoodGenerator(this);
                 dir = new Direction(this);
                 pos = new Position(this);
                 quantum = new MyQubit();
@@ -251,7 +253,7 @@ namespace Awesome.AI.Core
             if (unit[current].IsIDLE())
                 return true;
 
-            mech["noise"].CalcPattern1(MECHVERSION.NONE, 0);
+            mech["noise"].CalcPattern1(PATTERN.NONE, 0);
             mech["current"].CalcPattern1(parms[current].version , cycles);//mood general
             mech["current"].CalcPattern2(parms[current].version, cycles);//mood good
             mech["current"].CalcPattern3(parms[current].version, cycles);//mood bad
@@ -289,7 +291,10 @@ namespace Awesome.AI.Core
                 return;
 
             foreach(var kv in this.long_deci)
-                _long.Decide(_pro, kv.Key);            
+                _long.Decide(_pro, kv.Key);
+
+            mood.Generate(_pro);
+            mood.MoodOK(_pro);
         }
 
         private async void ProcessPass()
@@ -300,7 +305,7 @@ namespace Awesome.AI.Core
                     continue;
 
                 do_process = true;
-                await Task.Delay(2000);
+                await Task.Delay(2023);
             }
         }                
     }

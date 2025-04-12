@@ -82,38 +82,34 @@ namespace Awesome.AI.Core.Mechanics
              * */
 
             if (curr.IsNull())
-                throw new Exception("Variable");
+                throw new Exception("NoiseGenerator, Variable");
 
             if (curr.IsIDLE())
-                throw new Exception("Variable");
+                throw new Exception("NoiseGenerator, Variable");
 
             double acc = curr.HighAtZero;
 
             return acc;
         }
 
-        public void CalcPattern1(MECHVERSION version, int cycles)
+        public void CalcPattern1(PATTERN version, int cycles)
         {
-            //if (version != MECHVERSION.MOODGENERAL)
-            //    return;
-
             if (mind.current != "noise")
                 return;
 
-            //car left
-            double Fsta = ApplyStatic();
-
-            //car right
-            double Fdyn = ApplyDynamic();
+            if (version != PATTERN.NONE)
+                return;
 
             double deltaT = 0.002d;
             double m = 500.0d;
-            double u = Friction(false, mind.unit["noise"].credits, -2.0d);
             double N = m * Constants.GRAVITY;
 
+            double Fsta = ApplyStatic();
+            double Fdyn = ApplyDynamic();
+            double u = Friction(mind.unit["noise"].credits, -2.0d);
+
             double Ffriction = u * N;
-            
-            double Fnet = -Fsta + Fdyn + (Ffriction * Math.Sign(-Fsta + Fdyn));
+            double Fnet = -Fsta + Fdyn + (Ffriction * -Math.Sign(-Fsta + Fdyn));
             
             //F=m*a
             //a=dv/dt
@@ -133,9 +129,6 @@ namespace Awesome.AI.Core.Mechanics
 
             if (p_delta <= d_out_low) d_out_low = p_delta;
             if (p_delta > d_out_high) d_out_high = p_delta;
-
-            //if (double.IsNaN(velocity))
-            //    throw new Exception();
         }
 
         /*
@@ -164,11 +157,12 @@ namespace Awesome.AI.Core.Mechanics
             if (curr_unit.IsNull())
                 throw new Exception("ApplyDynamic");
 
-            double max = HighestVar; //divided by 10 for aprox acc
-            double acc = max - curr_unit.Variable; //divided by 10 for aprox acc
+            double max = HighestVar;
+            double acc = (max / 10.0d) - (curr_unit.Variable / 10.0d); //divided by 10 for aprox acc
             double m = 500.0d;
-            
-            acc = acc == 0.0d ? Constants.VERY_LOW : acc;// jajajaa
+
+            if (acc <= 0.0d)
+                acc = Constants.VERY_LOW;// jajajaa
                         
             double Fapplied = m * acc; //force, left
             
@@ -178,15 +172,12 @@ namespace Awesome.AI.Core.Mechanics
             return Fapplied;
         }
 
-        public double Friction(bool is_static, double credits, double shift)
+        public double Friction(double credits, double shift)
         {
             /*
              * friction coeficient
              * should friction be calculated from position???
              * */
-
-            if (is_static)
-                return Constants.BASE_REDUCTION;
 
             Calc calc = mind.calc;
 
@@ -197,12 +188,12 @@ namespace Awesome.AI.Core.Mechanics
             return friction;
         }
 
-        public void CalcPattern2(MECHVERSION version, int cycles)
+        public void CalcPattern2(PATTERN version, int cycles)
         {
             return;
         }
 
-        public void CalcPattern3(MECHVERSION version, int cycles)
+        public void CalcPattern3(PATTERN version, int cycles)
         {
             return;
         }          

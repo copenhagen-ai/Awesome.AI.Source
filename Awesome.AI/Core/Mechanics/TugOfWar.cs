@@ -70,51 +70,45 @@ namespace Awesome.AI.Core.Mechanics
         {
             get
             {
-                //its a hack, yes its cheating..
-                double boost = mind.goodbye.IsNo() ? mind.parms[mind.current].boost : 1.0d;
+                ////its a hack, yes its cheating..
+                //double boost = mind.goodbye.IsNo() ? mind.parms[mind.current].boost : 1.0d;
 
-                //posxy = 10.0d + (boost * momentum);//dosnt seem right
-                posxy += (boost * p_delta);
-                //posxy = posx + (boost * velocity);
-                //posxy = 10.0d + (boost * momentum);
+                ////posxy = 10.0d + (boost * momentum);//dosnt seem right
+                //posxy += (boost * p_delta);
+                ////posxy = posx + (boost * velocity);
+                ////posxy = 10.0d + (boost * momentum);
 
-                if (posxy < Constants.LOWXY)
-                    posxy = Constants.LOWXY;
-                if (posxy > Constants.HIGHXY)
-                    posxy = Constants.HIGHXY;
+                //if (posxy < Constants.LOWXY)
+                //    posxy = Constants.LOWXY;
+                //if (posxy > Constants.HIGHXY)
+                //    posxy = Constants.HIGHXY;
 
-                if (posxy <= posx_low) posx_low = posxy;
-                if (posxy > posx_high) posx_high = posxy;
+                //if (posxy <= posx_low) posx_low = posxy;
+                //if (posxy > posx_high) posx_high = posxy;
 
-                return posxy;
+                //return posxy;
+
+                return -1d;
             }
         }
 
         public double Variable(UNIT curr)
         {
             if (curr.IsNull())
-                throw new Exception("Variable");
+                throw new Exception("TugOfWar, Variable");
 
             if (curr.IsIDLE())
-                throw new Exception("Variable");
+                throw new Exception("TugOfWar, Variable");
 
             double _var = curr.HighAtZero;
 
             return _var;
         }
 
-        private double velocity = 0.0;
-        public void CalcPattern1(MECHVERSION version, int cycles)
+        private void Calc(PATTERN version, int cycles)
         {
-            if (mind.current != "current")
-                return;
-
-            if (version != MECHVERSION.MOODGENERAL)
-                return;
-
             if (cycles == 1)
                 Reset1();
-
 
             double Fmax = 5000.0d;                                              // Max oscillating force for F2
             double omega = 2 * Math.PI * 0.5;                                   // Frequency (0.5 Hz)
@@ -132,7 +126,7 @@ namespace Awesome.AI.Core.Mechanics
             double t = cycles * dt;
 
             double F1 = ApplyStatic1(Fmax);                                     // Constant force in Newtons (e.g., truck pulling)
-            double F2 = ApplyDynamic1(Fmax, t, omega, eta);
+            double F2 = ApplyDynamic1(version, Fmax, t, omega, eta);
             double friction = frictionForce * Math.Sign(velocity);              // Friction opposes motion
             double Fnet = F1 - F2 - friction;                                   // Net force with F1 constant and F2 dynamic
 
@@ -156,6 +150,40 @@ namespace Awesome.AI.Core.Mechanics
             if (p_delta > d_out_high) d_out_high = p_delta;
         }
 
+        private double velocity = 0.0;
+        public void CalcPattern1(PATTERN version, int cycles)
+        {
+            if (mind.current != "current")
+                return;
+
+            if (version != PATTERN.MOODGENERAL)
+                return;
+
+            Calc(version, cycles);
+        }
+
+        public void CalcPattern2(PATTERN version, int cycles)
+        {
+            if (mind.current != "current")
+                return;
+
+            if (version != PATTERN.MOODGOOD)
+                return;
+
+            Calc(version, cycles);
+        }
+
+        public void CalcPattern3(PATTERN version, int cycles)
+        {
+            if (mind.current != "current")
+                return;
+
+            if (version != PATTERN.MOODBAD)
+                return;
+
+            Calc(version, cycles);
+        }
+
         private void Reset1()
         {
             velocity = 0.0d;
@@ -167,8 +195,8 @@ namespace Awesome.AI.Core.Mechanics
 
             m_out_high = -1000.0d;
             m_out_low = 1000.0d;
-            d_out_high = -1000.0d;
-            d_out_low = 1000.0d;
+            //d_out_high = -1000.0d;
+            //d_out_low = 1000.0d;
             posx_high = -1000.0d;
             posx_low = 1000.0d;
         }
@@ -186,6 +214,17 @@ namespace Awesome.AI.Core.Mechanics
             //return mind.rand.RandomDouble(-1d, 1d)); // Random value between -1 and 1
         }
 
+        private double Sine(PATTERN version, double t, double omega)
+        {
+            switch (version)
+            {
+                case PATTERN.MOODGENERAL: return Math.Sin(omega * t);
+                case PATTERN.MOODGOOD: return (Math.Sin(omega * t) + 1.0d) / 2.0d;
+                case PATTERN.MOODBAD: return (Math.Sin(omega * t) - 1.0d) / 2.0d;
+                default: throw new Exception("TugOfWar, Sine");
+            }
+        }
+
         /*
          * car left
          * */
@@ -199,50 +238,13 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * car right
          * */
-        public double ApplyDynamic1(double Fmax, double t, double omega, double eta)
+        public double ApplyDynamic1(PATTERN version, double Fmax, double t, double omega, double eta)
         {
-            double Fapplied = Fmax * (Math.Sin(omega * t) + eta * GetRandomNoise1());  // Dynamic force
+            double Fapplied = Fmax * (Sine(version, t, omega) + eta * GetRandomNoise1());  // Dynamic force
             
             return Fapplied;
         }
 
-        public double Friction1(double credits, double shift)
-        {
-            /*
-             * friction coeficient
-             * should friction be calculated from position???
-             * */
-            
-            Calc calc = mind.calc;
-
-            double _c = 10.0d - credits;
-            double x = 5.0d - _c + shift;
-            double friction = calc.Logistic(x);
-
-            return friction;
-        }
-
-        public void CalcPattern2(MECHVERSION version, int cycles)
-        {
-            if (mind.current != "current")
-                return;
-
-            if (version != MECHVERSION.MOODGOOD)
-                return;
-
-            throw new NotImplementedException();
-        }
-
-        public void CalcPattern3(MECHVERSION version, int cycles)
-        {
-            if (mind.current != "current")
-                return;
-
-            if (version != MECHVERSION.MOODBAD)
-                return;
-
-            throw new NotImplementedException();
-        }          
 
         //NewtonForce
         //public double Variable(UNIT curr)
