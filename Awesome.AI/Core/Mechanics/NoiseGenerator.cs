@@ -136,7 +136,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyStatic()
         {
-            double acc = HighestVar; //divided by 10 for aprox acc
+            double acc = HighestVar / 10; //divided by 10 for aprox acc
             double m = 500.0d;
             
             double Fapplied = m * acc; //force, left

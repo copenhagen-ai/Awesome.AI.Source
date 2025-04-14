@@ -77,7 +77,7 @@ namespace Awesome.AI.Variables
         public const double RATIO = 50d;
         public const int FIRST_RUN = 5;
         public const int NUMBER_OF_UNITS = 10;
-        public const int RUNTIME = 2;                       //minutes
+        public const int RUNTIME = 3;                       //minutes
 
         public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
 

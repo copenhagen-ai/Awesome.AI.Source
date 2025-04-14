@@ -49,7 +49,8 @@ namespace Awesome.AI.Core
         public MECHANICS _mech;
         public HARDDOWN goodbye = HARDDOWN.NO;
 
-        private bool do_process = false;
+        public static bool ok { get; set; }
+        private bool do_process{ get; set; }
                 
         public int epochs = 1;
         public int cycles = 0; // Go TRON!
@@ -129,6 +130,9 @@ namespace Awesome.AI.Core
                 PostRun(true);
 
                 theanswer = UNIT.Create(this, -1.0d, "I dont Know", "null", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
+
+                ok = true;
+                do_process = false;
             
                 ProcessPass();
                         
@@ -166,8 +170,6 @@ namespace Awesome.AI.Core
             ;
         }
         
-        public bool run = true;
-        public bool ok = true;
         public void Run(object sender, MicroLibrary.MicroTimerEventArgs timerEventArgs)
         {
             cycles++;
@@ -175,12 +177,7 @@ namespace Awesome.AI.Core
 
             if (!ok)
                 return;
-                
-            if (!run)
-                return;
-
-            run = false;
-
+            
             Lists();
 
             if (do_process)
@@ -214,13 +211,13 @@ namespace Awesome.AI.Core
                 string msg = "run - " + _e.Message + "\n";
                 msg += _e.StackTrace;
                 XmlHelper.WriteError(msg);
+
+                ok = false;
             }
             finally
             {
                 if (_pro) 
-                    cycles = 0;
-
-                run = true;
+                    cycles = 0;                
             }
         }
 
@@ -297,12 +294,13 @@ namespace Awesome.AI.Core
             mood.MoodOK(_pro);
         }
 
+        //private static bool _ok = true;
         private async void ProcessPass()
         {
-            while (true)
+            while (ok)
             {
-                if (current == "noise")
-                    continue;
+                //if (current == "noise")
+                //    continue;
 
                 do_process = true;
                 await Task.Delay(2023);
