@@ -117,7 +117,7 @@ namespace Awesome.AI.Core.Mechanics
             double beta = 0.02d;                // Friction coefficient
             double dt = 0.1d;                   // Time step (s)
             double eta = 0.5d;                  // Random noise amplitude for wind force
-            double m = 0.5d;                    // Ball mass (kg)
+            double m = 0.25d;                    // Ball mass (kg)
 
             double t = cycles * dt;
 
@@ -160,6 +160,7 @@ namespace Awesome.AI.Core.Mechanics
             if (version != PATTERN.MOODGENERAL)
                 return;
 
+            pattern_curr = version;
             Calc(version, cycles);
         }
 
@@ -171,6 +172,7 @@ namespace Awesome.AI.Core.Mechanics
             if (version != PATTERN.MOODGOOD)
                 return;
 
+            pattern_curr = version;
             Calc(version, cycles);
         }
 
@@ -182,14 +184,18 @@ namespace Awesome.AI.Core.Mechanics
             if (version != PATTERN.MOODBAD)
                 return;
 
+            pattern_curr = version;
             Calc(version, cycles);
         }
 
+        PATTERN pattern_curr = PATTERN.NONE;
+        PATTERN pattern_prev = PATTERN.NONE;
         private void Reset1()
         {
-            int _rand = mind.rand.MyRandomInt(1, 5)[0];
-            bool rand_sample = _rand > 4;
-            if (!rand_sample) return;
+            if (pattern_prev == pattern_curr)
+                return;
+
+            pattern_prev = pattern_curr;
 
             x = 5.0;
             velocity = 0.0d;
@@ -199,8 +205,8 @@ namespace Awesome.AI.Core.Mechanics
 
             posxy = Constants.STARTXY;//10;
 
-            m_out_high = -1000.0d;
-            m_out_low = 1000.0d;
+            //m_out_high = -1000.0d;
+            //m_out_low = 1000.0d;
             //d_out_high = -1000.0d;
             //d_out_low = 1000.0d;
             posx_high = -1000.0d;
@@ -227,8 +233,8 @@ namespace Awesome.AI.Core.Mechanics
             {
                 case PATTERN.MOODGENERAL: return (Math.Sin(omega * t) + 1.0d) / 2.0d;
                 case PATTERN.MOODGOOD: return 0.5d + (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.5d;
-                case PATTERN.MOODBAD: return (Math.Sin(omega * t) - 1.0d) / 2.0d * 0.5d;
-                default: throw new Exception("TugOfWar, Sine");
+                case PATTERN.MOODBAD: return (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.5d;
+                default: throw new Exception("BallOnHill, Sine");
             }
         }
 

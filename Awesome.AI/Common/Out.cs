@@ -59,9 +59,7 @@ namespace Awesome.AI.Web.AI.Common
             if(mind.current == "noise")
                 return;
 
-            int _rand = mind.rand.MyRandomInt(1, 200)[0];
-            bool rand_sample = _rand > 190;
-            if (!rand_sample) return;
+            if (!mind.calc.IsRandomSample(200, 10)) return;
 
             if (count > 1)
                 count = 0;

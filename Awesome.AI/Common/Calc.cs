@@ -11,6 +11,14 @@ namespace Awesome.AI.Common
             this.mind = mind;
         }
 
+        public bool IsRandomSample(int count, int gt)
+        {
+            int _rand = mind.rand.MyRandomInt(1, count)[0];
+            bool rand_sample = _rand > (count - gt);
+
+            return rand_sample;
+        }
+
         public double Normalize(double value, double valmin, double valmax)
         {
             double normalized = (value - valmin) / (valmax - valmin);

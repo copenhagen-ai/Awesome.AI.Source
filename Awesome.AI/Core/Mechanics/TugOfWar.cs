@@ -128,7 +128,7 @@ namespace Awesome.AI.Core.Mechanics
             double F1 = ApplyStatic1(Fmax);                                     // Constant force in Newtons (e.g., truck pulling)
             double F2 = ApplyDynamic1(version, Fmax, t, omega, eta);
             double friction = frictionForce * Math.Sign(velocity);              // Friction opposes motion
-            double Fnet = F1 - F2 - friction;                                   // Net force with F1 constant and F2 dynamic
+            double Fnet = -F1 + F2 - friction;                                   // Net force with F1 constant and F2 dynamic
 
             // If friction is stronger than applied force and velocity is near zero, stop motion
             if (Math.Abs(Fnet) < frictionForce && Math.Abs(velocity) < 0.01)
@@ -159,6 +159,7 @@ namespace Awesome.AI.Core.Mechanics
             if (version != PATTERN.MOODGENERAL)
                 return;
 
+            pattern_curr = version;
             Calc(version, cycles);
         }
 
@@ -170,6 +171,7 @@ namespace Awesome.AI.Core.Mechanics
             if (version != PATTERN.MOODGOOD)
                 return;
 
+            pattern_curr = version;
             Calc(version, cycles);
         }
 
@@ -181,11 +183,19 @@ namespace Awesome.AI.Core.Mechanics
             if (version != PATTERN.MOODBAD)
                 return;
 
+            pattern_curr = version;
             Calc(version, cycles);
         }
 
+        PATTERN pattern_curr = PATTERN.NONE;
+        PATTERN pattern_prev = PATTERN.NONE;
         private void Reset1()
         {
+            if (pattern_prev == pattern_curr)
+                return;
+
+            pattern_prev = pattern_curr;
+
             velocity = 0.0d;
             p_curr = 0.0d;
             p_delta = 0.0d;
@@ -193,8 +203,8 @@ namespace Awesome.AI.Core.Mechanics
 
             posxy = Constants.STARTXY;//10;
 
-            m_out_high = -1000.0d;
-            m_out_low = 1000.0d;
+            //m_out_high = -1000.0d;
+            //m_out_low = 1000.0d;
             //d_out_high = -1000.0d;
             //d_out_low = 1000.0d;
             posx_high = -1000.0d;
@@ -218,9 +228,9 @@ namespace Awesome.AI.Core.Mechanics
         {
             switch (version)
             {
-                case PATTERN.MOODGENERAL: return Math.Sin(omega * t);
-                case PATTERN.MOODGOOD: return (Math.Sin(omega * t) + 1.0d) / 2.0d;
-                case PATTERN.MOODBAD: return (Math.Sin(omega * t) - 1.0d) / 2.0d;
+                case PATTERN.MOODGENERAL: return (Math.Sin(omega * t) + 1.0d) / 2.0d;
+                case PATTERN.MOODGOOD: return 0.5d + (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.5d;
+                case PATTERN.MOODBAD: return (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.5d;
                 default: throw new Exception("TugOfWar, Sine");
             }
         }

@@ -103,13 +103,13 @@ namespace Awesome.AI.Core
             double f_h = mech.HighestVar;
             double f_l = mech.LowestVar;
 
-            //double _v = mech.momentum;
-            //double v_h = mech.m_out_high;
-            //double v_l = mech.m_out_low;
+            double _v = mech.p_curr;
+            double v_h = mech.m_out_high;
+            double v_l = mech.m_out_low;
 
-            double _v = mech.p_delta;
-            double v_h = mech.d_out_high;
-            double v_l = mech.d_out_low;
+            //double _v = mech.p_delta;
+            //double v_h = mech.d_out_high;
+            //double v_l = mech.d_out_low;
 
             double nrg = mind.calc.NormalizeRange(_v, v_l, v_h, f_l, f_h);
 
