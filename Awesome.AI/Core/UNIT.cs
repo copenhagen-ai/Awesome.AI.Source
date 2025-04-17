@@ -153,7 +153,7 @@ namespace Awesome.AI.Core
             return _w;
         }
 
-        public void Update(double sign, double dist)
+        public void AdjustIndex(double sign, double dist)
         {
             if (dist < Constants.ALPHA)
                 return;

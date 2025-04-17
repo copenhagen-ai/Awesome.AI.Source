@@ -102,7 +102,7 @@ namespace Awesome.AI.Core
             double dist = DistAbs(res, near);
 
             if (!(above.IsNull() || below.IsNull()))
-                res.Update(sign, dist);
+                res.AdjustIndex(sign, dist);
 
             return res;
         }
