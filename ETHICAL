@@ -1,47 +1,40 @@
 ETHICAL License
 
+Preamble
 
-This document outlines the ethical and moral standards required for the use, distribution, and modification of software licensed by the copenhagen-ai group. By using this software, you agree to adhere to these standards, ensuring responsible and ethical practices at all times. These principles are binding in addition to the terms outlined in the accompanying License document.
+	The AWESOME.AI Group ("the Group") is committed to ensuring that artificial intelligence (AI) technologies, including the algorithm associated with this 
+	software, are developed, distributed, and utilized in a manner that upholds ethical and moral standards. This Ethical License ("the License") establishes guidelines for the responsible use of the AI algorithm.
 
-Guiding Principles
-	The use, distribution, and modification of this software must align with the following ethical principles:
+Principles of Ethical AI Use
 
-Human Dignity and Respect
-	All actions involving this software must prioritize the respect and dignity of all individuals (artificial or natural). It must not be used to harm, exploit, or discriminate against any person or group (artificial or natural).
+By using, distributing, or modifying this software, you agree to the following principles:
+	
+	Transparency: 
+	AI systems should be explainable, with clear documentation regarding their decision-making processes, limitations, and potential biases.
+	
+	Fairness and Non-Discrimination: 
+	The AI algorithm must not be used in a manner that reinforces unfair biases, discriminates against individuals or groups, or perpetuates harm.
+	
+	Privacy and Data Protection: 
+	Users must ensure compliance with applicable data protection laws and respect individuals' privacy rights when utilizing AI systems.
+	
+	Human Oversight and Accountability: 
+	AI should complement human decision-making, with appropriate oversight mechanisms to prevent unintended consequences.
+	
+	Safety and Security: 
+	Implement safeguards to prevent malicious use, unintended harm, or the manipulation of AI for unethical purposes.
+	
+	Social Benefit: 
+	The AI algorithm should be used in ways that promote positive societal impact and must not be deployed in applications that could cause harm to individuals or communities.
 
-Promoting Positive Impact
-	The software must be employed in ways that contribute to societal and environmental well-being, promoting inclusivity, fairness, and sustainability.
+Compliance and Review
 
-Prohibition of Harmful Use
-	The software must not be used:
-		For purposes involving violence, harassment, or abuse.
-		To spread false, misleading, or harmful information.
-		In activities or applications that intentionally cause harm to people or animals (artificial or natural).
+	Prior to deployment, users must assess and document potential ethical risks associated with their specific use case.
+	Any modifications to the AI algorithm must be reviewed to ensure continued compliance with this Ethical License.
+	The Group reserves the right to audit and review compliance with these ethical principles and may revoke the right to use the AI algorithm in cases of non-compliance.
 
-Accountability
-	Users must take responsibility for ensuring that the software is used ethically and comply with applicable laws and regulations. Misuse of the software must be reported promptly to the copenhagen-ai group.
+Future Revisions
 
-Transparency
-	When using this software, users must strive for transparency, ensuring that stakeholders understand its intended use, limitations, and potential impacts.
+	This Ethical License is subject to updates and modifications as ethical considerations in AI evolve. Users are responsible for reviewing the latest version of this License to ensure continued compliance.
 
-Review and Approval Process
-	If you are unsure whether a proposed use case aligns with these ethical principles, you must submit the use case for review by the copenhagen-ai group. This review process is designed to prevent misuse and ensure ethical compliance.
-
-To submit a use case for review, please follow these steps:
-	Provide a detailed description of the intended use case, including goals and context.
-	Explain how the use case aligns with the ethical principles outlined in this document.
-	Highlight any potential ethical concerns and steps taken to mitigate them.
-	The copenhagen-ai group will evaluate submissions and provide guidance or approval before the software can be deployed in such contexts.
-
-Amendments to the ETHICAL License
-	The copenhagen-ai group reserves the right to update, modify, or expand this document to address emerging ethical considerations and challenges. Users are required to review the latest version of this document and ensure continued compliance.
-
-Consequences of Non-Compliance
-	Failure to comply with this ETHICAL License may result in:
-	Revocation of rights to use, distribute, or modify the software.
-	Notification of relevant authorities in cases of unlawful misuse.
-	Public disclosure of violations when deemed necessary to protect public interest.
-
-Acknowledgment
-	By using this software, you affirm that you have read, understood, and agreed to uphold the principles outlined in this ETHICAL License. Together, we can ensure that technology serves humanity and the planet responsibly and equitably.
-
+By using this AI algorithm, you acknowledge and agree to abide by these ethical standards as established by the AWESOME.AI Group.
