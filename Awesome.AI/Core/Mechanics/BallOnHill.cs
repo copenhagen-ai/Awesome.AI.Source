@@ -26,8 +26,6 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            posxy = Constants.STARTXY;//10;
-
             m_out_high = -1000.0d;
             m_out_low = 1000.0d;
             d_out_high = -1000.0d;
@@ -46,15 +44,8 @@ namespace Awesome.AI.Core.Mechanics
             
             get 
             {
-                //if (Constants.Logic == LOGICTYPE.BOOLEAN)
-                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    //return p_delta.ToDownZero(mind);
-
-                //if (Constants.Logic == LOGICTYPE.QUBIT)
-                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    return p_delta.ToDownZero(mind);
-
-                throw new Exception("HardMom");
+                //return p_delta.ToDownPrev(p_delta_prev, mind);
+                return p_delta.ToDownZero(mind);
             }
         }
 
@@ -68,15 +59,11 @@ namespace Awesome.AI.Core.Mechanics
             get { return Variable(UNIT.GetHigh); }
         }
 
-        private double posxy { get; set; }
         public double POS_XY
         {
             get
             {
-                //its a hack, yes its cheating..
-                //double boost = mind.parms.boost;
-
-                posxy = x;
+                double posxy = position_x;
 
                 if (posxy <= 0.1d && mind.goodbye.IsNo())
                     posxy = Constants.VERY_LOW;
@@ -104,10 +91,12 @@ namespace Awesome.AI.Core.Mechanics
             return _var;
         }
 
+        private double velocity = 0.0;
+        private double position_x = Constants.STARTXY;
         private void Calc(PATTERN version, int cycles)
         {
             if (cycles == 1)
-                Reset1();
+                Reset();
 
             // Constants
             double a = 0.1d;                    // Parabola coefficient (hill steepness)
@@ -117,13 +106,13 @@ namespace Awesome.AI.Core.Mechanics
             double beta = 0.02d;                // Friction coefficient
             double dt = 0.1d;                   // Time step (s)
             double eta = 0.5d;                  // Random noise amplitude for wind force
-            double m = 0.25d;                    // Ball mass (kg)
+            double m = 0.25d;                   // Ball mass (kg)
 
             double t = cycles * dt;
 
             // Compute forces
             double Fx = ApplyDynamic(version, omega, t, F0, eta); // Wind force
-            double Fgravity = ApplyStatic(m, g, a, x);
+            double Fgravity = ApplyStatic(m, g, a, position_x);
             double Ffriction = -beta * velocity;
 
             // Compute acceleration along the tangent
@@ -131,7 +120,7 @@ namespace Awesome.AI.Core.Mechanics
 
             // Update velocity and position
             velocity += a_tangent * dt;
-            x += velocity * dt;
+            position_x += velocity * dt;
 
             p_prev = p_curr;
             p_curr = m * velocity;
@@ -142,16 +131,8 @@ namespace Awesome.AI.Core.Mechanics
 
             if (p_delta <= d_out_low) d_out_low = p_delta;
             if (p_delta > d_out_high) d_out_high = p_delta;
-
-            if (x >= 10.0d) x = 10.0d;
-            //else ;
-
-            if (x < 0.0d) x = 0.0d;
-            //else ;
         }
 
-        private double velocity = 0.0;
-        private double x = 5.0;
         public void CalcPattern1(PATTERN version, int cycles)
         {
             if (mind.current != "current")
@@ -190,20 +171,18 @@ namespace Awesome.AI.Core.Mechanics
 
         PATTERN pattern_curr = PATTERN.NONE;
         PATTERN pattern_prev = PATTERN.NONE;
-        private void Reset1()
+        private void Reset()
         {
             if (pattern_prev == pattern_curr)
                 return;
 
             pattern_prev = pattern_curr;
 
-            x = 5.0;
+            position_x = Constants.STARTXY;
             velocity = 0.0d;
             p_curr = 0.0d;
             p_delta = 0.0d;
             p_prev = 0.0d;
-
-            posxy = Constants.STARTXY;//10;
 
             //m_out_high = -1000.0d;
             //m_out_low = 1000.0d;
@@ -213,7 +192,7 @@ namespace Awesome.AI.Core.Mechanics
             posx_low = 1000.0d;
         }
 
-        private double GetRandomNoise1(double noiseAmplitude)
+        private double GetRandomNoise(double noiseAmplitude)
         {
             UNIT curr_unit = mind.unit["noise"];
 
@@ -222,7 +201,7 @@ namespace Awesome.AI.Core.Mechanics
 
             double _var = curr_unit.Variable;
 
-            double rand = mind.calc.NormalizeRange(_var, 0.0d, 100.0d, -1.0d, 1.0d);
+            double rand = mind.calc.Normalize(_var, 0.0d, 100.0d, -1.0d, 1.0d);
             
             return rand * noiseAmplitude;// Random value in range [-amplitude, amplitude]
         }
@@ -252,9 +231,9 @@ namespace Awesome.AI.Core.Mechanics
             if(mind.goodbye.IsYes())
                 return 0.0d;
 
-            double Fx = F0 * Sine(version, t, omega) + GetRandomNoise1(eta); // Wind force
+            double Fx = F0 * Sine(version, t, omega) + GetRandomNoise(eta); // Wind force
 
-            if (Fx < 0.0d)
+            if (Fx <= 0.0d)
                 Fx = 0.0d;
             
             return Fx;

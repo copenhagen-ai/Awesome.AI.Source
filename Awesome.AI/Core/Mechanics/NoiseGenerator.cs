@@ -70,7 +70,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             get
             {
-                return -1d;
+                throw new NotImplementedException("NoiseGenerator, POS_XY");
             }
         }
 
@@ -142,7 +142,7 @@ namespace Awesome.AI.Core.Mechanics
             double Fapplied = m * acc; //force, left
             
             if (Fapplied <= 0.0d)
-                Fapplied = Constants.VERY_LOW;
+                Fapplied = 0.0d;
 
             return Fapplied;
         }
@@ -162,12 +162,12 @@ namespace Awesome.AI.Core.Mechanics
             double m = 500.0d;
 
             if (acc <= 0.0d)
-                acc = Constants.VERY_LOW;// jajajaa
+                acc = 0.0d;// jajajaa
                         
             double Fapplied = m * acc; //force, left
             
             if (Fapplied <= 0.0d)
-                Fapplied = Constants.VERY_LOW;
+                Fapplied = 0.0d;
 
             return Fapplied;
         }
@@ -190,12 +190,12 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern2(PATTERN version, int cycles)
         {
-            return;
+            throw new NotImplementedException("NoiseGenerator, CalcPattern2");
         }
 
         public void CalcPattern3(PATTERN version, int cycles)
         {
-            return;
+            throw new NotImplementedException("NoiseGenerator, CalcPattern3");
         }          
 
         //NewtonForce

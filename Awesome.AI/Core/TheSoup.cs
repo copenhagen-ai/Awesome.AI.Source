@@ -1,9 +1,10 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
+using Awesome.AI.Variables;
 
 namespace Awesome.AI.Core
 {
-    public class TheMatrix
+    public class TheSoup
     {
         /*
          * as it is now, it is very simple just up or down
@@ -21,8 +22,8 @@ namespace Awesome.AI.Core
          * */
 
         private TheMind mind;
-        private TheMatrix() { }
-        public TheMatrix(TheMind mind)
+        private TheSoup() { }
+        public TheSoup(TheMind mind)
         {
             this.mind = mind;
         }
@@ -76,7 +77,7 @@ namespace Awesome.AI.Core
             if (units == null)
                 throw new ArgumentNullException();
 
-            double near = NearEnergy();
+            double near = Near();
 
             units = units.OrderByDescending(x => x.Variable).ToList();
 
@@ -86,18 +87,42 @@ namespace Awesome.AI.Core
             if (above.IsNull() && below.IsNull())
                 return null;
 
+            UNIT res = null;
+
             if (above.IsNull())
-                return below;
+                res = below;
 
             if (below.IsNull())
-                return above;
+                res = above;
 
-            UNIT res = near - above.Variable < below.Variable - near ? above : below;
+            if(res == null)
+                res = near - above.Variable < below.Variable - near ? above : below;
+
+            double sign = res == below ? 1d : -1d;
+            double dist = DistAbs(res, near);
+
+            if (!(above.IsNull() || below.IsNull()))
+                res.Update(sign, dist);
 
             return res;
         }
 
-        private double NearEnergy()
+        private double DistAbs(UNIT unit, double near)
+        {
+            IMechanics mech = mind.mech[mind.current];
+            
+            double v_h = mech.m_out_high;
+            double v_l = mech.m_out_low;
+
+            double near_norm = mind.calc.Normalize(near, v_l, v_h, 0.0d, 100.0d);
+            double idx = unit.Index;
+            
+            double res = Math.Abs(idx -  near_norm);
+
+            return res;
+        }
+
+        private double Near()
         {
             IMechanics mech = mind.mech[mind.current];
             double f_h = mech.HighestVar;
@@ -111,8 +136,8 @@ namespace Awesome.AI.Core
             //double v_h = mech.d_out_high;
             //double v_l = mech.d_out_low;
 
-            double nrg = mind.calc.NormalizeRange(_v, v_l, v_h, f_l, f_h);
-
+            double nrg = mind.calc.Normalize(_v, v_l, v_h, f_l, f_h);
+            
             return nrg;
         }
 
@@ -128,7 +153,7 @@ namespace Awesome.AI.Core
             double v_h = mech.d_out_high;
             double v_l = mech.d_out_low;
 
-            double pct = mind.calc.NormalizeRange(_v, v_l, v_h, 0.0d, 100.0d);
+            double pct = mind.calc.Normalize(_v, v_l, v_h, 0.0d, 100.0d);
 
             return pct;
         }

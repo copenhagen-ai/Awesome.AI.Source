@@ -17,7 +17,7 @@ namespace Awesome.AI.Core
 
     public class TheMind
     {
-        public TheMatrix matrix;
+        public TheSoup matrix;
         public Core core;
         public Memory mem;
         public QuickDecision _quick;
@@ -91,7 +91,7 @@ namespace Awesome.AI.Core
                 mech["current"] = parms["current"].GetMechanics(_mech);
                 mech["noise"] = parms["noise"].GetMechanics(MECHANICS.NOISE);
 
-                matrix = new TheMatrix(this);
+                matrix = new TheSoup(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
                 process = new Process(this);

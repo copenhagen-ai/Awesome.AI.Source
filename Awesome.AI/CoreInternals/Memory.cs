@@ -370,19 +370,19 @@ namespace Awesome.AI.CoreInternals
             switch (tone)
             {
                 case TONE.HIGH:
-                    _rand = mind.calc.NormalizeRange(_rand, 0.0d, 1.0d, 50.0d, 100.0d);
+                    _rand = mind.calc.Normalize(_rand, 0.0d, 1.0d, 50.0d, 100.0d);
                     _rand = _rand.Convert(mind);
                     break;
                 case TONE.LOW:
-                    _rand = mind.calc.NormalizeRange(_rand, 0.0d, 1.0d, 0.0d, 50.0d);
+                    _rand = mind.calc.Normalize(_rand, 0.0d, 1.0d, 0.0d, 50.0d);
                     _rand = _rand.Convert(mind);
                     break;
                 case TONE.MID:
-                    _rand = mind.calc.NormalizeRange(_rand, 0.0d, 1.0d, 25.0d, 75.0d);
+                    _rand = mind.calc.Normalize(_rand, 0.0d, 1.0d, 25.0d, 75.0d);
                     _rand = _rand.Convert(mind);
                     break;
                 case TONE.RANDOM:
-                    _rand = mind.calc.NormalizeRange(_rand, 0.0d, 1.0d, 0.0d, 100.0d);
+                    _rand = mind.calc.Normalize(_rand, 0.0d, 1.0d, 0.0d, 100.0d);
                     _rand = _rand.Convert(mind);
                     break;
             }

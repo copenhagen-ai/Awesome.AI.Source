@@ -153,6 +153,16 @@ namespace Awesome.AI.Core
             return _w;
         }
 
+        public void Update(double sign, double dist)
+        {
+            if (dist < Constants.ALPHA)
+                return;
+
+            double rand = mind.rand.MyRandomDouble(10)[5];
+
+            Index += rand * Constants.ETA * sign;
+        }
+
         public static UNIT GetHigh
         {
             get

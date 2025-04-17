@@ -69,20 +69,8 @@ namespace Awesome.AI.Variables
                     high_at_zero = true;
                     update_cred = 0.030d;
 
-                    //schedule_low = -1d;
-                    //schedule_mid = -1d;
-                    //schedule_high = -1d;
-
                     //hack = HACKMODES.NOHACK;                                          //not used any more
                     //shift = -2.0d;
-
-                    /*
-                     * boost is life span
-                     * as it seem momentum seem to go towards below 0.0
-                     * boost should be as close 1.0, without dying to fast
-                     * */
-
-                    boost = 1E-1d;
 
                     break;
                 case MECHANICS.GRAVITY:
@@ -104,14 +92,6 @@ namespace Awesome.AI.Variables
 
                     //shift = 0.0d;
 
-                    /*
-                        * boost is life span
-                        * as it seem momentum seem to go towards below 0.0
-                        * boost should be as close 1.0, without dying to fast
-                        * */
-
-                    boost = 1E-1d;
-
                     break;
                 case MECHANICS.TUGOFWAR:
                     _mech = new TugOfWar(mind, this);
@@ -132,14 +112,6 @@ namespace Awesome.AI.Variables
 
                     //shift = -2.0d;
 
-                    /*
-                     * boost is life span
-                     * as it seem momentum seem to go towards below 0.0
-                     * boost should be as close 1.0, without dying to fast
-                     * */
-
-                    boost = 1E-2d;
-
                     break;
                 case MECHANICS.HILL:
                     _mech = new BallOnHill(mind, this);
@@ -155,14 +127,6 @@ namespace Awesome.AI.Variables
 
                     //hack = HACKMODES.NOHACK;                                          //obsolete
                     //shift = 0.0d;                    
-
-                    /*
-                        * boost is life span?
-                        * I dont know if boost acts the same for this system
-                        * boost should be as close 1.0, without dying to fast
-                        * */
-
-                    boost = 1.0E0d;
 
                     break;
                 default: throw new Exception("GetMechanics");
@@ -198,7 +162,6 @@ namespace Awesome.AI.Variables
         // should it be 200, 1000 or more???
         public double low_cut;
         public double update_cred;
-        public double boost;//dimm the fluctuations
 
         private bool high_at_zero { get; set; }
 
@@ -206,6 +169,7 @@ namespace Awesome.AI.Variables
         public double schedule_mid { get; set; }
         public double schedule_high { get; set; }
 
+        //public double boost;//dimm the fluctuations
         //public double shift;
         //public double delta_time;
         //public double mass;

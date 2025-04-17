@@ -24,7 +24,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            posxy = Constants.STARTXY;//10;
+            position_x = Constants.STARTXY;//10;
 
             m_out_high = -1000.0d;
             m_out_low = 1000.0d;
@@ -43,15 +43,8 @@ namespace Awesome.AI.Core.Mechanics
         {
             get 
             {
-                //if (Constants.Logic == LOGICTYPE.BOOLEAN)
-                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    //return p_delta.ToDownZero(mind);
-
-                //if (Constants.Logic == LOGICTYPE.QUBIT)
-                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    return p_delta.ToDownZero(mind);
-
-                throw new Exception("HardMom");
+                //return p_delta.ToDownPrev(p_delta_prev, mind);
+                return p_delta.ToDownZero(mind);
             }            
         }
 
@@ -65,30 +58,23 @@ namespace Awesome.AI.Core.Mechanics
             get { return Variable(UNIT.GetHigh); }
         }
 
-        private double posxy { get; set; }
+        
         public double POS_XY
         {
             get
             {
-                ////its a hack, yes its cheating..
-                //double boost = mind.goodbye.IsNo() ? mind.parms[mind.current].boost : 1.0d;
+                double x_meter = position_x;
 
-                ////posxy = 10.0d + (boost * momentum);//dosnt seem right
-                //posxy += (boost * p_delta);
-                ////posxy = posx + (boost * velocity);
-                ////posxy = 10.0d + (boost * momentum);
+                if (x_meter <= 0.1d && mind.goodbye.IsNo())
+                    x_meter = Constants.VERY_LOW;
 
-                //if (posxy < Constants.LOWXY)
-                //    posxy = Constants.LOWXY;
-                //if (posxy > Constants.HIGHXY)
-                //    posxy = Constants.HIGHXY;
+                if (x_meter < Constants.LOWXY) x_meter = Constants.LOWXY;
+                if (x_meter > Constants.HIGHXY) x_meter = Constants.HIGHXY;
 
-                //if (posxy <= posx_low) posx_low = posxy;
-                //if (posxy > posx_high) posx_high = posxy;
+                if (x_meter <= posx_low) posx_low = x_meter;
+                if (x_meter > posx_high) posx_high = x_meter;
 
-                //return posxy;
-
-                return -1d;
+                return x_meter;
             }
         }
 
@@ -105,10 +91,12 @@ namespace Awesome.AI.Core.Mechanics
             return _var;
         }
 
+        private double velocity = 0.0; // Initial velocity in m/s
+        private double position_x = 5.0; // Initial position in meters
         private void Calc(PATTERN version, int cycles)
         {
             if (cycles == 1)
-                Reset1();
+                Reset();
 
             double Fmax = 5000.0d;                                              // Max oscillating force for F2
             double omega = 2 * Math.PI * 0.5;                                   // Frequency (0.5 Hz)
@@ -125,8 +113,8 @@ namespace Awesome.AI.Core.Mechanics
 
             double t = cycles * dt;
 
-            double F1 = ApplyStatic1(Fmax);                                     // Constant force in Newtons (e.g., truck pulling)
-            double F2 = ApplyDynamic1(version, Fmax, t, omega, eta);
+            double F1 = ApplyStatic(Fmax);                                     // Constant force in Newtons (e.g., truck pulling)
+            double F2 = ApplyDynamic(version, Fmax, t, omega, eta);
             double friction = frictionForce * Math.Sign(velocity);              // Friction opposes motion
             double Fnet = -F1 + F2 - friction;                                   // Net force with F1 constant and F2 dynamic
 
@@ -139,6 +127,7 @@ namespace Awesome.AI.Core.Mechanics
 
             double acceleration = Fnet / totalMass;
             velocity += acceleration * dt;                                      // Integrate acceleration to get velocity
+            position_x += velocity * dt; // Integrate velocity to get position
             p_curr = totalMass * velocity;
             p_delta = p_curr - p_prev;                                          // Compute change in momentum
             p_prev = p_curr;                                                    // Store current momentum for next iteration
@@ -150,7 +139,6 @@ namespace Awesome.AI.Core.Mechanics
             if (p_delta > d_out_high) d_out_high = p_delta;
         }
 
-        private double velocity = 0.0;
         public void CalcPattern1(PATTERN version, int cycles)
         {
             if (mind.current != "current")
@@ -189,7 +177,7 @@ namespace Awesome.AI.Core.Mechanics
 
         PATTERN pattern_curr = PATTERN.NONE;
         PATTERN pattern_prev = PATTERN.NONE;
-        private void Reset1()
+        private void Reset()
         {
             if (pattern_prev == pattern_curr)
                 return;
@@ -197,11 +185,10 @@ namespace Awesome.AI.Core.Mechanics
             pattern_prev = pattern_curr;
 
             velocity = 0.0d;
+            position_x = Constants.STARTXY;
             p_curr = 0.0d;
             p_delta = 0.0d;
             p_prev = 0.0d;
-
-            posxy = Constants.STARTXY;//10;
 
             //m_out_high = -1000.0d;
             //m_out_low = 1000.0d;
@@ -211,7 +198,7 @@ namespace Awesome.AI.Core.Mechanics
             posx_low = 1000.0d;
         }
 
-        private double GetRandomNoise1()
+        private double GetRandomNoise()
         {
             UNIT curr_unit = mind.unit["noise"];
 
@@ -220,7 +207,7 @@ namespace Awesome.AI.Core.Mechanics
 
             double _var = curr_unit.Variable;
 
-            return mind.calc.NormalizeRange(_var, 0.0d, 100.0d, -1.0d, 1.0d);
+            return mind.calc.Normalize(_var, 0.0d, 100.0d, -1.0d, 1.0d);
             //return mind.rand.RandomDouble(-1d, 1d)); // Random value between -1 and 1
         }
 
@@ -236,9 +223,9 @@ namespace Awesome.AI.Core.Mechanics
         }
 
         /*
-         * car left
+         * force left
          * */
-        public double ApplyStatic1(double Fmax)
+        public double ApplyStatic(double Fmax)
         {
             double Fapplied = Fmax * Constants.BASE_REDUCTION;
 
@@ -246,11 +233,14 @@ namespace Awesome.AI.Core.Mechanics
         }
 
         /*
-         * car right
+         * force right
          * */
-        public double ApplyDynamic1(PATTERN version, double Fmax, double t, double omega, double eta)
+        public double ApplyDynamic(PATTERN version, double Fmax, double t, double omega, double eta)
         {
-            double Fapplied = Fmax * (Sine(version, t, omega) + eta * GetRandomNoise1());  // Dynamic force
+            if (mind.goodbye.IsYes())
+                return 0.0d;
+
+            double Fapplied = Fmax * (Sine(version, t, omega) + eta * GetRandomNoise());  // Dynamic force
             
             return Fapplied;
         }

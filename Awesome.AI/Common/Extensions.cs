@@ -51,7 +51,7 @@ namespace Awesome.AI.Common
             double _l = 0.0d;
             double _h = 100.0d;
             
-            double res = mind.calc.NormalizeRange(_x, _l, _h, Constants.MIN, Constants.MAX);
+            double res = mind.calc.Normalize(_x, _l, _h, Constants.MIN, Constants.MAX);
 
             return res;
         }
@@ -72,7 +72,7 @@ namespace Awesome.AI.Common
             double high = mind.mech[mind.current].d_out_high;
             double low = mind.mech[mind.current].d_out_low;
 
-            double norm = mind.calc.NormalizeRange(deltaMom, low, high, 0.0d, 100.0d);
+            double norm = mind.calc.Normalize(deltaMom, low, high, 0.0d, 100.0d);
 
             //if (mind.parms.hack == HACKMODES.HACK)
             //    norm = 100.0d - norm;

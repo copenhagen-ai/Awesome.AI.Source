@@ -73,7 +73,7 @@ namespace Awesome.AI.Web.AI.Common
             if (mind._mech == MECHANICS.HILL)
                 position = $"{mind.mech[mind.current].POS_XY}";
             if (mind._mech == MECHANICS.TUGOFWAR)
-                position = $"{mind.pos.Pos}";
+                position = $"{mind.mech[mind.current].POS_XY}";
             if (mind._mech == MECHANICS.GRAVITY)
                 position = $"{mind.pos.Pos}";
             ratio_yes = $"{mind.dir.Count(HARDDOWN.YES)}";

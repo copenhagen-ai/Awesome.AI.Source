@@ -6,26 +6,25 @@ namespace Awesome.AI.Common
     {
         private TheMind mind;
         private Calc() { }
-        public Calc(TheMind mind) 
-        { 
+        public Calc(TheMind mind)
+        {
             this.mind = mind;
+        }
+
+        public bool Chance(int count, int gt)
+        {
+            int rand = mind.rand.MyRandomInt(1, count)[0];
+            bool ok = rand > (count - gt);
+
+            return ok;
         }
 
         public bool IsRandomSample(int count, int gt)
         {
-            int _rand = mind.rand.MyRandomInt(1, count)[0];
-            bool rand_sample = _rand > (count - gt);
-
-            return rand_sample;
+            return Chance(count, gt);
         }
 
-        public double Normalize(double value, double valmin, double valmax)
-        {
-            double normalized = (value - valmin) / (valmax - valmin);
-            return normalized;
-        }
-
-        public double NormalizeRange(double val, double valmin, double valmax, double ranmin, double ranmax)
+        public double Normalize(double val, double valmin, double valmax, double ranmin = 0.0d, double ranmax = 1.0d)
         {
             double normalized = (((val - valmin) / (valmax - valmin)) * (ranmax - ranmin)) + ranmin;
             return normalized;
@@ -37,46 +36,15 @@ namespace Awesome.AI.Common
             return denormalized;
         }
 
-        public bool MyChanceTo100(double val, bool gt = true)
+        public double ToPercent1(double _this, double _from)
         {
-            int[] num = mind.rand.MyRandomInt(1, 100);
-            return gt ? val > num[0] : val < num[0];
-        }
-
-        public bool MyChanceTo1(double val, bool gt = true)
-        {
-            int[] num = mind.rand.MyRandomInt(1, 1);
-            return gt ? val > num[0] : val < num[0];
-        }
-
-        public bool ChanceTo100(double val, bool gt = true)
-        {
-            int num = mind.rand.RandomInt(100);
-            return gt ? val > num : val < num;
-        }
-
-        public bool ChanceTo1(double val, bool gt = true)
-        {
-            double num = mind.rand.RandomDouble(0.0d, 1.0d);
-            return gt ? val > num : val < num;
-        }
-
-        public double ToPercent(double num, double high)
-        {
-            double res = 0.0d;
-            res = mind.calc.Normalize(num, 0.0d, high) * 100.0d;
-
+            double res = Normalize(_this, 0.0d, _from) * 100.0d;
             return res;
         }
 
-        public double Percentage(double num, double high)
+        public double ToPercent2(double _this, double _from)
         {
-            /*
-             * How many percent is 50 from 500? 	50 / 500 * 100% = 10%
-             * */
-
-            double res = num / high * 100.0d;
-
+            double res = _this / _from * 100.0d;
             return res;
         }
 
@@ -106,7 +74,7 @@ namespace Awesome.AI.Common
         {
             //round to nearest, up or down
             int res;
-            res = System.Convert.ToInt32(num);
+            res = Convert.ToInt32(num);
 
             return res;
         }
@@ -173,28 +141,14 @@ namespace Awesome.AI.Common
             if (x < 0.0d)
                 throw new Exception("Linear");
 
-            double y = a * x + b;                       //y er mass
-
-            //if (y > 2.0)                                //er egentlig ikke nødvendig
-            //    throw new Exception();
-            //if (y < 0.0)
-            //    throw new Exception();
+            double y = a * x + b;
 
             return y;
         }
 
         public double Quadratic(double x, double a, double b, double c)
         {
-            //if (x < 0.0d)
-            //    throw new Exception();
-
-            double y = a * (x * x) + (b * x) + c;         //y er mass
-
-            //if (y >= 10.0)                              //10 er top grænsen, 10 * 10
-            //    y = 10.0;
-            
-            //if (y < 0.1)                                //er egentlig ikke nødvendig
-            //    throw new Exception();
+            double y = a * (x * x) + (b * x) + c;
 
             return y;
         }
@@ -217,6 +171,7 @@ namespace Awesome.AI.Common
         {
             if (_a <= 0.0d)
                 throw new Exception("Pyth");
+            
             if (_b <= 0.0d)
                 throw new Exception("Pyth");
 
@@ -234,8 +189,10 @@ namespace Awesome.AI.Common
              * */
             if (theta > 180.0d)
                 throw new Exception("PythNear");
+            
             if (theta < -180.0d)
                 throw new Exception("PythNear");
+            
             if (hypotenuse <= 0.0d)
                 throw new Exception("PythNear");
 
@@ -255,8 +212,10 @@ namespace Awesome.AI.Common
              * */
             if (theta >= 90.0d)
                 throw new Exception("PythFar");
+            
             if (theta <= 0.0d)
                 throw new Exception("PythFar");
+            
             if (hypotenuse <= 0.0d)
                 throw new Exception("PythFar");
 
@@ -296,19 +255,6 @@ namespace Awesome.AI.Common
              * */
 
             double res = 2 * a * x + b;
-
-            return res;
-        }
-
-        public double Roots(double? _x, double _a, double _b, double _c, out double _x1, out double _x2)
-        {
-            _x1 = (-_b + Math.Sqrt(_b * _b - 4 * _a * _c)) / (2 * _a);
-            _x2 = (-_b - Math.Sqrt(_b * _b - 4 * _a * _c)) / (2 * _a);
-
-            if (_x.IsNull())
-                return -1d;
-
-            double res = _x >= 0.0d ? _x2 : _x1;
 
             return res;
         }
