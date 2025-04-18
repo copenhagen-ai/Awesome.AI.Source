@@ -7,12 +7,15 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class NoiseGenerator : IMechanics
     {
+        public double n_momentum { get; set; }
         public double p_curr { get; set; }
         public double p_prev { get; set; }
         public double p_delta { get; set; }
         public double p_delta_prev { get; set; }
-        public double m_out_high { get; set; }
-        public double m_out_low { get; set; }
+        public double m_out_high_c { get; set; }
+        public double m_out_low_c { get; set; }
+        public double m_out_high_n { get; set; }
+        public double m_out_low_n { get; set; }
         public double d_out_high { get; set; }
         public double d_out_low { get; set; }
         public double posx_high { get; set; }
@@ -26,8 +29,8 @@ namespace Awesome.AI.Core.Mechanics
 
             posxy = Constants.STARTXY;//10;
 
-            m_out_high = -1000.0d;
-            m_out_low = 1000.0d;
+            m_out_high_n = -1000.0d;
+            m_out_low_n = 1000.0d;
             d_out_high = -1000.0d;
             d_out_low = 1000.0d;
             posx_high = -1000.0d;
@@ -92,21 +95,31 @@ namespace Awesome.AI.Core.Mechanics
         //    return acc;
         //}
 
-        public void CalcPattern1(PATTERN version, int cycles)
+        //Momentum
+        public void Momentum(UNIT curr)
         {
-            if (mind.current != "noise")
-                return;
+            /*
+             * I guess this is a changeable function, for now it is just the one I know to calculate force
+             * */
 
-            if (version != PATTERN.NONE)
-                return;
+            if (curr.IsNull())
+                throw new Exception("NoiseGenerator, Variable");
 
+            if (curr.IsIDLE())
+                throw new Exception("NoiseGenerator, Variable");
+
+            Calc(curr, true);
+        }
+
+        public void Calc(UNIT curr, bool peek)
+        {
             double deltaT = 0.002d;
             double m = 500.0d;
             double N = m * Constants.GRAVITY;
 
             double Fsta = ApplyStatic();
-            double Fdyn = ApplyDynamic();
-            double u = Friction(mind.unit["noise"].credits, -2.0d);
+            double Fdyn = ApplyDynamic(curr);
+            double u = Friction(curr.credits, -2.0d);
 
             double Ffriction = u * N;
             double Fnet = -Fsta + Fdyn + (Ffriction * -Math.Sign(-Fsta + Fdyn));
@@ -118,18 +131,50 @@ namespace Awesome.AI.Core.Mechanics
             //dv=(F*dt)/m
             //double dv = (Fnet * dt) / m;
             double deltaVel = (Fnet * deltaT) / m;
-
+            
             //momentum: p = m * v
-            p_delta_prev = p_delta;
-            p_delta = (m * 2) * deltaVel;
-            p_curr += p_delta;
+            if (peek) {
+                n_momentum += (m * 2) * deltaVel;            
+            }
+            else
+            {
+                p_delta_prev = p_delta;
+                p_delta = (m * 2) * deltaVel;
+                p_curr += p_delta;
+            }
 
-            if (p_curr <= m_out_low) m_out_low = p_curr;
-            if (p_curr > m_out_high) m_out_high = p_curr;
+            if (n_momentum <= m_out_low_n) m_out_low_n = n_momentum;
+            if (n_momentum > m_out_high_n) m_out_high_n = n_momentum;
+
+            if (p_curr <= m_out_low_n) m_out_low_c = p_curr;
+            if (p_curr > m_out_high_n) m_out_high_c = p_curr;
 
             if (p_delta <= d_out_low) d_out_low = p_delta;
             if (p_delta > d_out_high) d_out_high = p_delta;
+
+            //return momentum;            
         }
+
+        public void CalcPattern1(PATTERN version, int cycles)
+        {
+            if (mind.current != "noise")
+                return;
+
+            if (version != PATTERN.NONE)
+                return;
+
+            Calc(mind.unit["noise"], false);
+        }
+
+        public void CalcPattern2(PATTERN version, int cycles)
+        {
+            throw new NotImplementedException("NoiseGenerator, CalcPattern2");
+        }
+
+        public void CalcPattern3(PATTERN version, int cycles)
+        {
+            throw new NotImplementedException("NoiseGenerator, CalcPattern3");
+        }          
 
         /*
          * car left
@@ -150,15 +195,13 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * car right
          * */
-        public double ApplyDynamic()
+        public double ApplyDynamic(UNIT curr)
         {
-            UNIT curr_unit = mind.unit[mind.current];
-
-            if (curr_unit.IsNull())
+            if (curr.IsNull())
                 throw new Exception("ApplyDynamic");
 
             double max = Constants.MAX;
-            double acc = (max / 10.0d) - (curr_unit.Variable / 10.0d); //divided by 10 for aprox acc
+            double acc = (max / 10.0d) - (curr.HighAtZero / 10.0d); //divided by 10 for aprox acc
             double m = 500.0d;
 
             if (acc <= 0.0d)
@@ -188,15 +231,6 @@ namespace Awesome.AI.Core.Mechanics
             return friction;
         }
 
-        public void CalcPattern2(PATTERN version, int cycles)
-        {
-            throw new NotImplementedException("NoiseGenerator, CalcPattern2");
-        }
-
-        public void CalcPattern3(PATTERN version, int cycles)
-        {
-            throw new NotImplementedException("NoiseGenerator, CalcPattern3");
-        }          
 
         //NewtonForce
         //public double Variable(UNIT curr)

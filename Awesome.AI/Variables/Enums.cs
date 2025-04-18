@@ -19,7 +19,5 @@
         public enum FUZZYDOWN { VERYYES, YES, MAYBE, NO, VERYNO }
         public enum PERIODDOWN { YES, NO }
         public enum LOGICTYPE { BOOLEAN, QUBIT }
-
-        //public enum HACKMODES { HACK, NOHACK }
     }
 }

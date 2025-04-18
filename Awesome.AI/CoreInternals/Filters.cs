@@ -50,6 +50,9 @@ namespace Awesome.AI.CoreInternals
              * Lowcut filter?
              * */
 
+            if(mind.current == "noise")
+                return true;
+
             if (_u == null)
                 throw new ArgumentNullException();
 

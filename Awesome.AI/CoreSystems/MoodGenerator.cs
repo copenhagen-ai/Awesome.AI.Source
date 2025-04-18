@@ -53,8 +53,8 @@ namespace Awesome.AI.CoreSystems
             if (!mind.calc.IsRandomSample(200, 10)) 
                 return;
 
-            double p_high = mind.mech[mind.current].m_out_high;
-            double p_low = mind.mech[mind.current].m_out_low;
+            double p_high = mind.mech[mind.current].m_out_high_c;
+            double p_low = mind.mech[mind.current].m_out_low_c;
 
             double avg = Avg.Average();
             double res = mind.calc.Normalize(avg, p_low, p_high, 0.0d, 100.0d);

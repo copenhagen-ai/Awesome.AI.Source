@@ -1,6 +1,5 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Variables;
 
 namespace Awesome.AI.Core
 {
@@ -77,17 +76,17 @@ namespace Awesome.AI.Core
             if (units == null)
                 throw new ArgumentNullException();
 
-            double near = NearX();
+            //double near = mind.current == "noise" ? NearMomentum() : NearPercent();
+            double near = NearPercent();
 
             units = units.OrderByDescending(x => x.Variable).ToList();
 
-            UNIT above = units.Where(x => x.Variable < near).FirstOrDefault();
-            UNIT below = units.Where(x => x.Variable >= near).LastOrDefault();
-
+            UNIT above = units.Where(x => Map(x) < near).FirstOrDefault();
+            UNIT below = units.Where(x => Map(x) >= near).LastOrDefault();
+            UNIT res = null;
+         
             if (above.IsNull() && below.IsNull())
                 return null;
-
-            UNIT res = null;
 
             if (above.IsNull())
                 res = below;
@@ -96,10 +95,10 @@ namespace Awesome.AI.Core
                 res = above;
 
             if(res.IsNull())
-                res = near - above.Variable < below.Variable - near ? above : below;
+                res = near - Map(above) < Map(below) - near ? above : below;
 
             double sign = res == below ? 1d : -1d;
-            double dist = Dist(res, near);
+            double dist = DistAbsolute(res, near);
 
             if (!(above.IsNull() || below.IsNull()))
                 res.Adjust(sign, dist);
@@ -107,7 +106,26 @@ namespace Awesome.AI.Core
             return res;
         }
 
-        private double Dist(UNIT unit, double near)
+        private double Map(UNIT x)
+        {
+            if (mind.current == "current")
+                return x.Variable;
+
+            IMechanics mech = mind.mech["noise"];
+
+            mech.Momentum(x);
+
+            double _v = mech.n_momentum;
+            double v_h = mech.m_out_high_n;
+            double v_l = mech.m_out_low_n;
+
+            double pct = mind.calc.Normalize(_v, v_l, v_h) * 100.0d;
+
+            return pct;
+
+        }
+
+        private double DistAbsolute(UNIT unit, double near)
         {
             IMechanics mech = mind.mech[mind.current];
             
@@ -117,40 +135,17 @@ namespace Awesome.AI.Core
 
             return res;
         }
-
-        private double NearX()
+        
+        private double NearPercent()
         {
-            /*
-             * is this allowed, mapping momentum to a 0 to 100 value?
-             * */
-
+            bool is_noise = mind.current == "noise";
             IMechanics mech = mind.mech[mind.current];
-            //double f_h = mech.HighestVar;
-            //double f_l = mech.LowestVar;
 
             double _v = mech.p_curr;
-            double v_h = mech.m_out_high;
-            double v_l = mech.m_out_low;
+            double v_h = is_noise ? mech.m_out_high_n : mech.m_out_high_c;
+            double v_l = is_noise ? mech.m_out_low_n : mech.m_out_low_c;
 
-            //map to percent
             double pct = mind.calc.Normalize(_v, v_l, v_h) * 100.0d;
-            
-            return pct;
-        }
-
-        private double NearZ()
-        {
-            IMechanics mech = mind.mech[mind.current];
-
-            //double _v = mech._momentum;
-            //double v_h = mech.m_out_high;
-            //double v_l = mech.m_out_low;
-
-            double _v = mech.p_delta;
-            double v_h = mech.d_out_high;
-            double v_l = mech.d_out_low;
-
-            double pct = mind.calc.Normalize(_v, v_l, v_h, 0.0d, 100.0d);
 
             return pct;
         }
@@ -175,6 +170,42 @@ namespace Awesome.AI.Core
             UNIT __u = units.Any() ? units[rand[0]] : UNIT.IDLE_UNIT(mind);
             return __u;
         }
+
+        //private double NearEnergy()
+        //{
+        //    IMechanics mech = mind.mech[mind.current];
+        //    double f_h = mech.HighestVar;
+        //    double f_l = mech.LowestVar;
+
+        //    double _v = mech.p_curr;
+        //    double v_h = mech.m_out_high;
+        //    double v_l = mech.m_out_low;
+
+        //    //double _v = mech.p_delta;
+        //    //double v_h = mech.d_out_high;
+        //    //double v_l = mech.d_out_low;
+
+        //    double nrg = mind.calc.Normalize(_v, v_l, v_h, f_l, f_h);
+
+        //    return nrg;
+        //}
+
+        //private double NearPercent()
+        //{
+        //    IMechanics mech = mind.mech[mind.current];
+
+        //    //double _v = mech._momentum;
+        //    //double v_h = mech.m_out_high;
+        //    //double v_l = mech.m_out_low;
+
+        //    double _v = mech.p_delta;
+        //    double v_h = mech.d_out_high;
+        //    double v_l = mech.d_out_low;
+
+        //    double pct = mind.calc.Normalize(_v, v_l, v_h, 0.0d, 100.0d);
+
+        //    return pct;
+        //}
 
         /*private UNIT JumpA(UNIT curr, List<UNIT> units, bool dir_up)
         {

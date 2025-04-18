@@ -67,6 +67,7 @@ namespace Awesome.AI.Variables
                     version = PATTERN.MOODGENERAL;
 
                     high_at_zero = true;
+                    
                     update_cred = 0.030d;
 
                     //hack = HACKMODES.NOHACK;                                          //not used any more
@@ -104,11 +105,7 @@ namespace Awesome.AI.Variables
                     //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = true;
-                    update_cred = 0.030d;
-                    
-                    schedule_low = 2.0d;
-                    schedule_mid = 5.0d;
-                    schedule_high = 8.0d;
+                    update_cred = 0.030d;                   
 
                     //shift = -2.0d;
 
@@ -164,7 +161,7 @@ namespace Awesome.AI.Variables
         public double update_cred;
 
         public bool high_at_zero { get; set; }
-
+        
         public double schedule_low { get; set; }
         public double schedule_mid { get; set; }
         public double schedule_high { get; set; }

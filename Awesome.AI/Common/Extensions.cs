@@ -140,18 +140,18 @@ namespace Awesome.AI.Common
             return res ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
-        public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
-        {
-            bool res = deltaMom <= prev;
+        //public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
+        //{
+        //    bool res = deltaMom <= prev;
 
-            if (Constants.Logic == LOGICTYPE.BOOLEAN)
-                res = !res;//we flip direction
+        //    if (Constants.Logic == LOGICTYPE.BOOLEAN)
+        //        res = !res;//we flip direction
 
-            if (Constants.Logic == LOGICTYPE.QUBIT)
-                res = mind.quantum.usage.MyQuantumXOR(res, res);
+        //    if (Constants.Logic == LOGICTYPE.QUBIT)
+        //        res = mind.quantum.usage.MyQuantumXOR(res, res);
 
-            return res ? HARDDOWN.YES : HARDDOWN.NO;
-        }
+        //    return res ? HARDDOWN.YES : HARDDOWN.NO;
+        //}
 
         //public static HARDDOWN ToDirection(this bool _q)
         //{

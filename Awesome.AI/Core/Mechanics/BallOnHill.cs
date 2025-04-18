@@ -7,13 +7,16 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class BallOnHill : IMechanics
     {
+        public double n_momentum { get; set; }
         public double p_curr { get; set; }
         public double p_prev { get; set; }
         public double p_delta { get; set; }
         public double p_delta_prev {  get; set; }
 
-        public double m_out_high { get; set; }
-        public double m_out_low { get; set; }
+        public double m_out_high_c { get; set; }
+        public double m_out_low_c { get; set; }
+        public double m_out_high_n { get; set; }
+        public double m_out_low_n { get; set; }
         public double d_out_high { get; set; }
         public double d_out_low { get; set; }
         public double posx_high { get; set; }
@@ -26,8 +29,10 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            m_out_high = -1000.0d;
-            m_out_low = 1000.0d;
+            m_out_high_c = -1000.0d;
+            m_out_low_c = 1000.0d;
+            m_out_high_n = -1000.0d;
+            m_out_low_n = 1000.0d;
             d_out_high = -1000.0d;
             d_out_low = 1000.0d;
             posx_high = -1000.0d;
@@ -91,6 +96,11 @@ namespace Awesome.AI.Core.Mechanics
         //    return _var;
         //}
 
+        public void Momentum(UNIT _c)
+        {
+            throw new NotImplementedException();
+        }
+
         private double velocity = 0.0;
         private double position_x = Constants.STARTXY;
         private void Calc(PATTERN version, int cycles)
@@ -126,8 +136,8 @@ namespace Awesome.AI.Core.Mechanics
             p_curr = m * velocity;
             p_delta = p_curr - p_prev;
 
-            if (p_curr <= m_out_low) m_out_low = p_curr;
-            if (p_curr > m_out_high) m_out_high = p_curr;
+            if (p_curr <= m_out_low_c) m_out_low_c = p_curr;
+            if (p_curr > m_out_high_c) m_out_high_c = p_curr;
 
             if (p_delta <= d_out_low) d_out_low = p_delta;
             if (p_delta > d_out_high) d_out_high = p_delta;

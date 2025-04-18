@@ -124,7 +124,7 @@ namespace Awesome.AI.Core
                 
 
                 parms["current"].UpdateLowCut();
-                parms["noise"].UpdateLowCut();
+                //parms["noise"].UpdateLowCut();
 
                 PreRun("noise", true);
                 PostRun(true);
@@ -251,7 +251,7 @@ namespace Awesome.AI.Core
                 return true;
 
             mech["noise"].CalcPattern1(PATTERN.NONE, 0);
-            mech["current"].CalcPattern1(parms[current].version , cycles);//mood general
+            mech["current"].CalcPattern1(parms[current].version, cycles);//mood general
             mech["current"].CalcPattern2(parms[current].version, cycles);//mood good
             mech["current"].CalcPattern3(parms[current].version, cycles);//mood bad
             
