@@ -30,7 +30,7 @@ namespace Awesome.AI.CoreInternals
 
             bool go_up = mind.Direction();
 
-            //remember static: high, dynamic: low.. at zero
+            //remember low/high at zero
             return go_up ? /*up*/f_a < f_b : /*down*/f_a >= f_b;
         }
 

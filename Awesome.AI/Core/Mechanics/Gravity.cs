@@ -47,15 +47,15 @@ namespace Awesome.AI.Core.Mechanics
             //get { return deltaMom.ToDownPrev(deltaMomPrev, mind); }
         }
 
-        public double HighestVar
-        {
-            get { return Variable(UNIT.GetHigh); }
-        }
+        //public double HighestVar
+        //{
+        //    get { return UNIT.GetHigh.Variable; }
+        //}
 
-        public double LowestVar
-        {
-            get { return Variable(UNIT.GetLow); }
-        }
+        //public double LowestVar
+        //{
+        //    get { return UNIT.GetLow.Variable; }
+        //}
 
         private double posxy { get; set; }
         public double POS_XY
@@ -66,10 +66,10 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public double Variable(UNIT curr)
-        {
-            throw new NotImplementedException();
-        }
+        //public double Variable(UNIT curr)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public void CalcPattern1(PATTERN version, int cycles)
         {

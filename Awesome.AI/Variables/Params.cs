@@ -122,7 +122,7 @@ namespace Awesome.AI.Variables
                     state = STATE.JUSTRUNNING;
                     version = PATTERN.MOODGENERAL;
 
-                    high_at_zero = true;
+                    high_at_zero = false;
                     update_cred = 0.050d;
 
                     //hack = HACKMODES.NOHACK;                                          //obsolete
@@ -163,7 +163,7 @@ namespace Awesome.AI.Variables
         public double low_cut;
         public double update_cred;
 
-        private bool high_at_zero { get; set; }
+        public bool high_at_zero { get; set; }
 
         public double schedule_low { get; set; }
         public double schedule_mid { get; set; }

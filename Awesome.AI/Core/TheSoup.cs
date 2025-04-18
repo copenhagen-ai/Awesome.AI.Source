@@ -77,7 +77,7 @@ namespace Awesome.AI.Core
             if (units == null)
                 throw new ArgumentNullException();
 
-            double near = Near();
+            double near = NearX();
 
             units = units.OrderByDescending(x => x.Variable).ToList();
 
@@ -95,53 +95,50 @@ namespace Awesome.AI.Core
             if (below.IsNull())
                 res = above;
 
-            if(res == null)
+            if(res.IsNull())
                 res = near - above.Variable < below.Variable - near ? above : below;
 
             double sign = res == below ? 1d : -1d;
-            double dist = DistAbs(res, near);
+            double dist = Dist(res, near);
 
             if (!(above.IsNull() || below.IsNull()))
-                res.AdjustIndex(sign, dist);
+                res.Adjust(sign, dist);
 
             return res;
         }
 
-        private double DistAbs(UNIT unit, double near)
+        private double Dist(UNIT unit, double near)
         {
             IMechanics mech = mind.mech[mind.current];
             
-            double v_h = mech.m_out_high;
-            double v_l = mech.m_out_low;
-
-            double near_norm = mind.calc.Normalize(near, v_l, v_h, 0.0d, 100.0d);
             double idx = unit.Index;
             
-            double res = Math.Abs(idx -  near_norm);
+            double res = Math.Abs(idx -  near);
 
             return res;
         }
 
-        private double Near()
+        private double NearX()
         {
+            /*
+             * is this allowed, mapping momentum to a 0 to 100 value?
+             * */
+
             IMechanics mech = mind.mech[mind.current];
-            double f_h = mech.HighestVar;
-            double f_l = mech.LowestVar;
+            //double f_h = mech.HighestVar;
+            //double f_l = mech.LowestVar;
 
             double _v = mech.p_curr;
             double v_h = mech.m_out_high;
             double v_l = mech.m_out_low;
 
-            //double _v = mech.p_delta;
-            //double v_h = mech.d_out_high;
-            //double v_l = mech.d_out_low;
-
-            double nrg = mind.calc.Normalize(_v, v_l, v_h, f_l, f_h);
+            //map to percent
+            double pct = mind.calc.Normalize(_v, v_l, v_h) * 100.0d;
             
-            return nrg;
+            return pct;
         }
 
-        private double NearPercent()
+        private double NearZ()
         {
             IMechanics mech = mind.mech[mind.current];
 

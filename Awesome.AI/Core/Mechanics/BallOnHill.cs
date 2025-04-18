@@ -49,15 +49,15 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public double HighestVar
-        {
-            get { return Variable(UNIT.GetLow); }
-        }
+        //public double HighestVar
+        //{
+        //    get { return UNIT.GetLow.Variable; }
+        //}
 
-        public double LowestVar
-        {
-            get { return Variable(UNIT.GetHigh); }
-        }
+        //public double LowestVar
+        //{
+        //    get { return UNIT.GetHigh.Variable; }
+        //}
 
         public double POS_XY
         {
@@ -78,18 +78,18 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public double Variable(UNIT _c)
-        {
-            if (_c.IsNull())
-                throw new Exception("BallOnHill, Variable");
+        //public double Variable(UNIT _c)
+        //{
+        //    if (_c.IsNull())
+        //        throw new Exception("BallOnHill, Variable");
 
-            if (_c.IsIDLE())
-                throw new Exception("BallOnHill, Variable");
+        //    if (_c.IsIDLE())
+        //        throw new Exception("BallOnHill, Variable");
 
-            double _var = _c.HighAtZero;
+        //    double _var = _c.HighAtZero;
 
-            return _var;
-        }
+        //    return _var;
+        //}
 
         private double velocity = 0.0;
         private double position_x = Constants.STARTXY;

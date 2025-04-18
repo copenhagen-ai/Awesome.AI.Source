@@ -37,14 +37,11 @@ namespace Awesome.AI.Core
         {
             get
             {
-                if (root == "_decision42")
-                    ;
-
                 if (_f != -1d)
                     return _f;
 
-                IMechanics _mech = mind.mech[mind.current];
-                _f = _mech.Variable(this);
+                _f = mind.parms[mind.current].high_at_zero ? HighAtZero : LowAtZero;
+                                
                 return _f;
             }
         }
@@ -153,7 +150,7 @@ namespace Awesome.AI.Core
             return _w;
         }
 
-        public void AdjustIndex(double sign, double dist)
+        public void Adjust(double sign, double dist)
         {
             if (dist < Constants.ALPHA)
                 return;

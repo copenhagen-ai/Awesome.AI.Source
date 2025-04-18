@@ -55,15 +55,15 @@ namespace Awesome.AI.Core.Mechanics
             }            
         }
 
-        public double HighestVar
-        {
-            get { return Variable(UNIT.GetLow); }
-        }
+        //public double HighestVar
+        //{
+        //    get { return UNIT.GetLow.Variable; }
+        //}
 
-        public double LowestVar
-        {
-            get { return Variable(UNIT.GetHigh); }
-        }
+        //public double LowestVar
+        //{
+        //    get { return UNIT.GetHigh.Variable; }
+        //}
 
         private double posxy { get; set; }
         public double POS_XY
@@ -75,22 +75,22 @@ namespace Awesome.AI.Core.Mechanics
         }
 
         //NewtonForce
-        public double Variable(UNIT curr)
-        {
-            /*
-             * I guess this is a changeable function, for now it is just the one I know to calculate force
-             * */
+        //public double Variable(UNIT curr)
+        //{
+        //    /*
+        //     * I guess this is a changeable function, for now it is just the one I know to calculate force
+        //     * */
 
-            if (curr.IsNull())
-                throw new Exception("NoiseGenerator, Variable");
+        //    if (curr.IsNull())
+        //        throw new Exception("NoiseGenerator, Variable");
 
-            if (curr.IsIDLE())
-                throw new Exception("NoiseGenerator, Variable");
+        //    if (curr.IsIDLE())
+        //        throw new Exception("NoiseGenerator, Variable");
 
-            double acc = curr.HighAtZero;
+        //    double acc = curr.HighAtZero;
 
-            return acc;
-        }
+        //    return acc;
+        //}
 
         public void CalcPattern1(PATTERN version, int cycles)
         {
@@ -136,7 +136,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyStatic()
         {
-            double acc = HighestVar / 10; //divided by 10 for aprox acc
+            double acc = Constants.MAX / 10; //divided by 10 for aprox acc
             double m = 500.0d;
             
             double Fapplied = m * acc; //force, left
@@ -157,7 +157,7 @@ namespace Awesome.AI.Core.Mechanics
             if (curr_unit.IsNull())
                 throw new Exception("ApplyDynamic");
 
-            double max = HighestVar;
+            double max = Constants.MAX;
             double acc = (max / 10.0d) - (curr_unit.Variable / 10.0d); //divided by 10 for aprox acc
             double m = 500.0d;
 

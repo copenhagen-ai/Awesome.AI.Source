@@ -21,8 +21,8 @@ namespace Awesome.AI.Interfaces
 
         double POS_XY { get; }
 
-        double HighestVar { get; }
-        double LowestVar { get; }
+        //double HighestVar { get; }
+        //double LowestVar { get; }
 
         //these are thought patterns
         //void CalcPatternOld(MECHVERSION version);//do calculations
@@ -30,6 +30,6 @@ namespace Awesome.AI.Interfaces
         void CalcPattern2(PATTERN version, int cycles);//good mood
         void CalcPattern3(PATTERN version, int cycles);//bad mood
 
-        double Variable(UNIT c);//force, mass, distance, acceleration etc
+        //double Variable(UNIT c);//force, mass, distance, acceleration etc
     }
 }

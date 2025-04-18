@@ -48,15 +48,15 @@ namespace Awesome.AI.Core.Mechanics
             }            
         }
 
-        public double HighestVar
-        {
-            get { return Variable(UNIT.GetLow); }
-        }
+        //public double HighestVar
+        //{
+        //    get { return UNIT.GetLow.Variable; }
+        //}
 
-        public double LowestVar
-        {
-            get { return Variable(UNIT.GetHigh); }
-        }
+        //public double LowestVar
+        //{
+        //    get { return UNIT.GetHigh.Variable; }
+        //}
 
         
         public double POS_XY
@@ -78,18 +78,18 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public double Variable(UNIT curr)
-        {
-            if (curr.IsNull())
-                throw new Exception("TugOfWar, Variable");
+        //public double Variable(UNIT curr)
+        //{
+        //    if (curr.IsNull())
+        //        throw new Exception("TugOfWar, Variable");
 
-            if (curr.IsIDLE())
-                throw new Exception("TugOfWar, Variable");
+        //    if (curr.IsIDLE())
+        //        throw new Exception("TugOfWar, Variable");
 
-            double _var = curr.HighAtZero;
+        //    double _var = mind.parms["current"].high_at_zero ? curr.HighAtZero : curr.LowAtZero;
 
-            return _var;
-        }
+        //    return _var;
+        //}
 
         private double velocity = 0.0; // Initial velocity in m/s
         private double position_x = 5.0; // Initial position in meters

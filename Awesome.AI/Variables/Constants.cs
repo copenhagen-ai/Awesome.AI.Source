@@ -59,16 +59,16 @@ namespace Awesome.AI.Variables
         };
 
 
-        public const double ETA = 0.1d;//learningrate
-        public const double ALPHA = 1.0d;//distance
-        public const double MIN = 0.5d;
-        public const double MAX = 99.5d;
         public const double STARTXY = 5.0d;
         public const double LOWXY = 0.0d;
         public const double HIGHXY = 10.0d;
-        public const double MAX_CREDIT = 10.0d;
+        public const double MIN = 0.5d;
+        public const double MAX = 99.5d;
         public const double LOW_CREDIT = 0.0d;
+        public const double MAX_CREDIT = 10.0d;
 
+        public const double ETA = 0.1d;//learningrate
+        public const double ALPHA = 1.0d;//distance
         public const double VERY_LOW = 1.0E-2;
         public const double GRAVITY = 9.81d;
         public const double GRAV_CONST = 6.674E-11d;

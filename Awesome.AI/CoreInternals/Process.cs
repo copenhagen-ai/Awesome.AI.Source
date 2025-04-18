@@ -81,14 +81,18 @@ namespace Awesome.AI.CoreInternals
             if (mind.parms[mind.current].state == STATE.QUICKDECISION)
                 return;
 
-            List<UNIT> units = mind.mem.UNITS_ALL();
             Stats stats = new Stats();
+
+            List<UNIT> units = mind.mem.UNITS_ALL();
 
             foreach (UNIT u in units)
                 stats.list.Add(new Stat() { _name = u.root, _var = u.Variable, _index = u.Index });
 
-
             string nam = most_common_unit.root;
+
+            if (!stats.list.Any(x=>x._name == nam))
+                return;
+
             Stat _s_curr = stats.list.Where(x => x._name == nam).First();
 
             if (!hits.ContainsKey(nam))
@@ -96,21 +100,21 @@ namespace Awesome.AI.CoreInternals
 
             hits[nam] += 1;
 
-            //mind.stats.list = mind.stats.list.OrderBy(x => x._var).ToList();
             stats.curr_name = nam;
-            //stats.curr_value = hits[nam];
+            
             _s_curr.hits = hits[nam];
 
             remember.Insert(0, nam);
             if (remember.Count > Constants.REMEMBER)
             {
                 string name = remember.Last();
+                
                 Stat _s_reset = stats.list.Where(x => x._name == name).First();
 
                 hits[name] -= 1;
 
                 stats.reset_name = name;
-                //stats.reset_value = hits[name];
+                
                 _s_reset.hits = hits[name];
 
                 remember.RemoveAt(remember.Count - 1);
