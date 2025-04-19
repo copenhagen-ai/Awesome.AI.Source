@@ -27,7 +27,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            position_x = Constants.STARTXY;//10;
+            position_x = Constants.STARTXY;
 
             m_out_high_c = -1000.0d;
             m_out_low_c = 1000.0d;
@@ -46,22 +46,14 @@ namespace Awesome.AI.Core.Mechanics
         {
             get 
             {
+                //return p_curr.ToDownPrev(p_prev, mind);
+                //return p_curr.ToDownZero(mind);
+
                 //return p_delta.ToDownPrev(p_delta_prev, mind);
                 return p_delta.ToDownZero(mind);
             }            
         }
-
-        //public double HighestVar
-        //{
-        //    get { return UNIT.GetLow.Variable; }
-        //}
-
-        //public double LowestVar
-        //{
-        //    get { return UNIT.GetHigh.Variable; }
-        //}
-
-        
+                
         public double POS_XY
         {
             get
@@ -81,19 +73,6 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        //public double Variable(UNIT curr)
-        //{
-        //    if (curr.IsNull())
-        //        throw new Exception("TugOfWar, Variable");
-
-        //    if (curr.IsIDLE())
-        //        throw new Exception("TugOfWar, Variable");
-
-        //    double _var = mind.parms["current"].high_at_zero ? curr.HighAtZero : curr.LowAtZero;
-
-        //    return _var;
-        //}
-
         public void Momentum(UNIT curr)
         {
             throw new NotImplementedException();
@@ -109,8 +88,8 @@ namespace Awesome.AI.Core.Mechanics
             double Fmax = 5000.0d;                                              // Max oscillating force for F2
             double omega = 2 * Math.PI * 0.5;                                   // Frequency (0.5 Hz)
             double eta = 0.2d;                                                  // Randomness factor
-            double m1 = 500.0d;                                        // 1500; // Mass of Car 1 in kg
-            double m2 = 500.0d;                                        // 1300; // Mass of Car 2 in kg
+            double m1 = 500.0d;                                                 // Mass of Car 1 in kg
+            double m2 = 500.0d;                                                 // Mass of Car 2 in kg
             double totalMass = m1 + m2;
             double dt = 0.1d;                                                   // Time step (s)
 
@@ -121,10 +100,10 @@ namespace Awesome.AI.Core.Mechanics
 
             double t = cycles * dt;
 
-            double F1 = ApplyStatic(Fmax);                                     // Constant force in Newtons (e.g., truck pulling)
+            double F1 = ApplyStatic(Fmax);                                      // Constant force in Newtons (e.g., truck pulling)
             double F2 = ApplyDynamic(pattern, Fmax, t, omega, eta);
-            double friction = frictionForce * -Math.Sign(velocity);              // Friction opposes motion
-            double Fnet = -F1 + F2 + friction;                                   // Net force with F1 constant and F2 dynamic
+            double friction = frictionForce * -Math.Sign(velocity);             // Friction opposes motion
+            double Fnet = -F1 + F2 + friction;                                  // Net force with F1 constant and F2 dynamic
 
             // If friction is stronger than applied force and velocity is near zero, stop motion
             if (Math.Abs(Fnet) < frictionForce && Math.Abs(velocity) < 0.01)
@@ -135,7 +114,7 @@ namespace Awesome.AI.Core.Mechanics
 
             double acceleration = Fnet / totalMass;
             velocity += acceleration * dt;                                      // Integrate acceleration to get velocity
-            position_x += velocity * dt; // Integrate velocity to get position
+            position_x += velocity * dt;                                        // Integrate velocity to get position
             p_curr = totalMass * velocity;
             p_delta = p_curr - p_prev;                                          // Compute change in momentum
             p_prev = p_curr;                                                    // Store current momentum for next iteration

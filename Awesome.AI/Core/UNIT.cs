@@ -89,35 +89,29 @@ namespace Awesome.AI.Core
             }
         }
 
-        private HUB hub = null;
         public HUB HUB
         {
             get
             {
-                //if (hub != null)
-                //    return hub;
-
                 if (IsIDLE())
                     return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);
 
-                hub = mind.mem.HUBS_ALL(mind.parms[mind.current].state).Where(x => x.units.Contains(this)).FirstOrDefault();
+                STATE state = mind.parms[mind.current].state;
 
-                if (hub == null)
+                try {
+                    return mind.mem.HUBS_ALL(state).Where(x => x.units.Contains(this)).First();
+                }
+                catch {
                     return HUB.Create("IDLE", new List<UNIT>(), TONE.RANDOM);
-
-                return hub;
+                }
             }
         }
 
-        private List<UNIT> rel = null;
         public List<UNIT> REL
         {
             get
             {
-                if (rel != null)
-                    return rel;
-
-                rel = HUB.units;
+                List<UNIT> rel = HUB.units;
 
                 return rel;
             }

@@ -27,7 +27,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            posxy = Constants.STARTXY;//10;
+            posxy = Constants.STARTXY;
 
             m_out_high_n = -1000.0d;
             m_out_low_n = 1000.0d;
@@ -46,27 +46,13 @@ namespace Awesome.AI.Core.Mechanics
         {
             get 
             {
-                //if (Constants.Logic == LOGICTYPE.BOOLEAN)
-                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    //return p_delta.ToDownZero(mind);
+                //return p_curr.ToDownPrev(p_prev, mind);
+                //return p_curr.ToDownZero(mind);
 
-                //if (Constants.Logic == LOGICTYPE.QUBIT)
-                    //return deltaMom.ToDownPrev(deltaMomPrev, mind);
-                    return p_delta.ToDownZero(mind);
-
-                throw new Exception("HardMom");
+                //return p_delta.ToDownPrev(p_delta_prev, mind);
+                return p_delta.ToDownZero(mind);
             }            
         }
-
-        //public double HighestVar
-        //{
-        //    get { return UNIT.GetLow.Variable; }
-        //}
-
-        //public double LowestVar
-        //{
-        //    get { return UNIT.GetHigh.Variable; }
-        //}
 
         private double posxy { get; set; }
         public double POS_XY
@@ -76,24 +62,6 @@ namespace Awesome.AI.Core.Mechanics
                 throw new NotImplementedException("NoiseGenerator, POS_XY");
             }
         }
-
-        //NewtonForce
-        //public double Variable(UNIT curr)
-        //{
-        //    /*
-        //     * I guess this is a changeable function, for now it is just the one I know to calculate force
-        //     * */
-
-        //    if (curr.IsNull())
-        //        throw new Exception("NoiseGenerator, Variable");
-
-        //    if (curr.IsIDLE())
-        //        throw new Exception("NoiseGenerator, Variable");
-
-        //    double acc = curr.HighAtZero;
-
-        //    return acc;
-        //}
 
         //Momentum
         public void Momentum(UNIT curr)
@@ -146,8 +114,6 @@ namespace Awesome.AI.Core.Mechanics
 
             if (p_delta <= d_out_low) d_out_low = p_delta;
             if (p_delta > d_out_high) d_out_high = p_delta;
-
-            //return momentum;            
         }
 
         public void CalcPattern1(PATTERN pattern, int cycles)
@@ -172,14 +138,14 @@ namespace Awesome.AI.Core.Mechanics
         }          
 
         /*
-         * car left
+         * force left
          * */
         public double ApplyStatic()
         {
             double acc = Constants.MAX / 10; //divided by 10 for aprox acc
             double m = 500.0d;
             
-            double Fapplied = m * acc; //force, left
+            double Fapplied = m * acc;
             
             if (Fapplied <= 0.0d)
                 Fapplied = 0.0d;
@@ -188,7 +154,7 @@ namespace Awesome.AI.Core.Mechanics
         }
 
         /*
-         * car right
+         * force right
          * */
         public double ApplyDynamic(UNIT curr)
         {
@@ -203,7 +169,7 @@ namespace Awesome.AI.Core.Mechanics
             if (acc <= 0.0d)
                 acc = 0.0d;// jajajaa
                         
-            double Fapplied = m * acc; //force, left
+            double Fapplied = m * acc;
             
             if (Fapplied <= 0.0d)
                 Fapplied = 0.0d;

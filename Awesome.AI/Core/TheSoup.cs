@@ -1,6 +1,4 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Interfaces;
-using System.Reflection.Metadata;
+﻿using Awesome.AI.Interfaces;
 
 namespace Awesome.AI.Core
 {
@@ -63,21 +61,19 @@ namespace Awesome.AI.Core
                 //&& Filters.Neighbor(x)
                 ).ToList();
 
-            if (units == null)
-                throw new Exception("Unit");
+            if (units is null)
+                throw new Exception("TheSoup, Unit");
 
             UNIT _u = Jump(units);
-            //_u = Filters.Neighbor(_u, units);
-
+            
             return _u;
         }
 
         private UNIT Jump(List<UNIT> units)
         {
-            if (units == null)
+            if (units is null)
                 throw new ArgumentNullException();
 
-            //double near = mind.current == "noise" ? NearMomentum() : NearPercent();
             double near = NearPercent();
 
             units = units.OrderByDescending(x => x.Variable).ToList();
@@ -86,16 +82,16 @@ namespace Awesome.AI.Core
             UNIT below = units.Where(x => Map(x) >= near).LastOrDefault();
             UNIT res = null;
          
-            if (above.IsNull() && below.IsNull())
+            if (above is null && below is null)
                 return null;
 
-            if (above.IsNull())
+            if (above is null)
                 res = below;
 
-            if (below.IsNull())
+            if (below is null)
                 res = above;
 
-            if(res.IsNull())
+            if(res is null)
                 res = near - Map(above) < Map(below) - near ? above : below;
 
             AdjustUnit(near, res, above, below);
@@ -105,7 +101,7 @@ namespace Awesome.AI.Core
 
         private void AdjustUnit(double near, UNIT res, UNIT _a, UNIT _b)
         {
-            if (_a.IsNull() || _b.IsNull())
+            if (_a is null || _b is null)
                 return;
 
             double sign = res == _b ? 1d : -1d;

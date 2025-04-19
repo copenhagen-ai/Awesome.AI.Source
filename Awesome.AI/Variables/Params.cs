@@ -17,6 +17,7 @@ namespace Awesome.AI.Variables
         public IMechanics GetMechanics(MECHANICS run = MECHANICS.NONE)
         {
             IMechanics _mech = null;
+
             /*
                 * INFO (not used)
                 * earth mass:      5.972 × 10^24 kg
@@ -29,34 +30,6 @@ namespace Awesome.AI.Variables
 
             switch (run)
             {
-                //case MECHANICS.WHEEL:
-                //    _mech = new _TheWheel(this.mind, this);
-
-                //    validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                //    case_tags = TAGS.ALL;                                               //used with TAGS and BOTH
-                //    case_occupasion = OCCUPASION.FIXED;                                 //used with OCCU and BOTH
-                //    hack = HACKMODES.HACK;
-                //    mech = MECHANICS.WHEEL;
-                //    matrix_type = MATRIX.GPT;
-
-                //    earth mass:      5.972×10 ^ 24 kg
-                //    sun mass: 1.989×10 ^ 30 kg
-                //    earth gravity: 9.807 m / s²
-                //    distance sun:    148.010.000 km
-                //    earth radius: 6,371 km
-                //    Vars.zero_mass = 10.0d * 1.989E30d;
-                //    mass = 5.972E24d;
-                //    update_cred = 0.050d;
-
-                //    /*
-                //     * boost is life span
-                //     * as it seem momentum seem to go towards below 0.0
-                //     * boost should be as close 1.0, without dying to fast
-                //     * */
-
-                //    boost = 1E9d;
-
-                //    break;
                 case MECHANICS.NOISE:
                     _mech = new NoiseGenerator(mind, this);
 
@@ -66,12 +39,8 @@ namespace Awesome.AI.Variables
                     state = STATE.JUSTRUNNING;
                     pattern = PATTERN.MOODGENERAL;
 
-                    high_at_zero = true;
-                    
+                    high_at_zero = true;                    
                     update_cred = 0.030d;
-
-                    //hack = HACKMODES.NOHACK;                                          //not used any more
-                    //shift = -2.0d;
 
                     break;
                 case MECHANICS.GRAVITY:
@@ -82,7 +51,6 @@ namespace Awesome.AI.Variables
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
                     pattern = PATTERN.NONE;
-                    //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = false;
                     update_cred = 0.05d;
@@ -90,8 +58,6 @@ namespace Awesome.AI.Variables
                     schedule_low = 2.0d;
                     schedule_mid = 6.0d;
                     schedule_high = 9.0d;
-
-                    //shift = 0.0d;
 
                     break;
                 case MECHANICS.TUGOFWAR:
@@ -102,12 +68,9 @@ namespace Awesome.AI.Variables
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     state = STATE.JUSTRUNNING;
                     pattern = PATTERN.MOODGENERAL;
-                    //hack = HACKMODES.NOHACK;                                          //not used any more
 
                     high_at_zero = true;
-                    update_cred = 0.030d;                   
-
-                    //shift = -2.0d;
+                    update_cred = 0.030d;
 
                     break;
                 case MECHANICS.HILL:
@@ -120,10 +83,7 @@ namespace Awesome.AI.Variables
                     pattern = PATTERN.MOODGENERAL;
 
                     high_at_zero = false;
-                    update_cred = 0.050d;
-
-                    //hack = HACKMODES.NOHACK;                                          //obsolete
-                    //shift = 0.0d;                    
+                    update_cred = 0.050d;                   
 
                     break;
                 default: throw new Exception("GetMechanics");
@@ -154,33 +114,13 @@ namespace Awesome.AI.Variables
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
         public STATE state;
         public PATTERN pattern;
-        //public HACKMODES hack;
 
-        // should it be 200, 1000 or more???
-        public double low_cut;
-        public double update_cred;
+        public bool high_at_zero { get; set; }        
+        public double low_cut { get; set; }
+        public double update_cred { get; set; }
 
-        public bool high_at_zero { get; set; }
-        
         public double schedule_low { get; set; }
         public double schedule_mid { get; set; }
         public double schedule_high { get; set; }
-
-        //public double boost;//dimm the fluctuations
-        //public double shift;
-        //public double delta_time;
-        //public double mass;
-        //public double max_index;
-        //public double pos_x_high;
-        //public double pos_x_low;
-        //public double pos_x_start;
-        //public double scale;
-        //public double dir_learningrate;
-        //public double lim_bias = 0.0d;                                            // approx start, then it auto adjusts
-        //public double lim_learningrate;                                           // I call it learningrate, but really it is just an adjustment
-        //public bool goto_school = false;
-        //public bool debug = true;
-        //public bool is_accord = true;
-        //public int learning_epochs = 100;
     }
 }

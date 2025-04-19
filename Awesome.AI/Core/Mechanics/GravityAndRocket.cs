@@ -29,7 +29,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            posxy = Constants.STARTXY;//10;
+            posxy = Constants.STARTXY;
 
             //m_out_high = -1.0E20d;
             //m_out_low = 1.0E20d;
@@ -46,19 +46,12 @@ namespace Awesome.AI.Core.Mechanics
 
         public HARDDOWN HardMom
         {
-            get { return p_delta.ToDownZero(mind); }
-            //get { return deltaMom.ToDownPrev(deltaMomPrev, mind); }
+            //return p_curr.ToDownPrev(p_prev, mind);
+            //return p_curr.ToDownZero(mind);
+
+            //return p_delta.ToDownPrev(p_delta_prev, mind);
+            get { return p_delta.ToDownZero(mind); }            
         }
-
-        //public double HighestVar
-        //{
-        //    get { return UNIT.GetHigh.Variable; }
-        //}
-
-        //public double LowestVar
-        //{
-        //    get { return UNIT.GetLow.Variable; }
-        //}
 
         private double posxy { get; set; }
         public double POS_XY
@@ -68,11 +61,6 @@ namespace Awesome.AI.Core.Mechanics
                 return -1d;
             }
         }
-
-        //public double Variable(UNIT curr)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public void Momentum(UNIT curr)
         {

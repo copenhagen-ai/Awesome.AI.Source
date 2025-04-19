@@ -20,7 +20,6 @@ namespace Awesome.AI.Core
         {
             //CreateNet(is_accord, neurons, learningrate, momentum);
 
-            //this.percent = 0.0d;
             this.subject = subject;
             this.units = units;
             tone = ton;

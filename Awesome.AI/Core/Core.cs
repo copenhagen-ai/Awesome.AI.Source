@@ -19,7 +19,6 @@ namespace Awesome.AI.Core
              * actually not part of the algorithm
              * */
 
-
             user_var = 0.0d;
 
             if (mind.current == "noise")

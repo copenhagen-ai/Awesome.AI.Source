@@ -49,20 +49,13 @@ namespace Awesome.AI.Core.Mechanics
             
             get 
             {
+                //return p_curr.ToDownPrev(p_prev, mind);
+                //return p_curr.ToDownZero(mind);
+
                 //return p_delta.ToDownPrev(p_delta_prev, mind);
                 return p_delta.ToDownZero(mind);
             }
         }
-
-        //public double HighestVar
-        //{
-        //    get { return UNIT.GetLow.Variable; }
-        //}
-
-        //public double LowestVar
-        //{
-        //    get { return UNIT.GetHigh.Variable; }
-        //}
 
         public double POS_XY
         {
@@ -82,19 +75,6 @@ namespace Awesome.AI.Core.Mechanics
                 return posxy;
             }
         }
-
-        //public double Variable(UNIT _c)
-        //{
-        //    if (_c.IsNull())
-        //        throw new Exception("BallOnHill, Variable");
-
-        //    if (_c.IsIDLE())
-        //        throw new Exception("BallOnHill, Variable");
-
-        //    double _var = _c.HighAtZero;
-
-        //    return _var;
-        //}
 
         public void Momentum(UNIT _c)
         {

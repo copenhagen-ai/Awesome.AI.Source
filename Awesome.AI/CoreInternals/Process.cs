@@ -90,37 +90,38 @@ namespace Awesome.AI.CoreInternals
 
             string nam = most_common_unit.root;
 
-            if (!stats.list.Any(x=>x._name == nam))
-                return;
-
-            Stat _s_curr = stats.list.Where(x => x._name == nam).First();
-
-            if (!hits.ContainsKey(nam))
-                hits.Add(nam, 0);
-
-            hits[nam] += 1;
-
-            stats.curr_name = nam;
-            
-            _s_curr.hits = hits[nam];
-
-            remember.Insert(0, nam);
-            if (remember.Count > Constants.REMEMBER)
+            try
             {
-                string name = remember.Last();
+                Stat _s_curr = stats.list.Where(x => x._name == nam).First();
+
+                if (!hits.ContainsKey(nam))
+                    hits.Add(nam, 0);
+
+                hits[nam] += 1;
+
+                stats.curr_name = nam;
+            
+                _s_curr.hits = hits[nam];
+
+                remember.Insert(0, nam);
+                if (remember.Count > Constants.REMEMBER)
+                {
+                    string name = remember.Last();
                 
-                Stat _s_reset = stats.list.Where(x => x._name == name).First();
+                    Stat _s_reset = stats.list.Where(x => x._name == name).First();
 
-                hits[name] -= 1;
+                    hits[name] -= 1;
 
-                stats.reset_name = name;
+                    stats.reset_name = name;
                 
-                _s_reset.hits = hits[name];
+                    _s_reset.hits = hits[name];
 
-                remember.RemoveAt(remember.Count - 1);
+                    remember.RemoveAt(remember.Count - 1);
+                }
+
+                mind.stats = stats;
             }
-
-            mind.stats = stats;
+            catch { return; }
         }
 
         //public void AddHistoryHUB(HUB h)
