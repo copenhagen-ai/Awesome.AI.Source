@@ -40,7 +40,6 @@ namespace Awesome.AI.Core
         public Dictionary<string, Params> parms;
 
         public string current { get; set; }
-        public Dictionary<string, HUB> hub;
         public Dictionary<string, UNIT> unit;
         public UNIT theanswer;
 
@@ -109,16 +108,13 @@ namespace Awesome.AI.Core
                 mem = new Memory(this, Constants.NUMBER_OF_UNITS);
 
                 unit = new Dictionary<string, UNIT>();
-                hub = new Dictionary<string, HUB>();
-
+                
                 foreach (string s in list)
                 {
                     if (mindtype == MINDS.ANDREW)
                         unit[s] = mem.UNITS_ALL().Where(x => x.root == "_fembots1").FirstOrDefault();
                     if (mindtype == MINDS.ROBERTA)
                         unit[s] = mem.UNITS_ALL().Where(x => x.root == "_macho machines1").FirstOrDefault();
-                    
-                    hub[s] = unit[s].HUB;
                 }
 
                 
@@ -251,9 +247,9 @@ namespace Awesome.AI.Core
                 return true;
 
             mech["noise"].CalcPattern1(PATTERN.NONE, 0);
-            mech["current"].CalcPattern1(parms[current].version, cycles);//mood general
-            mech["current"].CalcPattern2(parms[current].version, cycles);//mood good
-            mech["current"].CalcPattern3(parms[current].version, cycles);//mood bad
+            mech["current"].CalcPattern1(parms[current].pattern, cycles);//mood general
+            mech["current"].CalcPattern2(parms[current].pattern, cycles);//mood good
+            mech["current"].CalcPattern3(parms[current].pattern, cycles);//mood bad
             
             dir.Update();
             pos.Update();
@@ -268,7 +264,6 @@ namespace Awesome.AI.Core
 
         private void TheSoup() 
         {
-            hub[current] = unit[current].HUB;
             unit[current] = matrix.NextUnit();
         }
 
@@ -294,7 +289,6 @@ namespace Awesome.AI.Core
             mood.MoodOK(_pro);
         }
 
-        //private static bool _ok = true;
         private async void ProcessPass()
         {
             while (ok)

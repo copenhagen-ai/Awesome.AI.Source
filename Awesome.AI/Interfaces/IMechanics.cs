@@ -30,9 +30,9 @@ namespace Awesome.AI.Interfaces
 
         //these are thought patterns
         //void CalcPatternOld(MECHVERSION version);//do calculations
-        void CalcPattern1(PATTERN version, int cycles);//mood general
-        void CalcPattern2(PATTERN version, int cycles);//good mood
-        void CalcPattern3(PATTERN version, int cycles);//bad mood
+        void CalcPattern1(PATTERN pattern, int cycles);//mood general
+        void CalcPattern2(PATTERN pattern, int cycles);//good mood
+        void CalcPattern3(PATTERN pattern, int cycles);//bad mood
 
         //double Variable(UNIT c);//force, mass, distance, acceleration etc
 

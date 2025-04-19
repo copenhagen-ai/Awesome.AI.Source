@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
+using System.Reflection.Metadata;
 
 namespace Awesome.AI.Core
 {
@@ -97,13 +98,20 @@ namespace Awesome.AI.Core
             if(res.IsNull())
                 res = near - Map(above) < Map(below) - near ? above : below;
 
-            double sign = res == below ? 1d : -1d;
-            double dist = DistAbsolute(res, near);
-
-            if (!(above.IsNull() || below.IsNull()))
-                res.Adjust(sign, dist);
+            AdjustUnit(near, res, above, below);
 
             return res;
+        }
+
+        private void AdjustUnit(double near, UNIT res, UNIT _a, UNIT _b)
+        {
+            if (_a.IsNull() || _b.IsNull())
+                return;
+
+            double sign = res == _b ? 1d : -1d;
+            double dist = DistAbsolute(res, near);
+
+            res.Adjust(sign, dist);
         }
 
         private double Map(UNIT x)

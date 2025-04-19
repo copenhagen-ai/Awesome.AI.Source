@@ -258,5 +258,18 @@ namespace Awesome.AI.Common
 
             return res;
         }
+
+        public double Roots(double? _x, double _a, double _b, double _c, out double _x1, out double _x2)
+        {
+            _x1 = (-_b + Math.Sqrt(_b * _b - 4 * _a * _c)) / (2 * _a);
+            _x2 = (-_b - Math.Sqrt(_b * _b - 4 * _a * _c)) / (2 * _a);
+
+            if (_x.IsNull())
+                return -1d;
+
+            double res = _x >= 0.0d ? _x2 : _x1;
+
+            return res;
+        }
     }
 }

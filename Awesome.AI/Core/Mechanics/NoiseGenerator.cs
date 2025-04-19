@@ -98,15 +98,11 @@ namespace Awesome.AI.Core.Mechanics
         //Momentum
         public void Momentum(UNIT curr)
         {
-            /*
-             * I guess this is a changeable function, for now it is just the one I know to calculate force
-             * */
-
             if (curr.IsNull())
-                throw new Exception("NoiseGenerator, Variable");
+                throw new Exception("NoiseGenerator, Momentum");
 
             if (curr.IsIDLE())
-                throw new Exception("NoiseGenerator, Variable");
+                throw new Exception("NoiseGenerator, Momentum");
 
             Calc(curr, true);
         }
@@ -136,8 +132,7 @@ namespace Awesome.AI.Core.Mechanics
             if (peek) {
                 n_momentum += (m * 2) * deltaVel;            
             }
-            else
-            {
+            else {
                 p_delta_prev = p_delta;
                 p_delta = (m * 2) * deltaVel;
                 p_curr += p_delta;
@@ -155,23 +150,23 @@ namespace Awesome.AI.Core.Mechanics
             //return momentum;            
         }
 
-        public void CalcPattern1(PATTERN version, int cycles)
+        public void CalcPattern1(PATTERN pattern, int cycles)
         {
             if (mind.current != "noise")
                 return;
 
-            if (version != PATTERN.NONE)
+            if (pattern != PATTERN.NONE)
                 return;
 
             Calc(mind.unit["noise"], false);
         }
 
-        public void CalcPattern2(PATTERN version, int cycles)
+        public void CalcPattern2(PATTERN pattern, int cycles)
         {
             throw new NotImplementedException("NoiseGenerator, CalcPattern2");
         }
 
-        public void CalcPattern3(PATTERN version, int cycles)
+        public void CalcPattern3(PATTERN pattern, int cycles)
         {
             throw new NotImplementedException("NoiseGenerator, CalcPattern3");
         }          
@@ -201,7 +196,8 @@ namespace Awesome.AI.Core.Mechanics
                 throw new Exception("ApplyDynamic");
 
             double max = Constants.MAX;
-            double acc = (max / 10.0d) - (curr.HighAtZero / 10.0d); //divided by 10 for aprox acc
+            double val = curr.Variable;
+            double acc = (max - val) / 10.0d; //divided by 10 for aprox acc
             double m = 500.0d;
 
             if (acc <= 0.0d)

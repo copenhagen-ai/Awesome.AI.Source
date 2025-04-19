@@ -143,40 +143,40 @@ namespace Awesome.AI.Core.Mechanics
             if (p_delta > d_out_high) d_out_high = p_delta;
         }
 
-        public void CalcPattern1(PATTERN version, int cycles)
+        public void CalcPattern1(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODGENERAL)
+            if (pattern != PATTERN.MOODGENERAL)
                 return;
 
-            pattern_curr = version;
-            Calc(version, cycles);
+            pattern_curr = pattern;
+            Calc(pattern, cycles);
         }
 
-        public void CalcPattern2(PATTERN version, int cycles)
+        public void CalcPattern2(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODGOOD)
+            if (pattern != PATTERN.MOODGOOD)
                 return;
 
-            pattern_curr = version;
-            Calc(version, cycles);
+            pattern_curr = pattern;
+            Calc(pattern, cycles);
         }
 
-        public void CalcPattern3(PATTERN version, int cycles)
+        public void CalcPattern3(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODBAD)
+            if (pattern != PATTERN.MOODBAD)
                 return;
 
-            pattern_curr = version;
-            Calc(version, cycles);
+            pattern_curr = pattern;
+            Calc(pattern, cycles);
         }
 
         PATTERN pattern_curr = PATTERN.NONE;

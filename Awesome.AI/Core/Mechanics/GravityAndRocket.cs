@@ -5,7 +5,7 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
-    public class Gravity : IMechanics
+    public class GravityAndRocket : IMechanics
     {
         public double n_momentum { get; set; }
         public double p_curr { get; set; }
@@ -24,8 +24,8 @@ namespace Awesome.AI.Core.Mechanics
         public double posx_low { get; set; }
         
         private TheMind mind;
-        private Gravity() { }
-        public Gravity(TheMind mind, Params parms)
+        private GravityAndRocket() { }
+        public GravityAndRocket(TheMind mind, Params parms)
         {
             this.mind = mind;
 
@@ -79,34 +79,34 @@ namespace Awesome.AI.Core.Mechanics
             throw new NotImplementedException();
         }
 
-        public void CalcPattern1(PATTERN version, int cycles)
+        public void CalcPattern1(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODGENERAL)
+            if (pattern != PATTERN.MOODGENERAL)
                 return;
 
             throw new NotImplementedException();
         }
 
-        public void CalcPattern2(PATTERN version, int cycles)
+        public void CalcPattern2(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODGOOD)
+            if (pattern != PATTERN.MOODGOOD)
                 return;
 
             throw new NotImplementedException();
         }
 
-        public void CalcPattern3(PATTERN version, int cycles)
+        public void CalcPattern3(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODBAD)
+            if (pattern != PATTERN.MOODBAD)
                 return;
 
             throw new NotImplementedException();

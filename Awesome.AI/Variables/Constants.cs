@@ -4,7 +4,10 @@ namespace Awesome.AI.Variables
 {
     public class Constants
     {
-        //these are HUB subjects
+        /*
+         * these are HUB subjects
+         * */
+
         public const string andrew_s1 = "procrastination";
         public const string andrew_s2 = "fembots";
         public const string andrew_s3 = "power tools";
@@ -27,6 +30,9 @@ namespace Awesome.AI.Variables
         public const string roberta_s9 = "the weather";
         public const string roberta_s10 = "having fun";
         
+        /*
+         * decision values
+         * */
 
         public const string location_should_yes = "AYES";
         public const string location_should_no = "ANO";
@@ -58,36 +64,6 @@ namespace Awesome.AI.Variables
             { "WHISTLE", new int[]{ 5, 15 } },
         };
 
-
-        public const double STARTXY = 5.0d;
-        public const double LOWXY = 0.0d;
-        public const double HIGHXY = 10.0d;
-        public const double MIN = 0.5d;
-        public const double MAX = 99.5d;
-        public const double LOW_CREDIT = 0.0d;
-        public const double MAX_CREDIT = 10.0d;
-
-        public const double ETA = 0.1d;//learningrate
-        public const double ALPHA = 1.0d;//distance
-        public const double VERY_LOW = 1.0E-2;
-        public const double GRAVITY = 9.81d;
-        public const double GRAV_CONST = 6.674E-11d;
-        public const double MAX_PAIN = 100.0d;
-                
-        public const double BASE_REDUCTION = 2d / 3d;       //needs to be this otherwise position keeps going down
-        public const double LAPSES = 99d;                   //yesno ratio : reaction time in cycles
-        public const double RATIO = 50d;
-        public const int FIRST_RUN = 5;
-        public const int NUMBER_OF_UNITS = 10;
-        public const int RUNTIME = 3;                       //minutes
-
-        public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
-
-        public const int MICRO_SEC = 10000;                  //call micro timer every 1000µs (1ms)
-        public const int HIST_TOTAL = 100;                  //the number of UNITS???
-        public const int REMEMBER = 200;
-
-
         public static readonly string[] deci_subject = { "long_decision_should", "long_decision_what", "quick_decision_should" };
 
         public static readonly Dictionary<string, string> long_deci_roberta = new Dictionary<string, string>
@@ -102,6 +78,38 @@ namespace Awesome.AI.Variables
             { "location", "LIVINGROOM" },
             { "answer", "" },
             { "ask", "" }
-        };        
+        };
+
+        /*
+         * system constants
+         * */
+
+        public const double STARTXY = 5.0d;
+        public const double LOWXY = 0.0d;
+        public const double HIGHXY = 10.0d;
+        public const double MIN = 0.5d;
+        public const double MAX = 99.5d;
+        public const double LOW_CREDIT = 0.0d;
+        public const double MAX_CREDIT = 10.0d;
+
+        public const double ETA = 0.1d;                     //learningrate
+        public const double ALPHA = 1.0d;                   //distance
+        public const double VERY_LOW = 1.0E-2;
+        public const double GRAVITY = 9.81d;
+        public const double GRAV_CONST = 6.674E-11d;
+        public const double MAX_PAIN = 100.0d;
+                
+        public const double BASE_REDUCTION = 2d / 3d;       //0.666 hehe
+        public const double LAPSES = 99d;                   //yesno ratio : reaction time in cycles
+        public const double RATIO = 50d;
+        public const int FIRST_RUN = 5;
+        public const int NUMBER_OF_UNITS = 10;
+        public const int RUNTIME = 3;                       //minutes
+
+        public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
+
+        public const int MICRO_SEC = 10000;                 //call micro timer every 1000µs (1ms)
+        public const int HIST_TOTAL = 100;                  //the number of UNITS???
+        public const int REMEMBER = 200;                    //for stats
     }
 }

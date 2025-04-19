@@ -29,9 +29,9 @@ namespace Awesome.AI.CoreSystems
                 switch (_rand)
                 {
                     case <= 0: throw new Exception("MoodGenerator, Generate");                        
-                    case <= 3: mind.parms[mind.current].version = PATTERN.MOODGENERAL; break;
-                    case <= 6: mind.parms[mind.current].version = PATTERN.MOODGOOD; break;
-                    case <= 9: mind.parms[mind.current].version = PATTERN.MOODBAD; break;
+                    case <= 3: mind.parms[mind.current].pattern = PATTERN.MOODGENERAL; break;
+                    case <= 6: mind.parms[mind.current].pattern = PATTERN.MOODGOOD; break;
+                    case <= 9: mind.parms[mind.current].pattern = PATTERN.MOODBAD; break;
                     default: throw new Exception("MoodGenerator, Generate");
                 }
             }
@@ -59,7 +59,7 @@ namespace Awesome.AI.CoreSystems
             double avg = Avg.Average();
             double res = mind.calc.Normalize(avg, p_low, p_high, 0.0d, 100.0d);
 
-            PATTERN currentmood = mind.parms[mind.current].version;
+            PATTERN currentmood = mind.parms[mind.current].pattern;
 
             switch (currentmood)
             {

@@ -92,7 +92,7 @@ namespace Awesome.AI.Web.AI.Common
 
             whistle = mind._quick.Result ? "[Whistling to my self..]" : arr[count];
 
-            mood = mind.parms[mind.current].version.ToString();
+            mood = mind.parms[mind.current].pattern.ToString();
             moodOK = mind.mood.Result == PATTERNCOLOR.GREEN;
 
             if (mind._long.Result["answer"] != "") {

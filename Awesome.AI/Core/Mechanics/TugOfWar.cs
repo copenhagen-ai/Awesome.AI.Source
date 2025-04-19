@@ -101,7 +101,7 @@ namespace Awesome.AI.Core.Mechanics
 
         private double velocity = 0.0; // Initial velocity in m/s
         private double position_x = 5.0; // Initial position in meters
-        private void Calc(PATTERN version, int cycles)
+        private void Calc(PATTERN pattern, int cycles)
         {
             if (cycles == 1)
                 Reset();
@@ -122,7 +122,7 @@ namespace Awesome.AI.Core.Mechanics
             double t = cycles * dt;
 
             double F1 = ApplyStatic(Fmax);                                     // Constant force in Newtons (e.g., truck pulling)
-            double F2 = ApplyDynamic(version, Fmax, t, omega, eta);
+            double F2 = ApplyDynamic(pattern, Fmax, t, omega, eta);
             double friction = frictionForce * -Math.Sign(velocity);              // Friction opposes motion
             double Fnet = -F1 + F2 + friction;                                   // Net force with F1 constant and F2 dynamic
 
@@ -147,40 +147,40 @@ namespace Awesome.AI.Core.Mechanics
             if (p_delta > d_out_high) d_out_high = p_delta;
         }
 
-        public void CalcPattern1(PATTERN version, int cycles)
+        public void CalcPattern1(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODGENERAL)
+            if (pattern != PATTERN.MOODGENERAL)
                 return;
 
-            pattern_curr = version;
-            Calc(version, cycles);
+            pattern_curr = pattern;
+            Calc(pattern, cycles);
         }
 
-        public void CalcPattern2(PATTERN version, int cycles)
+        public void CalcPattern2(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODGOOD)
+            if (pattern != PATTERN.MOODGOOD)
                 return;
 
-            pattern_curr = version;
-            Calc(version, cycles);
+            pattern_curr = pattern;
+            Calc(pattern, cycles);
         }
 
-        public void CalcPattern3(PATTERN version, int cycles)
+        public void CalcPattern3(PATTERN pattern, int cycles)
         {
             if (mind.current != "current")
                 return;
 
-            if (version != PATTERN.MOODBAD)
+            if (pattern != PATTERN.MOODBAD)
                 return;
 
-            pattern_curr = version;
-            Calc(version, cycles);
+            pattern_curr = pattern;
+            Calc(pattern, cycles);
         }
 
         PATTERN pattern_curr = PATTERN.NONE;
