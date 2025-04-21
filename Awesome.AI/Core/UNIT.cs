@@ -168,6 +168,34 @@ namespace Awesome.AI.Core
             Adjust(sign, dist);
         }
 
+        private bool Add(double near, double dist)
+        {
+            int count = HUB.units.Count;
+            int max = HUB.max_num_units;
+            double avg = 100.0d / count;
+
+            if (count > max)
+                return false;
+
+            if (dist < avg)
+                return false;
+
+            double low = near - CONST.ALPHA >= CONST.MIN ? CONST.MIN : near - CONST.ALPHA;
+            double high = near + CONST.ALPHA >= CONST.MAX ? CONST.MAX : near + CONST.ALPHA;
+
+            mind.mem.UNITS_ADD(this, low, high);
+            
+            return true;
+        }
+
+        private void Remove(double near)
+        {
+            double low = near - CONST.ALPHA;
+            double high = near + CONST.ALPHA;
+
+            mind.mem.UNITS_REM(this, low, high);
+        }
+
         private void Adjust(double sign, double dist)
         {
             if (dist < CONST.ALPHA)
@@ -176,51 +204,6 @@ namespace Awesome.AI.Core
             double rand = mind.rand.MyRandomDouble(10)[5];
 
             Index += rand * CONST.ETA * sign;
-        }
-
-        private bool Add(double near, double dist)
-        {
-            int count = HUB.units.Count;
-            int max = HUB.max_num_units;
-            double avg = 100.0d / count;
-
-            if (count >= max)
-                return false;
-
-            if (dist < avg)
-                return false;
-
-            double low = near - CONST.ALPHA >= CONST.MIN ? CONST.MIN : near - CONST.ALPHA;
-            double high = near + CONST.ALPHA >= CONST.MAX ? CONST.MAX : near + CONST.ALPHA;
-            double idx = mind.rand.MyRandomDouble(1)[0];
-            idx = mind.calc.Normalize(idx, 0.0d, 1.0d, low, high);
-
-            List<string> list = mind.mem.Tags(mind.mindtype);
-            int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
-            string ticket = "" + HUB.subject + rand;
-
-            string guid = hub_guid;
-
-            UNIT _u = Create(mind, guid, idx, "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
-            mind.mem.UNITS_ADD(_u);
-            
-            return true;
-        }
-
-        private bool Remove(double near)
-        {
-            double low = near - CONST.ALPHA;
-            double high = near + CONST.ALPHA;
-
-            List<UNIT> list = mind.mem.UNITS_ALL().Where(x=>x.Index > low && x.Index < high).ToList();
-            list = list.Where(x=>x.created < this.created).ToList();
-
-            bool action = list.Any();
-
-            foreach(UNIT unit in list) 
-                mind.mem.UNITS_REM(unit);
-
-            return action;
         }
 
         public static UNIT IDLE_UNIT(TheMind mind)

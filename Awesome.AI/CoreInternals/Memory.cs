@@ -252,20 +252,34 @@ namespace Awesome.AI.CoreInternals
             return _u;
         }
 
-        public void UNITS_ADD(UNIT _u)
+        public void UNITS_ADD(UNIT unit, double low, double high)
         {
+            double idx = mind.rand.MyRandomDouble(1)[0];
+            idx = mind.calc.Normalize(idx, 0.0d, 1.0d, low, high);
+
+            List<string> list = mind.mem.Tags(mind.mindtype);
+            int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
+            string ticket = "" + unit.HUB.subject + rand;
+
+            string guid = unit.hub_guid;
+
+            UNIT _u = UNIT.Create(mind, guid, idx, "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
             HUB _h = _u.HUB;
 
             _h.units.Add(_u);
             units_running.Add(_u);
         }
 
-        public void UNITS_REM(UNIT _u)
+        public void UNITS_REM(UNIT unit, double low, double high)
         {
-            HUB _h = _u.HUB;
+            List<UNIT> list = mind.mem.UNITS_ALL().Where(x => x.Index > low && x.Index < high).ToList();
+            list = list.Where(x => x.created < unit.created).ToList();
 
-            _h.units.Remove(_u);
-            units_running.Remove(_u);
+            foreach (UNIT _u in list) {
+                HUB _h = _u.HUB;
+                _h.units.Remove(_u);
+                units_running.Remove(_u);
+            }
         }
 
         public List<HUB> HUBS_ALL(STATE state)
