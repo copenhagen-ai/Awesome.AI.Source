@@ -29,7 +29,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            posxy = Constants.STARTXY;
+            posxy = CONST.STARTXY;
 
             //m_out_high = -1.0E20d;
             //m_out_low = 1.0E20d;

@@ -64,8 +64,8 @@ namespace Awesome.AI.CoreSystems
             HUB hub = current.HUB;
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
-            HUB _1 = mind.mem.HUBS_SUB(mind.parms[mind.current].state, Constants.deci_subject[0]);
-            HUB _2 = mind.mem.HUBS_SUB(mind.parms[mind.current].state, Constants.deci_subject[1]);
+            HUB _1 = mind.mem.HUBS_SUB(mind.State, CONST.deci_subject[0]);
+            HUB _2 = mind.mem.HUBS_SUB(mind.State, CONST.deci_subject[1]);
 
             MyRandom rand = mind.rand;
             int[] _rand = rand.MyRandomInt(1, 5);
@@ -93,7 +93,7 @@ namespace Awesome.AI.CoreSystems
                 if (current.data == "CYES")
                 {
                     HUB _hub = null;
-                    List<HUB> list = mind.mem.HUBS_ALL(mind.parms[mind.current].state);
+                    List<HUB> list = mind.mem.HUBS_ALL(mind.State);
                     int count = list.Count;
                     int i = 0;
                     int[] _r = mind.rand.MyRandomInt(100, count - 1);
@@ -101,7 +101,7 @@ namespace Awesome.AI.CoreSystems
                     do {
                         _hub = list[_r[i]];
                         i++;
-                    } while (Constants.deci_subject.Contains(_hub.subject));
+                    } while (CONST.deci_subject.Contains(_hub.subject));
 
                     Result[type] = "" + _hub.subject;
                     State[type] = 0;

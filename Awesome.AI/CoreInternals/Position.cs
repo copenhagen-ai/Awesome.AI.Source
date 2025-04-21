@@ -22,14 +22,14 @@ namespace Awesome.AI.CoreInternals
         private double pos = 5.0d;
         private double pos_prev = 0.0d;
         public MOOD Mood { get; set; }
-        public double Pos { get { return pos <= 0.0d ? Constants.VERY_LOW : pos; } }
+        public double Pos { get { return pos <= 0.0d ? CONST.VERY_LOW : pos; } }
 
         public void Update()
         {
             if (mind.current == "noise")
                 return;
 
-            if (!mind.calc.IsRandomSample(200, 10)) 
+            if (!CONST.SAMPLE200.RandomSample(mind)) 
                 return;
 
             Schedule();

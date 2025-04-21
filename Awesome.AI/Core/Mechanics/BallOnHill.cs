@@ -64,10 +64,10 @@ namespace Awesome.AI.Core.Mechanics
                 double posxy = position_x;
 
                 if (posxy <= 0.1d && mind.goodbye.IsNo())
-                    posxy = Constants.VERY_LOW;
+                    posxy = CONST.VERY_LOW;
                 
-                if (posxy < Constants.LOWXY) posxy = Constants.LOWXY;
-                if (posxy > Constants.HIGHXY) posxy = Constants.HIGHXY;
+                if (posxy < CONST.LOWXY) posxy = CONST.LOWXY;
+                if (posxy > CONST.HIGHXY) posxy = CONST.HIGHXY;
 
                 if (posxy <= posx_low) posx_low = posxy;
                 if (posxy > posx_high) posx_high = posxy;
@@ -82,7 +82,7 @@ namespace Awesome.AI.Core.Mechanics
         }
 
         private double velocity = 0.0;
-        private double position_x = Constants.STARTXY;
+        private double position_x = CONST.STARTXY;
         private void Calc(PATTERN version, int cycles)
         {
             if (cycles == 1)
@@ -90,7 +90,7 @@ namespace Awesome.AI.Core.Mechanics
 
             // Constants
             double a = 0.1d;                    // Parabola coefficient (hill steepness)
-            double g = Constants.GRAVITY;       // Gravity (m/s^2)
+            double g = CONST.GRAVITY;       // Gravity (m/s^2)
             double F0 = 5.0d;                   // Wind force amplitude (N)
             double omega = Math.PI;             // Wind frequency
             double beta = 0.02d;                // Friction coefficient
@@ -168,7 +168,7 @@ namespace Awesome.AI.Core.Mechanics
 
             pattern_prev = pattern_curr;
 
-            position_x = Constants.STARTXY;
+            position_x = CONST.STARTXY;
             velocity = 0.0d;
             p_curr = 0.0d;
             p_delta = 0.0d;

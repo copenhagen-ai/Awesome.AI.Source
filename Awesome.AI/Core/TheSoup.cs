@@ -26,21 +26,21 @@ namespace Awesome.AI.Core
             this.mind = mind;
         }
 
-        public UNIT NextUnit()
+        public UNIT NextUnit(UNIT _u)
         {
-            if (!mind.unit[mind.current].IsIDLE())
+            if (!_u.IsIDLE())
             {
                 UNIT w_act = Unit();
 
-                if (w_act != null)
+                if (w_act is not null)
                     return w_act;                
             }
             
             /*
              * with more HUBS and UNITS added, this buffer wil be used less often
              * */
-            UNIT _u = Buffer();
-            return _u;
+            UNIT __u = Buffer();
+            return __u;
         }
 
         /*
@@ -94,12 +94,12 @@ namespace Awesome.AI.Core
             if(res is null)
                 res = near - Map(above) < Map(below) - near ? above : below;
 
-            AdjustUnit(near, res, above, below);
+            UpdateUnit(near, res, above, below);
 
             return res;
         }
 
-        private void AdjustUnit(double near, UNIT res, UNIT _a, UNIT _b)
+        private void UpdateUnit(double near, UNIT res, UNIT _a, UNIT _b)
         {
             if (_a is null || _b is null)
                 return;
@@ -107,11 +107,13 @@ namespace Awesome.AI.Core
             double sign = res == _b ? 1d : -1d;
             double dist = DistAbsolute(res, near);
 
-            res.Adjust(sign, dist);
+            res.Update(sign, near, dist);
         }
 
         private double Map(UNIT x)
         {
+            return x.Variable;
+
             if (mind.current == "current")
                 return x.Variable;
 
@@ -170,9 +172,9 @@ namespace Awesome.AI.Core
                                 && mind.filters.LowCut(x)
                                 ).OrderByDescending(x => x.Variable).ToList();
             
-            int[] rand = mind.rand.MyRandomInt(1,units.Count - 1);
-            UNIT __u = units.Any() ? units[rand[0]] : UNIT.IDLE_UNIT(mind);
-            return __u;
+            int rand = mind.rand.MyRandomInt(1,units.Count - 1)[0];
+            UNIT _u = units.Any() ? units[rand] : UNIT.IDLE_UNIT(mind);
+            return _u;
         }
 
         //private double NearEnergy()

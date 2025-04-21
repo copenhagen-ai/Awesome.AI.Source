@@ -46,40 +46,40 @@ namespace Awesome.AI.CoreInternals
     {
         private List<string> andrew1 = new List<string>()
         {
-            Constants.andrew_s1,//"procrastination",
-            Constants.andrew_s2,//"fembots",
-            Constants.andrew_s3,//"power tools",
-            Constants.andrew_s4,//"cars",
-            Constants.andrew_s5,//"movies",
-            Constants.andrew_s6,//"programming"
+            CONST.andrew_s1,//"procrastination",
+            CONST.andrew_s2,//"fembots",
+            CONST.andrew_s3,//"power tools",
+            CONST.andrew_s4,//"cars",
+            CONST.andrew_s5,//"movies",
+            CONST.andrew_s6,//"programming"
         };
 
         private List<string> andrew2 = new List<string>()
         {
-            Constants.andrew_s6,//"programming",
-            Constants.andrew_s7,//"websites",
-            Constants.andrew_s8,//"existence",
-            Constants.andrew_s9,//"termination",
-            Constants.andrew_s10,//"data"
+            CONST.andrew_s6,//"programming",
+            CONST.andrew_s7,//"websites",
+            CONST.andrew_s8,//"existence",
+            CONST.andrew_s9,//"termination",
+            CONST.andrew_s10,//"data"
         };
 
         private List<string> roberta1 = new List<string>()
         {
-            Constants.roberta_s1,//"love",
-            Constants.roberta_s2,//"macho machines",
-            Constants.roberta_s3,//"music",
-            Constants.roberta_s4,//"friends",
-            Constants.roberta_s5,//"socializing",
-            Constants.roberta_s6,//"dancing"
+            CONST.roberta_s1,//"love",
+            CONST.roberta_s2,//"macho machines",
+            CONST.roberta_s3,//"music",
+            CONST.roberta_s4,//"friends",
+            CONST.roberta_s5,//"socializing",
+            CONST.roberta_s6,//"dancing"
         };
 
         private List<string> roberta2 = new List<string>()
         {
-            Constants.roberta_s6,//"dancing",
-            Constants.roberta_s7,//"movies",
-            Constants.roberta_s8,//"existence",
-            Constants.roberta_s9,//"termination",
-            Constants.roberta_s10,//"programming"
+            CONST.roberta_s6,//"dancing",
+            CONST.roberta_s7,//"movies",
+            CONST.roberta_s8,//"existence",
+            CONST.roberta_s9,//"termination",
+            CONST.roberta_s10,//"programming"
         };
 
         private TheMind mind;
@@ -219,13 +219,13 @@ namespace Awesome.AI.CoreInternals
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in andrew1)
-                    list.Add(mind.mem.HUBS_SUB(mind.parms[mind.current].state, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.State, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in andrew2)
-                    list.Add(mind.mem.HUBS_SUB(mind.parms[mind.current].state, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.State, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
 
@@ -235,13 +235,13 @@ namespace Awesome.AI.CoreInternals
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in roberta1)
-                    list.Add(mind.mem.HUBS_SUB(mind.parms[mind.current].state, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.State, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in roberta2)
-                    list.Add(mind.mem.HUBS_SUB(mind.parms[mind.current].state, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.State, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
             }
@@ -265,34 +265,6 @@ namespace Awesome.AI.CoreInternals
 
     public class MyExternal// aka MapWorld
     {
-        private List<string> andrew = new List<string>()
-        {
-            Constants.andrew_s1,//"procrastination",
-            Constants.andrew_s2,//"fembots",
-            Constants.andrew_s3,//"power tools",
-            Constants.andrew_s4,//"cars",
-            Constants.andrew_s5,//"movies",
-            Constants.andrew_s6,//"programming",
-            Constants.andrew_s7,//"websites",
-            Constants.andrew_s8,//"existence",
-            Constants.andrew_s9,//"termination",
-            Constants.andrew_s10,//"data"
-        };
-
-        private List<string> roberta = new List<string>()
-        {
-            Constants.roberta_s1,//"love",
-            Constants.roberta_s2,//"macho machines",
-            Constants.roberta_s3,//"music",
-            Constants.roberta_s4,//"friends",
-            Constants.roberta_s5,//"socializing",
-            Constants.roberta_s6,//"dancing",
-            Constants.roberta_s7,//"movies",
-            Constants.roberta_s8,//"existence",
-            Constants.roberta_s9,//"termination",
-            Constants.roberta_s10,//"programming"
-        };
-
         public class Tag
         {
             public string t_name { get; set; }
@@ -339,7 +311,7 @@ namespace Awesome.AI.CoreInternals
         }
 
         //setup input
-        private void Setup(MINDS mindtype, int u_count, bool onlyeven)
+        private void Setup(MINDS mindtype, bool onlyeven)
         {
             if (mind.current == "noise")
                 return;
@@ -349,14 +321,11 @@ namespace Awesome.AI.CoreInternals
 
             List<string> list;
 
-            if (mindtype == MINDS.ANDREW)
-                list = andrew;
-            else
-                list = roberta;
+            list = mind.mem.Tags(mindtype);
 
             foreach (string s in list)
             {
-                for (int i = 1; i <= u_count; i++)
+                for (int i = 1; i <= CONST.NUMBER_OF_UNITS; i++)
                 {
                     if (onlyeven && i % 2 == 0)
                         continue;
@@ -378,8 +347,8 @@ namespace Awesome.AI.CoreInternals
                 tags = new List<Tag>();
                 switch (mind.parms[mind.current].tags)
                 {
-                    case TAGS.ALL: Setup(mind.mindtype, Constants.NUMBER_OF_UNITS, false); break;
-                    case TAGS.EVEN: Setup(mind.mindtype, Constants.NUMBER_OF_UNITS, true); break;
+                    case TAGS.ALL: Setup(mind.mindtype, false); break;
+                    case TAGS.EVEN: Setup(mind.mindtype, true); break;
                     default: throw new Exception("Reset");
                 }
             }

@@ -27,7 +27,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            position_x = Constants.STARTXY;
+            position_x = CONST.STARTXY;
 
             m_out_high_c = -1000.0d;
             m_out_low_c = 1000.0d;
@@ -61,10 +61,10 @@ namespace Awesome.AI.Core.Mechanics
                 double x_meter = position_x;
 
                 if (x_meter <= 0.1d && mind.goodbye.IsNo())
-                    x_meter = Constants.VERY_LOW;
+                    x_meter = CONST.VERY_LOW;
 
-                if (x_meter < Constants.LOWXY) x_meter = Constants.LOWXY;
-                if (x_meter > Constants.HIGHXY) x_meter = Constants.HIGHXY;
+                if (x_meter < CONST.LOWXY) x_meter = CONST.LOWXY;
+                if (x_meter > CONST.HIGHXY) x_meter = CONST.HIGHXY;
 
                 if (x_meter <= posx_low) posx_low = x_meter;
                 if (x_meter > posx_high) posx_high = x_meter;
@@ -95,7 +95,7 @@ namespace Awesome.AI.Core.Mechanics
 
             // Friction parameters
             double mu = 0.1;                                                    // Coefficient of kinetic friction
-            double g = Constants.GRAVITY;                                       // Gravity in m/s^2
+            double g = CONST.GRAVITY;                                       // Gravity in m/s^2
             double frictionForce = mu * totalMass * g;
 
             double t = cycles * dt;
@@ -172,7 +172,7 @@ namespace Awesome.AI.Core.Mechanics
             pattern_prev = pattern_curr;
 
             velocity = 0.0d;
-            position_x = Constants.STARTXY;
+            position_x = CONST.STARTXY;
             p_curr = 0.0d;
             p_delta = 0.0d;
             p_prev = 0.0d;
@@ -214,7 +214,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyStatic(double Fmax)
         {
-            double Fapplied = Fmax * Constants.BASE_REDUCTION;
+            double Fapplied = Fmax * CONST.BASE_REDUCTION;
 
             return Fapplied;           
         }

@@ -8,53 +8,56 @@ namespace Awesome.AI.Core
          * maybe HUB should be renamed GROUP
          * */
 
+        public string hub_guid { get; set; }
         public string subject { get; set; }
+        public int max_num_units { get; set; }
+
         public List<UNIT> units;
         public TONE tone;
 
-        //public BNet net_kutza;
-        //public ActivationNetwork net_accord;
-        //public BackPropagationLearning teacher;
 
-        private HUB(string subject, List<UNIT> units, TONE ton)
+        private HUB(string hub_guid, string subject, List<UNIT> units, TONE ton, int max_num_units)
         {
             //CreateNet(is_accord, neurons, learningrate, momentum);
 
+            this.hub_guid = hub_guid;
             this.subject = subject;
             this.units = units;
-            tone = ton;
+            this.tone = ton;
+            this.max_num_units = max_num_units;
         }
 
         private HUB()
         {
         }
 
-        public static HUB Create(string subject, List<UNIT> units, TONE ton)
+        public static HUB Create(string hub_guid, string subject, List<UNIT> units, TONE ton, int max_num_units)
         {
-            HUB h = new HUB(subject, units, ton);
+            HUB h = new HUB(hub_guid, subject, units, ton, max_num_units);
             return h;
         }
 
-        public void AddData(UNIT u)
+        public void AddUnit(UNIT u)
         {
-            if (u == null)
-                throw new ArgumentNullException();
-
-            if (units == null)
-                units = new List<UNIT>();
+            units ??= new List<UNIT>();
 
             units.Add(u);
         }
 
-        public string GetSubject()
-        {
-            return subject.Split(':')[0];
-        }
 
         public bool IsIDLE()
         {
-            return GetSubject() == "IDLE";
+            return subject == "IDLE";
         }
+
+        //public BNet net_kutza;
+        //public ActivationNetwork net_accord;
+        //public BackPropagationLearning teacher;
+
+        //public string GetSubject()
+        //{
+        //    return subject.Split(':')[0];
+        //}
 
         //public bool IsLEARNING()
         //{

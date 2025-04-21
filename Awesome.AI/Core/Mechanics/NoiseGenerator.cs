@@ -27,7 +27,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
 
-            posxy = Constants.STARTXY;
+            posxy = CONST.STARTXY;
 
             m_out_high_n = -1000.0d;
             m_out_low_n = 1000.0d;
@@ -79,7 +79,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             double deltaT = 0.002d;
             double m = 500.0d;
-            double N = m * Constants.GRAVITY;
+            double N = m * CONST.GRAVITY;
 
             double Fsta = ApplyStatic();
             double Fdyn = ApplyDynamic(curr);
@@ -142,7 +142,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyStatic()
         {
-            double acc = Constants.MAX / 10; //divided by 10 for aprox acc
+            double acc = CONST.MAX / 10; //divided by 10 for aprox acc
             double m = 500.0d;
             
             double Fapplied = m * acc;
@@ -161,7 +161,7 @@ namespace Awesome.AI.Core.Mechanics
             if (curr.IsNull())
                 throw new Exception("ApplyDynamic");
 
-            double max = Constants.MAX;
+            double max = CONST.MAX;
             double val = curr.Variable;
             double acc = (max - val) / 10.0d; //divided by 10 for aprox acc
             double m = 500.0d;

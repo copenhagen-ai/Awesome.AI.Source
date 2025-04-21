@@ -6,6 +6,19 @@ namespace Awesome.AI.Common
 {
     public static class Extensions
     {
+        public static void BusyWait(this string txt, int count)
+        {
+            //because i dont want to implement async
+            for (int i = 0; i < count; i++) 
+                Console.WriteLine(txt);
+        }
+
+        public static bool RandomSample(this int count, TheMind mind)
+        {
+            //this is a replacement, for just performing task when (mind)do_process
+            return mind.calc.Chance(count, 10);
+        }
+
         public static bool IsNull<T>(this T source)
         {
             return source == null;
@@ -60,7 +73,7 @@ namespace Awesome.AI.Common
             double _l = 0.0d;
             double _h = 100.0d;
             
-            double res = mind.calc.Normalize(_x, _l, _h, Constants.MIN, Constants.MAX);
+            double res = mind.calc.Normalize(_x, _l, _h, CONST.MIN, CONST.MAX);
 
             return res;
         }
@@ -129,10 +142,10 @@ namespace Awesome.AI.Common
                 res = !res;
             else
             {
-                if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                if (CONST.Logic == LOGICTYPE.BOOLEAN)
                     res = res;//we flip direction
             
-                if (Constants.Logic == LOGICTYPE.QUBIT)
+                if (CONST.Logic == LOGICTYPE.QUBIT)
                     res = mind.quantum.usage.MyQuantumXOR(res, res);
             }
 
@@ -147,10 +160,10 @@ namespace Awesome.AI.Common
                 res = !res;
             else
             {
-                if (Constants.Logic == LOGICTYPE.BOOLEAN)
+                if (CONST.Logic == LOGICTYPE.BOOLEAN)
                     res = res;//we flip direction
 
-                if (Constants.Logic == LOGICTYPE.QUBIT)
+                if (CONST.Logic == LOGICTYPE.QUBIT)
                     res = mind.quantum.usage.MyQuantumXOR(res, res);
             }
 

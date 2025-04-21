@@ -42,7 +42,7 @@ namespace Awesome.AI.CoreInternals
             }
 
             u_history.Insert(0, mind.unit[mind.current]);
-            if (u_history.Count > Constants.HIST_TOTAL)
+            if (u_history.Count > CONST.HIST_TOTAL)
                 u_history.RemoveAt(u_history.Count - 1);
         }
 
@@ -78,7 +78,7 @@ namespace Awesome.AI.CoreInternals
             if (mind.unit[mind.current].IsQUICKDECISION())
                 return;
 
-            if (mind.parms[mind.current].state == STATE.QUICKDECISION)
+            if (mind.State == STATE.QUICKDECISION)
                 return;
 
             Stats stats = new Stats();
@@ -86,9 +86,9 @@ namespace Awesome.AI.CoreInternals
             List<UNIT> units = mind.mem.UNITS_ALL();
 
             foreach (UNIT u in units)
-                stats.list.Add(new Stat() { _name = u.root, _var = u.Variable, _index = u.Index });
+                stats.list.Add(new Stat() { _name = u.Root, _var = u.Variable, _index = u.Index });
 
-            string nam = most_common_unit.root;
+            string nam = most_common_unit.Root;
 
             try
             {
@@ -104,7 +104,7 @@ namespace Awesome.AI.CoreInternals
                 _s_curr.hits = hits[nam];
 
                 remember.Insert(0, nam);
-                if (remember.Count > Constants.REMEMBER)
+                if (remember.Count > CONST.REMEMBER)
                 {
                     string name = remember.Last();
                 

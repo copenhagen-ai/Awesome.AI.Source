@@ -39,40 +39,51 @@ namespace Awesome.AI.Core
         public Dictionary<string, IMechanics> mech;
         public Dictionary<string, Params> parms;
 
-        public string current { get; set; }
-        public Dictionary<string, UNIT> unit;
-        public UNIT theanswer;
-
         
+        private Dictionary<string, string> long_deci {  get; set; }
+        public Dictionary<string, UNIT> unit;
+        public Stats stats = new Stats();
+        public UNIT theanswer;
+                
         public MINDS mindtype;
         public MECHANICS _mech;
         public HARDDOWN goodbye = HARDDOWN.NO;
 
         public static bool ok { get; set; }
         private bool do_process{ get; set; }
+        public string current { get; set; }
                 
+        public string hobby = "socializing";
         public int epochs = 1;
         public int cycles = 0; // Go TRON!
         public int cycles_all = 0;
-        public int correct_thinking = 0;
-        public int not_correct_thinking = 0;
-        public int _near_death = 0;
         public double user_var = 0.0d;
-        public int valid_units = 0;
 
         public bool chat_answer { get; set; }
         public bool chat_asked { get; set; }
-
-        private Dictionary<string, string> long_deci {  get; set; }
-        
+                
+        //public int correct_thinking = 0;
+        //public int _near_death = 0;
+        //public int not_correct_thinking = 0;
+        //public int valid_units = 0;
         //public bool theme_on = false;
         //public string theme = "none";
         //public string theme_old = "";
-        public string hobby = "socializing";
+        //public List<KeyValuePair<string, int>> themes_stat = new List<KeyValuePair<string, int>>();
 
-        public List<KeyValuePair<string, int>> themes_stat = new List<KeyValuePair<string, int>>();
-        public Stats stats = new Stats();
-        
+
+        public STATE State
+        {
+            get
+            {
+                if (current == "noise")
+                    return STATE.JUSTRUNNING;
+
+                return parms["current"].state;
+            }
+            set { parms["current"].state = value; }
+        }
+
         public TheMind(MECHANICS m, MINDS mindtype, Dictionary<string, string> long_deci)
         {
             try
@@ -105,16 +116,16 @@ namespace Awesome.AI.Core
                 dir = new Direction(this);
                 pos = new Position(this);
                 quantum = new MyQubit();
-                mem = new Memory(this, Constants.NUMBER_OF_UNITS);
+                mem = new Memory(this);
 
                 unit = new Dictionary<string, UNIT>();
                 
                 foreach (string s in list)
                 {
                     if (mindtype == MINDS.ANDREW)
-                        unit[s] = mem.UNITS_ALL().Where(x => x.root == "_fembots1").FirstOrDefault();
+                        unit[s] = mem.UNITS_ALL().Where(x => x.Root == "_fembots1").First();
                     if (mindtype == MINDS.ROBERTA)
-                        unit[s] = mem.UNITS_ALL().Where(x => x.root == "_macho machines1").FirstOrDefault();
+                        unit[s] = mem.UNITS_ALL().Where(x => x.Root == "_macho machines1").First();
                 }
 
                 
@@ -125,7 +136,7 @@ namespace Awesome.AI.Core
                 PreRun("noise", true);
                 PostRun(true);
 
-                theanswer = UNIT.Create(this, -1.0d, "I dont Know", "null", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
+                theanswer = UNIT.Create(this, "GUID", -1.0d, "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
 
                 ok = true;
                 do_process = false;
@@ -151,7 +162,7 @@ namespace Awesome.AI.Core
 
             List<Tuple<string, bool, double>> units_force = new List<Tuple<string, bool, double>>();
             foreach (UNIT u in list.OrderBy(x => x.Variable).ToList())
-                units_force.Add(new Tuple<string, bool, double>(u.root, u.IsValid, u.Variable));
+                units_force.Add(new Tuple<string, bool, double>(u.Root, u.IsValid, u.Variable));
 
             //List<Tuple<string, bool, double>> units_mass = new List<Tuple<string, bool, double>>();
             //foreach (UNIT u in list.OrderBy(x => x.HighAtZero).ToList())
@@ -161,7 +172,7 @@ namespace Awesome.AI.Core
             List<UNIT> list2 = list.OrderBy(x => x.Variable).ToList();
             List<UNIT> list3 = list.Where(x => filters.LowCut(x)).OrderBy(x => x.Variable).ToList();
 
-            valid_units = units_force.Count;
+            int valid_units = units_force.Count;
 
             ;
         }
@@ -264,7 +275,16 @@ namespace Awesome.AI.Core
 
         private void TheSoup() 
         {
-            unit[current] = matrix.NextUnit();
+            //if (unit["noise"].IsIDLE())
+            //    unit["noise"] = matrix.NextUnit(UNIT.IDLE_UNIT(this));
+
+            //if (unit["current"].IsIDLE())
+            //    unit["current"] = matrix.NextUnit(UNIT.IDLE_UNIT(this));
+
+            //if (unit["noise"].IsIDLE() || unit["current"].IsIDLE())
+            //    return;
+
+            unit[current] = matrix.NextUnit(unit[current]);
         }
 
         private void Process(bool _pro)
@@ -279,7 +299,7 @@ namespace Awesome.AI.Core
             if (current == "noise")
                 return;
 
-            if (parms[current].state == STATE.QUICKDECISION)
+            if (State == STATE.QUICKDECISION)
                 return;
 
             foreach(var kv in this.long_deci)

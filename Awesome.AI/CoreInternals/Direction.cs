@@ -29,7 +29,7 @@ namespace Awesome.AI.CoreInternals
             {
                 RatioNoise.Add(DownHard);
 
-                if (RatioNoise.Count > Constants.LAPSES)
+                if (RatioNoise.Count > CONST.LAPSES)
                     RatioNoise.RemoveAt(0);
             }
 
@@ -37,7 +37,7 @@ namespace Awesome.AI.CoreInternals
             {
                 RatioCurrent.Add(DownHard);
 
-                if (RatioCurrent.Count > Constants.LAPSES)
+                if (RatioCurrent.Count > CONST.LAPSES)
                     RatioCurrent.RemoveAt(0);
             }
         }

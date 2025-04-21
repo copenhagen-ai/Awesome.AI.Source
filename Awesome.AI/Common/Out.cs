@@ -34,12 +34,12 @@ namespace Awesome.AI.Web.AI.Common
         public string chat_state { get; set; }
         public string chat_answer { get; set; }
         public string chat_subject { get; set; }
-        public string common_hub { get; set; }
         public string whistle { get; set; }
 
         public string mood {  get; set; }
         public bool moodOK { get; set; }
 
+        //public string common_hub { get; set; }
         //public string chat_index { get; set; }
         public UNIT common_unit { get; set; }
 
@@ -54,14 +54,14 @@ namespace Awesome.AI.Web.AI.Common
             return count >= 59 ? ":COMEAGAIN" : chat_answer;
         }
 
-        private string[] arr = { "[.??]", "[??.]" };
+        private string[] gimmick = { "[.??]", "[??.]" };
         private int count = 0;
         public void Set()
         {
             if(mind.current == "noise")
                 return;
 
-            if (!mind.calc.IsRandomSample(200, 10)) return;
+            if (!CONST.SAMPLE200.RandomSample(mind)) return;
 
             if (count > 1)
                 count = 0;
@@ -84,13 +84,13 @@ namespace Awesome.AI.Web.AI.Common
             ratio_no_n = $"{mind.dir.Count(HARDDOWN.NO, true)}";
             going_down = $"{(mind.dir.DownHard.IsNo() ? "NO" : "YES")}";
             epochs = $"{mind.epochs}";
-            runtime = $"{Constants.RUNTIME}";
+            runtime = $"{CONST.RUNTIME}";
             occu = $"{mind._internal.Occu}";
             location = $"{mind._long.Result["location"]}";
             loc_state = mind._long.State["location"] > 0 ? "making a decision" : "just thinking";
             chat_state = mind._long.State["answer"] > 0 ? "thinking" : "just thinking";
 
-            whistle = mind._quick.Result ? "[Whistling to my self..]" : arr[count];
+            whistle = mind._quick.Result ? "[Whistling to my self..]" : gimmick[count];
 
             mood = mind.parms[mind.current].pattern.ToString();
             moodOK = mind.mood.Result == PATTERNCOLOR.GREEN;
@@ -110,10 +110,10 @@ namespace Awesome.AI.Web.AI.Common
 
             common_unit = mind.process.most_common_unit;
 
-            if (common_unit == null)
-                return;
+            //if (common_unit == null)
+            //    return;
                        
-            common_hub = common_unit.HUB.GetSubject();
+            //common_hub = common_unit.HUB.subject;
 
             count++;
         }

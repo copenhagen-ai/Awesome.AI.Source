@@ -26,7 +26,7 @@ namespace Awesome.AI.Common
             if (double.IsInfinity(momentum))
                 throw new Exception("SaveMomentum");
 
-            if (mind.cycles_all < Constants.FIRST_RUN)
+            if (mind.cycles_all < CONST.FIRST_RUN)
                 momentum = RandomDouble(0.0d, 1.0d);
 
             if (momentum == 0.0d)
@@ -75,7 +75,7 @@ namespace Awesome.AI.Common
                  * 0 <= res < i_max
                  */
 
-                if (i_max > 999)
+                if (i_max > 9999)
                     throw new Exception("MyRandomInt");
 
                 int[] res = new int[count];
@@ -84,7 +84,7 @@ namespace Awesome.AI.Common
                 {
                     string rand = Rand(i);
 
-                    double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}") / 1000;
+                    double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}{rand[3]}") / 10000;
                     res[i] = mind.calc.RoundInt((double)i_max * dec);
                 }
 

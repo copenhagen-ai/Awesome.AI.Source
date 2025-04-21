@@ -1,4 +1,6 @@
-﻿using Awesome.AI.Core;
+﻿using Awesome.AI.Common;
+using Awesome.AI.Core;
+using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreSystems
@@ -50,7 +52,7 @@ namespace Awesome.AI.CoreSystems
             if (Avg.Count > 100)
                 Avg.RemoveAt(0);
 
-            if (!mind.calc.IsRandomSample(200, 10)) 
+            if (!CONST.SAMPLE200.RandomSample(mind)) 
                 return;
 
             double p_high = mind.mech[mind.current].m_out_high_c;

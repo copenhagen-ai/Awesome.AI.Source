@@ -21,6 +21,7 @@ namespace Awesome.AI.Common
 
         public bool IsRandomSample(int count, int gt)
         {
+            //this is a replacement, for just performing task when (mind)do_process
             return Chance(count, gt);
         }
 

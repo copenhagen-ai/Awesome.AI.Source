@@ -2,7 +2,7 @@
 
 namespace Awesome.AI.Variables
 {
-    public class Constants
+    public class CONST
     {
         /*
          * these are HUB subjects
@@ -94,17 +94,24 @@ namespace Awesome.AI.Variables
 
         public const double ETA = 0.1d;                     //learningrate
         public const double ALPHA = 1.0d;                   //distance
-        public const double VERY_LOW = 1.0E-2;
+        public const int ACTIVATOR = 4000;                  //randomness, turn it way down
+
         public const double GRAVITY = 9.81d;
         public const double GRAV_CONST = 6.674E-11d;
-        public const double MAX_PAIN = 100.0d;
                 
         public const double BASE_REDUCTION = 2d / 3d;       //0.666 hehe
+        public const double MAX_PAIN = 100.0d;
         public const double LAPSES = 99d;                   //yesno ratio : reaction time in cycles
         public const double RATIO = 50d;
+        public const double VERY_LOW = 1.0E-2;
         public const int FIRST_RUN = 5;
-        public const int NUMBER_OF_UNITS = 10;
         public const int RUNTIME = 3;                       //minutes
+        
+        public const int NUMBER_OF_UNITS = 10;
+        public const int MAX_UNITS = 20;
+
+        public const int SAMPLE200 = 200;
+        public const int SAMPLE4500 = 4500;
 
         public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
 

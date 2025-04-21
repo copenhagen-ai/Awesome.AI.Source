@@ -22,7 +22,7 @@ namespace Awesome.AI.CoreInternals
             if (_x == null)
                 throw new ArgumentNullException();
 
-            if (mind.parms[mind.current].state == STATE.QUICKDECISION)
+            if (mind.State == STATE.QUICKDECISION)
                 return true;
 
             double f_a = _x.Variable;
@@ -56,7 +56,7 @@ namespace Awesome.AI.CoreInternals
             if (_u == null)
                 throw new ArgumentNullException();
 
-            if (mind.parms[mind.current].state == STATE.QUICKDECISION)
+            if (mind.State == STATE.QUICKDECISION)
                 return true;
 
             double lower_border = mind.parms[mind.current].low_cut;
@@ -72,7 +72,7 @@ namespace Awesome.AI.CoreInternals
             if (unit == null)
                 throw new ArgumentNullException();
 
-            if (mind.parms[mind.current].state == STATE.QUICKDECISION)
+            if (mind.State == STATE.QUICKDECISION)
                 return true;
 
             return unit.credits > 1.0d;
