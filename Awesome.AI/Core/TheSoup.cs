@@ -99,6 +99,29 @@ namespace Awesome.AI.Core
             return res;
         }
 
+        private double Map(UNIT x)
+        {
+            //is this ok?
+            return x.Variable;
+
+
+            //if (mind.current == "current")
+            //    return x.Variable;
+
+            //IMechanics mech = mind.mech["noise"];
+
+            //mech.Momentum(x);
+
+            //double _v = mech.n_momentum;
+            //double v_h = mech.m_out_high_n;
+            //double v_l = mech.m_out_low_n;
+
+            //double pct = mind.calc.Normalize(_v, v_l, v_h) * 100.0d;
+            ////pct = 100.0d - pct;
+
+            //return pct;
+        }
+
         private void UpdateUnit(double near, UNIT res, UNIT _a, UNIT _b)
         {
             if (_a is null || _b is null)
@@ -110,26 +133,6 @@ namespace Awesome.AI.Core
             res.Update(sign, near, dist);
         }
 
-        private double Map(UNIT x)
-        {
-            return x.Variable;
-
-            if (mind.current == "current")
-                return x.Variable;
-
-            IMechanics mech = mind.mech["noise"];
-
-            mech.Momentum(x);
-
-            double _v = mech.n_momentum;
-            double v_h = mech.m_out_high_n;
-            double v_l = mech.m_out_low_n;
-
-            double pct = mind.calc.Normalize(_v, v_l, v_h) * 100.0d;
-
-            return pct;
-
-        }
 
         private double DistAbsolute(UNIT unit, double near)
         {

@@ -116,12 +116,8 @@ namespace Awesome.AI.Core
                 STATE state = mind.State;
                 List<HUB> list = mind.mem.HUBS_ALL(state);
 
-                try {
-                    return list.Where(x => x.hub_guid == this.hub_guid).First();
-                }
-                catch {
-                    return HUB.Create("GUID", "IDLE", new List<UNIT>(), TONE.RANDOM, -1);
-                }
+                //FirstOrDefault is fine
+                return list.Where(x => x.hub_guid == this.hub_guid).FirstOrDefault();                
             }
         }
 
@@ -180,7 +176,7 @@ namespace Awesome.AI.Core
             if (dist < avg)
                 return false;
 
-            double low = near - CONST.ALPHA >= CONST.MIN ? CONST.MIN : near - CONST.ALPHA;
+            double low = near - CONST.ALPHA <= CONST.MIN ? CONST.MIN : near - CONST.ALPHA;
             double high = near + CONST.ALPHA >= CONST.MAX ? CONST.MAX : near + CONST.ALPHA;
 
             mind.mem.UNITS_ADD(this, low, high);
@@ -204,6 +200,12 @@ namespace Awesome.AI.Core
             double rand = mind.rand.MyRandomDouble(10)[5];
 
             Index += rand * CONST.ETA * sign;
+
+            if (Index <= CONST.MIN)
+                Index = CONST.MIN;
+
+            if (Index >= CONST.MAX)
+                Index = CONST.MAX;
         }
 
         public static UNIT IDLE_UNIT(TheMind mind)

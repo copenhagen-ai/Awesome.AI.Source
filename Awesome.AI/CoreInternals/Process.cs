@@ -36,9 +36,9 @@ namespace Awesome.AI.CoreInternals
 
             if (!u_history.Any())
             {
-                u_history.Add(mind.mem.UNIT_RND(1));
-                u_history.Add(mind.mem.UNIT_RND(2));
-                u_history.Add(mind.mem.UNIT_RND(3));
+                u_history.Add(mind.mem.UNITS_RND(1));
+                u_history.Add(mind.mem.UNITS_RND(2));
+                u_history.Add(mind.mem.UNITS_RND(3));
             }
 
             u_history.Insert(0, mind.unit[mind.current]);

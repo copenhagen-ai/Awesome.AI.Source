@@ -231,7 +231,7 @@ namespace Awesome.AI.CoreInternals
             return res;
         }
 
-        public UNIT UNIT_RND(int index)
+        public UNIT UNITS_RND(int index)
         {
             int[] rand;
             UNIT _u;
@@ -257,7 +257,7 @@ namespace Awesome.AI.CoreInternals
             double idx = mind.rand.MyRandomDouble(1)[0];
             idx = mind.calc.Normalize(idx, 0.0d, 1.0d, low, high);
 
-            List<string> list = mind.mem.Tags(mind.mindtype);
+            List<string> list = Tags(mind.mindtype);
             int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
             string ticket = "" + unit.HUB.subject + rand;
 
@@ -272,7 +272,7 @@ namespace Awesome.AI.CoreInternals
 
         public void UNITS_REM(UNIT unit, double low, double high)
         {
-            List<UNIT> list = mind.mem.UNITS_ALL().Where(x => x.Index > low && x.Index < high).ToList();
+            List<UNIT> list = UNITS_ALL().Where(x => x.Index > low && x.Index < high).ToList();
             list = list.Where(x => x.created < unit.created).ToList();
 
             foreach (UNIT _u in list) {
