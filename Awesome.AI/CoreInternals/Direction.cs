@@ -7,8 +7,8 @@ namespace Awesome.AI.CoreInternals
 {
     public class Direction
     {
-        public HARDDOWN DownHard { get { return mind.mech[mind.current].HardMom; } }
-        public FUZZYDOWN DownFuzzy { get { return mind.mech[mind.current].FuzzyMom; } }
+        public HARDDOWN DownHard { get { return mind.mech_current.HardMom; } }
+        public FUZZYDOWN DownFuzzy { get { return mind.mech_current.FuzzyMom; } }
         public PERIODDOWN DownPeriod { get { return RatioCurrent.PeriodDown(mind); } }
 
         public List<HARDDOWN> RatioCurrent { get; set; }
@@ -33,7 +33,7 @@ namespace Awesome.AI.CoreInternals
                     RatioNoise.RemoveAt(0);
             }
 
-            if (mind.current == "current")
+            if (mind.current == "mech")
             {
                 RatioCurrent.Add(DownHard);
 

@@ -68,14 +68,14 @@ namespace Awesome.AI.Web.AI.Common
 
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            momentum = $"{mind.mech[mind.current].p_curr.ToString("E3")}";
-            deltaMom = $"{mind.mech[mind.current].p_delta.ToString("E3")}";
+            momentum = $"{mind.mech_current.p_curr.ToString("E3")}";
+            deltaMom = $"{mind.mech_current.p_delta.ToString("E3")}";
 
             user_var = $"{mind.user_var}";
             if (mind._mech == MECHANICS.HILL)
-                position = $"{mind.mech[mind.current].POS_XY}";
+                position = $"{mind.mech_current.POS_XY}";
             if (mind._mech == MECHANICS.TUGOFWAR)
-                position = $"{mind.mech[mind.current].POS_XY}";
+                position = $"{mind.mech_current.POS_XY}";
             if (mind._mech == MECHANICS.GRAVITY)
                 position = $"{mind.pos.Pos}";
             ratio_yes_c = $"{mind.dir.Count(HARDDOWN.YES, false)}";
@@ -92,7 +92,7 @@ namespace Awesome.AI.Web.AI.Common
 
             whistle = mind._quick.Result ? "[Whistling to my self..]" : gimmick[count];
 
-            mood = mind.parms[mind.current].pattern.ToString();
+            mood = mind.parms_current.pattern.ToString();
             moodOK = mind.mood.Result == PATTERNCOLOR.GREEN;
 
             if (mind._long.Result["answer"] != "") {

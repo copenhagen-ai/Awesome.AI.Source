@@ -124,7 +124,7 @@ namespace Awesome.AI.Core.Mechanics
             if (pattern != PATTERN.NONE)
                 return;
 
-            Calc(mind.unit["noise"], false);
+            Calc(mind.unit_noise, false);
         }
 
         public void CalcPattern2(PATTERN pattern, int cycles)

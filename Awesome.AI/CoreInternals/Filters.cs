@@ -26,7 +26,7 @@ namespace Awesome.AI.CoreInternals
                 return true;
 
             double f_a = _x.Variable;
-            double f_b = mind.unit[mind.current].Variable;
+            double f_b = mind.unit_current.Variable;
 
             bool go_up = mind.Direction();
 
@@ -59,7 +59,7 @@ namespace Awesome.AI.CoreInternals
             if (mind.State == STATE.QUICKDECISION)
                 return true;
 
-            double lower_border = mind.parms[mind.current].low_cut;
+            double lower_border = mind.parms_current.low_cut;
             double force = _u.Variable;
 
             if (force < lower_border)

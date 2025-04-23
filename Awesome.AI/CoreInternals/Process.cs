@@ -22,7 +22,7 @@ namespace Awesome.AI.CoreInternals
 
         public void History()
         {
-            if (mind.unit[mind.current].IsIDLE())
+            if (mind.unit_current.IsIDLE())
                 return;
 
             //if (mind.curr_unit.IsDECISION())
@@ -41,7 +41,7 @@ namespace Awesome.AI.CoreInternals
                 u_history.Add(mind.mem.UNITS_RND(3));
             }
 
-            u_history.Insert(0, mind.unit[mind.current]);
+            u_history.Insert(0, mind.unit_current);
             if (u_history.Count > CONST.HIST_TOTAL)
                 u_history.RemoveAt(u_history.Count - 1);
         }
@@ -75,7 +75,7 @@ namespace Awesome.AI.CoreInternals
             if (most_common_unit.IsNull())
                 return;
 
-            if (mind.unit[mind.current].IsQUICKDECISION())
+            if (mind.unit_current.IsQUICKDECISION())
                 return;
 
             if (mind.State == STATE.QUICKDECISION)

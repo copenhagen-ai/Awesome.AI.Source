@@ -34,14 +34,14 @@ namespace Awesome.AI.Core
         public Position pos;
         public MyQubit quantum;
 
-        private List<string> list = new List<string>() { "current", "noise" };
+        private List<string> list = new List<string>() { "mech", "noise" };
 
-        public Dictionary<string, IMechanics> mech;
-        public Dictionary<string, Params> parms;
+        public Dictionary<string, IMechanics> mech { get; set; }
+        public Dictionary<string, Params> parms { get; set; }
+        public Dictionary<string, UNIT> unit { get; set; }
+        private Dictionary<string, string> long_deci {  get; set; }
 
         
-        private Dictionary<string, string> long_deci {  get; set; }
-        public Dictionary<string, UNIT> unit;
         public Stats stats = new Stats();
         public UNIT theanswer;
                 
@@ -50,8 +50,10 @@ namespace Awesome.AI.Core
         public HARDDOWN goodbye = HARDDOWN.NO;
 
         public static bool ok { get; set; }
-        private bool do_process{ get; set; }
         public string current { get; set; }
+        public bool do_process{ get; set; }
+        public bool chat_answer { get; set; }
+        public bool chat_asked { get; set; }
                 
         public string hobby = "socializing";
         public int epochs = 1;
@@ -59,12 +61,10 @@ namespace Awesome.AI.Core
         public int cycles_all = 0;
         public double user_var = 0.0d;
 
-        public bool chat_answer { get; set; }
-        public bool chat_asked { get; set; }
-                
+
         //public int correct_thinking = 0;
-        //public int _near_death = 0;
         //public int not_correct_thinking = 0;
+        //public int _near_death = 0;
         //public int valid_units = 0;
         //public bool theme_on = false;
         //public string theme = "none";
@@ -79,9 +79,63 @@ namespace Awesome.AI.Core
                 if (current == "noise")
                     return STATE.JUSTRUNNING;
 
-                return parms["current"].state;
+                return parms["mech"].state;
             }
-            set { parms["current"].state = value; }
+            set { parms["mech"].state = value; }
+        }
+
+        public UNIT unit_current
+        {
+            get { return unit[current]; }
+            set { unit[current] = value; }
+        }
+
+        public UNIT unit_mechanics
+        {
+            get { return unit["mech"]; }
+            set { unit["mech"] = value; }
+        }
+
+        public UNIT unit_noise
+        {
+            get { return unit["noise"]; }
+            set { unit["noise"] = value; }
+        }
+
+        public IMechanics mech_current
+        {
+            get { return mech[current]; }
+            set { mech[current] = value; }
+        }
+
+        public IMechanics mech_mechanics
+        {
+            get { return mech["mech"]; }
+            set { mech["mech"] = value; }
+        }
+
+        public IMechanics mech_noise
+        {
+            get { return mech["noise"]; }
+            set { mech["noise"] = value; }
+        }
+
+        public Params parms_current
+        {
+            get { return parms[current]; }
+            set { parms[current] = value; }
+        }
+
+        public Params parms_mechanics
+        {
+            get { return parms["mech"]; }
+            set { parms["mech"] = value; }
+        }
+
+        public Params parms_noise
+        {
+            get { return parms["noise"]; }
+            set { parms["noise"] = value; }
         }
 
         public TheMind(MECHANICS m, MINDS mindtype, Dictionary<string, string> long_deci)
@@ -91,15 +145,15 @@ namespace Awesome.AI.Core
                 this._mech = m;
                 this.mindtype = mindtype;
                 this.long_deci = long_deci;
-                current = "current";
+                current = "mech";
 
                 parms = new Dictionary<string, Params>();
                 foreach (string s in list)
                     parms[s] = new Params(this);
 
                 mech = new Dictionary<string, IMechanics>();
-                mech["current"] = parms["current"].GetMechanics(_mech);
-                mech["noise"] = parms["noise"].GetMechanics(MECHANICS.NOISE);
+                mech_mechanics = parms_mechanics.GetMechanics(_mech);
+                mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
 
                 matrix = new TheSoup(this);
                 calc = new Calc(this);
@@ -128,9 +182,9 @@ namespace Awesome.AI.Core
                         unit[s] = mem.UNITS_ALL().Where(x => x.Root == "_macho machines1").First();
                 }
 
-                
 
-                parms["current"].UpdateLowCut();
+
+                parms_mechanics.UpdateLowCut();
                 //parms["noise"].UpdateLowCut();
 
                 PreRun("noise", true);
@@ -230,9 +284,9 @@ namespace Awesome.AI.Core
 
         private void PreRun(string current, bool _pro)
         {
-            rand.SaveMomentum(current, mech[current].p_delta);
+            rand.SaveMomentum(current, mech_current.p_delta);
 
-            _quick.Run(_pro, unit[current]);            
+            _quick.Run(_pro, unit_current);            
         }
 
         private void PostRun(bool _pro)
@@ -257,10 +311,10 @@ namespace Awesome.AI.Core
             if (unit[current].IsIDLE())
                 return true;
 
-            mech["noise"].CalcPattern1(PATTERN.NONE, 0);
-            mech["current"].CalcPattern1(parms[current].pattern, cycles);//mood general
-            mech["current"].CalcPattern2(parms[current].pattern, cycles);//mood good
-            mech["current"].CalcPattern3(parms[current].pattern, cycles);//mood bad
+            mech_noise.CalcPattern1(PATTERN.NONE, 0);
+            mech_mechanics.CalcPattern1(parms_current.pattern, cycles);//mood general
+            mech_mechanics.CalcPattern2(parms_current.pattern, cycles);//mood good
+            mech_mechanics.CalcPattern3(parms_current.pattern, cycles);//mood bad
             
             dir.Update();
             pos.Update();
@@ -278,13 +332,13 @@ namespace Awesome.AI.Core
             //if (unit["noise"].IsIDLE())
             //    unit["noise"] = matrix.NextUnit(UNIT.IDLE_UNIT(this));
 
-            //if (unit["current"].IsIDLE())
-            //    unit["current"] = matrix.NextUnit(UNIT.IDLE_UNIT(this));
+            //if (unit["mech"].IsIDLE())
+            //    unit["mech"] = matrix.NextUnit(UNIT.IDLE_UNIT(this));
 
-            //if (unit["noise"].IsIDLE() || unit["current"].IsIDLE())
+            //if (unit["noise"].IsIDLE() || unit["mech"].IsIDLE())
             //    return;
 
-            unit[current] = matrix.NextUnit(unit[current]);
+            unit_current = matrix.NextUnit(unit_current);
         }
 
         private void Process(bool _pro)

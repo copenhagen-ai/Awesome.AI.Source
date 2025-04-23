@@ -19,8 +19,8 @@ namespace Awesome.AI.Core
         public string hub_guid { get; set; }//name
         public string data { get; set; }//data
         public double credits { get; set; }
-        //public string root { get; set; }//name
-
+        public double Index { get; set; }
+        
         private TheMind mind;
         private UNIT() { }
         public UNIT(TheMind mind)
@@ -41,18 +41,12 @@ namespace Awesome.AI.Core
             }
         }
 
-        private double dex = -1.0d;
-        public double Index
-        {
-            get { return dex; }
-            set { dex = value; }
-        }
 
         public double Variable
         {
             get
             {
-                bool high_at_zero = mind.parms[mind.current].high_at_zero;
+                bool high_at_zero = mind.parms_current.high_at_zero;
 
                 return high_at_zero ? HighAtZero : LowAtZero;
             }
@@ -92,7 +86,7 @@ namespace Awesome.AI.Core
         {
             get
             {
-                switch (mind.parms[mind.current].validation)
+                switch (mind.parms_current.validation)
                 {
                     case VALIDATION.BOTH:
                         return mind._internal.Valid(this) && mind._external.Valid(this);
@@ -148,7 +142,7 @@ namespace Awesome.AI.Core
             return _w;
         }
 
-        public void Update(double sign, double near, double dist)
+        public void Update(double idx_sign, double add_sign, double near, double dist)
         {
             /*
              * it is difficult determinating if the does as supposed, but the logic seems correct
@@ -161,7 +155,7 @@ namespace Awesome.AI.Core
                 return;
 
             Remove(near);
-            Adjust(sign, dist);
+            Adjust(idx_sign, add_sign, dist);
         }
 
         private bool Add(double near, double dist)
@@ -192,20 +186,17 @@ namespace Awesome.AI.Core
             mind.mem.UNITS_REM(this, low, high);
         }
 
-        private void Adjust(double sign, double dist)
+        private void Adjust(double idx_sign, double add_sign, double dist)
         {
             if (dist < CONST.ALPHA)
                 return;
 
             double rand = mind.rand.MyRandomDouble(10)[5];
 
-            Index += rand * CONST.ETA * sign;
+            Index += (rand * CONST.ETA * add_sign * idx_sign);
 
-            if (Index <= CONST.MIN)
-                Index = CONST.MIN;
-
-            if (Index >= CONST.MAX)
-                Index = CONST.MAX;
+            if (Index <= CONST.MIN) Index = CONST.MIN;
+            if (Index >= CONST.MAX) Index = CONST.MAX;
         }
 
         public static UNIT IDLE_UNIT(TheMind mind)

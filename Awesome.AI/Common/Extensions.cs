@@ -81,8 +81,8 @@ namespace Awesome.AI.Common
 
         public static FUZZYDOWN ToFuzzy(this double deltaMom, TheMind mind)
         {
-            double high = mind.mech[mind.current].d_out_high;
-            double low = mind.mech[mind.current].d_out_low;
+            double high = mind.mech_current.d_out_high;
+            double low = mind.mech_current.d_out_low;
 
             double norm = mind.calc.Normalize(deltaMom, low, high, 0.0d, 100.0d);
 

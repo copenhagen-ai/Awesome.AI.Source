@@ -31,9 +31,9 @@ namespace Awesome.AI.CoreSystems
                 switch (_rand)
                 {
                     case <= 0: throw new Exception("MoodGenerator, Generate");                        
-                    case <= 3: mind.parms[mind.current].pattern = PATTERN.MOODGENERAL; break;
-                    case <= 6: mind.parms[mind.current].pattern = PATTERN.MOODGOOD; break;
-                    case <= 9: mind.parms[mind.current].pattern = PATTERN.MOODBAD; break;
+                    case <= 3: mind.parms_current.pattern = PATTERN.MOODGENERAL; break;
+                    case <= 6: mind.parms_current.pattern = PATTERN.MOODGOOD; break;
+                    case <= 9: mind.parms_current.pattern = PATTERN.MOODBAD; break;
                     default: throw new Exception("MoodGenerator, Generate");
                 }
             }
@@ -45,7 +45,7 @@ namespace Awesome.AI.CoreSystems
         private List<double> Avg {  get; set; }
         public void MoodOK(bool _pro)
         {
-            double p_mom = mind.mech[mind.current].p_curr;
+            double p_mom = mind.mech_current.p_curr;
 
             Avg ??= new List<double>();
             Avg.Add(p_mom);
@@ -55,13 +55,13 @@ namespace Awesome.AI.CoreSystems
             if (!CONST.SAMPLE200.RandomSample(mind)) 
                 return;
 
-            double p_high = mind.mech[mind.current].m_out_high_c;
-            double p_low = mind.mech[mind.current].m_out_low_c;
+            double p_high = mind.mech_current.m_out_high_c;
+            double p_low = mind.mech_current.m_out_low_c;
 
             double avg = Avg.Average();
             double res = mind.calc.Normalize(avg, p_low, p_high, 0.0d, 100.0d);
 
-            PATTERN currentmood = mind.parms[mind.current].pattern;
+            PATTERN currentmood = mind.parms_current.pattern;
 
             switch (currentmood)
             {

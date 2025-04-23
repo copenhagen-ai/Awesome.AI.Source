@@ -108,7 +108,7 @@ namespace Awesome.AI.CoreInternals
                 epoch_old = mind.epochs;
                 if (run)
                 {
-                    switch (mind.parms[mind.current].occupasion)
+                    switch (mind.parms_current.occupasion)
                     {
                         case OCCUPASION.FIXED:
                             occu = new Area() { name = mind.hobby, max_epochs = -1, values = null }; ;
@@ -252,12 +252,12 @@ namespace Awesome.AI.CoreInternals
             if (mind.current == "noise")
                 return;
 
-            if (mind.parms[mind.current].validation != VALIDATION.EXTERNAL)
+            if (mind.parms_current.validation != VALIDATION.EXTERNAL)
             {
                 //mind.stats.Reset();
 
                 areas = new List<Area>();
-                Setup(mind.unit[mind.current].HUB, mind.mindtype);
+                Setup(mind.unit_current.HUB, mind.mindtype);
             }
         }
     }
@@ -340,12 +340,12 @@ namespace Awesome.AI.CoreInternals
             if (mind.current == "noise")
                 return;
 
-            if (mind.parms[mind.current].validation != VALIDATION.INTERNAL)
+            if (mind.parms_current.validation != VALIDATION.INTERNAL)
             {
                 //mind.stats.Reset();
 
                 tags = new List<Tag>();
-                switch (mind.parms[mind.current].tags)
+                switch (mind.parms_current.tags)
                 {
                     case TAGS.ALL: Setup(mind.mindtype, false); break;
                     case TAGS.EVEN: Setup(mind.mindtype, true); break;

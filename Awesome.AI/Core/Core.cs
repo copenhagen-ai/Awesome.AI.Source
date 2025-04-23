@@ -28,10 +28,10 @@ namespace Awesome.AI.Core
             switch (mind._mech)
             {
                 case MECHANICS.TUGOFWAR: 
-                    ok = ReciprocalOK(mind.mech[mind.current].POS_XY, out user_var);
+                    ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);
                     return ok;
                 case MECHANICS.HILL: 
-                    ok = ReciprocalOK(mind.mech[mind.current].POS_XY, out user_var);
+                    ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);
                     return ok;
                 case MECHANICS.GRAVITY:
                     ok = EventHorizonOK(mind.pos.Pos, out user_var);
@@ -108,10 +108,10 @@ namespace Awesome.AI.Core
 
         public void UpdateCredit()
         {
-            //if (mind.unit[mind.current].IsIDLE())
+            //if (mind.UnitCurrent.IsIDLE())
             //    return;
 
-            if (mind.unit[mind.current].IsQUICKDECISION())
+            if (mind.unit_current.IsQUICKDECISION())
                 return;
 
             List<UNIT> list = mind.mem.UNITS_ALL();
@@ -125,19 +125,19 @@ namespace Awesome.AI.Core
                 if (_u.IsQUICKDECISION())
                     continue;
 
-                if (_u.Root == mind.unit[mind.current].Root)
+                if (_u.Root == mind.unit_current.Root)
                     continue;
 
-                double cred = mind.parms[mind.current].update_cred;
+                double cred = mind.parms_current.update_cred;
                 _u.credits += cred;
 
                 if (_u.credits > CONST.MAX_CREDIT)
                     _u.credits = CONST.MAX_CREDIT;
             }
 
-            mind.unit[mind.current].credits -= 1.0d;
-            if (mind.unit[mind.current].credits < CONST.LOW_CREDIT)
-                mind.unit[mind.current].credits = CONST.LOW_CREDIT;
+            mind.unit_current.credits -= 1.0d;
+            if (mind.unit_current.credits < CONST.LOW_CREDIT)
+                mind.unit_current.credits = CONST.LOW_CREDIT;
         }
         
         

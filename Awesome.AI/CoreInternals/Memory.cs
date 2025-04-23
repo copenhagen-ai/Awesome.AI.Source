@@ -272,7 +272,7 @@ namespace Awesome.AI.CoreInternals
 
         public void UNITS_REM(UNIT unit, double low, double high)
         {
-            List<UNIT> list = UNITS_ALL().Where(x => x.Index > low && x.Index < high).ToList();
+            List<UNIT> list = UNITS_ALL().Where(x => x.Variable > low && x.Variable < high).ToList();
             list = list.Where(x => x.created < unit.created).ToList();
 
             foreach (UNIT _u in list) {

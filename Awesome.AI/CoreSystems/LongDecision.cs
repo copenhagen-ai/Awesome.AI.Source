@@ -48,10 +48,10 @@ namespace Awesome.AI.CoreSystems
             if (mind.epochs < 5)
                 return;
 
-            if (!mind.unit[mind.current].IsDECISION())
+            if (!mind.unit_current.IsDECISION())
                 return;
 
-            if (mind.unit[mind.current].long_deci_type.ToString() != type.ToUpper())
+            if (mind.unit_current.long_deci_type.ToString() != type.ToUpper())
                 return;
 
             if (type == "ask" && mind.chat_asked)
@@ -60,7 +60,7 @@ namespace Awesome.AI.CoreSystems
             if (type == "ask" && State["answer"] > 0)
                 return;
 
-            UNIT current = mind.unit[mind.current];
+            UNIT current = mind.unit_current;
             HUB hub = current.HUB;
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();

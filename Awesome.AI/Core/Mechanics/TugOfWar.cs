@@ -128,7 +128,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern1(PATTERN pattern, int cycles)
         {
-            if (mind.current != "current")
+            if (mind.current != "mech")
                 return;
 
             if (pattern != PATTERN.MOODGENERAL)
@@ -140,7 +140,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern2(PATTERN pattern, int cycles)
         {
-            if (mind.current != "current")
+            if (mind.current != "mech")
                 return;
 
             if (pattern != PATTERN.MOODGOOD)
@@ -152,7 +152,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern3(PATTERN pattern, int cycles)
         {
-            if (mind.current != "current")
+            if (mind.current != "mech")
                 return;
 
             if (pattern != PATTERN.MOODBAD)
@@ -187,7 +187,7 @@ namespace Awesome.AI.Core.Mechanics
 
         private double GetRandomNoise()
         {
-            UNIT curr_unit = mind.unit["noise"];
+            UNIT curr_unit = mind.unit_noise;
 
             if (curr_unit == null)
                 throw new Exception("ApplyDynamic");

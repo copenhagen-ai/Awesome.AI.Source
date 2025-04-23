@@ -71,21 +71,21 @@ namespace Awesome.AI.CoreInternals
                 return;
             }
 
-            if (pos < mind.parms[mind.current].schedule_low)
+            if (pos < mind.parms_current.schedule_low)
             {
                 if (!is_no)
                     is_no = true;
                 return;
             }
 
-            if (pos < mind.parms[mind.current].schedule_mid)
+            if (pos < mind.parms_current.schedule_mid)
             {
                 if (!is_no)
                     is_no = mind.dir.DownHard.IsNo();
                 return;
             }
 
-            if (pos >= mind.parms[mind.current].schedule_high)
+            if (pos >= mind.parms_current.schedule_high)
             {
                 is_no = false;
                 down = 0.1d;

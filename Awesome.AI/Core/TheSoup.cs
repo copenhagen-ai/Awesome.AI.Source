@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Interfaces;
+using Awesome.AI.Variables;
 
 namespace Awesome.AI.Core
 {
@@ -105,7 +106,7 @@ namespace Awesome.AI.Core
             return x.Variable;
 
 
-            //if (mind.current == "current")
+            //if (mind.current == "mech")
             //    return x.Variable;
 
             //IMechanics mech = mind.mech["noise"];
@@ -127,16 +128,20 @@ namespace Awesome.AI.Core
             if (_a is null || _b is null)
                 return;
 
-            double sign = res == _b ? 1d : -1d;
+            Params parm = mind.parms_current;
+
+            //im getting confused - noise uses high acc at zero, meaning reverse index
+            double idx_sign = parm.high_at_zero ? -1d : 1d;
+            double add_sign = res == _b ? 1d : -1d;
             double dist = DistAbsolute(res, near);
 
-            res.Update(sign, near, dist);
+            res.Update(idx_sign, add_sign, near, dist);
         }
 
 
         private double DistAbsolute(UNIT unit, double near)
         {
-            IMechanics mech = mind.mech[mind.current];
+            IMechanics mech = mind.mech_current;
             
             double idx = unit.Index;
             
@@ -148,7 +153,7 @@ namespace Awesome.AI.Core
         private double NearPercent()
         {
             bool is_noise = mind.current == "noise";
-            IMechanics mech = mind.mech[mind.current];
+            IMechanics mech = mind.mech_current;
 
             double _v = mech.p_curr;
             double v_h = is_noise ? mech.m_out_high_n : mech.m_out_high_c;
