@@ -109,8 +109,8 @@ namespace Awesome.AI.Core.Mechanics
             if (n_momentum <= m_out_low_n) m_out_low_n = n_momentum;
             if (n_momentum > m_out_high_n) m_out_high_n = n_momentum;
 
-            if (p_curr <= m_out_low_n) m_out_low_c = p_curr;
-            if (p_curr > m_out_high_n) m_out_high_c = p_curr;
+            if (p_curr <= m_out_low_c) m_out_low_c = p_curr;
+            if (p_curr > m_out_high_c) m_out_high_c = p_curr;
 
             if (p_delta <= d_out_low) d_out_low = p_delta;
             if (p_delta > d_out_high) d_out_high = p_delta;

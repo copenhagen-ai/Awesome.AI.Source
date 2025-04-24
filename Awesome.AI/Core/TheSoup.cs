@@ -143,7 +143,7 @@ namespace Awesome.AI.Core
         {
             IMechanics mech = mind.mech_current;
             
-            double idx = unit.Index;
+            double idx = unit.Variable;
             
             double res = Math.Abs(idx -  near);
 
@@ -155,9 +155,9 @@ namespace Awesome.AI.Core
             bool is_noise = mind.current == "noise";
             IMechanics mech = mind.mech_current;
 
-            double _v = mech.p_curr;
-            double v_h = is_noise ? mech.m_out_high_n : mech.m_out_high_c;
-            double v_l = is_noise ? mech.m_out_low_n : mech.m_out_low_c;
+            double _v = is_noise ? mech.p_curr : mech.p_curr;
+            double v_h = is_noise ? mech.m_out_high_c : mech.m_out_high_c;
+            double v_l = is_noise ? mech.m_out_low_c : mech.m_out_low_c;
 
             double pct = mind.calc.Normalize(_v, v_l, v_h) * 100.0d;
 
