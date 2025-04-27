@@ -41,33 +41,63 @@ namespace Awesome.AI.CoreSystems
             Count++;
         }
 
-        public PATTERNCOLOR Result { get; set; } = PATTERNCOLOR.RED;
+        private void Reset()
+        {
+            a_low = 1000d;
+            a_high = -1000d;
+        }
+
+        public PATTERNCOLOR ResultColor { get; set; } = PATTERNCOLOR.RED;
+        public double ResultMomentum { get; set; } = -1d;
         private List<double> Avg {  get; set; }
+        private double a_low { get; set; } = 1000d;
+        private double a_high { get; set; } = -1000d;
+        PATTERN currentmood { get; set; } = PATTERN.NONE;
         public void MoodOK(bool _pro)
         {
-            double p_mom = mind.mech_current.p_curr;
-
-            Avg ??= new List<double>();
-            Avg.Add(p_mom);
-            if (Avg.Count > 100)
-                Avg.RemoveAt(0);
-
+            
             if (!CONST.SAMPLE200.RandomSample(mind)) 
                 return;
 
+            //if (currentmood != mind.parms_current.pattern)
+            //    Reset();
+
+            currentmood = mind.parms_current.pattern;
+
+            double p_mom = mind.mech_current.p_curr;
+            double d_mom = mind.mech_current.p_delta;
+
+            Avg ??= new List<double>();
+            Avg.Add(p_mom);
+            if (Avg.Count > 1)
+                Avg.RemoveAt(0);
+
+
             double p_high = mind.mech_current.m_out_high_c;
             double p_low = mind.mech_current.m_out_low_c;
+            double d_high = mind.mech_current.d_out_high;
+            double d_low = mind.mech_current.d_out_low;
 
             double avg = Avg.Average();
-            double res = mind.calc.Normalize(avg, p_low, p_high, 0.0d, 100.0d);
+            
+            if (avg > a_high) a_high = avg;
+            if (avg < a_low) a_low = avg;
 
-            PATTERN currentmood = mind.parms_current.pattern;
+            double res = mind.calc.Normalize(avg, p_low, p_high, 10.0d, 90.0d);
+            ResultMomentum = mind.calc.Normalize(avg, p_low, p_high, 10.0d, 90.0d);
+
 
             switch (currentmood)
             {
-                case PATTERN.MOODGENERAL: Result = PATTERNCOLOR.GREEN; break;
-                case PATTERN.MOODGOOD: Result = res >= 50.0d ? PATTERNCOLOR.GREEN : PATTERNCOLOR.RED; break;
-                case PATTERN.MOODBAD: Result = res < 50.0d ? PATTERNCOLOR.GREEN : PATTERNCOLOR.RED; break;
+                case PATTERN.MOODGENERAL: 
+                    ResultColor = PATTERNCOLOR.GREEN; 
+                    break;
+                case PATTERN.MOODGOOD: 
+                    ResultColor = res >= 49.0d ? PATTERNCOLOR.GREEN : PATTERNCOLOR.RED; 
+                    break;
+                case PATTERN.MOODBAD: 
+                    ResultColor = res <= 51.0d ? PATTERNCOLOR.GREEN : PATTERNCOLOR.RED; 
+                    break;
             }
         }
     }

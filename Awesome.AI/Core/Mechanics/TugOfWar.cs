@@ -87,7 +87,7 @@ namespace Awesome.AI.Core.Mechanics
 
             double Fmax = 5000.0d;                                              // Max oscillating force for F2
             double omega = 2 * Math.PI * 0.5;                                   // Frequency (0.5 Hz)
-            double eta = 0.2d;                                                  // Randomness factor
+            double eta = 0.8d;                                                  // Randomness factor
             double m1 = 500.0d;                                                 // Mass of Car 1 in kg
             double m2 = 500.0d;                                                 // Mass of Car 2 in kg
             double totalMass = m1 + m2;
@@ -102,8 +102,8 @@ namespace Awesome.AI.Core.Mechanics
 
             double F1 = ApplyStatic(Fmax);                                      // Constant force in Newtons (e.g., truck pulling)
             double F2 = ApplyDynamic(pattern, Fmax, t, omega, eta);
-            double friction = frictionForce * -Math.Sign(velocity);             // Friction opposes motion
-            double Fnet = -F1 + F2 + friction;                                  // Net force with F1 constant and F2 dynamic
+            double friction = frictionForce * Math.Sign(velocity);             // Friction opposes motion
+            double Fnet = -F1 + F2 - friction;                                  // Net force with F1 constant and F2 dynamic
 
             // If friction is stronger than applied force and velocity is near zero, stop motion
             if (Math.Abs(Fnet) < frictionForce && Math.Abs(velocity) < 0.01)
@@ -203,8 +203,8 @@ namespace Awesome.AI.Core.Mechanics
             switch (version)
             {
                 case PATTERN.MOODGENERAL: return (Math.Sin(omega * t) + 1.0d) / 2.0d;
-                case PATTERN.MOODGOOD: return 0.5d + (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.5d;
-                case PATTERN.MOODBAD: return (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.5d;
+                case PATTERN.MOODGOOD: return 0.8d + (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.2d;
+                case PATTERN.MOODBAD: return (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.4d;
                 default: throw new Exception("TugOfWar, Sine");
             }
         }

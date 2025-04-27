@@ -96,7 +96,7 @@ namespace Awesome.AI.Core.Mechanics
             double beta = 0.02d;                // Friction coefficient
             double dt = 0.1d;                   // Time step (s)
             double eta = 0.5d;                  // Random noise amplitude for wind force
-            double m = 0.25d;                   // Ball mass (kg)
+            double m = 0.15d;                    // Ball mass (kg)
 
             double t = cycles * dt;
 
@@ -196,9 +196,9 @@ namespace Awesome.AI.Core.Mechanics
             return rand * noiseAmplitude;// Random value in range [-amplitude, amplitude]
         }
 
-        private double Sine(PATTERN version, double t, double omega)
+        private double Sine(PATTERN pattern, double t, double omega)
         {
-            switch (version)
+            switch (pattern)
             {
                 case PATTERN.MOODGENERAL: return (Math.Sin(omega * t) + 1.0d) / 2.0d;
                 case PATTERN.MOODGOOD: return 0.5d + (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.5d;
@@ -216,14 +216,14 @@ namespace Awesome.AI.Core.Mechanics
             return Fgravity;
         }
 
-        private double ApplyDynamic(PATTERN version, double omega, double t, double F0, double eta)
+        private double ApplyDynamic(PATTERN pattern, double omega, double t, double F0, double eta)
         {
             if(mind.goodbye.IsYes())
                 return 0.0d;
 
-            double Fx = F0 * Sine(version, t, omega) + GetRandomNoise(eta); // Wind force
+            double Fx = F0 * Sine(pattern, t, omega) + GetRandomNoise(eta); // Wind force
 
-            if (Fx <= 0.0d)
+            if (Fx < 0.0d)
                 Fx = 0.0d;
             
             return Fx;

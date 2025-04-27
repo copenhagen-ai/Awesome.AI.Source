@@ -38,6 +38,7 @@ namespace Awesome.AI.Web.AI.Common
 
         public string mood {  get; set; }
         public bool moodOK { get; set; }
+        public double mood_mom { get; set; }
 
         //public string common_hub { get; set; }
         //public string chat_index { get; set; }
@@ -93,7 +94,8 @@ namespace Awesome.AI.Web.AI.Common
             whistle = mind._quick.Result ? "[Whistling to my self..]" : gimmick[count];
 
             mood = mind.parms_current.pattern.ToString();
-            moodOK = mind.mood.Result == PATTERNCOLOR.GREEN;
+            moodOK = mind.mood.ResultColor == PATTERNCOLOR.GREEN;
+            mood_mom = mind.mood.ResultMomentum;
 
             if (mind._long.Result["answer"] != "") {
                 chat_answer = $"{mind._long.Result["answer"]}";
