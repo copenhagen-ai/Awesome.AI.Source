@@ -155,7 +155,7 @@ namespace Awesome.AI.Core
             bool is_noise = mind.current == "no check any more";
             IMechanics mech = mind.mech_current;
 
-            double _v = is_noise ? mech.n_momentum : mech.p_curr;
+            double _v = is_noise ? mech.peek_momentum : mech.p_curr;
             double v_h = is_noise ? mech.m_out_high_n : mech.m_out_high_c;
             double v_l = is_noise ? mech.m_out_low_n : mech.m_out_low_c;
 

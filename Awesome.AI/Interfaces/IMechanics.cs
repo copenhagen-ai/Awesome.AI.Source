@@ -14,11 +14,13 @@ namespace Awesome.AI.Interfaces
         double posx_high { get; set; }
         double posx_low { get; set; }
 
-        double n_momentum { get; set; }
+        double peek_momentum { get; set; }
+        double p_norm { get; set; }
+        double d_norm { get; set; }
         double p_curr { get; set; }
         double p_prev { get; set; }
-        double p_delta { get; set; }
-        double p_delta_prev { get; set; }
+        double d_curr { get; set; }
+        double d_prev { get; set; }
 
         FUZZYDOWN FuzzyMom { get; }
         HARDDOWN HardMom { get; }
@@ -30,6 +32,7 @@ namespace Awesome.AI.Interfaces
         void CalcPattern2(PATTERN pattern, int cycles);//good mood
         void CalcPattern3(PATTERN pattern, int cycles);//bad mood
 
-        void Momentum(UNIT c);
+        void Peek(UNIT c);
+        void Normalize();
     }
 }

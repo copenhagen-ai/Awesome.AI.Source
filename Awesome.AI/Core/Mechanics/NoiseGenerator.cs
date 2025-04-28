@@ -7,11 +7,13 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class NoiseGenerator : IMechanics
     {
-        public double n_momentum { get; set; }
+        public double peek_momentum { get; set; }
+        public double p_norm { get; set; }
+        public double d_norm { get; set; }
         public double p_curr { get; set; }
         public double p_prev { get; set; }
-        public double p_delta { get; set; }
-        public double p_delta_prev { get; set; }
+        public double d_curr { get; set; }
+        public double d_prev { get; set; }
         public double m_out_high_c { get; set; }
         public double m_out_low_c { get; set; }
         public double m_out_high_n { get; set; }
@@ -39,7 +41,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public FUZZYDOWN FuzzyMom 
         { 
-            get { return p_delta.ToFuzzy(mind); } 
+            get { return d_curr.ToFuzzy(mind); } 
         }
 
         public HARDDOWN HardMom
@@ -50,7 +52,7 @@ namespace Awesome.AI.Core.Mechanics
                 //return p_curr.ToDownZero(mind);
 
                 //return p_delta.ToDownPrev(p_delta_prev, mind);
-                return p_delta.ToDownZero(mind);
+                return d_curr.ToDownZero(mind);
             }            
         }
 
@@ -63,8 +65,40 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        //Momentum
-        public void Momentum(UNIT curr)
+        List<double> p_avg = new List<double>();
+        List<double> d_avg = new List<double>();
+        public void Normalize()
+        {
+            p_avg ??= new List<double>();
+            p_avg.Add(p_curr);
+            if (p_avg.Count > 1)
+                p_avg.RemoveAt(0);
+
+            d_avg ??= new List<double>();
+            d_avg.Add(d_curr);
+            if (d_avg.Count > 1)
+                d_avg.RemoveAt(0);
+
+
+            double p_high = m_out_high_c;
+            double p_low = m_out_low_c;
+            double d_high = d_out_high;
+            double d_low = d_out_low;
+
+            double p_av = p_avg.Average();
+            double d_av = d_avg.Average();
+
+            if (p_av > p_high) p_high = p_av;
+            if (p_av < p_low) p_low = p_av;
+
+            if (d_av > d_high) d_high = d_av;
+            if (d_av < d_low) d_low = d_av;
+
+            p_norm = mind.calc.Normalize(p_av, p_low, p_high, 10.0d, 90.0d);
+            d_norm = mind.calc.Normalize(d_av, d_low, d_high, 10.0d, 90.0d);
+        }
+
+        public void Peek(UNIT curr)
         {
             if (curr.IsNull())
                 throw new Exception("NoiseGenerator, Momentum");
@@ -98,22 +132,22 @@ namespace Awesome.AI.Core.Mechanics
             
             //momentum: p = m * v
             if (peek) {
-                n_momentum += (m * 2) * deltaVel;            
+                peek_momentum += (m * 2) * deltaVel;            
             }
             else {
-                p_delta_prev = p_delta;
-                p_delta = (m * 2) * deltaVel;
-                p_curr += p_delta;
+                d_prev = d_curr;
+                d_curr = (m * 2) * deltaVel;
+                p_curr += d_curr;
             }
 
-            if (n_momentum <= m_out_low_n) m_out_low_n = n_momentum;
-            if (n_momentum > m_out_high_n) m_out_high_n = n_momentum;
+            if (peek_momentum <= m_out_low_n) m_out_low_n = peek_momentum;
+            if (peek_momentum > m_out_high_n) m_out_high_n = peek_momentum;
 
             if (p_curr <= m_out_low_c) m_out_low_c = p_curr;
             if (p_curr > m_out_high_c) m_out_high_c = p_curr;
 
-            if (p_delta <= d_out_low) d_out_low = p_delta;
-            if (p_delta > d_out_high) d_out_high = p_delta;
+            if (d_curr <= d_out_low) d_out_low = d_curr;
+            if (d_curr > d_out_high) d_out_high = d_curr;
         }
 
         public void CalcPattern1(PATTERN pattern, int cycles)
@@ -125,6 +159,7 @@ namespace Awesome.AI.Core.Mechanics
                 return;
 
             Calc(mind.unit_noise, false);
+            Normalize();
         }
 
         public void CalcPattern2(PATTERN pattern, int cycles)

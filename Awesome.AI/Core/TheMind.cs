@@ -284,7 +284,7 @@ namespace Awesome.AI.Core
 
         private void PreRun(string current, bool _pro)
         {
-            rand.SaveMomentum(current, mech_current.p_delta);
+            rand.SaveMomentum(current, mech_current.d_curr);
 
             _quick.Run(_pro, unit_current);            
         }

@@ -7,11 +7,13 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class GravityAndRocket : IMechanics
     {
-        public double n_momentum { get; set; }
+        public double peek_momentum { get; set; }
+        public double p_norm { get; set; }
+        public double d_norm { get; set; }
         public double p_curr { get; set; }
         public double p_prev { get; set; }
-        public double p_delta { get; set; }
-        public double p_delta_prev {  get; set; }
+        public double d_curr { get; set; }
+        public double d_prev {  get; set; }
         public double Fsta { get; set; }
         public double Fdyn { get; set; }
         public double m_out_high_c { get; set; }
@@ -41,7 +43,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public FUZZYDOWN FuzzyMom
         {
-            get { return p_delta.ToFuzzy(mind); }
+            get { return d_curr.ToFuzzy(mind); }
         }
 
         public HARDDOWN HardMom
@@ -50,7 +52,7 @@ namespace Awesome.AI.Core.Mechanics
             //return p_curr.ToDownZero(mind);
 
             //return p_delta.ToDownPrev(p_delta_prev, mind);
-            get { return p_delta.ToDownZero(mind); }            
+            get { return d_curr.ToDownZero(mind); }            
         }
 
         private double posxy { get; set; }
@@ -62,7 +64,12 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public void Momentum(UNIT curr)
+        public void Normalize()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Peek(UNIT curr)
         {
             throw new NotImplementedException();
         }

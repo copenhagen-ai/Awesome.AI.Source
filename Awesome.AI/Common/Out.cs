@@ -40,6 +40,8 @@ namespace Awesome.AI.Web.AI.Common
         public bool moodOK { get; set; }
         public double mood_mom { get; set; }
 
+        public double norm_noise {  get; set; }
+
         //public string common_hub { get; set; }
         //public string chat_index { get; set; }
         public UNIT common_unit { get; set; }
@@ -70,7 +72,7 @@ namespace Awesome.AI.Web.AI.Common
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
             momentum = $"{mind.mech_current.p_curr.ToString("E3")}";
-            deltaMom = $"{mind.mech_current.p_delta.ToString("E3")}";
+            deltaMom = $"{mind.mech_current.d_curr.ToString("E3")}";
 
             user_var = $"{mind.user_var}";
             if (mind._mech == MECHANICS.HILL)
@@ -94,8 +96,10 @@ namespace Awesome.AI.Web.AI.Common
             whistle = mind._quick.Result ? "[Whistling to my self..]" : gimmick[count];
 
             mood = mind.parms_current.pattern.ToString();
-            moodOK = mind.mood.ResultColor == PATTERNCOLOR.GREEN;
-            mood_mom = mind.mood.ResultMomentum;
+            moodOK = mind.mood.ResColor == PATTERNCOLOR.GREEN;
+            mood_mom = mind.mood.ResMomentum;
+
+            norm_noise = mind.mech_noise.p_norm;
 
             if (mind._long.Result["answer"] != "") {
                 chat_answer = $"{mind._long.Result["answer"]}";

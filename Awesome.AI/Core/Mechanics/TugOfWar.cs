@@ -7,11 +7,13 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class TugOfWar : IMechanics
     {
-        public double n_momentum { get; set; }
+        public double peek_momentum { get; set; }
+        public double p_norm { get; set; }
+        public double d_norm { get; set; }
         public double p_curr { get; set; }
         public double p_prev { get; set; }
-        public double p_delta { get; set; }
-        public double p_delta_prev { get; set; }
+        public double d_curr { get; set; }
+        public double d_prev { get; set; }
         public double m_out_high_c { get; set; }
         public double m_out_low_c { get; set; }
         public double m_out_high_n { get; set; }
@@ -39,7 +41,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public FUZZYDOWN FuzzyMom 
         { 
-            get { return p_delta.ToFuzzy(mind); } 
+            get { return d_curr.ToFuzzy(mind); } 
         }
 
         public HARDDOWN HardMom
@@ -50,7 +52,7 @@ namespace Awesome.AI.Core.Mechanics
                 //return p_curr.ToDownZero(mind);
 
                 //return p_delta.ToDownPrev(p_delta_prev, mind);
-                return p_delta.ToDownZero(mind);
+                return d_curr.ToDownZero(mind);
             }            
         }
                 
@@ -73,7 +75,40 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public void Momentum(UNIT curr)
+        List<double> p_avg = new List<double>();
+        List<double> d_avg = new List<double>();
+        public void Normalize()
+        {
+            p_avg ??= new List<double>();
+            p_avg.Add(p_curr);
+            if (p_avg.Count > 1)
+                p_avg.RemoveAt(0);
+
+            d_avg ??= new List<double>();
+            d_avg.Add(d_curr);
+            if (d_avg.Count > 1)
+                d_avg.RemoveAt(0);
+
+
+            double p_high = m_out_high_c;
+            double p_low = m_out_low_c;
+            double d_high = d_out_high;
+            double d_low = d_out_low;
+
+            double p_av = p_avg.Average();
+            double d_av = d_avg.Average();
+
+            if (p_av > p_high) p_high = p_av;
+            if (p_av < p_low) p_low = p_av;
+
+            if (d_av > d_high) d_high = d_av;
+            if (d_av < d_low) d_low = d_av;
+
+            p_norm = mind.calc.Normalize(p_av, p_low, p_high, 10.0d, 90.0d);
+            d_norm = mind.calc.Normalize(d_av, d_low, d_high, 10.0d, 90.0d);
+        }
+
+        public void Peek(UNIT curr)
         {
             throw new NotImplementedException();
         }
@@ -87,9 +122,9 @@ namespace Awesome.AI.Core.Mechanics
 
             double Fmax = 5000.0d;                                              // Max oscillating force for F2
             double omega = 2 * Math.PI * 0.5;                                   // Frequency (0.5 Hz)
-            double eta = 0.8d;                                                  // Randomness factor
-            double m1 = 500.0d;                                                 // Mass of Car 1 in kg
-            double m2 = 500.0d;                                                 // Mass of Car 2 in kg
+            double eta = 0.5d;                                                  // Randomness factor
+            double m1 = 300.0d;                                                 // Mass of Car 1 in kg
+            double m2 = 300.0d;                                                 // Mass of Car 2 in kg
             double totalMass = m1 + m2;
             double dt = 0.1d;                                                   // Time step (s)
 
@@ -116,14 +151,14 @@ namespace Awesome.AI.Core.Mechanics
             velocity += acceleration * dt;                                      // Integrate acceleration to get velocity
             position_x += velocity * dt;                                        // Integrate velocity to get position
             p_curr = totalMass * velocity;
-            p_delta = p_curr - p_prev;                                          // Compute change in momentum
+            d_curr = p_curr - p_prev;                                          // Compute change in momentum
             p_prev = p_curr;                                                    // Store current momentum for next iteration
 
             if (p_curr <= m_out_low_c) m_out_low_c = p_curr;
             if (p_curr > m_out_high_c) m_out_high_c = p_curr;
 
-            if (p_delta <= d_out_low) d_out_low = p_delta;
-            if (p_delta > d_out_high) d_out_high = p_delta;
+            if (d_curr <= d_out_low) d_out_low = d_curr;
+            if (d_curr > d_out_high) d_out_high = d_curr;
         }
 
         public void CalcPattern1(PATTERN pattern, int cycles)
@@ -136,6 +171,7 @@ namespace Awesome.AI.Core.Mechanics
 
             pattern_curr = pattern;
             Calc(pattern, cycles);
+            Normalize();
         }
 
         public void CalcPattern2(PATTERN pattern, int cycles)
@@ -148,6 +184,7 @@ namespace Awesome.AI.Core.Mechanics
 
             pattern_curr = pattern;
             Calc(pattern, cycles);
+            Normalize();
         }
 
         public void CalcPattern3(PATTERN pattern, int cycles)
@@ -160,6 +197,7 @@ namespace Awesome.AI.Core.Mechanics
 
             pattern_curr = pattern;
             Calc(pattern, cycles);
+            Normalize();
         }
 
         PATTERN pattern_curr = PATTERN.NONE;
@@ -174,7 +212,7 @@ namespace Awesome.AI.Core.Mechanics
             velocity = 0.0d;
             position_x = CONST.STARTXY;
             p_curr = 0.0d;
-            p_delta = 0.0d;
+            d_curr = 0.0d;
             p_prev = 0.0d;
 
             //m_out_high = -1000.0d;
@@ -198,12 +236,12 @@ namespace Awesome.AI.Core.Mechanics
             //return mind.rand.RandomDouble(-1d, 1d)); // Random value between -1 and 1
         }
 
-        private double Sine(PATTERN version, double t, double omega)
+        private double Sine(PATTERN pattern, double t, double omega)
         {
-            switch (version)
+            switch (pattern)
             {
                 case PATTERN.MOODGENERAL: return (Math.Sin(omega * t) + 1.0d) / 2.0d;
-                case PATTERN.MOODGOOD: return 0.8d + (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.2d;
+                case PATTERN.MOODGOOD: return 0.6d + (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.4d;
                 case PATTERN.MOODBAD: return (Math.Sin(omega * t) + 1.0d) / 2.0d * 0.4d;
                 default: throw new Exception("TugOfWar, Sine");
             }
@@ -222,12 +260,12 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * force right
          * */
-        public double ApplyDynamic(PATTERN version, double Fmax, double t, double omega, double eta)
+        public double ApplyDynamic(PATTERN pattern, double Fmax, double t, double omega, double eta)
         {
             if (mind.goodbye.IsYes())
                 return 0.0d;
 
-            double Fapplied = Fmax * (Sine(version, t, omega) + eta * GetRandomNoise());  // Dynamic force
+            double Fapplied = Fmax * (Sine(pattern, t, omega) + eta * GetRandomNoise());  // Dynamic force
             
             return Fapplied;
         }

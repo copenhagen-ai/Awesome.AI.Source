@@ -7,11 +7,13 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class BallOnHill : IMechanics
     {
-        public double n_momentum { get; set; }
+        public double peek_momentum { get; set; }
+        public double p_norm { get; set; }
+        public double d_norm { get; set; }
         public double p_curr { get; set; }
         public double p_prev { get; set; }
-        public double p_delta { get; set; }
-        public double p_delta_prev {  get; set; }
+        public double d_curr { get; set; }
+        public double d_prev {  get; set; }
 
         public double m_out_high_c { get; set; }
         public double m_out_low_c { get; set; }
@@ -41,7 +43,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public FUZZYDOWN FuzzyMom
         {
-            get { return p_delta.ToFuzzy(mind); }
+            get { return d_curr.ToFuzzy(mind); }
         }
 
         public HARDDOWN HardMom
@@ -53,7 +55,7 @@ namespace Awesome.AI.Core.Mechanics
                 //return p_curr.ToDownZero(mind);
 
                 //return p_delta.ToDownPrev(p_delta_prev, mind);
-                return p_delta.ToDownZero(mind);
+                return d_curr.ToDownZero(mind);
             }
         }
 
@@ -76,14 +78,47 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public void Momentum(UNIT _c)
+        List<double> p_avg = new List<double>();
+        List<double> d_avg = new List<double>();
+        public void Normalize()
+        {
+            p_avg ??= new List<double>();
+            p_avg.Add(p_curr);
+            if (p_avg.Count > 1)
+                p_avg.RemoveAt(0);
+
+            d_avg ??= new List<double>();
+            d_avg.Add(d_curr);
+            if (d_avg.Count > 1)
+                d_avg.RemoveAt(0);
+
+
+            double p_high = m_out_high_c;
+            double p_low = m_out_low_c;
+            double d_high = d_out_high;
+            double d_low = d_out_low;
+
+            double p_av = p_avg.Average();
+            double d_av = d_avg.Average();
+
+            if (p_av > p_high) p_high = p_av;
+            if (p_av < p_low) p_low = p_av;
+
+            if (d_av > d_high) d_high = d_av;
+            if (d_av < d_low) d_low = d_av;
+
+            p_norm = mind.calc.Normalize(p_av, p_low, p_high, 10.0d, 90.0d);
+            d_norm = mind.calc.Normalize(d_av, d_low, d_high, 10.0d, 90.0d);
+        }
+
+        public void Peek(UNIT _c)
         {
             throw new NotImplementedException();
         }
 
         private double velocity = 0.0;
         private double position_x = CONST.STARTXY;
-        private void Calc(PATTERN version, int cycles)
+        private void Calc(PATTERN pattern, int cycles)
         {
             if (cycles == 1)
                 Reset();
@@ -96,12 +131,12 @@ namespace Awesome.AI.Core.Mechanics
             double beta = 0.02d;                // Friction coefficient
             double dt = 0.1d;                   // Time step (s)
             double eta = 0.5d;                  // Random noise amplitude for wind force
-            double m = 0.15d;                    // Ball mass (kg)
+            double m = 0.35d;                    // Ball mass (kg)
 
             double t = cycles * dt;
 
             // Compute forces
-            double Fx = ApplyDynamic(version, omega, t, F0, eta); // Wind force
+            double Fx = ApplyDynamic(pattern, omega, t, F0, eta); // Wind force
             double Fgravity = ApplyStatic(m, g, a, position_x);
             double Ffriction = -beta * velocity;
 
@@ -114,13 +149,13 @@ namespace Awesome.AI.Core.Mechanics
 
             p_prev = p_curr;
             p_curr = m * velocity;
-            p_delta = p_curr - p_prev;
+            d_curr = p_curr - p_prev;
 
             if (p_curr <= m_out_low_c) m_out_low_c = p_curr;
             if (p_curr > m_out_high_c) m_out_high_c = p_curr;
 
-            if (p_delta <= d_out_low) d_out_low = p_delta;
-            if (p_delta > d_out_high) d_out_high = p_delta;
+            if (d_curr <= d_out_low) d_out_low = d_curr;
+            if (d_curr > d_out_high) d_out_high = d_curr;
         }
 
         public void CalcPattern1(PATTERN pattern, int cycles)
@@ -133,6 +168,7 @@ namespace Awesome.AI.Core.Mechanics
 
             pattern_curr = pattern;
             Calc(pattern, cycles);
+            Normalize();
         }
 
         public void CalcPattern2(PATTERN pattern, int cycles)
@@ -145,6 +181,7 @@ namespace Awesome.AI.Core.Mechanics
 
             pattern_curr = pattern;
             Calc(pattern, cycles);
+            Normalize();
         }
 
         public void CalcPattern3(PATTERN pattern, int cycles)
@@ -157,6 +194,7 @@ namespace Awesome.AI.Core.Mechanics
 
             pattern_curr = pattern;
             Calc(pattern, cycles);
+            Normalize();
         }
 
         PATTERN pattern_curr = PATTERN.NONE;
@@ -171,7 +209,7 @@ namespace Awesome.AI.Core.Mechanics
             position_x = CONST.STARTXY;
             velocity = 0.0d;
             p_curr = 0.0d;
-            p_delta = 0.0d;
+            d_curr = 0.0d;
             p_prev = 0.0d;
 
             //m_out_high = -1000.0d;
