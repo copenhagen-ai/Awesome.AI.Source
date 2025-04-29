@@ -152,7 +152,7 @@ namespace Awesome.AI.Core
         
         private double NearPercent()
         {
-            bool is_noise = mind.current == "no check any more";
+            bool is_noise = mind.z_current == "no check any more";
             IMechanics mech = mind.mech_current;
 
             double _v = is_noise ? mech.peek_momentum : mech.p_curr;

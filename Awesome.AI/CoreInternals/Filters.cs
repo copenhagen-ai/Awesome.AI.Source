@@ -50,7 +50,7 @@ namespace Awesome.AI.CoreInternals
              * Lowcut filter?
              * */
 
-            if(mind.current == "noise")
+            if(mind.z_current == "z_noise")
                 return true;
 
             if (_u == null)

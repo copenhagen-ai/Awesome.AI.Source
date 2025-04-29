@@ -15,7 +15,7 @@ namespace Awesome.AI.Core
         public Ticket ticket = new Ticket("NOTICKET");
         private UNITTYPE unit_type { get; set; }
         public LONGTYPE long_deci_type { get; set; }
-        public DateTime created {  get; set; }
+        public DateTime created { get; set; }
         public string hub_guid { get; set; }//name
         public string data { get; set; }//data
         public double credits { get; set; }

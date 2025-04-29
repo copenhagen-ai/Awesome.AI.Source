@@ -138,7 +138,7 @@ namespace Awesome.AI.Common
 
             bool res = deltaMom <= 0.0d;
 
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 res = !res;
             else
             {
@@ -156,7 +156,7 @@ namespace Awesome.AI.Common
         {
             bool res = deltaMom <= prev;
 
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 res = !res;
             else
             {

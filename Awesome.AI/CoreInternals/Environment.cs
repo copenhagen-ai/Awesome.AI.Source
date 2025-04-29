@@ -156,7 +156,7 @@ namespace Awesome.AI.CoreInternals
 
         public bool Valid(UNIT _u)
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return true;
 
             if (_u.IsNull())
@@ -205,7 +205,7 @@ namespace Awesome.AI.CoreInternals
         //process occupation
         public void Setup(HUB last, MINDS mindtype)
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return;
 
             /*
@@ -249,7 +249,7 @@ namespace Awesome.AI.CoreInternals
 
         public void Reset()
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return;
 
             if (mind.parms_current.validation != VALIDATION.EXTERNAL)
@@ -286,7 +286,7 @@ namespace Awesome.AI.CoreInternals
 
         public bool Valid(UNIT _u)
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return true;
 
             if (_u.ticket.IsNull())
@@ -313,7 +313,7 @@ namespace Awesome.AI.CoreInternals
         //setup input
         private void Setup(MINDS mindtype, bool onlyeven)
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return;
 
             tags = new List<Tag>();
@@ -337,7 +337,7 @@ namespace Awesome.AI.CoreInternals
 
         public void Reset()
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return;
 
             if (mind.parms_current.validation != VALIDATION.INTERNAL)

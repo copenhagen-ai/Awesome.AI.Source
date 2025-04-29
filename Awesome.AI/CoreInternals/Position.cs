@@ -26,7 +26,7 @@ namespace Awesome.AI.CoreInternals
 
         public void Update()
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return;
 
             if (!CONST.SAMPLE200.RandomSample(mind)) 

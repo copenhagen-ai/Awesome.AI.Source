@@ -25,7 +25,7 @@ namespace Awesome.AI.CoreInternals
 
         public void Update()
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
             {
                 RatioNoise.Add(DownHard);
 
@@ -33,7 +33,7 @@ namespace Awesome.AI.CoreInternals
                     RatioNoise.RemoveAt(0);
             }
 
-            if (mind.current == "mech")
+            if (mind.z_current == "z_mech")
             {
                 RatioCurrent.Add(DownHard);
 

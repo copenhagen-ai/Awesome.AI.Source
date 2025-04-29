@@ -1,4 +1,5 @@
-﻿using static Awesome.AI.Variables.Enums;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Variables
 {
@@ -100,10 +101,10 @@ namespace Awesome.AI.Variables
         public const double GRAV_CONST = 6.674E-11d;
                 
         public const double BASE_REDUCTION = 2d / 3d;       //0.666 hehe
-        public const double MAX_PAIN = 100.0d;
+        public const double MAX_PAIN = 100.0d;              //connected x
+        public const double VERY_LOW = 1.0E-2;              //connected x
         public const double LAPSES = 99d;                   //yesno ratio : reaction time in cycles
         public const double RATIO = 50d;
-        public const double VERY_LOW = 1.0E-2;
         public const int FIRST_RUN = 5;
         public const int RUNTIME = 3;                       //minutes
         

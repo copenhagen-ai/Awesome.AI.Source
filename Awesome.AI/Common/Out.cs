@@ -61,7 +61,7 @@ namespace Awesome.AI.Web.AI.Common
         private int count = 0;
         public void Set()
         {
-            if(mind.current == "noise")
+            if(mind.z_current == "z_noise")
                 return;
 
             if (!CONST.SAMPLE200.RandomSample(mind)) return;

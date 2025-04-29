@@ -21,7 +21,7 @@ namespace Awesome.AI.Core
 
             user_var = 0.0d;
 
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return true;
 
             bool ok;
@@ -89,7 +89,7 @@ namespace Awesome.AI.Core
              * should there be some procedure for this(unlocking)?
              * */
 
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return;
 
             for (int i = 0; i <= 20; i++)

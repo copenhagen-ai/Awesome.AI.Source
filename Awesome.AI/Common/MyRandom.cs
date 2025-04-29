@@ -17,7 +17,7 @@ namespace Awesome.AI.Common
 
         public void SaveMomentum(string current, double momentum)
         {
-            if (current != "noise")
+            if (current != "z_noise")
                 return;
 
             if (double.IsNaN(momentum))

@@ -76,7 +76,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern1(PATTERN pattern, int cycles)
         {
-            if (mind.current != "mech")
+            if (mind.z_current != "z_mech")
                 return;
 
             if (pattern != PATTERN.MOODGENERAL)
@@ -87,7 +87,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern2(PATTERN pattern, int cycles)
         {
-            if (mind.current != "mech")
+            if (mind.z_current != "z_mech")
                 return;
 
             if (pattern != PATTERN.MOODGOOD)
@@ -98,7 +98,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern3(PATTERN pattern, int cycles)
         {
-            if (mind.current != "mech")
+            if (mind.z_current != "z_mech")
                 return;
 
             if (pattern != PATTERN.MOODBAD)

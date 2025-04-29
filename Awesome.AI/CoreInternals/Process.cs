@@ -66,7 +66,7 @@ namespace Awesome.AI.CoreInternals
 
         public void Stats(bool _pro)
         {
-            if (mind.current == "noise")
+            if (mind.z_current == "z_noise")
                 return;
 
             if (!_pro)

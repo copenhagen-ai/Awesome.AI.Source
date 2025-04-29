@@ -152,7 +152,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void CalcPattern1(PATTERN pattern, int cycles)
         {
-            if (mind.current != "noise")
+            if (mind.z_current != "z_noise")
                 return;
 
             if (pattern != PATTERN.NONE)

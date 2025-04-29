@@ -11,10 +11,8 @@ namespace Awesome.AI.Core
         public string hub_guid { get; set; }
         public string subject { get; set; }
         public int max_num_units { get; set; }
-
-        public List<UNIT> units;
-        public TONE tone;
-
+        public List<UNIT> units { get; set; }        
+        public TONE tone { get; set; }
 
         private HUB(string hub_guid, string subject, List<UNIT> units, TONE ton, int max_num_units)
         {

@@ -34,7 +34,7 @@ namespace Awesome.AI.Core
         public Position pos;
         public MyQubit quantum;
 
-        private List<string> list = new List<string>() { "mech", "noise" };
+        private List<string> zzzz = new List<string>() { "z_mech", "z_noise" };
 
         public Dictionary<string, IMechanics> mech { get; set; }
         public Dictionary<string, Params> parms { get; set; }
@@ -50,7 +50,7 @@ namespace Awesome.AI.Core
         public HARDDOWN goodbye = HARDDOWN.NO;
 
         public static bool ok { get; set; }
-        public string current { get; set; }
+        public string z_current { get; set; }
         public bool do_process{ get; set; }
         public bool chat_answer { get; set; }
         public bool chat_asked { get; set; }
@@ -76,67 +76,26 @@ namespace Awesome.AI.Core
         {
             get
             {
-                if (current == "noise")
+                if (z_current == "z_noise")
                     return STATE.JUSTRUNNING;
 
-                return parms["mech"].state;
+                return parms["z_mech"].state;
             }
-            set { parms["mech"].state = value; }
+            set { parms["z_mech"].state = value; }
         }
 
-        public UNIT unit_current
-        {
-            get { return unit[current]; }
-            set { unit[current] = value; }
-        }
+        //these coordinates could be viewed as going a long the z-axis
+        public UNIT unit_current { get { return unit[z_current]; } set { unit[z_current] = value; } }
+        public UNIT unit_mechanics { get { return unit["z_mech"]; } set { unit["z_mech"] = value; } }
+        public UNIT unit_noise { get { return unit["z_noise"]; } set { unit["z_noise"] = value; } }
 
-        public UNIT unit_mechanics
-        {
-            get { return unit["mech"]; }
-            set { unit["mech"] = value; }
-        }
+        public IMechanics mech_current { get { return mech[z_current]; } set { mech[z_current] = value; } }
+        public IMechanics mech_mechanics { get { return mech["z_mech"]; } set { mech["z_mech"] = value; } }
+        public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }
 
-        public UNIT unit_noise
-        {
-            get { return unit["noise"]; }
-            set { unit["noise"] = value; }
-        }
-
-        public IMechanics mech_current
-        {
-            get { return mech[current]; }
-            set { mech[current] = value; }
-        }
-
-        public IMechanics mech_mechanics
-        {
-            get { return mech["mech"]; }
-            set { mech["mech"] = value; }
-        }
-
-        public IMechanics mech_noise
-        {
-            get { return mech["noise"]; }
-            set { mech["noise"] = value; }
-        }
-
-        public Params parms_current
-        {
-            get { return parms[current]; }
-            set { parms[current] = value; }
-        }
-
-        public Params parms_mechanics
-        {
-            get { return parms["mech"]; }
-            set { parms["mech"] = value; }
-        }
-
-        public Params parms_noise
-        {
-            get { return parms["noise"]; }
-            set { parms["noise"] = value; }
-        }
+        public Params parms_current { get { return parms[z_current]; } set { parms[z_current] = value; } }
+        public Params parms_mechanics { get { return parms["z_mech"]; } set { parms["z_mech"] = value; } }
+        public Params parms_noise { get { return parms["z_noise"]; } set { parms["z_noise"] = value; } }
 
         public TheMind(MECHANICS m, MINDS mindtype, Dictionary<string, string> long_deci)
         {
@@ -145,10 +104,10 @@ namespace Awesome.AI.Core
                 this._mech = m;
                 this.mindtype = mindtype;
                 this.long_deci = long_deci;
-                current = "mech";
+                z_current = "z_mech";
 
                 parms = new Dictionary<string, Params>();
-                foreach (string s in list)
+                foreach (string s in zzzz)
                     parms[s] = new Params(this);
 
                 mech = new Dictionary<string, IMechanics>();
@@ -174,7 +133,7 @@ namespace Awesome.AI.Core
 
                 unit = new Dictionary<string, UNIT>();
                 
-                foreach (string s in list)
+                foreach (string s in zzzz)
                 {
                     if (mindtype == MINDS.ANDREW)
                         unit[s] = mem.UNITS_ALL().Where(x => x.Root == "_fembots1").First();
@@ -187,7 +146,7 @@ namespace Awesome.AI.Core
                 parms_mechanics.UpdateLowCut();
                 //parms["noise"].UpdateLowCut();
 
-                PreRun("noise", true);
+                PreRun("z_noise", true);
                 PostRun(true);
 
                 theanswer = UNIT.Create(this, "GUID", -1.0d, "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
@@ -209,7 +168,7 @@ namespace Awesome.AI.Core
         
         private void Lists()
         {
-            if (current == "noise")
+            if (z_current == "z_noise")
                 return;
 
             List<UNIT> list = mem.UNITS_VAL();
@@ -249,12 +208,12 @@ namespace Awesome.AI.Core
 
             try
             {
-                foreach (string s in list)
+                foreach (string s in zzzz)
                 {
-                    current = s;
+                    z_current = s;
 
                     //Randomize(_pro);
-                    PreRun(current, _pro);
+                    PreRun(z_current, _pro);
 
                     if (!Core(_pro))//the basics
                         ok = false;
@@ -308,7 +267,7 @@ namespace Awesome.AI.Core
             core.UpdateCredit();
             core.AnswerQuestion();
             
-            if (unit[current].IsIDLE())
+            if (unit[z_current].IsIDLE())
                 return true;
 
             mech_noise.CalcPattern1(PATTERN.NONE, 0);
@@ -350,7 +309,7 @@ namespace Awesome.AI.Core
 
         private void Systems(bool _pro)
         {
-            if (current == "noise")
+            if (z_current == "z_noise")
                 return;
 
             if (State == STATE.QUICKDECISION)
