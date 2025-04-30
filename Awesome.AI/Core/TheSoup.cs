@@ -1,5 +1,4 @@
-﻿using Awesome.AI.Interfaces;
-using Awesome.AI.Variables;
+﻿using Awesome.AI.Variables;
 
 namespace Awesome.AI.Core
 {
@@ -142,13 +141,9 @@ namespace Awesome.AI.Core
             res.Update(idx_sign, add_sign, near, dist);
         }
 
-
         private double DistAbsolute(UNIT unit, double near)
         {
-            IMechanics mech = mind.mech_current;
-            
             double idx = unit.Variable;
-            
             double res = Math.Abs(idx -  near);
 
             return res;
@@ -157,13 +152,8 @@ namespace Awesome.AI.Core
         private double NearPercent()
         {
             bool is_noise = mind.z_current == "no check any more";
-            IMechanics mech = mind.mech_current;
-
-            double _v = is_noise ? mech.peek_momentum : mech.p_curr;
-            double v_h = is_noise ? mech.m_out_high_n : mech.m_out_high_c;
-            double v_l = is_noise ? mech.m_out_low_n : mech.m_out_low_c;
-
-            double pct = mind.calc.Normalize(_v, v_l, v_h) * 100.0d;
+            double _v = is_noise ? mind.mech_current.peek_momentum : mind.mech_current.p_100;
+            double pct = _v;
 
             return pct;
         }

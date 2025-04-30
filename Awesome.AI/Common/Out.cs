@@ -99,7 +99,7 @@ namespace Awesome.AI.Web.AI.Common
             moodOK = mind.mood.ResColor == PATTERNCOLOR.GREEN;
             mood_mom = mind.mood.ResMomentum;
 
-            norm_noise = mind.mech_noise.p_norm;
+            norm_noise = mind.mech_noise.p_90;
 
             if (mind._long.Result["answer"] != "") {
                 chat_answer = $"{mind._long.Result["answer"]}";

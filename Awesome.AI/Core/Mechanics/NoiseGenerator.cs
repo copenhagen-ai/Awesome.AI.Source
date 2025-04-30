@@ -8,8 +8,10 @@ namespace Awesome.AI.Core.Mechanics
     public class NoiseGenerator : IMechanics
     {
         public double peek_momentum { get; set; }
-        public double p_norm { get; set; }
-        public double d_norm { get; set; }
+        public double p_100 { get; set; }
+        public double d_100 { get; set; }
+        public double p_90 { get; set; }
+        public double d_90 { get; set; }
         public double p_curr { get; set; }
         public double p_prev { get; set; }
         public double d_curr { get; set; }
@@ -94,8 +96,11 @@ namespace Awesome.AI.Core.Mechanics
             if (d_av > d_high) d_high = d_av;
             if (d_av < d_low) d_low = d_av;
 
-            p_norm = mind.calc.Normalize(p_av, p_low, p_high, 10.0d, 90.0d);
-            d_norm = mind.calc.Normalize(d_av, d_low, d_high, 10.0d, 90.0d);
+            p_100 = mind.calc.Normalize(p_av, p_low, p_high, 0.0d, 100.0d);
+            d_100 = mind.calc.Normalize(d_av, d_low, d_high, 0.0d, 100.0d);
+
+            p_90 = mind.calc.Normalize(p_av, p_low, p_high, 10.0d, 90.0d);
+            d_90 = mind.calc.Normalize(d_av, d_low, d_high, 10.0d, 90.0d);
         }
 
         public void Peek(UNIT curr)

@@ -5,18 +5,14 @@ namespace Awesome.AI.Interfaces
 {
     public interface IMechanics
     {
-        double m_out_high_c { get; set; }
-        double m_out_low_c { get; set; }
-        double m_out_high_n { get; set; }
-        double m_out_low_n { get; set; }
-        double d_out_high { get; set; }
-        double d_out_low { get; set; }
         double posx_high { get; set; }
         double posx_low { get; set; }
 
         double peek_momentum { get; set; }
-        double p_norm { get; set; }
-        double d_norm { get; set; }
+        double p_100 { get; set; }
+        double d_100 { get; set; }
+        double p_90 { get; set; }
+        double d_90 { get; set; }
         double p_curr { get; set; }
         double p_prev { get; set; }
         double d_curr { get; set; }

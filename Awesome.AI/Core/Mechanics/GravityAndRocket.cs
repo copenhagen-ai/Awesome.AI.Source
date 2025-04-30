@@ -8,8 +8,10 @@ namespace Awesome.AI.Core.Mechanics
     public class GravityAndRocket : IMechanics
     {
         public double peek_momentum { get; set; }
-        public double p_norm { get; set; }
-        public double d_norm { get; set; }
+        public double p_100 { get; set; }
+        public double d_100 { get; set; }
+        public double p_90 { get; set; }
+        public double d_90 { get; set; }
         public double p_curr { get; set; }
         public double p_prev { get; set; }
         public double d_curr { get; set; }
