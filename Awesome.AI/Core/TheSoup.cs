@@ -128,6 +128,10 @@ namespace Awesome.AI.Core
             if (_a is null || _b is null)
                 return;
 
+            //i think it makes sense only noise can update unit
+            if (mind.z_current != "z_noise")
+                return;
+
             Params parm = mind.parms_current;
 
             //im getting confused - noise uses high acc at zero, meaning reverse index
