@@ -64,12 +64,10 @@ namespace Awesome.AI.CoreSystems
             HUB hub = current.HUB;
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
-            HUB _1 = mind.mem.HUBS_SUB(mind.State, CONST.deci_subject[0]);
-            HUB _2 = mind.mem.HUBS_SUB(mind.State, CONST.deci_subject[1]);
-
-            MyRandom rand = mind.rand;
-            int[] _rand = rand.MyRandomInt(1, 5);
-            if (_rand[0] == 1)
+            HUB _1 = mind.mem.HUBS_SUB(mind.STATE, CONST.deci_subject[0]);
+            HUB _2 = mind.mem.HUBS_SUB(mind.STATE, CONST.deci_subject[1]);
+            
+            if (CONST.SAMPLE50.RandomSample(mind))
             {
                 mind.mem.Randomize(_1);
                 mind.mem.Randomize(_2);
@@ -93,7 +91,7 @@ namespace Awesome.AI.CoreSystems
                 if (current.data == "CYES")
                 {
                     HUB _hub = null;
-                    List<HUB> list = mind.mem.HUBS_ALL(mind.State);
+                    List<HUB> list = mind.mem.HUBS_ALL(mind.STATE);
                     int count = list.Count;
                     int i = 0;
                     int[] _r = mind.rand.MyRandomInt(100, count - 1);

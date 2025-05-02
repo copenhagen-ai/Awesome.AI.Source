@@ -9,6 +9,7 @@ namespace Awesome.AI.Interfaces
         double posx_low { get; set; }
 
         double peek_momentum { get; set; }
+        double peek_norm { get; set; }
         double p_100 { get; set; }
         double d_100 { get; set; }
         double p_90 { get; set; }

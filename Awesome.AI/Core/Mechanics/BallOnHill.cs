@@ -8,6 +8,7 @@ namespace Awesome.AI.Core.Mechanics
     public class BallOnHill : IMechanics
     {
         public double peek_momentum { get; set; }
+        public double peek_norm { get; set; }
         public double p_100 { get; set; }
         public double d_100 { get; set; }
         public double p_90 { get; set; }
@@ -19,8 +20,6 @@ namespace Awesome.AI.Core.Mechanics
 
         public double m_out_high_c { get; set; }
         public double m_out_low_c { get; set; }
-        public double m_out_high_n { get; set; }
-        public double m_out_low_n { get; set; }
         public double d_out_high { get; set; }
         public double d_out_low { get; set; }
         public double posx_high { get; set; }
@@ -35,8 +34,8 @@ namespace Awesome.AI.Core.Mechanics
 
             m_out_high_c = -1000.0d;
             m_out_low_c = 1000.0d;
-            m_out_high_n = -1000.0d;
-            m_out_low_n = 1000.0d;
+            m_out_high_c = -1000.0d;
+            m_out_low_c = 1000.0d;
             d_out_high = -1000.0d;
             d_out_low = 1000.0d;
             posx_high = -1000.0d;

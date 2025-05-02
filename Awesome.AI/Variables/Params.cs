@@ -36,7 +36,6 @@ namespace Awesome.AI.Variables
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                    state = STATE.JUSTRUNNING;
                     pattern = PATTERN.MOODGENERAL;
 
                     high_at_zero = true;                    
@@ -49,7 +48,6 @@ namespace Awesome.AI.Variables
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                    state = STATE.JUSTRUNNING;
                     pattern = PATTERN.NONE;
 
                     high_at_zero = false;
@@ -66,11 +64,10 @@ namespace Awesome.AI.Variables
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                    state = STATE.JUSTRUNNING;
                     pattern = PATTERN.MOODGENERAL;
 
                     high_at_zero = true;
-                    update_cred = 0.030d;
+                    update_cred = 0.005d;
 
                     break;
                 case MECHANICS.HILL:
@@ -79,11 +76,10 @@ namespace Awesome.AI.Variables
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                    state = STATE.JUSTRUNNING;
                     pattern = PATTERN.MOODGENERAL;
 
                     high_at_zero = false;
-                    update_cred = 0.050d;                   
+                    update_cred = 0.005d;                   
 
                     break;
                 default: throw new Exception("GetMechanics");
@@ -112,7 +108,6 @@ namespace Awesome.AI.Variables
         public VALIDATION validation;
         public TAGS tags;                                               //used with WORLD and BOTH
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
-        public STATE state;
         public PATTERN pattern;
 
         public bool high_at_zero { get; set; }        

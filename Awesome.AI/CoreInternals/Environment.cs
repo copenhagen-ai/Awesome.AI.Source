@@ -95,7 +95,7 @@ namespace Awesome.AI.CoreInternals
         private bool run = false;
         private int epoch_old = -1;
         public int epoch_count = 0;
-        public int[] epoch_stop = new int[] { -1 };
+        public int epoch_stop = -1;
 
         public string Occu
         {
@@ -120,14 +120,14 @@ namespace Awesome.AI.CoreInternals
                              * ..maybe not
                              * */
 
-                            if (epoch_count <= epoch_stop[0])
+                            if (epoch_count <= epoch_stop)
                                 break;
 
                             epoch_count = 0;
-                            epoch_stop = mind.rand.MyRandomInt(1, occu.max_epochs);
-                            int[] index = mind.rand.MyRandomInt(1, areas.Count - 1);
+                            epoch_stop = mind.rand.MyRandomInt(1, occu.max_epochs)[0];
+                            int index = mind.rand.MyRandomInt(1, areas.Count - 1)[0];
 
-                            occu = areas[index[0]];
+                            occu = areas[index];
 
                             if (occu == null)
                                 throw new Exception("Occu");
@@ -168,7 +168,10 @@ namespace Awesome.AI.CoreInternals
             if (_u.IsQUICKDECISION())
                 return true;
 
-            Area area = SetArea().Result;
+            Area area = areas.Where(x => x.name == Occu).First();
+
+            if (area == null)
+                return false;
 
             List<HUB> _hubs = area.values;
             bool res = _hubs.Contains(_u.HUB);
@@ -176,19 +179,19 @@ namespace Awesome.AI.CoreInternals
             return res;
         }
 
-        private async Task<Area> SetArea()
-        {
-            /* weird error here, so let it be ugly */
-            Area area = areas.Where(x => x.name == Occu).FirstOrDefault();
+        //private Area SetArea()
+        //{
+        //    Area area = areas.Where(x => x.name == Occu).FirstOrDefault();
 
-            while (area.IsNull())
-            {
-                await Task.Delay(100);
-                area = areas.Where(x => x.name == Occu).FirstOrDefault();
-            }
+        //    /* weird error here, so let it be ugly */
+        //    //while (area.IsNull())
+        //    //{
+        //    //    await Task.Delay(100);
+        //    //    area = areas.Where(x => x.name == Occu).FirstOrDefault();
+        //    //}
 
-            return area;
-        }
+        //    return area;
+        //}
 
         //public void AddHUB(HUB hub, string name)
         //{
@@ -205,9 +208,6 @@ namespace Awesome.AI.CoreInternals
         //process occupation
         public void Setup(HUB last, MINDS mindtype)
         {
-            if (mind.z_current == "z_noise")
-                return;
-
             /*
              * these should be set according to hobbys, mood, location, interests etc..
              * */
@@ -219,13 +219,13 @@ namespace Awesome.AI.CoreInternals
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in andrew1)
-                    list.Add(mind.mem.HUBS_SUB(mind.State, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in andrew2)
-                    list.Add(mind.mem.HUBS_SUB(mind.State, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
 
@@ -235,13 +235,13 @@ namespace Awesome.AI.CoreInternals
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in roberta1)
-                    list.Add(mind.mem.HUBS_SUB(mind.State, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in roberta2)
-                    list.Add(mind.mem.HUBS_SUB(mind.State, s));
+                    list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
                 list.Add(last);
                 areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
             }
@@ -313,9 +313,6 @@ namespace Awesome.AI.CoreInternals
         //setup input
         private void Setup(MINDS mindtype, bool onlyeven)
         {
-            if (mind.z_current == "z_noise")
-                return;
-
             tags = new List<Tag>();
             tags.Add(new Tag("SPECIAL"));
 

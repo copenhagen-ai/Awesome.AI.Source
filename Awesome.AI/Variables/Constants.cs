@@ -111,8 +111,9 @@ namespace Awesome.AI.Variables
         public const int NUMBER_OF_UNITS = 10;
         public const int MAX_UNITS = 20;
 
+        public const int SAMPLE50 = 50;
         public const int SAMPLE200 = 200;
-        public const int SAMPLE4500 = 4500;
+        public const int SAMPLE4500 = 1500;
 
         public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
 

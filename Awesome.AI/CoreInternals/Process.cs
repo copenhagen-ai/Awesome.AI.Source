@@ -78,7 +78,7 @@ namespace Awesome.AI.CoreInternals
             if (mind.unit_current.IsQUICKDECISION())
                 return;
 
-            if (mind.State == STATE.QUICKDECISION)
+            if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
             Stats stats = new Stats();

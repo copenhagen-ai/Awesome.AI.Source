@@ -195,13 +195,13 @@ namespace Awesome.AI.CoreInternals
         {
             Reset();
 
-            if (mind.State == STATE.JUSTRUNNING && !units_running.Any())
+            if (mind.STATE == STATE.JUSTRUNNING && !units_running.Any())
                 throw new Exception("Memory, UNITS_VAL 1");
 
-            if (mind.State == STATE.QUICKDECISION && !units_decision.Any())
+            if (mind.STATE == STATE.QUICKDECISION && !units_decision.Any())
                 throw new Exception("Memory, UNITS_VAL 2");
 
-            switch (mind.State)
+            switch (mind.STATE)
             {
                 case STATE.JUSTRUNNING: return units_running;
                 case STATE.QUICKDECISION: return units_decision;
@@ -215,13 +215,13 @@ namespace Awesome.AI.CoreInternals
 
             List<UNIT> res;
 
-            if (mind.State == STATE.JUSTRUNNING && !units_running.Any())
+            if (mind.STATE == STATE.JUSTRUNNING && !units_running.Any())
                 throw new Exception("Memory, UNITS_VAL 1");
 
-            if (mind.State == STATE.QUICKDECISION && !units_decision.Any())
+            if (mind.STATE == STATE.QUICKDECISION && !units_decision.Any())
                 throw new Exception("Memory, UNITS_VAL 2");
 
-            switch (mind.State)
+            switch (mind.STATE)
             {
                 case STATE.JUSTRUNNING: res = units_running.Where(x => x.IsValid).ToList(); break;
                 case STATE.QUICKDECISION: res = units_decision.ToList(); break;//all are valid
@@ -236,7 +236,7 @@ namespace Awesome.AI.CoreInternals
             int[] rand;
             UNIT _u;
 
-            switch (mind.State)
+            switch (mind.STATE)
             {
                 case STATE.JUSTRUNNING:
                     rand = mind.rand.MyRandomInt(index, units_running.Count() - 1);
@@ -491,7 +491,7 @@ namespace Awesome.AI.CoreInternals
                     _count++;
                 }
 
-                switch (mind.State)
+                switch (mind.STATE)
                 {
                     case STATE.JUSTRUNNING: units_running = units_running.Concat(_u).ToList(); break;
                     case STATE.QUICKDECISION: units_decision = units_decision.Concat(_u).ToList(); break;
@@ -500,7 +500,7 @@ namespace Awesome.AI.CoreInternals
 
                 HUB _h = HUB.Create(guid, s, _u, tone, max_units);
 
-                HUBS_ADD(mind.State, _h);
+                HUBS_ADD(mind.STATE, _h);
             }
         }
 

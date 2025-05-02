@@ -46,16 +46,19 @@ namespace Awesome.AI.CoreSystems
 
         public void Run(bool _pro, UNIT curr)
         {
+            //if (mind.z_current == "z_noise")
+            //    return;
+
             if (new_res)
                 return;
 
-            if (mind.State == STATE.QUICKDECISION && mind.mem.QDCOUNT() > 0)
+            if (mind.STATE == STATE.QUICKDECISION && mind.mem.QDCOUNT() > 0)
             {
                 if (mind.mem.QDCOUNT() <= 1)
                 {
                     res = curr.data == "QYES";
                     new_res = true;
-                    mind.State = STATE.JUSTRUNNING;
+                    mind.STATE = STATE.JUSTRUNNING;
                 }
 
                 mind.mem.QDREMOVE(curr);
@@ -109,7 +112,7 @@ namespace Awesome.AI.CoreSystems
             if (!_pro)
                 return;
 
-            mind.State = STATE.QUICKDECISION;
+            mind.STATE = STATE.QUICKDECISION;
         }
     }
 }

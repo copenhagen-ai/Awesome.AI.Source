@@ -34,7 +34,7 @@ namespace Awesome.AI.Core
         public Position pos;
         public MyQubit quantum;
 
-        private List<string> zzzz = new List<string>() { "z_mech", "z_noise" };
+        private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
         public Dictionary<string, IMechanics> mech { get; set; }
         public Dictionary<string, Params> parms { get; set; }
@@ -72,17 +72,8 @@ namespace Awesome.AI.Core
         //public List<KeyValuePair<string, int>> themes_stat = new List<KeyValuePair<string, int>>();
 
 
-        public STATE State
-        {
-            get
-            {
-                if (z_current == "z_noise")
-                    return STATE.JUSTRUNNING;
-
-                return parms["z_mech"].state;
-            }
-            set { parms["z_mech"].state = value; }
-        }
+        public STATE STATE { get; set; } = STATE.JUSTRUNNING;
+        
 
         //these coordinates could be viewed as going a long the z-axis
         public UNIT unit_current { get { return unit[z_current]; } set { unit[z_current] = value; } }
@@ -312,7 +303,7 @@ namespace Awesome.AI.Core
             if (z_current == "z_noise")
                 return;
 
-            if (State == STATE.QUICKDECISION)
+            if (STATE == STATE.QUICKDECISION)
                 return;
 
             foreach(var kv in this.long_deci)

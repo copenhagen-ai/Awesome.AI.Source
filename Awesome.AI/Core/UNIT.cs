@@ -107,7 +107,7 @@ namespace Awesome.AI.Core
                 if (IsIDLE())
                     return HUB.Create("GUID", "IDLE", new List<UNIT>(), TONE.RANDOM, -1);
 
-                STATE state = mind.State;
+                STATE state = mind.STATE;
                 List<HUB> list = mind.mem.HUBS_ALL(state);
 
                 //FirstOrDefault is fine

@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Variables;
+﻿using Awesome.AI.Interfaces;
+using Awesome.AI.Variables;
 
 namespace Awesome.AI.Core
 {
@@ -28,6 +29,9 @@ namespace Awesome.AI.Core
 
         public UNIT NextUnit(UNIT _u)
         {
+            //if (mind.z_current != "z_noise")
+            //    return _u;
+
             if (!_u.IsIDLE())
             {
                 UNIT w_act = Unit();
@@ -104,22 +108,16 @@ namespace Awesome.AI.Core
             //is this ok?
             return x.Variable;
 
+            if (mind.z_current == "z_mech")
+                return x.Variable;
 
-            //if (mind.current == "mech")
-            //    return x.Variable;
+            IMechanics mech = mind.mech["z_noise"];
 
-            //IMechanics mech = mind.mech["noise"];
+            mech.Peek(x);
 
-            //mech.Momentum(x);
-
-            //double _v = mech.n_momentum;
-            //double v_h = mech.m_out_high_n;
-            //double v_l = mech.m_out_low_n;
-
-            //double pct = mind.calc.Normalize(_v, v_l, v_h) * 100.0d;
-            ////pct = 100.0d - pct;
-
-            //return pct;
+            double norm = mech.peek_norm;
+            
+            return norm;
         }
 
         private void UpdateUnit(double near, UNIT res, UNIT _a, UNIT _b)
@@ -143,17 +141,15 @@ namespace Awesome.AI.Core
 
         private double DistAbsolute(UNIT unit, double near)
         {
-            double idx = unit.Variable;
-            double res = Math.Abs(idx -  near);
+            double _var = Map(unit);
+            double res = Math.Abs(_var -  near);
 
             return res;
         }
         
         private double NearPercent()
         {
-            bool is_noise = mind.z_current == "no check any more";
-            double _v = is_noise ? mind.mech_current.peek_momentum : mind.mech_current.p_100;
-            double pct = _v;
+            double pct = mind.mech_current.p_100;
 
             return pct;
         }

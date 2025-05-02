@@ -8,6 +8,7 @@ namespace Awesome.AI.Core.Mechanics
     public class NoiseGenerator : IMechanics
     {
         public double peek_momentum { get; set; }
+        public double peek_norm { get; set; }
         public double p_100 { get; set; }
         public double d_100 { get; set; }
         public double p_90 { get; set; }
@@ -16,8 +17,8 @@ namespace Awesome.AI.Core.Mechanics
         public double p_prev { get; set; }
         public double d_curr { get; set; }
         public double d_prev { get; set; }
-        public double m_out_high_c { get; set; }
-        public double m_out_low_c { get; set; }
+        public double m_out_high_p { get; set; }
+        public double m_out_low_p { get; set; }
         public double m_out_high_n { get; set; }
         public double m_out_low_n { get; set; }
         public double d_out_high { get; set; }
@@ -33,6 +34,8 @@ namespace Awesome.AI.Core.Mechanics
 
             posxy = CONST.STARTXY;
 
+            m_out_high_p = -1000.0d;
+            m_out_low_p = 1000.0d;
             m_out_high_n = -1000.0d;
             m_out_low_n = 1000.0d;
             d_out_high = -1000.0d;
@@ -82,25 +85,14 @@ namespace Awesome.AI.Core.Mechanics
                 d_avg.RemoveAt(0);
 
 
-            double p_high = m_out_high_c;
-            double p_low = m_out_low_c;
-            double d_high = d_out_high;
-            double d_low = d_out_low;
-
             double p_av = p_avg.Average();
             double d_av = d_avg.Average();
 
-            if (p_av > p_high) p_high = p_av;
-            if (p_av < p_low) p_low = p_av;
+            p_100 = mind.calc.Normalize(p_av, m_out_low_n, m_out_high_n, 0.0d, 100.0d);
+            d_100 = mind.calc.Normalize(d_av, d_out_low, d_out_high, 0.0d, 100.0d);
 
-            if (d_av > d_high) d_high = d_av;
-            if (d_av < d_low) d_low = d_av;
-
-            p_100 = mind.calc.Normalize(p_av, p_low, p_high, 0.0d, 100.0d);
-            d_100 = mind.calc.Normalize(d_av, d_low, d_high, 0.0d, 100.0d);
-
-            p_90 = mind.calc.Normalize(p_av, p_low, p_high, 10.0d, 90.0d);
-            d_90 = mind.calc.Normalize(d_av, d_low, d_high, 10.0d, 90.0d);
+            p_90 = mind.calc.Normalize(p_av, m_out_low_n, m_out_high_n, 10.0d, 90.0d);
+            d_90 = mind.calc.Normalize(d_av, d_out_low, d_out_high, 10.0d, 90.0d);
         }
 
         public void Peek(UNIT curr)
@@ -112,6 +104,8 @@ namespace Awesome.AI.Core.Mechanics
                 throw new Exception("NoiseGenerator, Momentum");
 
             Calc(curr, true);
+
+            peek_norm = mind.calc.Normalize(peek_momentum, m_out_low_p, m_out_high_p, 0.0d, 100.0d);
         }
 
         public void Calc(UNIT curr, bool peek)
@@ -137,19 +131,20 @@ namespace Awesome.AI.Core.Mechanics
             
             //momentum: p = m * v
             if (peek) {
-                peek_momentum += (m * 2) * deltaVel;            
+                peek_momentum = p_prev + (m * 2) * deltaVel;            
             }
             else {
                 d_prev = d_curr;
                 d_curr = (m * 2) * deltaVel;
+                p_prev = p_curr;
                 p_curr += d_curr;
             }
 
-            if (peek_momentum <= m_out_low_n) m_out_low_n = peek_momentum;
-            if (peek_momentum > m_out_high_n) m_out_high_n = peek_momentum;
+            if (peek_momentum <= m_out_low_p) m_out_low_p = peek_momentum;
+            if (peek_momentum > m_out_high_p) m_out_high_p = peek_momentum;
 
-            if (p_curr <= m_out_low_c) m_out_low_c = p_curr;
-            if (p_curr > m_out_high_c) m_out_high_c = p_curr;
+            if (p_curr <= m_out_low_n) m_out_low_n = p_curr;
+            if (p_curr > m_out_high_n) m_out_high_n = p_curr;
 
             if (d_curr <= d_out_low) d_out_low = d_curr;
             if (d_curr > d_out_high) d_out_high = d_curr;
