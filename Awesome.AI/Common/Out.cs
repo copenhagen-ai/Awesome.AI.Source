@@ -21,8 +21,6 @@ namespace Awesome.AI.Web.AI.Common
 
         public string user_var { get; set; }
         public string position { get; set; }
-        public string ratio_yes_c { get; set; }
-        public string ratio_no_c { get; set; }
         public string ratio_yes_n { get; set; }
         public string ratio_no_n { get; set; }
         public string going_down { get; set; }
@@ -31,7 +29,6 @@ namespace Awesome.AI.Web.AI.Common
         public string occu { get; set; }
         public string location { get; set; }
         public string loc_state { get; set; }
-        public string chat_state { get; set; }
         public string chat_answer { get; set; }
         public string chat_subject { get; set; }
         public string whistle { get; set; }
@@ -42,6 +39,9 @@ namespace Awesome.AI.Web.AI.Common
 
         public double norm_noise {  get; set; }
 
+        //public string ratio_yes_c { get; set; }
+        //public string ratio_no_c { get; set; }
+        //public string chat_state { get; set; }
         //public string common_hub { get; set; }
         //public string chat_index { get; set; }
         public UNIT common_unit { get; set; }
@@ -81,17 +81,17 @@ namespace Awesome.AI.Web.AI.Common
                 position = $"{mind.mech_current.POS_XY}";
             if (mind._mech == MECHANICS.GRAVITY)
                 position = $"{mind.pos.Pos}";
-            ratio_yes_c = $"{mind.dir.Count(HARDDOWN.YES, false)}";
-            ratio_no_c = $"{mind.dir.Count(HARDDOWN.NO, false)}";
-            ratio_yes_n = $"{mind.dir.Count(HARDDOWN.YES, true)}";
-            ratio_no_n = $"{mind.dir.Count(HARDDOWN.NO, true)}";
+            //ratio_yes_c = $"{mind.dir.Count(HARDDOWN.YES, false)}";
+            //ratio_no_c = $"{mind.dir.Count(HARDDOWN.NO, false)}";
+            ratio_yes_n = $"{mind.dir.Count(HARDDOWN.YES)}";
+            ratio_no_n = $"{mind.dir.Count(HARDDOWN.NO)}";
             going_down = $"{(mind.dir.DownHard.IsNo() ? "NO" : "YES")}";
             epochs = $"{mind.epochs}";
             runtime = $"{CONST.RUNTIME}";
             occu = $"{mind._internal.Occu}";
             location = $"{mind._long.Result["location"]}";
             loc_state = mind._long.State["location"] > 0 ? "making a decision" : "just thinking";
-            chat_state = mind._long.State["answer"] > 0 ? "thinking" : "just thinking";
+            //chat_state = mind._long.State["answer"] > 0 ? "thinking" : "just thinking";
 
             whistle = mind._quick.Result ? "[Whistling to my self..]" : gimmick[count];
 

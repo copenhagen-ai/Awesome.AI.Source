@@ -22,6 +22,9 @@ namespace Awesome.AI.CoreInternals
 
         public void History()
         {
+            if (mind.z_current != "z_noise")
+                return;
+
             if (mind.unit_current.IsIDLE())
                 return;
 
@@ -48,7 +51,7 @@ namespace Awesome.AI.CoreInternals
 
         public void Common()
         {
-            if (u_history.IsNullOrEmpty())
+            if (mind.z_current != "z_noise")
                 return;
 
             //if (mind.curr_unit.IsQUICKDECISION())
@@ -66,7 +69,7 @@ namespace Awesome.AI.CoreInternals
 
         public void Stats(bool _pro)
         {
-            if (mind.z_current == "z_noise")
+            if (mind.z_current != "z_noise")
                 return;
 
             if (!_pro)

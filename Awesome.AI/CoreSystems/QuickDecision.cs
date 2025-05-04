@@ -46,8 +46,8 @@ namespace Awesome.AI.CoreSystems
 
         public void Run(bool _pro, UNIT curr)
         {
-            //if (mind.z_current == "z_noise")
-            //    return;
+            if (mind.z_current != "z_noise")
+                return;
 
             if (new_res)
                 return;

@@ -9,9 +9,8 @@ namespace Awesome.AI.CoreInternals
     {
         public HARDDOWN DownHard { get { return mind.mech_current.HardMom; } }
         public FUZZYDOWN DownFuzzy { get { return mind.mech_current.FuzzyMom; } }
-        public PERIODDOWN DownPeriod { get { return RatioCurrent.PeriodDown(mind); } }
+        public PERIODDOWN DownPeriod { get { return RatioNoise.PeriodDown(mind); } }
 
-        public List<HARDDOWN> RatioCurrent { get; set; }
         public List<HARDDOWN> RatioNoise { get; set; }
 
         private TheMind mind;
@@ -19,36 +18,27 @@ namespace Awesome.AI.CoreInternals
         public Direction(TheMind mind)
         {
             this.mind = mind;
-            RatioCurrent = new List<HARDDOWN>();
             RatioNoise = new List<HARDDOWN>();
         }
 
         public void Update()
         {
-            if (mind.z_current == "z_noise")
-            {
-                RatioNoise.Add(DownHard);
+            if (mind.z_current != "z_noise")
+                return;
+            
+            RatioNoise.Add(DownHard);
 
-                if (RatioNoise.Count > CONST.LAPSES)
-                    RatioNoise.RemoveAt(0);
-            }
-
-            if (mind.z_current == "z_mech")
-            {
-                RatioCurrent.Add(DownHard);
-
-                if (RatioCurrent.Count > CONST.LAPSES)
-                    RatioCurrent.RemoveAt(0);
-            }
+            if (RatioNoise.Count > CONST.LAPSES)
+                RatioNoise.RemoveAt(0);            
         }
 
-        public int Count(HARDDOWN choise, bool is_noise)
+        public int Count(HARDDOWN choise/*, bool is_noise*/)
         {
             int count = 0;
             switch (choise)
             {
-                case HARDDOWN.YES: count = is_noise ? RatioNoise.Where(z => z.IsYes()).Count() : RatioCurrent.Where(z => z.IsYes()).Count(); break;
-                case HARDDOWN.NO: count = is_noise ? RatioNoise.Where(z => z.IsNo()).Count() : RatioCurrent.Where(z => z.IsNo()).Count(); break;
+                case HARDDOWN.YES: count = RatioNoise.Where(z => z.IsYes()).Count(); break;
+                case HARDDOWN.NO: count = RatioNoise.Where(z => z.IsNo()).Count(); break;
             }
 
             return count;

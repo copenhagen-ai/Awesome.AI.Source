@@ -89,7 +89,7 @@ namespace Awesome.AI.Core
              * should there be some procedure for this(unlocking)?
              * */
 
-            if (mind.z_current == "z_noise")
+            if (mind.z_current != "z_noise")
                 return;
 
             for (int i = 0; i <= 20; i++)
@@ -108,11 +108,14 @@ namespace Awesome.AI.Core
 
         public void UpdateCredit()
         {
-            //if (mind.UnitCurrent.IsIDLE())
-            //    return;
+            if (mind.z_current != "z_noise")
+                return;
 
             if (mind.unit_current.IsQUICKDECISION())
                 return;
+
+            //if (mind.UnitCurrent.IsIDLE())
+            //    return;
 
             List<UNIT> list = mind.mem.UNITS_ALL();
 

@@ -213,7 +213,7 @@ namespace Awesome.AI.CoreInternals
              * */
 
             if (last.IsNull())
-                throw new Exception("Setup");
+                throw new Exception("MyInternal, Setup");
 
             if (mindtype == MINDS.ANDREW)
             {
@@ -250,6 +250,9 @@ namespace Awesome.AI.CoreInternals
         public void Reset()
         {
             if (mind.z_current == "z_noise")
+                return;
+
+            if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
             if (mind.parms_current.validation != VALIDATION.EXTERNAL)

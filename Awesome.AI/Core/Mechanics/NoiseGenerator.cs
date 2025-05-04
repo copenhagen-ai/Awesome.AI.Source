@@ -110,7 +110,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void Calc(UNIT curr, bool peek)
         {
-            double deltaT = 0.002d;
+            double deltaT = 0.1d;
             double m = 500.0d;
             double N = m * CONST.GRAVITY;
 

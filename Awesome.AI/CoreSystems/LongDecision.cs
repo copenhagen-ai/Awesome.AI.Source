@@ -41,6 +41,8 @@ namespace Awesome.AI.CoreSystems
              *     else
              *         OCCU = OCCU
              */
+            if (mind.z_current != "z_noise")
+                return;
 
             if (!_pro)
                 return;

@@ -300,14 +300,14 @@ namespace Awesome.AI.Core
 
         private void Systems(bool _pro)
         {
-            if (z_current == "z_noise")
-                return;
-
             if (STATE == STATE.QUICKDECISION)
                 return;
 
             foreach(var kv in this.long_deci)
                 _long.Decide(_pro, kv.Key);
+
+            if (z_current == "z_noise")
+                return;
 
             mood.Generate(_pro);
             mood.MoodOK(_pro);

@@ -29,8 +29,8 @@ namespace Awesome.AI.Core
 
         public UNIT NextUnit(UNIT _u)
         {
-            //if (mind.z_current != "z_noise")
-            //    return _u;
+            if (mind.z_current != "z_noise")
+                return _u;
 
             if (!_u.IsIDLE())
             {
@@ -80,7 +80,7 @@ namespace Awesome.AI.Core
 
             double near = NearPercent();
 
-            units = units.OrderByDescending(x => x.Variable).ToList();
+            units = units.OrderByDescending(x => Map(x)).ToList();
 
             UNIT above = units.Where(x => Map(x) < near).FirstOrDefault();
             UNIT below = units.Where(x => Map(x) >= near).LastOrDefault();
@@ -106,10 +106,10 @@ namespace Awesome.AI.Core
         private double Map(UNIT x)
         {
             //is this ok?
-            return x.Variable;
+            //return x.Variable;
 
-            if (mind.z_current == "z_mech")
-                return x.Variable;
+            //if (mind.z_current == "z_mech")
+            //    return x.Variable;
 
             IMechanics mech = mind.mech["z_noise"];
 
@@ -149,9 +149,9 @@ namespace Awesome.AI.Core
         
         private double NearPercent()
         {
-            double pct = mind.mech_current.p_100;
+            double norm = 100.0d - mind.mech_current.p_100;
 
-            return pct;
+            return norm;
         }
 
         /*
