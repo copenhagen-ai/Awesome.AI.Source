@@ -25,7 +25,6 @@ namespace Awesome.AI.Core
         public MoodGenerator mood;
         public Calc calc;
         public MyRandom rand;
-        public Process process;
         public Filters filters;
         public Out _out;
         public MyInternal _internal;
@@ -33,7 +32,7 @@ namespace Awesome.AI.Core
         public Direction dir;
         public Position pos;
         public MyQubit quantum;
-
+        
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
         public Dictionary<string, IMechanics> mech { get; set; }
@@ -108,7 +107,6 @@ namespace Awesome.AI.Core
                 matrix = new TheSoup(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
-                process = new Process(this);
                 _internal = new MyInternal(this);
                 _external = new MyExternal(this);
                 filters = new Filters(this);
@@ -121,7 +119,7 @@ namespace Awesome.AI.Core
                 pos = new Position(this);
                 quantum = new MyQubit();
                 mem = new Memory(this);
-
+                
                 unit = new Dictionary<string, UNIT>();
                 
                 foreach (string s in zzzz)
@@ -183,22 +181,22 @@ namespace Awesome.AI.Core
         
         public void Run(object sender, MicroLibrary.MicroTimerEventArgs timerEventArgs)
         {
-            cycles++;
-            cycles_all++;
-
-            if (!ok)
-                return;
-            
-            Lists();
-
-            if (do_process)
-                epochs++;
-
-            bool _pro = do_process;
-            do_process = false;
-
             try
             {
+                cycles++;
+                cycles_all++;
+
+                if (!ok)
+                    return;
+            
+                Lists();
+
+                if (do_process)
+                    epochs++;
+
+                bool _pro = do_process;
+                do_process = false;
+
                 foreach (string s in zzzz)
                 {
                     z_current = s;
@@ -210,12 +208,13 @@ namespace Awesome.AI.Core
                         ok = false;
 
                     TheSoup();//find new curr_unit/curr_hub
-                    PostRun(_pro);
-                    Process(_pro);
+                    CorePost(_pro);
                     Systems(_pro);
-
-                    _out.Set();
+                    PostRun(_pro);                    
                 }
+                
+                if (_pro) 
+                    cycles = 0;
             }
             catch (Exception _e)
             {
@@ -225,22 +224,19 @@ namespace Awesome.AI.Core
 
                 ok = false;
             }
-            finally
-            {
-                if (_pro) 
-                    cycles = 0;                
-            }
         }
 
         private void PreRun(string current, bool _pro)
         {
             rand.SaveMomentum(current, mech_current.d_curr);
 
-            _quick.Run(_pro, unit_current);            
+            _quick.Run(unit_current);            
         }
 
         private void PostRun(bool _pro)
         {
+            _out.Set();
+
             if (!_pro)
                 return;
 
@@ -291,11 +287,11 @@ namespace Awesome.AI.Core
             unit_current = matrix.NextUnit(unit_current);
         }
 
-        private void Process(bool _pro)
+        private void CorePost(bool _pro)
         {
-            process.History();
-            process.Common();
-            process.Stats(_pro);
+            core.History();
+            core.Common();
+            core.Stats(_pro);
         }
 
         private void Systems(bool _pro)

@@ -168,15 +168,18 @@ namespace Awesome.AI.CoreInternals
             if (_u.IsQUICKDECISION())
                 return true;
 
-            Area area = areas.Where(x => x.name == Occu).First();
+            try
+            {
+                Area area = areas.Where(x => x.name == Occu).First();
+                List<HUB> _hubs = area.values;
+                bool res = _hubs.Contains(_u.HUB);
 
-            if (area == null)
+                return res;
+            }
+            catch 
+            {
                 return false;
-
-            List<HUB> _hubs = area.values;
-            bool res = _hubs.Contains(_u.HUB);
-
-            return res;
+            }
         }
 
         //private Area SetArea()

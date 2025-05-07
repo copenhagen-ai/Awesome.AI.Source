@@ -41,6 +41,7 @@ namespace Awesome.AI.CoreSystems
              *     else
              *         OCCU = OCCU
              */
+
             if (mind.z_current != "z_noise")
                 return;
 
@@ -66,8 +67,8 @@ namespace Awesome.AI.CoreSystems
             HUB hub = current.HUB;
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
-            HUB _1 = mind.mem.HUBS_SUB(mind.STATE, CONST.deci_subject[0]);
-            HUB _2 = mind.mem.HUBS_SUB(mind.STATE, CONST.deci_subject[1]);
+            HUB _1 = mind.mem.HUBS_SUB(mind.STATE, CONST.DECI_SUBJECTS[0]);
+            HUB _2 = mind.mem.HUBS_SUB(mind.STATE, CONST.DECI_SUBJECTS[1]);
             
             if (CONST.SAMPLE50.RandomSample(mind))
             {
@@ -101,7 +102,7 @@ namespace Awesome.AI.CoreSystems
                     do {
                         _hub = list[_r[i]];
                         i++;
-                    } while (CONST.deci_subject.Contains(_hub.subject));
+                    } while (CONST.DECI_SUBJECTS.Contains(_hub.subject));
 
                     Result[type] = "" + _hub.subject;
                     State[type] = 0;

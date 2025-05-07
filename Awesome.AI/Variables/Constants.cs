@@ -65,7 +65,7 @@ namespace Awesome.AI.Variables
             { "WHISTLE", new int[]{ 5, 15 } },
         };
 
-        public static readonly string[] deci_subject = { "long_decision_should", "long_decision_what", "quick_decision_should" };
+        public static readonly string[] DECI_SUBJECTS = { "long_decision_should", "long_decision_what", "quick_decision_should" };
 
         public static readonly Dictionary<string, string> long_deci_roberta = new Dictionary<string, string>
         {
@@ -113,12 +113,12 @@ namespace Awesome.AI.Variables
 
         public const int SAMPLE50 = 50;
         public const int SAMPLE200 = 200;
-        public const int SAMPLE4500 = 500;
+        public const int SAMPLE4500 = 1500;
 
         public const LOGICTYPE Logic = LOGICTYPE.BOOLEAN;
 
         public const int MICRO_SEC = 10000;                 //call micro timer every 1000µs (1ms)
         public const int HIST_TOTAL = 100;                  //the number of UNITS???
-        public const int REMEMBER = 50;                    //for stats
+        public const int REMEMBER = 100;                    //for stats
     }
 }

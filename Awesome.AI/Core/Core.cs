@@ -1,10 +1,16 @@
-﻿using Awesome.AI.Variables;
+﻿using Awesome.AI.Common;
+using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core
 {
     public class Core
     {
+        public UNIT most_common_unit;
+        private List<UNIT> u_history = new List<UNIT>();
+        private List<string> remember = new List<string>();
+        private Dictionary<string, int> hits = new Dictionary<string, int>();
+
         private TheMind mind;
         private Core() { }
         public Core(TheMind mind)
@@ -142,8 +148,115 @@ namespace Awesome.AI.Core
             if (mind.unit_current.credits < CONST.LOW_CREDIT)
                 mind.unit_current.credits = CONST.LOW_CREDIT;
         }
-        
-        
+
+        public void History()
+        {
+            if (mind.z_current != "z_noise")
+                return;
+
+            if (mind.unit_current.IsIDLE())
+                return;
+
+            //if (mind.curr_unit.IsDECISION())
+            //    return;
+
+            //if (mind.curr_unit.IsQUICKDECISION())
+            //    return;
+
+            //if (mind.parms.state == STATE.QUICKDECISION)
+            //    return;
+
+            if (!u_history.Any())
+            {
+                u_history.Add(mind.mem.UNITS_RND(1));
+                u_history.Add(mind.mem.UNITS_RND(2));
+                u_history.Add(mind.mem.UNITS_RND(3));
+            }
+
+            u_history.Insert(0, mind.unit_current);
+            if (u_history.Count > CONST.HIST_TOTAL)
+                u_history.RemoveAt(u_history.Count - 1);
+        }
+
+        public void Common()
+        {
+            if (mind.z_current != "z_noise")
+                return;
+
+            //if (mind.curr_unit.IsQUICKDECISION())
+            //    return;
+
+            //if (mind.parms.state == STATE.QUICKDECISION)
+            //    return;
+
+            most_common_unit = u_history
+                .GroupBy(x => x)
+                .OrderByDescending(x => x.Count())
+                .Select(x => x.Key)
+                .First();
+        }
+
+        public void Stats(bool _pro)
+        {
+            if (mind.z_current != "z_noise")
+                return;
+
+            if (!_pro)
+                return;
+
+            if (most_common_unit.IsNull())
+                return;
+
+            if (mind.unit_current.IsQUICKDECISION())
+                return;
+
+            if (mind.STATE == STATE.QUICKDECISION)
+                return;
+
+            Stats stats = new Stats();
+
+            List<UNIT> units = mind.mem.UNITS_ALL();
+
+            foreach (UNIT u in units)
+                stats.list.Add(new Stat() { _name = u.Root, _var = u.Variable, _index = u.Index });
+
+            string nam = most_common_unit.Root;
+
+            try
+            {
+                Stat _s_curr = stats.list.Where(x => x._name == nam).First();
+
+                if (!hits.ContainsKey(nam))
+                    hits.Add(nam, 0);
+
+                hits[nam] += 1;
+
+                stats.curr_name = nam;
+
+                _s_curr.hits = hits[nam];
+
+                remember.Insert(0, nam);
+                if (remember.Count > CONST.REMEMBER)
+                {
+                    string name = remember.Last();
+
+                    Stat _s_reset = stats.list.Where(x => x._name == name).First();
+
+                    hits[name] -= 1;
+
+                    stats.reset_name = name;
+
+                    _s_reset.hits = hits[name];
+
+                    remember.RemoveAt(remember.Count - 1);
+                }
+
+                mind.stats = stats;
+            }
+            catch { return; }
+        }
+
+
 
         //private bool passed = false;
         //private bool IsConsious()//something like this :)
@@ -166,10 +279,10 @@ namespace Awesome.AI.Core
 
         //    if (PassTest())
         //        return true;
-            
+
         //    if(passed)
         //        return mind.process.StreamTop().HUB.GetSubject() == mind.theme;
-            
+
         //    return false;
         //}
 

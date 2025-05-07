@@ -44,7 +44,7 @@ namespace Awesome.AI.CoreSystems
             }
         }
 
-        public void Run(bool _pro, UNIT curr)
+        public void Run(UNIT curr)
         {
             if (mind.z_current != "z_noise")
                 return;
@@ -63,8 +63,6 @@ namespace Awesome.AI.CoreSystems
 
                 mind.mem.QDREMOVE(curr);
 
-                Go = false;
-
                 return;
             }
 
@@ -75,19 +73,15 @@ namespace Awesome.AI.CoreSystems
             foreach (var kv in dict)
             {
                 if (curr.data == kv.Key)
-                    Setup(_pro, kv.Value[0], 5);
-
-                if (Go)
-                    Start(_pro);
+                    Setup(kv.Value[0], 5);
             }
         }
 
-        private void Setup(bool _pro, int count, int period)
+        private void Setup(int count, int period)
         {
             if (!CONST.SAMPLE4500.RandomSample(mind))
                 return;
-
-            Go = true;
+            
             Period = period;
             Count = 0;
 
@@ -103,16 +97,9 @@ namespace Awesome.AI.CoreSystems
             mind.mem.QDRESETH();
 
             TONE tone = TONE.RANDOM;
-            mind.mem.Decide(STATE.QUICKDECISION, CONST.MAX_UNITS, CONST.deci_subject[2], should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
-            //mind.mem.HubsDecide(STATE.QUICKDECISION, guid, Constants.deci_subject[2], should_decision, UNITTYPE.QDECISION, 0, tone);
-        }
-
-        private void Start(bool _pro)
-        {
-            if (!_pro)
-                return;
-
+            mind.mem.Decide(STATE.QUICKDECISION, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[2], should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
+            
             mind.STATE = STATE.QUICKDECISION;
-        }
+        }        
     }
 }

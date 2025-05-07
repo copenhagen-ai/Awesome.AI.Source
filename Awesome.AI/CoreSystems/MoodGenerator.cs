@@ -48,7 +48,7 @@ namespace Awesome.AI.CoreSystems
         }
 
         public PATTERNCOLOR ResColor { get; set; } = PATTERNCOLOR.RED;
-        public double ResMomentum { get; set; } = -1d;
+        public double p_90 { get; set; } = -1d;
         private List<double> Avg {  get; set; }
         private double a_low { get; set; } = 1000d;
         private double a_high { get; set; } = -1000d;
@@ -65,7 +65,7 @@ namespace Awesome.AI.CoreSystems
             currentmood = mind.parms_current.pattern;
             
             double res = mind.mech_current.p_90;
-            ResMomentum = res;
+            p_90 = res;
 
 
             switch (currentmood)

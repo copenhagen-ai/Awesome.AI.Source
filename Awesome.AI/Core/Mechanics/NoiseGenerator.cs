@@ -110,7 +110,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void Calc(UNIT curr, bool peek)
         {
-            double deltaT = 0.1d;
+            double deltaT = 0.02d;
             double m = 500.0d;
             double N = m * CONST.GRAVITY;
 
@@ -132,8 +132,7 @@ namespace Awesome.AI.Core.Mechanics
             //momentum: p = m * v
             if (peek) {
                 peek_momentum = p_prev + (m * 2) * deltaVel;            
-            }
-            else {
+            } else {
                 d_prev = d_curr;
                 d_curr = (m * 2) * deltaVel;
                 p_prev = p_curr;

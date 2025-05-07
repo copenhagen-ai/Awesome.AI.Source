@@ -110,8 +110,15 @@ namespace Awesome.AI.Core
                 STATE state = mind.STATE;
                 List<HUB> list = mind.mem.HUBS_ALL(state);
 
-                //FirstOrDefault is fine
-                return list.Where(x => x.hub_guid == this.hub_guid).FirstOrDefault();                
+                try
+                {
+                    return list.Where(x => x.hub_guid == this.hub_guid).First();
+                } 
+                catch 
+                {
+                    //it can be null, when quick desicion and roomhub -> monologue
+                    return null;
+                }
             }
         }
 

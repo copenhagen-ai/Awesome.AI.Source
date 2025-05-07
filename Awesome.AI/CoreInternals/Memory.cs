@@ -1,9 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
 using Awesome.AI.Variables;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using static Awesome.AI.Variables.Enums;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace Awesome.AI.CoreInternals
 {
@@ -150,25 +148,25 @@ namespace Awesome.AI.CoreInternals
 
             TONE tone;
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.deci_subject[0], long_decision_should, UNITTYPE.DECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], long_decision_should, UNITTYPE.DECISION, LONGTYPE.LOCATION, count1, tone);
             
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.HIGH;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.deci_subject[1], long_decision_what, UNITTYPE.DECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[1], long_decision_what, UNITTYPE.DECISION, LONGTYPE.LOCATION, count1, tone);
             
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.deci_subject[0], answer_should_decision, UNITTYPE.DECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], answer_should_decision, UNITTYPE.DECISION, LONGTYPE.ANSWER, count1, tone);
             
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.LOW;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.deci_subject[1], answer_what_decision, UNITTYPE.DECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[1], answer_what_decision, UNITTYPE.DECISION, LONGTYPE.ANSWER, count1, tone);
             
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.MID;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.deci_subject[0], ask_should_decision, UNITTYPE.DECISION, LONGTYPE.ASK, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], ask_should_decision, UNITTYPE.DECISION, LONGTYPE.ASK, count1, tone);
             
             Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             foreach (var kv in dict)
             {
                 tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
-                Quick(CONST.MAX_UNITS, kv.Value[1], CONST.deci_subject[2], kv.Key, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
+                Quick(CONST.MAX_UNITS, kv.Value[1], CONST.DECI_SUBJECTS[2], kv.Key, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
             }
         }
 
