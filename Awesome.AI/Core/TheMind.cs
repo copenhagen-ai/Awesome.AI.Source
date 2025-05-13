@@ -189,7 +189,7 @@ namespace Awesome.AI.Core
                 if (!ok)
                     return;
             
-                Lists();
+                //Lists();
 
                 if (do_process)
                     epochs++;
@@ -257,7 +257,7 @@ namespace Awesome.AI.Core
             if (unit[z_current].IsIDLE())
                 return true;
 
-            mech_noise.CalcPattern1(PATTERN.NONE, 0);
+            mech_noise.CalcPattern1(PATTERN.NONE, cycles);
             mech_mechanics.CalcPattern1(parms_current.pattern, cycles);//mood general
             mech_mechanics.CalcPattern2(parms_current.pattern, cycles);//mood good
             mech_mechanics.CalcPattern3(parms_current.pattern, cycles);//mood bad

@@ -103,13 +103,16 @@ namespace Awesome.AI.Core.Mechanics
             if (curr.IsIDLE())
                 throw new Exception("NoiseGenerator, Momentum");
 
-            Calc(curr, true);
+            Calc(curr, true, -1);
 
             peek_norm = mind.calc.Normalize(peek_momentum, m_out_low_p, m_out_high_p, 0.0d, 100.0d);
         }
 
-        public void Calc(UNIT curr, bool peek)
+        public void Calc(UNIT curr, bool peek, int cycles)
         {
+            if (cycles == 1)
+                Reset();
+
             double deltaT = 0.02d;
             double m = 500.0d;
             double N = m * CONST.GRAVITY;
@@ -157,7 +160,7 @@ namespace Awesome.AI.Core.Mechanics
             if (pattern != PATTERN.NONE)
                 return;
 
-            Calc(mind.unit_noise, false);
+            Calc(mind.unit_noise, false, cycles);
             Normalize();
         }
 
@@ -169,7 +172,25 @@ namespace Awesome.AI.Core.Mechanics
         public void CalcPattern3(PATTERN pattern, int cycles)
         {
             throw new NotImplementedException("NoiseGenerator, CalcPattern3");
-        }          
+        }
+
+        private void Reset() 
+        {
+            //could be done in other ways also
+            if (!CONST.SAMPLE200.RandomSample(mind)) 
+                return;
+
+            posxy = CONST.STARTXY;
+
+            m_out_high_p = -1000.0d;
+            m_out_low_p = 1000.0d;
+            m_out_high_n = -1000.0d;
+            m_out_low_n = 1000.0d;
+            d_out_high = -1000.0d;
+            d_out_low = 1000.0d;
+            posx_high = -1000.0d;
+            posx_low = 1000.0d;
+        }
 
         /*
          * force left
