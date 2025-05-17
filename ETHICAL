@@ -2,39 +2,38 @@ ETHICAL License
 
 Preamble
 
-	The Copenhagen.AI Group ("the Group") is committed to ensuring that artificial intelligence (AI) technologies, including the algorithm associated with this 
-	software, are developed, distributed, and utilized in a manner that upholds ethical and moral standards. This Ethical License ("the License") establishes guidelines for the responsible use of the AI algorithm.
+The Copenhagen.AI Group ("the Group") is committed to ensuring that artificial intelligence (AI) technologies, including the algorithm associated with this software, are developed, distributed, and utilized in a manner that upholds ethical and moral standards. This Ethical License ("the License") establishes guidelines for the responsible use of the AI algorithm.
 
 Principles of Ethical AI Use
 
 By using, distributing, or modifying this software, you agree to the following principles:
 	
-	Transparency: 
-	AI systems should be explainable, with clear documentation regarding their decision-making processes, limitations, and potential biases.
+Transparency: 
+AI systems should be explainable, with clear documentation regarding their decision-making processes, limitations, and potential biases.
 	
-	Fairness and Non-Discrimination: 
-	The AI algorithm must not be used in a manner that reinforces unfair biases, discriminates against individuals or groups, or perpetuates harm.
+Fairness and Non-Discrimination: 
+The AI algorithm must not be used in a manner that reinforces unfair biases, discriminates against individuals or groups, or perpetuates harm.
 	
-	Privacy and Data Protection: 
-	Users must ensure compliance with applicable data protection laws and respect individuals' privacy rights when utilizing AI systems.
+Privacy and Data Protection: 
+Users must ensure compliance with applicable data protection laws and respect individuals' privacy rights when utilizing AI systems.
 	
-	Human Oversight and Accountability: 
-	AI should complement human decision-making, with appropriate oversight mechanisms to prevent unintended consequences.
+Human Oversight and Accountability: 
+AI should complement human decision-making, with appropriate oversight mechanisms to prevent unintended consequences.
 	
-	Safety and Security: 
-	Implement safeguards to prevent malicious use, unintended harm, or the manipulation of AI for unethical purposes.
+Safety and Security: 
+Implement safeguards to prevent malicious use, unintended harm, or the manipulation of AI for unethical purposes.
 	
-	Social Benefit: 
-	The AI algorithm should be used in ways that promote positive societal impact and must not be deployed in applications that could cause harm to individuals or communities.
+Social Benefit: 
+The AI algorithm should be used in ways that promote positive societal impact and must not be deployed in applications that could cause harm to individuals or communities.
 
 Compliance and Review
 
-	Prior to deployment, users must assess and document potential ethical risks associated with their specific use case.
-	Any modifications to the AI algorithm must be reviewed to ensure continued compliance with this Ethical License.
-	The Group reserves the right to audit and review compliance with these ethical principles and may revoke the right to use the AI algorithm in cases of non-compliance.
+Prior to deployment, users must assess and document potential ethical risks associated with their specific use case.
+Any modifications to the AI algorithm must be reviewed to ensure continued compliance with this Ethical License.
+The Group reserves the right to audit and review compliance with these ethical principles and may revoke the right to use the AI algorithm in cases of non-compliance.
 
 Future Revisions
 
-	This Ethical License is subject to updates and modifications as ethical considerations in AI evolve. Users are responsible for reviewing the latest version of this License to ensure continued compliance.
+This Ethical License is subject to updates and modifications as ethical considerations in AI evolve. Users are responsible for reviewing the latest version of this License to ensure continued compliance.
 
 By using this AI algorithm, you acknowledge and agree to abide by these ethical standards as established by the Copenhagen.AI Group.
