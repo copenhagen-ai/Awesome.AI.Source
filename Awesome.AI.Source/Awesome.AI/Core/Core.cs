@@ -215,6 +215,8 @@ namespace Awesome.AI.Core
 
             Stats stats = new Stats();
 
+            stats.list ??= new List<Stat>();
+
             List<UNIT> units = mind.mem.UNITS_ALL();
 
             foreach (UNIT u in units)

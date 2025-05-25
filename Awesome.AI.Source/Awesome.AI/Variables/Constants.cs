@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
-using static Awesome.AI.Variables.Enums;
+﻿using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Variables
 {

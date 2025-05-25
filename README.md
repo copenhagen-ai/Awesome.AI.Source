@@ -25,8 +25,3 @@ The formulation of the ethical standards, may be updated or altered in the futur
 By using this software, you acknowledge and agree to the terms of the applicable license and the ethical guidelines set forth by the Copenhagen-AI Group.
 
 For inquiries regarding licensing, please contact the Copenhagen-AI Group.
-
-
-DISCLAIMER:
-
-This software is provided "as-is," without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall the authors, contributors, or the Copenhagen-AI Group be held liable for any claim, damages, or other liability arising from the use of this software.

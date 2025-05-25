@@ -1,19 +1,19 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Core;
+﻿using Awesome.AI.Core;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Web.AI.Common
+namespace Awesome.AI.Common
 {
     public class Out
     {
         private TheMind mind;
-        private Out() { }
+        public Out() { }
         public Out(TheMind mind)
         {
             this.mind = mind;
         }
 
+        public bool ok {  get; set; }
         public string cycles { get; set; }
         public string cycles_total { get; set; }
         public string p_curr { get; set; }
@@ -44,8 +44,9 @@ namespace Awesome.AI.Web.AI.Common
         //public string common_hub { get; set; }
         //public string chat_index { get; set; }
 
-        public UNIT common_unit { get; set; }
-        public HUB common_hub { get; set; }
+        //public UNIT common_unit { get; set; }
+        //public HUB common_hub { get; set; }
+        public string common_hub_subject { get; set; }
 
         public async Task<string> GetAnswer()
         {
@@ -74,6 +75,7 @@ namespace Awesome.AI.Web.AI.Common
             if (count > 1)
                 count = 0;
 
+            ok = mind.ok;
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
             p_curr = $"{mind.mech_current.p_curr.ToString("E3")}";
@@ -106,13 +108,14 @@ namespace Awesome.AI.Web.AI.Common
             norm_mood = mind.mood.p_90;
             norm_noise = mind.mech_noise.p_90;
 
-            common_unit = mind.core.most_common_unit;
-            common_hub = mind.core.most_common_unit.HUB;
+            //common_unit = mind.core.most_common_unit;
+            common_hub_subject = mind.core.most_common_unit.HUB.subject;
 
             if (mind._long.Result["answer"] != "") {
                 chat_answer = $"{mind._long.Result["answer"]}";
                 mind._long.Result["answer"] = "";
             }
+
 
             if(mind._long.Result["ask"] != "") {
                 chat_subject = $"{mind._long.Result["ask"]}";

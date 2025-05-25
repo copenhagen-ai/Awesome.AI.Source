@@ -12,8 +12,7 @@
     {
         public string curr_name { get; set; }
         public string reset_name { get; set; }
-
-        public List<Stat> list = new List<Stat>();        
+        public List<Stat> list { get; set; }
     }
 
 }

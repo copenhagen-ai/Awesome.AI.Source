@@ -3,8 +3,7 @@ using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
-using Awesome.AI.Web.AI.Common;
-using Awesome.AI.Web.Helpers;
+using System.Diagnostics;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core
@@ -48,7 +47,7 @@ namespace Awesome.AI.Core
         public MECHANICS _mech;
         public HARDDOWN goodbye = HARDDOWN.NO;
 
-        public static bool ok { get; set; }
+        public bool ok { get; set; }
         public string z_current { get; set; }
         public bool do_process{ get; set; }
         public bool chat_answer { get; set; }
@@ -151,7 +150,9 @@ namespace Awesome.AI.Core
             {
                 string msg = "themind - " + _e.Message + "\n";
                 msg += _e.StackTrace;
-                XmlHelper.WriteError(msg);                
+
+                Debug.WriteLine(msg);
+                //XmlHelper.WriteError(msg);                
             }
         }
         
@@ -220,7 +221,9 @@ namespace Awesome.AI.Core
             {
                 string msg = "run - " + _e.Message + "\n";
                 msg += _e.StackTrace;
-                XmlHelper.WriteError(msg);
+                
+                Debug.WriteLine(msg);
+                //XmlHelper.WriteError(msg);
 
                 ok = false;
             }
