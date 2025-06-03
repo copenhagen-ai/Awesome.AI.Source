@@ -20,8 +20,6 @@ The use of this software is subject to the ethical guidelines established by the
 
 The Copenhagen-AI Group reserves the right to review, update, and enforce these ethical standards. Failure to comply with these standards may result in the revocation of licensing rights.
 
-The formulation of the ethical standards, may be updated or altered in the future. While existing versions of the software remain under the previously accepted terms, new versions may be subject to revised licensing conditions.
-
 By using this software, you acknowledge and agree to the terms of the applicable license and the ethical guidelines set forth by the Copenhagen-AI Group.
 
 For inquiries regarding licensing, please contact the Copenhagen-AI Group.

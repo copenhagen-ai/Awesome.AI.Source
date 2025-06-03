@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -133,38 +134,44 @@ namespace Awesome.AI.Common
              * NO is to say no to going downwards
              * */
 
-            bool res = deltaMom <= 0.0d;
+            Agent agent = new Agent(mind);
+
+            bool res1 = deltaMom <= 0.0d;
+            bool res2 = agent.Simulate();
 
             if (mind.z_current == "z_noise")
-                res = !res;
+                res1 = !res1;
             else
             {
                 if (CONST.Logic == LOGICTYPE.BOOLEAN)
-                    res = res;//we flip direction
+                    res1 = res1;//we flip direction
             
                 if (CONST.Logic == LOGICTYPE.QUBIT)
-                    res = mind.quantum.usage.MyQuantumXOR(res, res);
+                    res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
             }
 
-            return res ? HARDDOWN.YES : HARDDOWN.NO;
+            return res1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
         {
-            bool res = deltaMom <= prev;
+            Agent agent = new Agent(mind);
+
+            bool res1 = deltaMom <= prev;
+            bool res2 = agent.Simulate();
 
             if (mind.z_current == "z_noise")
-                res = !res;
+                res1 = !res1;
             else
             {
                 if (CONST.Logic == LOGICTYPE.BOOLEAN)
-                    res = res;//we flip direction
+                    res1 = res1;//we flip direction
 
                 if (CONST.Logic == LOGICTYPE.QUBIT)
-                    res = mind.quantum.usage.MyQuantumXOR(res, res);
+                    res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
             }
 
-            return res ? HARDDOWN.YES : HARDDOWN.NO;
+            return res1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         //public static bool TheHack(this bool _b, TheMind mind)

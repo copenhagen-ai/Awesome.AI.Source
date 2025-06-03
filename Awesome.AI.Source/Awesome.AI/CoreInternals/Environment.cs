@@ -11,6 +11,20 @@ namespace Awesome.AI.CoreInternals
         /*
          * family, friends and just persons to interact with
          * */
+
+        private TheMind mind;
+        private Agent() { }
+        public Agent(TheMind mind)
+        {
+            this.mind = mind;
+        }
+
+        public bool Simulate()
+        {
+            bool samp = CONST.SAMPLE20.RandomSample(mind);
+
+            return samp;
+        }
     }
 
     class TimeLine
