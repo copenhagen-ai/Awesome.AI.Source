@@ -238,7 +238,11 @@ namespace Awesome.AI.Core
 
         private void PostRun(bool _pro)
         {
-            _out.Set();
+            if (z_current == "z_noise")
+                _out.SetNoise();
+
+            if (z_current == "z_mech")
+                _out.SetMech();
 
             if (!_pro)
                 return;

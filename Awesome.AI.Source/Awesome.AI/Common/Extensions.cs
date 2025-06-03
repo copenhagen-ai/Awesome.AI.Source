@@ -134,43 +134,39 @@ namespace Awesome.AI.Common
              * NO is to say no to going downwards
              * */
 
+            if (mind.z_current != "z_noise")
+                throw new NotImplementedException("Extensions, ToDownZero");
+
             Agent agent = new Agent(mind);
 
             bool res1 = deltaMom <= 0.0d;
             bool res2 = agent.Simulate();
 
-            if (mind.z_current == "z_noise")
-                res1 = !res1;
-            else
-            {
-                if (CONST.Logic == LOGICTYPE.BOOLEAN)
-                    res1 = res1;//we flip direction
+            if (CONST.Logic == LOGICTYPE.BOOLEAN)
+                res1 = !res1;//we flip direction
             
-                if (CONST.Logic == LOGICTYPE.QUBIT)
-                    res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
-            }
-
+            if (CONST.Logic == LOGICTYPE.QUBIT)
+                res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
+            
             return res1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
         {
+            if (mind.z_current != "z_noise")
+                throw new NotImplementedException("Extensions, ToDownPrev");
+
             Agent agent = new Agent(mind);
 
             bool res1 = deltaMom <= prev;
             bool res2 = agent.Simulate();
 
-            if (mind.z_current == "z_noise")
-                res1 = !res1;
-            else
-            {
-                if (CONST.Logic == LOGICTYPE.BOOLEAN)
-                    res1 = res1;//we flip direction
-
-                if (CONST.Logic == LOGICTYPE.QUBIT)
-                    res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
-            }
-
+            if (CONST.Logic == LOGICTYPE.BOOLEAN)
+                res1 = !res1;//we flip direction
+            
+            if (CONST.Logic == LOGICTYPE.QUBIT)
+                res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
+            
             return res1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
