@@ -6,20 +6,20 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreInternals
 {
-    class Agent
+    class SimpleAgent
     {
         /*
          * family, friends and just persons to interact with
          * */
 
         private TheMind mind;
-        private Agent() { }
-        public Agent(TheMind mind)
+        private SimpleAgent() { }
+        public SimpleAgent(TheMind mind)
         {
             this.mind = mind;
         }
 
-        public bool Simulate()
+        public bool SimulateDown()
         {
             bool samp = CONST.SAMPLE20.RandomSample(mind);
 

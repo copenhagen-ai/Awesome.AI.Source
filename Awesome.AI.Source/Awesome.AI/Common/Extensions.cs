@@ -137,10 +137,10 @@ namespace Awesome.AI.Common
             if (mind.z_current != "z_noise")
                 throw new NotImplementedException("Extensions, ToDownZero");
 
-            Agent agent = new Agent(mind);
+            SimpleAgent agent = new SimpleAgent(mind);
 
             bool res1 = deltaMom <= 0.0d;
-            bool res2 = agent.Simulate();
+            bool res2 = agent.SimulateDown();
 
             if (CONST.Logic == LOGICTYPE.BOOLEAN)
                 res1 = !res1;//we flip direction
@@ -156,10 +156,10 @@ namespace Awesome.AI.Common
             if (mind.z_current != "z_noise")
                 throw new NotImplementedException("Extensions, ToDownPrev");
 
-            Agent agent = new Agent(mind);
+            SimpleAgent agent = new SimpleAgent(mind);
 
             bool res1 = deltaMom <= prev;
-            bool res2 = agent.Simulate();
+            bool res2 = agent.SimulateDown();
 
             if (CONST.Logic == LOGICTYPE.BOOLEAN)
                 res1 = !res1;//we flip direction
