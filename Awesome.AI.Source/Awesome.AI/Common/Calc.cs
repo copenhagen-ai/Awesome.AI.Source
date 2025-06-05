@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Variables;
 
 namespace Awesome.AI.Common
 {
@@ -126,7 +127,7 @@ namespace Awesome.AI.Common
 
             double t_observer = 0.0d;
             double t_distant = 1.0d;
-            double Rs = 2.0d;
+            double Rs = CONST.RS;
 
             if (r <= Rs)
                 r = Rs;

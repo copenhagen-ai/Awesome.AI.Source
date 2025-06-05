@@ -40,7 +40,7 @@ namespace Awesome.AI.Core
                     ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);
                     return ok;
                 case MECHANICS.GRAVITY:
-                    ok = EventHorizonOK(mind.pos.Pos, out user_var);
+                    ok = EventHorizonOK(mind.mech_current.POS_XY, out user_var);
                     return ok;
                 default: 
                     throw new Exception("OK");

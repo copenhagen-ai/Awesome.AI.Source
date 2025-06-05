@@ -220,8 +220,8 @@ namespace Awesome.AI.Core.Mechanics
             //m_out_low = 1000.0d;
             //d_out_high = -1000.0d;
             //d_out_low = 1000.0d;
-            posx_high = -1000.0d;
-            posx_low = 1000.0d;
+            posx_high = -1E10d;
+            posx_low = 1E10d;
         }
 
         private double GetRandomNoise(double noiseAmplitude)

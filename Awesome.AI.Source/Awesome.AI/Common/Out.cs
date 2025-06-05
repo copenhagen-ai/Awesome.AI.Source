@@ -107,7 +107,7 @@ namespace Awesome.AI.Common
             if (mind._mech == MECHANICS.TUGOFWAR)
                 position = $"{mind.mech_current.POS_XY}";
             if (mind._mech == MECHANICS.GRAVITY)
-                position = $"{mind.pos.Pos}";
+                position = $"{mind.mech_current.POS_XY}";
 
             epochs = $"{mind.epochs}";
             runtime = $"{CONST.RUNTIME}";

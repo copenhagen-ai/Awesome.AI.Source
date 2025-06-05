@@ -154,9 +154,9 @@ namespace Awesome.AI.Core.Mechanics
             double acceleration = Fnet / totalMass;
             velocity += acceleration * dt;                                      // Integrate acceleration to get velocity
             position_x += velocity * dt;                                        // Integrate velocity to get position
+            p_prev = p_curr;                                                    // Store current momentum for next iteration
             p_curr = totalMass * velocity;
             d_curr = p_curr - p_prev;                                          // Compute change in momentum
-            p_prev = p_curr;                                                    // Store current momentum for next iteration
 
             if (p_curr <= m_out_low_c) m_out_low_c = p_curr;
             if (p_curr > m_out_high_c) m_out_high_c = p_curr;
@@ -223,8 +223,8 @@ namespace Awesome.AI.Core.Mechanics
             //m_out_low = 1000.0d;
             //d_out_high = -1000.0d;
             //d_out_low = 1000.0d;
-            posx_high = -1000.0d;
-            posx_low = 1000.0d;
+            posx_high = -1E10d;
+            posx_low = 1E10d;
         }
 
         private double GetRandomNoise()
@@ -232,7 +232,7 @@ namespace Awesome.AI.Core.Mechanics
             UNIT curr_unit = mind.unit_noise;
 
             if (curr_unit == null)
-                throw new Exception("ApplyDynamic");
+                throw new Exception("TugOfWar, GetRandomNoise");
 
             double _var = curr_unit.Variable;
 

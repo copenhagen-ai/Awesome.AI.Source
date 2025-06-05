@@ -48,14 +48,10 @@ namespace Awesome.AI.Variables
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                    pattern = PATTERN.NONE;
+                    pattern = PATTERN.MOODGENERAL;
 
-                    high_at_zero = false;
+                    high_at_zero = true;
                     update_cred = 0.05d;
-                    
-                    schedule_low = 2.0d;
-                    schedule_mid = 6.0d;
-                    schedule_high = 9.0d;
 
                     break;
                 case MECHANICS.TUGOFWAR:
