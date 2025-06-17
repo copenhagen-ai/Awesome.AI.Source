@@ -141,10 +141,14 @@ namespace Awesome.AI.Common
 
             bool res1 = deltaMom <= 0.0d;
             bool res2 = agent.SimulateDown();
+            bool err = CONST.SAMPLE20.RandomSample(mind);
 
-            if (CONST.Logic == LOGICTYPE.BOOLEAN)
+            if (CONST.Logic == LOGICTYPE.QUIRK)
+                res1 = err ? !res1 : res1;//we flip direction
+
+            if (CONST.Logic == LOGICTYPE.LOGICERROR)
                 res1 = !res1;//we flip direction
-            
+
             if (CONST.Logic == LOGICTYPE.QUBIT)
                 res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
             
@@ -159,14 +163,18 @@ namespace Awesome.AI.Common
             SimpleAgent agent = new SimpleAgent(mind);
 
             bool res1 = deltaMom <= prev;
-            bool res2 = agent.SimulateDown();
+            bool res2 = agent.SimulateDown(); 
+            bool err = CONST.SAMPLE20.RandomSample(mind);
 
-            if (CONST.Logic == LOGICTYPE.BOOLEAN)
+            if (CONST.Logic == LOGICTYPE.QUIRK)
+                res1 = err ? !res1 : res1;//we flip direction
+
+            if (CONST.Logic == LOGICTYPE.LOGICERROR)
                 res1 = !res1;//we flip direction
-            
+
             if (CONST.Logic == LOGICTYPE.QUBIT)
                 res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
-            
+
             return res1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
