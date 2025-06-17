@@ -113,10 +113,11 @@ namespace Awesome.AI.Variables
 
         public const int SAMPLE20 = 20;
         public const int SAMPLE50 = 50;
+        public const int SAMPLE100 = 100;
         public const int SAMPLE200 = 200;
         public const int SAMPLE4500 = 1500;
 
-        public const LOGICTYPE Logic = LOGICTYPE.QUIRK;
+        public const LOGICTYPE Logic = LOGICTYPE.LOGICERROR;
 
         public const int MICRO_SEC = 10000;                 //call micro timer every 1000µs (1ms)
         public const int HIST_TOTAL = 100;                  //the number of UNITS???

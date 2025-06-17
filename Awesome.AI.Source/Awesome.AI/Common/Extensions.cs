@@ -141,11 +141,7 @@ namespace Awesome.AI.Common
 
             bool res1 = deltaMom <= 0.0d;
             bool res2 = agent.SimulateDown();
-            bool err = CONST.SAMPLE20.RandomSample(mind);
-
-            if (CONST.Logic == LOGICTYPE.QUIRK)
-                res1 = err ? !res1 : res1;//we flip direction
-
+            
             if (CONST.Logic == LOGICTYPE.LOGICERROR)
                 res1 = !res1;//we flip direction
 
@@ -164,11 +160,7 @@ namespace Awesome.AI.Common
 
             bool res1 = deltaMom <= prev;
             bool res2 = agent.SimulateDown(); 
-            bool err = CONST.SAMPLE20.RandomSample(mind);
-
-            if (CONST.Logic == LOGICTYPE.QUIRK)
-                res1 = err ? !res1 : res1;//we flip direction
-
+            
             if (CONST.Logic == LOGICTYPE.LOGICERROR)
                 res1 = !res1;//we flip direction
 
