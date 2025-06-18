@@ -138,36 +138,60 @@ namespace Awesome.AI.Common
                 throw new NotImplementedException("Extensions, ToDownZero");
 
             SimpleAgent agent = new SimpleAgent(mind);
+            double time = mind.cycles * 0.1d;
 
-            bool res1 = deltaMom <= 0.0d;
-            bool res2 = agent.SimulateDown();
-            
-            if (CONST.Logic == LOGICTYPE.LOGICERROR)
-                res1 = !res1;//we flip direction
+            bool down1 = deltaMom <= 0.0d;
+            bool down2 = agent.SimulateDown();
+            bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
+            bool dontflip2 = Math.Sin(time) > 0.4d;
+
+            //is this a logic error?
+            if (CONST.Logic == LOGICTYPE.FLIP)
+                down1 = !down1;//we flip direction
+
+            if (CONST.Logic == LOGICTYPE.QUIRK)
+                down1 = dontflip1 ? down1 : !down1;
+
+            if (CONST.Logic == LOGICTYPE.SINE)
+                down1 = dontflip2 ? down1 : !down1;
 
             if (CONST.Logic == LOGICTYPE.QUBIT)
-                res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
+                down1 = mind.quantum.usage.MyQuantumXOR(down1, down2);
             
-            return res1 ? HARDDOWN.YES : HARDDOWN.NO;
+            return down1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
         {
+            /*
+             * NO is to say no to going downwards
+             * */
+
             if (mind.z_current != "z_noise")
                 throw new NotImplementedException("Extensions, ToDownPrev");
 
             SimpleAgent agent = new SimpleAgent(mind);
+            double time = mind.cycles * 0.1d;
 
-            bool res1 = deltaMom <= prev;
-            bool res2 = agent.SimulateDown(); 
-            
-            if (CONST.Logic == LOGICTYPE.LOGICERROR)
-                res1 = !res1;//we flip direction
+            bool down1 = deltaMom <= prev;
+            bool down2 = agent.SimulateDown();
+            bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
+            bool dontflip2 = Math.Sin(time) > 0.4d;
+
+            //is this a logic error?
+            if (CONST.Logic == LOGICTYPE.FLIP)
+                down1 = !down1;//we flip direction
+
+            if (CONST.Logic == LOGICTYPE.QUIRK)
+                down1 = dontflip1 ? down1 : !down1;
+
+            if (CONST.Logic == LOGICTYPE.SINE)
+                down1 = dontflip2 ? down1 : !down1;
 
             if (CONST.Logic == LOGICTYPE.QUBIT)
-                res1 = mind.quantum.usage.MyQuantumXOR(res1, res2);
+                down1 = mind.quantum.usage.MyQuantumXOR(down1, down2);
 
-            return res1 ? HARDDOWN.YES : HARDDOWN.NO;
+            return down1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
         //public static bool TheHack(this bool _b, TheMind mind)

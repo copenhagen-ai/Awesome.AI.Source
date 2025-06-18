@@ -20,6 +20,6 @@
         public enum HARDDOWN { YES, NO }
         public enum FUZZYDOWN { VERYYES, YES, MAYBE, NO, VERYNO }
         public enum PERIODDOWN { YES, NO }
-        public enum LOGICTYPE { LOGICERROR, QUBIT }
+        public enum LOGICTYPE { FLIP, QUIRK, SINE, QUBIT }
     }
 }
