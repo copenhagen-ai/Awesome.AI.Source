@@ -10,7 +10,7 @@
 
         public bool Use(bool val, TheMind mind)
         {
-            double norm = mind.mech["z_noise"].d_100;
+            double norm = mind.mech["z_noise"].p_100;
             norm = mind.calc.Normalize(norm, 0.0d, 100.0d, -10.0d, 10.0d);
             double per = mind.prob.NormalCDF(norm, 0.0d, 2.0d) * 100.0d;
 
