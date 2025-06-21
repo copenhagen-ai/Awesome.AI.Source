@@ -31,7 +31,8 @@ namespace Awesome.AI.Core
         public Direction dir;
         public Position pos;
         public MyQubit quantum;
-        
+        public MyProbabilityHelper prob;
+
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
         public Dictionary<string, IMechanics> mech { get; set; }
@@ -117,6 +118,7 @@ namespace Awesome.AI.Core
                 dir = new Direction(this);
                 pos = new Position(this);
                 quantum = new MyQubit();
+                prob = new MyProbabilityHelper();
                 mem = new Memory(this);
                 
                 unit = new Dictionary<string, UNIT>();

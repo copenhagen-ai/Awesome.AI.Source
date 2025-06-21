@@ -155,9 +155,12 @@ namespace Awesome.AI.Common
             if (CONST.Logic == LOGICTYPE.SINE)
                 down1 = dontflip2 ? down1 : !down1;
 
+            if (CONST.Logic == LOGICTYPE.PROBABILITY)
+                down1 = mind.prob.Use(down1, mind);
+
             if (CONST.Logic == LOGICTYPE.QUBIT)
                 down1 = mind.quantum.usage.MyQuantumXOR(down1, down2);
-            
+
             return down1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
@@ -187,6 +190,9 @@ namespace Awesome.AI.Common
 
             if (CONST.Logic == LOGICTYPE.SINE)
                 down1 = dontflip2 ? down1 : !down1;
+
+            if (CONST.Logic == LOGICTYPE.PROBABILITY)
+                down1 = mind.prob.Use(down1, mind);
 
             if (CONST.Logic == LOGICTYPE.QUBIT)
                 down1 = mind.quantum.usage.MyQuantumXOR(down1, down2);
