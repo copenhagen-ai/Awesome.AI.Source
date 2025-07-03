@@ -22,6 +22,7 @@ namespace Awesome.AI.Core
         public QuickDecision _quick;
         public LongDecision _long;
         public MoodGenerator mood;
+        public Monologue mono;
         public Calc calc;
         public MyRandom rand;
         public Filters filters;
@@ -115,6 +116,7 @@ namespace Awesome.AI.Core
                 _long = new LongDecision(this, this.long_deci);
                 _quick = new QuickDecision(this);
                 mood = new MoodGenerator(this);
+                mono = new Monologue(this);
                 dir = new Direction(this);
                 pos = new Position(this);
                 quantum = new MyQubit();
@@ -316,6 +318,7 @@ namespace Awesome.AI.Core
 
             mood.Generate(_pro);
             mood.MoodOK(_pro);
+            mono.Create(_pro);
         }
 
         private async void ProcessPass()

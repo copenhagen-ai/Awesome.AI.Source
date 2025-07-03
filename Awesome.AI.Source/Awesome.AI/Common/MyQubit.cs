@@ -193,22 +193,6 @@
             return (qubitA, qubitB);
         }
 
-        // Quantum XOR using entangled qubits
-        public bool MyQuantumXOR(bool a, bool b)
-        {
-            var (qubitA, qubitB) = CreateEntangledPair();
-
-            // Set initial states based on inputs
-            if (a) qubitA.ApplyPauliX();
-            if (b) qubitB.ApplyPauliX();
-
-            // Measurement collapses the state, but entanglement ensures XOR behavior
-            int measurementA = qubitA.Measure();
-            int measurementB = qubitB.Measure();
-
-            // XOR logic: a ⊕ b
-            return measurementA != measurementB;
-        }
 
         public bool MySuperposition()
         {
@@ -236,6 +220,38 @@
             int measurement1 = qubitB.Measure();
 
             return measurement1 > 0;
+        }
+
+        // Quantum XOR using entangled qubits, unconventional
+        public bool DontQuantumXOR(bool a, bool b)
+        {
+            var (qubitA, qubitB) = CreateEntangledPair();
+
+            // Set initial states based on inputs
+            if (a) qubitA.ApplyPauliX();
+            if (b) qubitB.ApplyPauliX();
+
+            // Measurement collapses the state, but entanglement ensures XOR behavior
+            int measurementA = qubitA.Measure();
+            int measurementB = qubitB.Measure();
+
+            // XOR logic: a ⊕ b
+            return measurementA != measurementB;
+        }
+
+        // Quantum XOR using entangled qubits, correct
+        public bool DoQuantumXOR(bool a, bool b)
+        {
+            MyQubit control = new MyQubit();
+            MyQubit target = new MyQubit();
+
+            if (a) control.ApplyPauliX();
+            if (b) target.ApplyPauliX();
+
+            control.ApplyCNOT(target);
+
+            int result = target.Measure();
+            return result > 0;
         }
     }
 }

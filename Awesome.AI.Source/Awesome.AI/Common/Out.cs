@@ -32,6 +32,9 @@ namespace Awesome.AI.Common
         public string chat_answer { get; set; }
         public string chat_subject { get; set; }
         public string whistle { get; set; }
+        public string monologue_det_result { get; set; }
+        public string monologue_det_subject { get; set; }
+        public string monologue_det_relevance { get; set; }
 
         public string mood {  get; set; }
         public bool mood_ok { get; set; }
@@ -120,6 +123,10 @@ namespace Awesome.AI.Common
 
             mood = mind.parms_current.pattern.ToString();
             mood_ok = mind.mood.ResColor == PATTERNCOLOR.GREEN;
+
+            monologue_det_result = mind.mono.Result;
+            monologue_det_subject = mind.mono.Subject;
+            monologue_det_relevance = mind.mono.Relevance;
 
             norm_mood = mind.mood.p_90;
             norm_noise = mind.mech_noise.p_90;

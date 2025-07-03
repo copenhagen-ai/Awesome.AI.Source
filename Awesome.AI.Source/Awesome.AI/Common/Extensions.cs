@@ -146,7 +146,7 @@ namespace Awesome.AI.Common
             bool dontflip2 = Math.Sin(time) > 0.4d;
 
             //is this a logic error?
-            if (CONST.Logic == LOGICTYPE.FLIP)
+            if (CONST.Logic == LOGICTYPE.CLASSICAL)
                 down1 = !down1;//we flip direction
 
             if (CONST.Logic == LOGICTYPE.QUIRK)
@@ -159,7 +159,7 @@ namespace Awesome.AI.Common
                 down1 = mind.prob.Use(down1, mind);
 
             if (CONST.Logic == LOGICTYPE.QUBIT)
-                down1 = mind.quantum.usage.MyQuantumXOR(down1, down2);
+                down1 = mind.quantum.usage.DoQuantumXOR(down1, down2);
 
             return down1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
@@ -182,7 +182,7 @@ namespace Awesome.AI.Common
             bool dontflip2 = Math.Sin(time) > 0.4d;
 
             //is this a logic error?
-            if (CONST.Logic == LOGICTYPE.FLIP)
+            if (CONST.Logic == LOGICTYPE.CLASSICAL)
                 down1 = !down1;//we flip direction
 
             if (CONST.Logic == LOGICTYPE.QUIRK)
@@ -195,7 +195,7 @@ namespace Awesome.AI.Common
                 down1 = mind.prob.Use(down1, mind);
 
             if (CONST.Logic == LOGICTYPE.QUBIT)
-                down1 = mind.quantum.usage.MyQuantumXOR(down1, down2);
+                down1 = mind.quantum.usage.DoQuantumXOR(down1, down2);
 
             return down1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
