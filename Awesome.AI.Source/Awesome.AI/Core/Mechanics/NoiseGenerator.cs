@@ -57,7 +57,7 @@ namespace Awesome.AI.Core.Mechanics
                 //return p_curr.ToDownZero(mind);
 
                 //return p_delta.ToDownPrev(p_delta_prev, mind);
-                return d_curr.ToDownZero(mind);
+                return d_curr.GoDownZero(mind);
             }            
         }
 

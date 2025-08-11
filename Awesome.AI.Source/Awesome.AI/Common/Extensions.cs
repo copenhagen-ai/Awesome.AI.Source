@@ -98,7 +98,7 @@ namespace Awesome.AI.Common
             }
         }
 
-        public static PERIODDOWN PeriodDown(this List<HARDDOWN> Ratio, TheMind mind)
+        public static PERIODDOWN ToPeriod(this List<HARDDOWN> Ratio, TheMind mind)
         {
             /*
              * indifferent of the direction
@@ -117,18 +117,7 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        public static bool Direction(this TheMind mind)
-        {
-            /*
-             * up is true 
-             * */
-             
-            bool go_up = mind.dir.DownHard.IsNo();
-
-            return go_up;
-        }
-
-        public static HARDDOWN ToDownZero(this double deltaMom, TheMind mind)
+        public static HARDDOWN GoDownZero(this double deltaMom, TheMind mind)
         {
             /*
              * NO is to say no to going downwards
@@ -163,7 +152,7 @@ namespace Awesome.AI.Common
             return down1 ? HARDDOWN.YES : HARDDOWN.NO;
         }
 
-        public static HARDDOWN ToDownPrev(this double deltaMom, double prev, TheMind mind)
+        public static HARDDOWN GoDownPrev(this double deltaMom, double prev, TheMind mind)
         {
             /*
              * NO is to say no to going downwards

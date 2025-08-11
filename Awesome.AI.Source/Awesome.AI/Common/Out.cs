@@ -23,7 +23,7 @@ namespace Awesome.AI.Common
         public string position { get; set; }
         public string ratio_yes_n { get; set; }
         public string ratio_no_n { get; set; }
-        public string going_down { get; set; }
+        public string go_down { get; set; }
         public string epochs { get; set; }
         public string runtime { get; set; }
         public string occu { get; set; }
@@ -80,7 +80,7 @@ namespace Awesome.AI.Common
 
             ratio_yes_n = $"{mind.dir.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.dir.Count(HARDDOWN.NO)}";
-            going_down = $"{(mind.dir.DownHard.IsNo() ? "NO" : "YES")}";
+            go_down = $"{(mind.dir.GoDownHard.IsNo() ? "NO" : "YES")}";
         }
 
         public void SetMech()

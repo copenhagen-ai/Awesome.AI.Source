@@ -7,9 +7,9 @@ namespace Awesome.AI.CoreInternals
 {
     public class Direction
     {
-        public HARDDOWN DownHard { get { return mind.mech_current.HardMom; } }
-        public FUZZYDOWN DownFuzzy { get { return mind.mech_current.FuzzyMom; } }
-        public PERIODDOWN DownPeriod { get { return RatioNoise.PeriodDown(mind); } }
+        public HARDDOWN GoDownHard { get { return mind.mech_current.HardMom; } }
+        public FUZZYDOWN GoDownFuzzy { get { return mind.mech_current.FuzzyMom; } }
+        public PERIODDOWN GoDownPeriod { get { return RatioNoise.ToPeriod(mind); } }
 
         public List<HARDDOWN> RatioNoise { get; set; }
 
@@ -26,7 +26,7 @@ namespace Awesome.AI.CoreInternals
             if (mind.z_current != "z_noise")
                 return;
             
-            RatioNoise.Add(DownHard);
+            RatioNoise.Add(GoDownHard);
 
             if (RatioNoise.Count > CONST.LAPSES)
                 RatioNoise.RemoveAt(0);            

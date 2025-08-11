@@ -81,7 +81,7 @@ namespace Awesome.AI.CoreInternals
             if (pos < mind.parms_current.schedule_mid)
             {
                 if (!is_no)
-                    is_no = mind.dir.DownHard.IsNo();
+                    is_no = mind.dir.GoDownHard.IsNo();
                 return;
             }
 
