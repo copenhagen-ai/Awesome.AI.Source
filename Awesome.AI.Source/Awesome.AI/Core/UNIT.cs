@@ -1,7 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
-using Microsoft.VisualBasic;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core

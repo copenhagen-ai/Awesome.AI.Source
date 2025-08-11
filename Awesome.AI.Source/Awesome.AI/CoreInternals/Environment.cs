@@ -40,7 +40,7 @@ namespace Awesome.AI.CoreInternals
      * rooms at home, work and other
      * ie. at work you mostly think about work and so on
      * */
-    public class Area
+    public class Occupasion
     {
         public string name { get; set; }
         public int max_epochs { get; set; }
@@ -104,9 +104,9 @@ namespace Awesome.AI.CoreInternals
             this.mind = mind;
         }
 
-        public List<Area> areas = new List<Area>();//this is the map
+        public List<Occupasion> occus = new List<Occupasion>();//this is the map
 
-        private Area occu = new Area() { name = "init", max_epochs = 10, values = null };
+        private Occupasion occu = new Occupasion() { name = "init", max_epochs = 10, values = null };
         private bool run = false;
         private int epoch_old = -1;
         public int epoch_count = 0;
@@ -126,7 +126,7 @@ namespace Awesome.AI.CoreInternals
                     switch (mind.parms_current.occupasion)
                     {
                         case OCCUPASION.FIXED:
-                            occu = new Area() { name = mind.hobby, max_epochs = -1, values = null }; ;
+                            occu = new Occupasion() { name = mind.hobby, max_epochs = -1, values = null }; ;
                             break;
                         case OCCUPASION.DYNAMIC:
 
@@ -140,9 +140,9 @@ namespace Awesome.AI.CoreInternals
 
                             epoch_count = 0;
                             epoch_stop = mind.rand.MyRandomInt(1, occu.max_epochs)[0];
-                            int index = mind.rand.MyRandomInt(1, areas.Count - 1)[0];
+                            int index = mind.rand.MyRandomInt(1, occus.Count - 1)[0];
 
-                            occu = areas[index];
+                            occu = occus[index];
 
                             if (occu == null)
                                 throw new Exception("Occu");
@@ -185,8 +185,8 @@ namespace Awesome.AI.CoreInternals
 
             try
             {
-                Area area = areas.Where(x => x.name == Occu).First();
-                List<HUB> _hubs = area.values;
+                Occupasion occu = occus.Where(x => x.name == Occu).First();
+                List<HUB> _hubs = occu.values;
                 bool res = _hubs.Contains(_u.HUB);
 
                 return res;
@@ -239,13 +239,13 @@ namespace Awesome.AI.CoreInternals
                 foreach (string s in andrew1)
                     list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
                 list.Add(last);
-                areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
+                occus.Add(new Occupasion() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in andrew2)
                     list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
                 list.Add(last);
-                areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
+                occus.Add(new Occupasion() { name = "hobbys", max_epochs = 30, values = list });/**/
 
             }
 
@@ -255,13 +255,13 @@ namespace Awesome.AI.CoreInternals
                 foreach (string s in roberta1)
                     list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
                 list.Add(last);
-                areas.Add(new Area() { name = "socializing", max_epochs = 30, values = list });
+                occus.Add(new Occupasion() { name = "socializing", max_epochs = 30, values = list });
 
                 list = new List<HUB>();
                 foreach (string s in roberta2)
                     list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
                 list.Add(last);
-                areas.Add(new Area() { name = "hobbys", max_epochs = 30, values = list });/**/
+                occus.Add(new Occupasion() { name = "hobbys", max_epochs = 30, values = list });/**/
             }
         }
 
@@ -277,7 +277,7 @@ namespace Awesome.AI.CoreInternals
             {
                 //mind.stats.Reset();
 
-                areas = new List<Area>();
+                occus = new List<Occupasion>();
                 Setup(mind.unit_current.HUB, mind.mindtype);
             }
         }

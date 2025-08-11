@@ -145,8 +145,7 @@ namespace Awesome.AI.Common
             bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
             bool dontflip2 = Math.Sin(time) > 0.4d;
 
-            //is this a logic error?
-            if (CONST.Logic == LOGICTYPE.CLASSICAL)
+            if (CONST.Logic == LOGICTYPE.CLASSICAL) //is this a logic error?
                 down1 = !down1;//we flip direction
 
             if (CONST.Logic == LOGICTYPE.QUIRK)
