@@ -99,7 +99,7 @@ namespace Awesome.AI.Variables
         public const double GRAVITY = 9.81d;
         public const double GRAV_CONST = 6.674E-11d;        //6.67430E-11;
 
-        public const double BASE_REDUCTION = 2d / 3d;       //0.666 hehe
+        public const double BASE_REDUCTION = 2d / 3d;
         public const double MAX_PAIN = 100.0d;              //connected x
         public const double VERY_LOW = 1.0E-2;              //connected x
         public const double RS = 2.0;                       //Schwarzschild radius
