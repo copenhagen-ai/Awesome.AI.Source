@@ -32,6 +32,10 @@ namespace Awesome.AI.Core
             get
             {
                 HUB hub = HUB;
+
+                if (hub is null)
+                    throw new Exception("UNIT, Root");
+
                 List<UNIT> list = hub.units.OrderBy(x => x.created).ToList();
                 int idx = list.IndexOf(this) + 1;
                 string res = "_" + hub.subject + idx;
@@ -148,7 +152,7 @@ namespace Awesome.AI.Core
             return _w;
         }
 
-        public void Update(double idx_sign, double add_sign, double near, double dist)
+        public void Update(double dir, double near, double dist)
         {
             /*
              * it is difficult determinating if the does as supposed, but the logic seems correct
@@ -161,7 +165,7 @@ namespace Awesome.AI.Core
                 return;
 
             Remove(near);
-            Adjust(idx_sign, add_sign, dist);
+            Adjust(dir, dist);
         }
 
         private bool Add(double near, double dist)
@@ -192,14 +196,14 @@ namespace Awesome.AI.Core
             mind.mem.UNITS_REM(this, low, high);
         }
 
-        private void Adjust(double idx_sign, double add_sign, double dist)
+        private void Adjust(double dir, double dist)
         {
             if (dist < CONST.ALPHA)
                 return;
 
             double rand = mind.rand.MyRandomDouble(10)[5];
 
-            Index += (rand * CONST.ETA * add_sign * idx_sign);
+            Index += (rand * CONST.ETA * dir);
 
             if (Index <= CONST.MIN) Index = CONST.MIN;
             if (Index >= CONST.MAX) Index = CONST.MAX;

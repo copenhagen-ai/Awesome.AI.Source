@@ -1,5 +1,7 @@
-﻿using Awesome.AI.Interfaces;
+﻿using Awesome.AI.Common;
+using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
+using System.Text.RegularExpressions;
 
 namespace Awesome.AI.Core
 {
@@ -55,8 +57,8 @@ namespace Awesome.AI.Core
             List<UNIT> units = mind.mem.UNITS_VAL();
 
             units = units.Where(x =>
-                   mind.filters.Direction(x)       //comment to turn off
-                && mind.filters.LowCut(x)          //comment to turn off
+                   //mind.filters.Direction(x)       //comment to turn off
+                   mind.filters.LowCut(x)          //comment to turn off
                 && mind.filters.Credits(x)         //comment to turn off
                 //   mind.filters.UnitIsValid(x)   //comment to turn off
                 //&& mind.filters.Theme(x)         //comment to turn off
@@ -98,7 +100,7 @@ namespace Awesome.AI.Core
             if(res is null)
                 res = near - Map(above) < Map(below) - near ? above : below;
 
-            UpdateUnit(near, res, above, below);
+            UpdateUnit(near, res);
 
             return res;
         }
@@ -120,23 +122,18 @@ namespace Awesome.AI.Core
             return norm;
         }
 
-        private void UpdateUnit(double near, UNIT res, UNIT _a, UNIT _b)
+        private void UpdateUnit(double near, UNIT res)
         {
-            if (_a is null || _b is null)
-                return;
+            //return;
 
             //i think it makes sense only noise can update unit
             if (mind.z_current != "z_noise")
                 return;
 
-            Params parm = mind.parms_current;
-
-            //im getting confused - noise uses high acc at zero, meaning reverse index
-            double idx_sign = parm.high_at_zero ? -1d : 1d;
-            double add_sign = res == _b ? 1d : -1d;
+            double dir = mind.dir.DirectionDown;
             double dist = DistAbsolute(res, near);
 
-            res.Update(idx_sign, add_sign, near, dist);
+            res.Update(dir, near, dist);
         }
 
         private double DistAbsolute(UNIT unit, double near)

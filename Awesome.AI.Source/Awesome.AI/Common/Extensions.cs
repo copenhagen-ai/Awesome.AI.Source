@@ -55,6 +55,16 @@ namespace Awesome.AI.Common
             return _q == HARDDOWN.NO;
         }
 
+        public static double IsYesDouble(this HARDDOWN _q)
+        {
+            return _q.IsYes() ? -1.0 : 1.0d;
+        }
+
+        public static double IsNoDouble(this HARDDOWN _q)
+        {
+            return _q.IsNo() ? 1.0d : -1.0d;
+        }
+
         private static Random rng = new Random();
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -134,14 +144,14 @@ namespace Awesome.AI.Common
             //bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
             //bool dontflip2 = Math.Sin(time) > 0.4d;
 
-            //if (CONST.Logic == LOGICTYPE.CLASSICAL) //is this a logic error?
-            //    down1 = !down1;//we flip direction
-
             //if (CONST.Logic == LOGICTYPE.QUIRK)
             //    down1 = dontflip1 ? down1 : !down1;
 
             //if (CONST.Logic == LOGICTYPE.SINE)
             //    down1 = dontflip2 ? down1 : !down1;
+
+            if (CONST.Logic == LOGICTYPE.CLASSICAL) //is this a logic error?
+                down1 = !down1;//we flip direction
 
             if (CONST.Logic == LOGICTYPE.PROBABILITY)
                 down1 = mind.prob.Use(down1, mind);
@@ -169,15 +179,15 @@ namespace Awesome.AI.Common
             //bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
             //bool dontflip2 = Math.Sin(time) > 0.4d;
 
-            //is this a logic error?
-            //if (CONST.Logic == LOGICTYPE.CLASSICAL)
-            //    down1 = !down1;//we flip direction
-
             //if (CONST.Logic == LOGICTYPE.QUIRK)
             //    down1 = dontflip1 ? down1 : !down1;
 
             //if (CONST.Logic == LOGICTYPE.SINE)
-            //    down1 = dontflip2 ? down1 : !down1;
+            //    down1 = dontflip2 ? down1 : !down1
+            //    ;
+
+            if (CONST.Logic == LOGICTYPE.CLASSICAL) //is this a logic error?
+                down1 = !down1;//we flip direction
 
             if (CONST.Logic == LOGICTYPE.PROBABILITY)
                 down1 = mind.prob.Use(down1, mind);

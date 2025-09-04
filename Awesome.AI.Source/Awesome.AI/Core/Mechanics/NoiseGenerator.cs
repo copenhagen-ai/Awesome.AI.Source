@@ -88,11 +88,11 @@ namespace Awesome.AI.Core.Mechanics
             double p_av = p_avg.Average();
             double d_av = d_avg.Average();
 
-            p_100 = mind.calc.Normalize(p_av, m_out_low_n, m_out_high_n, 0.0d, 100.0d);
-            d_100 = mind.calc.Normalize(d_av, d_out_low, d_out_high, 0.0d, 100.0d);
+            p_100 = mind.calc.Normalize(p_av, m_out_low_n - 0.1d, m_out_high_n, 0.0d, 100.0d);
+            d_100 = mind.calc.Normalize(d_av, d_out_low - 0.1d, d_out_high, 0.0d, 100.0d);
 
-            p_90 = mind.calc.Normalize(p_av, m_out_low_n, m_out_high_n, 10.0d, 90.0d);
-            d_90 = mind.calc.Normalize(d_av, d_out_low, d_out_high, 10.0d, 90.0d);
+            p_90 = mind.calc.Normalize(p_av, m_out_low_n - 0.1d, m_out_high_n, 10.0d, 90.0d);
+            d_90 = mind.calc.Normalize(d_av, d_out_low - 0.1d, d_out_high, 10.0d, 90.0d);
         }
 
         public void Peek(UNIT curr)

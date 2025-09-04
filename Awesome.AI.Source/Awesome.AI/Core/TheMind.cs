@@ -30,9 +30,9 @@ namespace Awesome.AI.Core
         public MyInternal _internal;
         public MyExternal _external;
         public Direction dir;
-        public Position pos;
         public MyQubit quantum;
         public MyProbabilityHelper prob;
+        //public Position pos;
 
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
@@ -118,10 +118,10 @@ namespace Awesome.AI.Core
                 mood = new MoodGenerator(this);
                 mono = new Monologue(this);
                 dir = new Direction(this);
-                pos = new Position(this);
                 quantum = new MyQubit();
                 prob = new MyProbabilityHelper();
                 mem = new Memory(this);
+                //pos = new Position(this);
                 
                 unit = new Dictionary<string, UNIT>();
                 
@@ -274,7 +274,7 @@ namespace Awesome.AI.Core
             mech_mechanics.CalcPattern3(parms_current.pattern, cycles);//mood bad
             
             dir.Update();
-            pos.Update();
+            //pos.Update();
 
             //if (curr_hub.IsIDLE())
             //    core.SetTheme(_pro);

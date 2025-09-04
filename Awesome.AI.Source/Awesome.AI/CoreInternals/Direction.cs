@@ -7,6 +7,7 @@ namespace Awesome.AI.CoreInternals
 {
     public class Direction
     {
+        public double DirectionDown { get { return GoDownHard.IsYesDouble(); } }
         public HARDDOWN GoDownHard { get { return mind.mech_current.HardMom; } }
         public FUZZYDOWN GoDownFuzzy { get { return mind.mech_current.FuzzyMom; } }
         public PERIODDOWN GoDownPeriod { get { return RatioNoise.ToPeriod(mind); } }

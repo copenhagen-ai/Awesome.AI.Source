@@ -11,8 +11,11 @@
         public bool Use(bool val, TheMind mind)
         {
             double norm = mind.mech["z_noise"].p_100;
-            norm = mind.calc.Normalize(norm, 0.0d, 100.0d, -10.0d, 10.0d);
-            double per = mind.prob.NormalCDF(norm, 0.0d, 2.0d) * 100.0d;
+            norm = mind.calc.Normalize(norm, 0.0d, 100.0d, 0.0d, 10.0d);
+            double per = mind.prob.NormalPDF(norm, 5.0d, 4.0d) * 100.0d;
+
+            if (per > 100.0d)
+                per = 100.0d;
 
             bool flip = mind.calc.Chance(100, 100 - (int)per);
 
