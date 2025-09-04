@@ -127,21 +127,21 @@ namespace Awesome.AI.Common
                 throw new NotImplementedException("Extensions, ToDownZero");
 
             SimpleAgent agent = new SimpleAgent(mind);
-            double time = mind.cycles * 0.1d;
+            //double time = mind.cycles * 0.1d;
 
             bool down1 = deltaMom <= 0.0d;
             bool down2 = agent.SimulateDown();
-            bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
-            bool dontflip2 = Math.Sin(time) > 0.4d;
+            //bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
+            //bool dontflip2 = Math.Sin(time) > 0.4d;
 
-            if (CONST.Logic == LOGICTYPE.CLASSICAL) //is this a logic error?
-                down1 = !down1;//we flip direction
+            //if (CONST.Logic == LOGICTYPE.CLASSICAL) //is this a logic error?
+            //    down1 = !down1;//we flip direction
 
-            if (CONST.Logic == LOGICTYPE.QUIRK)
-                down1 = dontflip1 ? down1 : !down1;
+            //if (CONST.Logic == LOGICTYPE.QUIRK)
+            //    down1 = dontflip1 ? down1 : !down1;
 
-            if (CONST.Logic == LOGICTYPE.SINE)
-                down1 = dontflip2 ? down1 : !down1;
+            //if (CONST.Logic == LOGICTYPE.SINE)
+            //    down1 = dontflip2 ? down1 : !down1;
 
             if (CONST.Logic == LOGICTYPE.PROBABILITY)
                 down1 = mind.prob.Use(down1, mind);
@@ -162,22 +162,22 @@ namespace Awesome.AI.Common
                 throw new NotImplementedException("Extensions, ToDownPrev");
 
             SimpleAgent agent = new SimpleAgent(mind);
-            double time = mind.cycles * 0.1d;
+            //double time = mind.cycles * 0.1d;
 
             bool down1 = deltaMom <= prev;
             bool down2 = agent.SimulateDown();
-            bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
-            bool dontflip2 = Math.Sin(time) > 0.4d;
+            //bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
+            //bool dontflip2 = Math.Sin(time) > 0.4d;
 
             //is this a logic error?
-            if (CONST.Logic == LOGICTYPE.CLASSICAL)
-                down1 = !down1;//we flip direction
+            //if (CONST.Logic == LOGICTYPE.CLASSICAL)
+            //    down1 = !down1;//we flip direction
 
-            if (CONST.Logic == LOGICTYPE.QUIRK)
-                down1 = dontflip1 ? down1 : !down1;
+            //if (CONST.Logic == LOGICTYPE.QUIRK)
+            //    down1 = dontflip1 ? down1 : !down1;
 
-            if (CONST.Logic == LOGICTYPE.SINE)
-                down1 = dontflip2 ? down1 : !down1;
+            //if (CONST.Logic == LOGICTYPE.SINE)
+            //    down1 = dontflip2 ? down1 : !down1;
 
             if (CONST.Logic == LOGICTYPE.PROBABILITY)
                 down1 = mind.prob.Use(down1, mind);
