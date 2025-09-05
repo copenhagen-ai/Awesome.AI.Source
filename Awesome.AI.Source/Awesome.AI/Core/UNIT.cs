@@ -34,7 +34,7 @@ namespace Awesome.AI.Core
                 HUB hub = HUB;
 
                 if (hub is null)
-                    throw new Exception("UNIT, Root");
+                    return "xxxx";
 
                 List<UNIT> list = hub.units.OrderBy(x => x.created).ToList();
                 int idx = list.IndexOf(this) + 1;
@@ -221,6 +221,26 @@ namespace Awesome.AI.Core
         public bool IsDECISION() => unit_type == UNITTYPE.DECISION;
 
         public bool IsQUICKDECISION() => unit_type == UNITTYPE.QDECISION;
+
+        public static bool OK(UNIT _u)
+        {
+            if (_u.IsNull())
+                return false;
+
+            if (_u.Root == "xxxx")
+                return false;
+
+            if (_u.IsIDLE())
+                return false;
+
+            if (_u.IsQUICKDECISION())
+                return false;
+
+            if (_u.IsDECISION())
+                return false;
+
+            return true;
+        }
 
         
 

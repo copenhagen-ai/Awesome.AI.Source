@@ -128,10 +128,7 @@ namespace Awesome.AI.Core
             //this could be a problem with many hubs
             foreach (UNIT _u in list)
             {
-                //if (_u.IsIDLE())
-                //    continue;
-
-                if (_u.IsQUICKDECISION())
+                if (!UNIT.OK(_u))
                     continue;
 
                 if (_u.Root == mind.unit_current.Root)
@@ -204,10 +201,10 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            if (most_common_unit.IsNull())
+            if (!UNIT.OK(most_common_unit))
                 return;
 
-            if (mind.unit_current.IsQUICKDECISION())
+            if (!UNIT.OK(mind.unit_current))
                 return;
 
             if (mind.STATE == STATE.QUICKDECISION)
@@ -219,8 +216,12 @@ namespace Awesome.AI.Core
 
             List<UNIT> units = mind.mem.UNITS_ALL();
 
-            foreach (UNIT u in units)
+            foreach (UNIT u in units) 
+            {                
+                if (!UNIT.OK(u)) continue;
+
                 stats.list.Add(new Stat() { _name = u.Root, _var = u.Variable, _index = u.Index });
+            }
 
             string nam = most_common_unit.Root;
 
