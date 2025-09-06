@@ -39,7 +39,7 @@ namespace Awesome.AI.Variables
                     pattern = PATTERN.MOODGENERAL;
 
                     high_at_zero = true;                    
-                    update_cred = 0.030d;
+                    //update_cred = 0.030d;
 
                     break;
                 case MECHANICS.GRAVITY:
@@ -51,7 +51,7 @@ namespace Awesome.AI.Variables
                     pattern = PATTERN.MOODGENERAL;
 
                     high_at_zero = true;
-                    update_cred = 0.05d;
+                    //update_cred = 0.05d;
 
                     break;
                 case MECHANICS.TUGOFWAR:
@@ -63,7 +63,7 @@ namespace Awesome.AI.Variables
                     pattern = PATTERN.MOODGENERAL;
 
                     high_at_zero = true;
-                    update_cred = 0.005d;
+                    //update_cred = 0.005d;
 
                     break;
                 case MECHANICS.HILL:
@@ -75,7 +75,7 @@ namespace Awesome.AI.Variables
                     pattern = PATTERN.MOODGENERAL;
 
                     high_at_zero = false;
-                    update_cred = 0.005d;                   
+                    //update_cred = 0.005d;                   
 
                     break;
                 default: throw new Exception("GetMechanics");
@@ -108,10 +108,10 @@ namespace Awesome.AI.Variables
 
         public bool high_at_zero { get; set; }        
         public double low_cut { get; set; }
-        public double update_cred { get; set; }
 
-        public double schedule_low { get; set; }
-        public double schedule_mid { get; set; }
-        public double schedule_high { get; set; }
+        //public double update_cred { get; set; }
+        //public double schedule_low { get; set; }
+        //public double schedule_mid { get; set; }
+        //public double schedule_high { get; set; }
     }
 }

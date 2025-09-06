@@ -253,6 +253,9 @@ namespace Awesome.AI.CoreInternals
 
         public void UNITS_ADD(UNIT unit, double low, double high)
         {
+            if (unit.HUB is null)
+                return;
+
             double idx = mind.rand.MyRandomDouble(1)[0];
             idx = mind.calc.Normalize(idx, 0.0d, 1.0d, low, high);
 

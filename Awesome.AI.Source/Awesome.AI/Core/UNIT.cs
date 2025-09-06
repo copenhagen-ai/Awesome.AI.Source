@@ -125,15 +125,15 @@ namespace Awesome.AI.Core
             }
         }
 
-        public List<UNIT> REL
-        {
-            get
-            {
-                List<UNIT> rel = HUB.units;
+        //public List<UNIT> REL
+        //{
+        //    get
+        //    {
+        //        List<UNIT> rel = HUB.units;
 
-                return rel;
-            }
-        }
+        //        return rel;
+        //    }
+        //}
 
         public static UNIT Create(TheMind mind, string h_guid, double index, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
         {
@@ -170,6 +170,9 @@ namespace Awesome.AI.Core
 
         private bool Add(double near, double dist)
         {
+            if (HUB is null)
+                return true;
+
             int count = HUB.units.Count;
             int max = HUB.max_num_units;
             double avg = 100.0d / count;
@@ -222,7 +225,7 @@ namespace Awesome.AI.Core
 
         public bool IsQUICKDECISION() => unit_type == UNITTYPE.QDECISION;
 
-        public static bool OK(UNIT _u)
+        public static bool OK1(UNIT _u)
         {
             if (_u.IsNull())
                 return false;
@@ -242,7 +245,38 @@ namespace Awesome.AI.Core
             return true;
         }
 
-        
+        public static bool OK2(UNIT _u)
+        {
+            if (_u.IsNull())
+                return false;
+
+            if (_u.Root == "xxxx")
+                return false;
+
+            if (_u.IsQUICKDECISION())
+                return false;
+
+            return true;
+        }
+
+        public static bool OK3(UNIT _u)
+        {
+            if (_u.IsNull())
+                return false;
+
+            if (_u.Root == "xxxx")
+                return false;
+
+            if (_u.IsQUICKDECISION())
+                return false;
+
+            if (_u.IsDECISION())
+                return false;
+
+            return true;
+        }
+
+
 
         //UNIT next = null;
         //public UNIT Next

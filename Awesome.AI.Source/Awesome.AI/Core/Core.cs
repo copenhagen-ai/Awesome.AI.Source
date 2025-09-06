@@ -117,24 +117,21 @@ namespace Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            if (mind.unit_current.IsQUICKDECISION())
+            if (!UNIT.OK2(mind.unit_current))
                 return;
-
-            //if (mind.UnitCurrent.IsIDLE())
-            //    return;
 
             List<UNIT> list = mind.mem.UNITS_ALL();
 
             //this could be a problem with many hubs
             foreach (UNIT _u in list)
             {
-                if (!UNIT.OK(_u))
+                if (!UNIT.OK2(_u))
                     continue;
 
                 if (_u.Root == mind.unit_current.Root)
                     continue;
 
-                double cred = mind.parms_current.update_cred;
+                double cred = CONST.UPD_CREDIT;
                 _u.credits += cred;
 
                 if (_u.credits > CONST.MAX_CREDIT)
@@ -201,10 +198,10 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            if (!UNIT.OK(most_common_unit))
+            if (!UNIT.OK1(most_common_unit))
                 return;
 
-            if (!UNIT.OK(mind.unit_current))
+            if (!UNIT.OK1(mind.unit_current))
                 return;
 
             if (mind.STATE == STATE.QUICKDECISION)
@@ -218,7 +215,7 @@ namespace Awesome.AI.Core
 
             foreach (UNIT u in units) 
             {                
-                if (!UNIT.OK(u)) continue;
+                if (!UNIT.OK1(u)) continue;
 
                 stats.list.Add(new Stat() { _name = u.Root, _var = u.Variable, _index = u.Index });
             }

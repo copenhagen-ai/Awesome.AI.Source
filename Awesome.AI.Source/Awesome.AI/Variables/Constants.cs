@@ -91,6 +91,7 @@ namespace Awesome.AI.Variables
         public const double MAX = 99.5d;
         public const double LOW_CREDIT = 0.0d;
         public const double MAX_CREDIT = 10.0d;
+        public const double UPD_CREDIT = 0.03d;          //credit update
 
         public const double ETA = 0.05d;                    //learningrate
         public const double ALPHA = 0.001d;                 //distance

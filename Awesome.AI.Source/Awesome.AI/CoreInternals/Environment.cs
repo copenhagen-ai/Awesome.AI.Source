@@ -277,6 +277,9 @@ namespace Awesome.AI.CoreInternals
             {
                 //mind.stats.Reset();
 
+                //if (mind.unit_current.HUB is null)
+                //    return;
+
                 occus = new List<Occupasion>();
                 Setup(mind.unit_current.HUB, mind.mindtype);
             }

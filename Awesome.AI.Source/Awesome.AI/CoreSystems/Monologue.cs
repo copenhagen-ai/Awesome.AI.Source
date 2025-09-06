@@ -319,6 +319,8 @@ namespace Awesome.AI.CoreSystems
                 if (mind.STATE == STATE.QUICKDECISION)
                     return;
 
+                if (mind.core.most_common_unit.HUB is null)
+                    return;
 
                 mt = mind.mindtype;
                 sub = mind.core.most_common_unit.HUB.subject;

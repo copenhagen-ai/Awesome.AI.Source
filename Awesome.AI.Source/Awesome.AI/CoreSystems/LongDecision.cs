@@ -64,7 +64,7 @@ namespace Awesome.AI.CoreSystems
                 return;
 
             UNIT current = mind.unit_current;
-            HUB hub = current.HUB;
+            string subject = current.HUB?.subject ?? "";
 
             List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
             HUB _1 = mind.mem.HUBS_SUB(mind.STATE, CONST.DECI_SUBJECTS[0]);
@@ -76,7 +76,7 @@ namespace Awesome.AI.CoreSystems
                 mind.mem.Randomize(_2);
             }
 
-            if (hub.subject == "long_decision_should" && State[type] == 0)
+            if (subject == "long_decision_should" && State[type] == 0)
             {
                 if (current.data == "AYES")
                     State[type]++;
@@ -109,7 +109,7 @@ namespace Awesome.AI.CoreSystems
                 }
             }
 
-            if (hub.subject == "long_decision_what" && State[type] == 1)
+            if (subject == "long_decision_what" && State[type] == 1)
             {
                 Result[type] = mind.dir.GoDownHard.IsNo() ?
                     current.data.Replace("WHAT", "") :
