@@ -198,10 +198,7 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            if (!UNIT.OK1(most_common_unit))
-                return;
-
-            if (!UNIT.OK1(mind.unit_current))
+            if (!UNIT.OK2(most_common_unit))
                 return;
 
             if (mind.STATE == STATE.QUICKDECISION)

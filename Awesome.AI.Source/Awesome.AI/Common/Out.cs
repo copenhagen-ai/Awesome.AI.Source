@@ -132,8 +132,7 @@ namespace Awesome.AI.Common
             norm_noise = mind.mech_noise.p_90;
 
             //common_unit = mind.core.most_common_unit;
-            if(mind.core.most_common_unit.HUB != null)
-                common_hub_subject = mind.core.most_common_unit.HUB.subject;
+            common_hub_subject = mind?.core?.most_common_unit?.HUB?.subject ?? "";
 
             if (mind._long.Result["answer"] != "")
             {

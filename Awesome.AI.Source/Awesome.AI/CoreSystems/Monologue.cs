@@ -319,13 +319,12 @@ namespace Awesome.AI.CoreSystems
                 if (mind.STATE == STATE.QUICKDECISION)
                     return;
 
-                if (mind.core.most_common_unit.HUB is null)
-                    return;
-
                 mt = mind.mindtype;
-                sub = mind.core.most_common_unit.HUB.subject;
+                sub = mind?.core?.most_common_unit?.HUB?.subject  ?? "";
                 idx = $"{mind.mech_current.p_100}"[..1];
-                //idx = $"{mind.core.most_common_unit.Index}"[..1];
+                
+                if (sub == "")
+                    return;
 
                 if (CONST.DECI_SUBJECTS.Contains(sub))
                     return;

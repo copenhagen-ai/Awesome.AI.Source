@@ -174,13 +174,7 @@ namespace Awesome.AI.CoreInternals
             if (mind.z_current == "z_noise")
                 return true;
 
-            if (_u.IsNull())
-                throw new Exception("Valid");
-
-            if (_u.IsDECISION())
-                return true;
-
-            if (_u.IsQUICKDECISION())
+            if (!UNIT.OK3(_u))
                 return true;
 
             try
