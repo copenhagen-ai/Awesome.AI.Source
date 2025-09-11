@@ -78,8 +78,8 @@ namespace Awesome.AI.Common
             if (count > 1)
                 count = 0;
 
-            ratio_yes_n = $"{mind.dir.Count(HARDDOWN.YES)}";
-            ratio_no_n = $"{mind.dir.Count(HARDDOWN.NO)}";
+            ratio_yes_n = $"{mind.dir.Count(true)}";
+            ratio_no_n = $"{mind.dir.Count(false)}";
             go_down = $"{(mind.dir.GoDownHard.IsNo() ? "NO" : "YES")}";
         }
 

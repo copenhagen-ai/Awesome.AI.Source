@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Core;
+﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Core;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Interfaces
@@ -20,7 +21,7 @@ namespace Awesome.AI.Interfaces
         double d_prev { get; set; }
 
         FUZZYDOWN FuzzyMom { get; }
-        HARDDOWN HardMom { get; }
+        Down HardMom { get; }
 
         double POS_XY { get; }
 

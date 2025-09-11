@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Common;
+﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Common;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
@@ -16,6 +17,7 @@ namespace Awesome.AI.Core
 
     public class TheMind
     {
+        public Down space;
         public TheSoup matrix;
         public Core core;
         public Memory mem;
@@ -47,7 +49,7 @@ namespace Awesome.AI.Core
                 
         public MINDS mindtype;
         public MECHANICS _mech;
-        public HARDDOWN goodbye = HARDDOWN.NO;
+        public Down goodbye { get; set; }
 
         public bool ok { get; set; }
         public string z_current { get; set; }
@@ -105,6 +107,8 @@ namespace Awesome.AI.Core
                 mech_mechanics = parms_mechanics.GetMechanics(_mech);
                 mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
 
+                goodbye = new Down(this);
+                space = new Down(this);
                 matrix = new TheSoup(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);

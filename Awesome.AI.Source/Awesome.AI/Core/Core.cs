@@ -109,7 +109,9 @@ namespace Awesome.AI.Core
             if (answer == null)
                 throw new ArgumentNullException();
 
-            mind.goodbye = answer == "It does not" ? HARDDOWN.YES : HARDDOWN.NO;
+            mind.goodbye.SetNO();
+            if (answer == "It does not")
+                mind.goodbye.SetYES();
         }
 
         public void UpdateCredit()

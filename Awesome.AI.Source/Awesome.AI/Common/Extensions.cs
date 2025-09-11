@@ -45,25 +45,25 @@ namespace Awesome.AI.Common
             return !Double.IsNaN(value) && !Double.IsInfinity(value);
         }
 
-        public static bool IsYes(this HARDDOWN _q)
-        {
-            return _q == HARDDOWN.YES;
-        }
+        //public static bool IsYes(this HARDDOWN _q)
+        //{
+        //    return _q == HARDDOWN.YES;
+        //}
 
-        public static bool IsNo(this HARDDOWN _q)
-        {
-            return _q == HARDDOWN.NO;
-        }
+        //public static bool IsNo(this HARDDOWN _q)
+        //{
+        //    return _q == HARDDOWN.NO;
+        //}
 
-        public static double IsYesDouble(this HARDDOWN _q)
-        {
-            return _q.IsYes() ? -1.0 : 1.0d;
-        }
+        //public static double IsYesDouble(this HARDDOWN _q)
+        //{
+        //    return _q.IsYes() ? -1.0 : 1.0d;
+        //}
 
-        public static double IsNoDouble(this HARDDOWN _q)
-        {
-            return _q.IsNo() ? 1.0d : -1.0d;
-        }
+        //public static double IsNoDouble(this HARDDOWN _q)
+        //{
+        //    return _q.IsNo() ? 1.0d : -1.0d;
+        //}
 
         private static Random rng = new Random();
         public static void Shuffle<T>(this IList<T> list)
@@ -108,14 +108,14 @@ namespace Awesome.AI.Common
             }
         }
 
-        public static PERIODDOWN ToPeriod(this List<HARDDOWN> Ratio, TheMind mind)
+        public static PERIODDOWN ToPeriod(this List<double> Ratio, TheMind mind)
         {
             /*
              * indifferent of the direction
              * */
 
-            int count_no = Ratio.Count(x=>x == HARDDOWN.NO);
-            int count_yes = Ratio.Count(x=>x == HARDDOWN.YES);
+            int count_no = Ratio.Count(x=>x >= 0.0d);
+            int count_yes = Ratio.Count(x=>x < 0.0d);
 
             PERIODDOWN res = count_no >= count_yes ? 
                 PERIODDOWN.NO : 
@@ -127,7 +127,7 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        public static HARDDOWN GoDownZero(this double deltaMom, TheMind mind)
+        public static void GoDownZero(this double deltaMom, TheMind mind)
         {
             /*
              * NO is to say no to going downwards
@@ -159,10 +159,12 @@ namespace Awesome.AI.Common
             if (CONST.Logic == LOGICTYPE.QUBIT)
                 down1 = mind.quantum.usage.DoQuantumXOR(down1, down2);
 
-            return down1 ? HARDDOWN.YES : HARDDOWN.NO;
+            mind.space.SetNO();
+            if (down1)
+                mind.space.SetYES(); 
         }
 
-        public static HARDDOWN GoDownPrev(this double deltaMom, double prev, TheMind mind)
+        public static void GoDownPrev(this double deltaMom, double prev, TheMind mind)
         {
             /*
              * NO is to say no to going downwards
@@ -195,7 +197,9 @@ namespace Awesome.AI.Common
             if (CONST.Logic == LOGICTYPE.QUBIT)
                 down1 = mind.quantum.usage.DoQuantumXOR(down1, down2);
 
-            return down1 ? HARDDOWN.YES : HARDDOWN.NO;
+            mind.space.SetNO();
+            if (down1)
+                mind.space.SetYES(); 
         }
 
         //public static bool TheHack(this bool _b, TheMind mind)

@@ -1,8 +1,8 @@
-﻿namespace Awesome.AI.Common
-{
-    using Awesome.AI.Core;
-    using System;
+﻿using Awesome.AI.Core;
+using System;
 
+namespace Awesome.AI.Common
+{
     public class MyProbabilityHelper
     {
         // Constants

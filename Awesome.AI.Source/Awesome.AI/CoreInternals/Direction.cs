@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Common;
+﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Common;
 using Awesome.AI.Core;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
@@ -7,19 +8,19 @@ namespace Awesome.AI.CoreInternals
 {
     public class Direction
     {
-        public double DirectionDown { get { return GoDownHard.IsYesDouble(); } }
-        public HARDDOWN GoDownHard { get { return mind.mech_current.HardMom; } }
+        public double DirectionDown { get { return GoDownHard.Get().xx; } }
+        public Down GoDownHard { get { return mind.mech_current.HardMom; } }
         public FUZZYDOWN GoDownFuzzy { get { return mind.mech_current.FuzzyMom; } }
         public PERIODDOWN GoDownPeriod { get { return RatioNoise.ToPeriod(mind); } }
 
-        public List<HARDDOWN> RatioNoise { get; set; }
+        public List<double> RatioNoise { get; set; }
 
         private TheMind mind;
         private Direction() { }
         public Direction(TheMind mind)
         {
             this.mind = mind;
-            RatioNoise = new List<HARDDOWN>();
+            RatioNoise = new List<double>();
         }
 
         public void Update()
@@ -27,19 +28,19 @@ namespace Awesome.AI.CoreInternals
             if (mind.z_current != "z_noise")
                 return;
             
-            RatioNoise.Add(GoDownHard);
+            RatioNoise.Add(GoDownHard.Get().xx);
 
             if (RatioNoise.Count > CONST.LAPSES)
-                RatioNoise.RemoveAt(0);            
+                RatioNoise.RemoveAt(0);
         }
 
-        public int Count(HARDDOWN choise/*, bool is_noise*/)
+        public int Count(bool is_yes)
         {
             int count = 0;
-            switch (choise)
+            switch (is_yes)
             {
-                case HARDDOWN.YES: count = RatioNoise.Where(z => z.IsYes()).Count(); break;
-                case HARDDOWN.NO: count = RatioNoise.Where(z => z.IsNo()).Count(); break;
+                case true: count = RatioNoise.Where(z => z < 0.0d).Count(); break;
+                case false: count = RatioNoise.Where(z => z >= 0.0d).Count(); break;
             }
 
             return count;

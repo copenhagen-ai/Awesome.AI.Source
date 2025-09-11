@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Common;
+﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
@@ -49,15 +50,17 @@ namespace Awesome.AI.Core.Mechanics
             get { return d_curr.ToFuzzy(mind); } 
         }
 
-        public HARDDOWN HardMom
+        public Down HardMom
         {
             get 
             {
                 //return p_curr.ToDownPrev(p_prev, mind);
                 //return p_curr.ToDownZero(mind);
-
                 //return p_delta.ToDownPrev(p_delta_prev, mind);
-                return d_curr.GoDownZero(mind);
+                    
+                d_curr.GoDownZero(mind);
+
+                return mind.space;
             }            
         }
 
