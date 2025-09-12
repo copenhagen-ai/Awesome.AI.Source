@@ -57,7 +57,7 @@ namespace Awesome.AI.Core
             List<UNIT> units = mind.mem.UNITS_VAL();
 
             units = units.Where(x =>
-                   //mind.filters.Direction(x)       //comment to turn off
+                //   mind.filters.Direction(x) //comment to turn off
                    mind.filters.LowCut(x)          //comment to turn off
                 && mind.filters.Credits(x)         //comment to turn off
                 //   mind.filters.UnitIsValid(x)   //comment to turn off
@@ -130,7 +130,7 @@ namespace Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            double dir = mind.dir.DirectionDown;
+            double dir = mind.down.Direction;
             double dist = DistAbsolute(res, near);
 
             res.Update(dir, near, dist);

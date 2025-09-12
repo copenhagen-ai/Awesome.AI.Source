@@ -111,7 +111,7 @@ namespace Awesome.AI.CoreSystems
 
             if (subject == "long_decision_what" && State[type] == 1)
             {
-                Result[type] = mind.dir.GoDownHard.IsNo() ?
+                Result[type] = mind.down.IsNo() ?
                     current.data.Replace("WHAT", "") :
                     Result[type];
 

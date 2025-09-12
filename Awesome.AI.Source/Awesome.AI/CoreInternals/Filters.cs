@@ -46,26 +46,29 @@ namespace Awesome.AI.CoreInternals
             return unit.credits > 1.0d;
         }
 
-        //public bool Direction(UNIT _x)
-        //{
-        //    /*
-        //     * this filter can be on or off, just have to tweek HardMom and ToDownZero/ToDownPrev
-        //     * */
+        public bool Direction(UNIT _x)
+        {
+            /*
+             * this filter can be on or off, just have to tweek HardMom and ToDownZero/ToDownPrev
+             * */
 
-        //    if (_x == null)
-        //        throw new ArgumentNullException();
+            //if (skip)
+            //    return true;
 
-        //    if (mind.STATE == STATE.QUICKDECISION)
-        //        return true;
+            if (_x == null)
+                throw new ArgumentNullException();
 
-        //    double f_a = _x.Variable;
-        //    double f_b = mind.unit_current.Variable;
+            if (mind.STATE == STATE.QUICKDECISION)
+                return true;
 
-        //    bool go_up = mind.dir.GoDownHard.IsNo();
+            double f_a = _x.Variable;
+            double f_b = mind.unit_current.Variable;
 
-        //    //remember low/high at zero
-        //    return go_up ? /*up*/f_a < f_b : /*down*/f_a >= f_b;
-        //}
+            bool go_up = mind.down.IsNo();
+
+            //remember low/high at zero
+            return go_up ? /*up*/f_a < f_b : /*down*/f_a >= f_b;
+        }
 
         //public bool UnitIsValid(UNIT _u)
         //{

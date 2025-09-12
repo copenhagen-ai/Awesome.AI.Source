@@ -17,7 +17,7 @@ namespace Awesome.AI.Core
 
     public class TheMind
     {
-        public Down space;
+        public Down down;
         public TheSoup matrix;
         public Core core;
         public Memory mem;
@@ -31,9 +31,9 @@ namespace Awesome.AI.Core
         public Out _out;
         public MyInternal _internal;
         public MyExternal _external;
-        public Direction dir;
         public MyQubit quantum;
         public MyProbabilityHelper prob;
+        //public Direction dir;
         //public Position pos;
 
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
@@ -108,7 +108,7 @@ namespace Awesome.AI.Core
                 mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
 
                 goodbye = new Down(this);
-                space = new Down(this);
+                down = new Down(this);
                 matrix = new TheSoup(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
@@ -121,10 +121,10 @@ namespace Awesome.AI.Core
                 _quick = new QuickDecision(this);
                 mood = new MoodGenerator(this);
                 mono = new Monologue(this);
-                dir = new Direction(this);
                 quantum = new MyQubit();
                 prob = new MyProbabilityHelper();
                 mem = new Memory(this);
+                //dir = new Direction(this);
                 //pos = new Position(this);
                 
                 unit = new Dictionary<string, UNIT>();
@@ -276,8 +276,8 @@ namespace Awesome.AI.Core
             mech_mechanics.CalcPattern1(parms_current.pattern, cycles);//mood general
             mech_mechanics.CalcPattern2(parms_current.pattern, cycles);//mood good
             mech_mechanics.CalcPattern3(parms_current.pattern, cycles);//mood bad
-            
-            dir.Update();
+
+            down.Update();
             //pos.Update();
 
             //if (curr_hub.IsIDLE())

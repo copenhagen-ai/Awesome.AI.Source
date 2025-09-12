@@ -20,8 +20,8 @@ namespace Awesome.AI.Interfaces
         double d_curr { get; set; }
         double d_prev { get; set; }
 
-        FUZZYDOWN FuzzyMom { get; }
-        Down HardMom { get; }
+        //FUZZYDOWN FuzzyMom { get; }
+        //Down HardMom { get; }
 
         double POS_XY { get; }
 

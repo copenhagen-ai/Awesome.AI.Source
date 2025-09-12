@@ -43,25 +43,6 @@ namespace Awesome.AI.Core.Mechanics
             posx_low = 1000.0d;
         }
 
-        public FUZZYDOWN FuzzyMom
-        {
-            get { return d_curr.ToFuzzy(mind); }
-        }
-
-        public Down HardMom
-        {
-            
-            get 
-            {
-                //return p_curr.ToDownPrev(p_prev, mind);
-                //return p_curr.ToDownZero(mind);
-                //return p_delta.ToDownPrev(p_delta_prev, mind);
-                    
-                d_curr.GoDownZero(mind);
-                return mind.space;
-            }
-        }
-
         public double POS_XY
         {
             get

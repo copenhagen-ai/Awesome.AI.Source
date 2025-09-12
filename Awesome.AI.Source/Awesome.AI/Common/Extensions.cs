@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Core;
-using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -45,26 +44,6 @@ namespace Awesome.AI.Common
             return !Double.IsNaN(value) && !Double.IsInfinity(value);
         }
 
-        //public static bool IsYes(this HARDDOWN _q)
-        //{
-        //    return _q == HARDDOWN.YES;
-        //}
-
-        //public static bool IsNo(this HARDDOWN _q)
-        //{
-        //    return _q == HARDDOWN.NO;
-        //}
-
-        //public static double IsYesDouble(this HARDDOWN _q)
-        //{
-        //    return _q.IsYes() ? -1.0 : 1.0d;
-        //}
-
-        //public static double IsNoDouble(this HARDDOWN _q)
-        //{
-        //    return _q.IsNo() ? 1.0d : -1.0d;
-        //}
-
         private static Random rng = new Random();
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -89,133 +68,16 @@ namespace Awesome.AI.Common
             return res;
         }
 
-
-        public static FUZZYDOWN ToFuzzy(this double deltaMom, TheMind mind)
-        {
-            double norm = mind.mech_current.p_100;
-
-            //if (mind.parms.hack == HACKMODES.HACK)
-            //    norm = 100.0d - norm;
-
-            switch (norm)
-            {
-                case < 20.0d: return FUZZYDOWN.VERYNO;
-                case < 40.0d: return FUZZYDOWN.NO;
-                case < 60.0d: return FUZZYDOWN.MAYBE;
-                case < 80.0d: return FUZZYDOWN.YES;
-                case < 100.0d: return FUZZYDOWN.VERYYES;
-                default: throw new NotSupportedException("ToFuzzy");
-            }
-        }
-
-        public static PERIODDOWN ToPeriod(this List<double> Ratio, TheMind mind)
+        [Obsolete("Legazy Method", true)]
+        public static bool TheHack(this bool _b, TheMind mind)
         {
             /*
-             * indifferent of the direction
+             * >> this is the hack/cheat <<
              * */
-
-            int count_no = Ratio.Count(x=>x >= 0.0d);
-            int count_yes = Ratio.Count(x=>x < 0.0d);
-
-            PERIODDOWN res = count_no >= count_yes ? 
-                PERIODDOWN.NO : 
-                PERIODDOWN.YES;
-
-            //if (mind.parms.hack == HACKMODES.HACK)
-            //    res = !res;
-
-            return res;
+            bool do_hack = mind.parms[mind.z_current].hack == HACKMODE.HACK;
+            if (do_hack)
+                return !_b;
+            return _b;
         }
-
-        public static void GoDownZero(this double deltaMom, TheMind mind)
-        {
-            /*
-             * NO is to say no to going downwards
-             * */
-
-            if (mind.z_current != "z_noise")
-                throw new NotImplementedException("Extensions, ToDownZero");
-
-            SimpleAgent agent = new SimpleAgent(mind);
-            //double time = mind.cycles * 0.1d;
-
-            bool down1 = deltaMom <= 0.0d;
-            bool down2 = agent.SimulateDown();
-            //bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
-            //bool dontflip2 = Math.Sin(time) > 0.4d;
-
-            //if (CONST.Logic == LOGICTYPE.QUIRK)
-            //    down1 = dontflip1 ? down1 : !down1;
-
-            //if (CONST.Logic == LOGICTYPE.SINE)
-            //    down1 = dontflip2 ? down1 : !down1;
-
-            if (CONST.Logic == LOGICTYPE.CLASSICAL) //is this a logic error?
-                down1 = !down1;//we flip direction
-
-            if (CONST.Logic == LOGICTYPE.PROBABILITY)
-                down1 = mind.prob.Use(down1, mind);
-
-            if (CONST.Logic == LOGICTYPE.QUBIT)
-                down1 = mind.quantum.usage.DoQuantumXOR(down1, down2);
-
-            mind.space.SetNO();
-            if (down1)
-                mind.space.SetYES(); 
-        }
-
-        public static void GoDownPrev(this double deltaMom, double prev, TheMind mind)
-        {
-            /*
-             * NO is to say no to going downwards
-             * */
-
-            if (mind.z_current != "z_noise")
-                throw new NotImplementedException("Extensions, ToDownPrev");
-
-            SimpleAgent agent = new SimpleAgent(mind);
-            //double time = mind.cycles * 0.1d;
-
-            bool down1 = deltaMom <= prev;
-            bool down2 = agent.SimulateDown();
-            //bool dontflip1 = CONST.SAMPLE100.RandomSample(mind);
-            //bool dontflip2 = Math.Sin(time) > 0.4d;
-
-            //if (CONST.Logic == LOGICTYPE.QUIRK)
-            //    down1 = dontflip1 ? down1 : !down1;
-
-            //if (CONST.Logic == LOGICTYPE.SINE)
-            //    down1 = dontflip2 ? down1 : !down1
-            //    ;
-
-            if (CONST.Logic == LOGICTYPE.CLASSICAL) //is this a logic error?
-                down1 = !down1;//we flip direction
-
-            if (CONST.Logic == LOGICTYPE.PROBABILITY)
-                down1 = mind.prob.Use(down1, mind);
-
-            if (CONST.Logic == LOGICTYPE.QUBIT)
-                down1 = mind.quantum.usage.DoQuantumXOR(down1, down2);
-
-            mind.space.SetNO();
-            if (down1)
-                mind.space.SetYES(); 
-        }
-
-        //public static bool TheHack(this bool _b, TheMind mind)
-        //{
-        //    /*
-        //     * >> this is the hack/cheat <<
-        //     * */
-        //    bool do_hack = mind.parms.hack == HACKMODES.HACK;
-        //    if (do_hack)
-        //        return !_b;
-        //    return _b;
-        //}
-
-        //public static HARDDOWN ToDirection(this bool _q)
-        //{
-        //    return _q ? HARDDOWN.YES : HARDDOWN.NO;
-        //}        
     }
 }
