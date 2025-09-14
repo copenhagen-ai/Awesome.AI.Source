@@ -80,7 +80,7 @@ namespace Awesome.AI.Core
             if (units is null)
                 throw new ArgumentNullException();
 
-            double near = NearPercent();
+            double near = Near();
 
             units = units.OrderByDescending(x => Map(x)).ToList();
 
@@ -98,7 +98,7 @@ namespace Awesome.AI.Core
                 res = above;
 
             if(res is null)
-                res = near - Map(above) < Map(below) - near ? above : below;
+                res = near - Map(above) < Map(below) - near ? below : above;//switcharoonie
 
             UpdateUnit(near, res);
 
@@ -130,7 +130,7 @@ namespace Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            double dir = mind.down.Direction;
+            double dir = mind.down.IsYes ? -1.0d : 1.0d;
             double dist = DistAbsolute(res, near);
 
             res.Update(dir, near, dist);
@@ -144,9 +144,10 @@ namespace Awesome.AI.Core
             return res;
         }
         
-        private double NearPercent()
+        private double Near()
         {
             double norm = 100.0d - mind.mech_current.p_100;
+            //double norm = 100.0d - mind.down.NormX();
 
             return norm;
         }

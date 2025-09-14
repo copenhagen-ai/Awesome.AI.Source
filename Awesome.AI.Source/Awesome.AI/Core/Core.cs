@@ -6,16 +6,38 @@ namespace Awesome.AI.Core
 {
     public class Core
     {
-        public UNIT most_common_unit;
-        private List<UNIT> u_history = new List<UNIT>();
-        private List<string> remember = new List<string>();
-        private Dictionary<string, int> hits = new Dictionary<string, int>();
+        public UNIT most_common_unit { get; set; }
+        private Stats stats { get; set; }
+
+        private List<UNIT> history { get; set; }
+        private List<int> remember { get; set; }
+        private Dictionary<int, int> hits { get; set; }
+        private Dictionary<int, int> units { get; set; }
+
 
         private TheMind mind;
         private Core() { }
-        public Core(TheMind mind)
+        public Core(TheMind mind, int rand1, int rand2, int rand3)
         {
             this.mind = mind;
+
+            stats = new Stats();
+            history = new List<UNIT>();
+            remember = new List<int>();
+            hits = new Dictionary<int, int>();
+            units = new Dictionary<int, int>();
+
+            history.Add(mind.mem.UNITS_ALL()[rand1]);
+            history.Add(mind.mem.UNITS_ALL()[rand2]);
+            history.Add(mind.mem.UNITS_ALL()[rand3]);
+            
+            most_common_unit = history[1];
+
+            for (int i = 1; i <= 10; i++)
+                hits.Add(i * 10, 0);
+
+            for (int i = 1; i <= 10; i++)
+                units.Add(i * 10, 0);
         }
 
         public bool OK(out double user_var)
@@ -162,16 +184,9 @@ namespace Awesome.AI.Core
             //if (mind.parms.state == STATE.QUICKDECISION)
             //    return;
 
-            if (!u_history.Any())
-            {
-                u_history.Add(mind.mem.UNITS_RND(1));
-                u_history.Add(mind.mem.UNITS_RND(2));
-                u_history.Add(mind.mem.UNITS_RND(3));
-            }
-
-            u_history.Insert(0, mind.unit_current);
-            if (u_history.Count > CONST.HIST_TOTAL)
-                u_history.RemoveAt(u_history.Count - 1);
+            history.Insert(0, mind.unit_current);
+            if (history.Count > CONST.HIST_TOTAL)
+                history.RemoveAt(history.Count - 1);
         }
 
         public void Common()
@@ -185,7 +200,7 @@ namespace Awesome.AI.Core
             //if (mind.parms.state == STATE.QUICKDECISION)
             //    return;
 
-            most_common_unit = u_history
+            most_common_unit = history
                 .GroupBy(x => x)
                 .OrderByDescending(x => x.Count())
                 .Select(x => x.Key)
@@ -206,53 +221,63 @@ namespace Awesome.AI.Core
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
-            Stats stats = new Stats();
-
-            stats.list ??= new List<Stat>();
-
-            List<UNIT> units = mind.mem.UNITS_ALL();
-
-            foreach (UNIT u in units) 
-            {                
-                if (!UNIT.OK1(u)) continue;
-
-                stats.list.Add(new Stat() { _name = u.Root, _var = u.Variable, _index = u.Index });
-            }
-
-            string nam = most_common_unit.Root;
-
             try
             {
-                Stat _s_curr = stats.list.Where(x => x._name == nam).First();
-
-                if (!hits.ContainsKey(nam))
-                    hits.Add(nam, 0);
-
-                hits[nam] += 1;
-
-                stats.curr_name = nam;
-
-                _s_curr.hits = hits[nam];
-
-                remember.Insert(0, nam);
-                if (remember.Count > CONST.REMEMBER)
-                {
-                    string name = remember.Last();
-
-                    Stat _s_reset = stats.list.Where(x => x._name == name).First();
-
-                    hits[name] -= 1;
-
-                    stats.reset_name = name;
-
-                    _s_reset.hits = hits[name];
-
-                    remember.RemoveAt(remember.Count - 1);
-                }
-
-                mind.stats = stats;
+                Hits();
+                Units();
             }
             catch { return; }
+        }
+
+        private void Hits()
+        {
+            int idx = GetIndex(most_common_unit);
+
+            hits[idx] += 1;
+
+            remember.Insert(0, idx);
+
+            if (remember.Count > CONST.REMEMBER)
+            {
+                int res_idx = remember.Last();
+
+                hits[res_idx] -= 1;
+
+                remember.RemoveAt(remember.Count);
+            }
+
+            mind.stats.hits = hits;
+        }
+
+        private void Units()
+        {
+            units = new Dictionary<int, int>();
+
+            for (int i = 1; i <= 10; i++)
+                units.Add(i * 10, 0);
+
+            List<UNIT> units2 = mind.mem.UNITS_ALL();
+
+            foreach (UNIT unit in units2)
+            {
+                int idx = GetIndex(unit);
+                units[idx] += 1;
+            }
+
+            mind.stats.units = units;
+        }
+
+        private int GetIndex(UNIT unit)
+        {
+            int index = (int)unit.Index;
+
+            for (int i = 9; i >= 0; i--)
+            {
+                if (index > i * 10)
+                    return (i + 1) * 10;
+            }
+
+            throw new Exception("Core, GetIndex");
         }
 
 

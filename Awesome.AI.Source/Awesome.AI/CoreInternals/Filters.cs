@@ -64,7 +64,7 @@ namespace Awesome.AI.CoreInternals
             double f_a = _x.Variable;
             double f_b = mind.unit_current.Variable;
 
-            bool go_up = mind.down.IsNo();
+            bool go_up = mind.down.IsNo;
 
             //remember low/high at zero
             return go_up ? /*up*/f_a < f_b : /*down*/f_a >= f_b;

@@ -19,8 +19,8 @@ namespace Awesome.AI.Core
     {
         public Down down;
         public TheSoup matrix;
-        public Core core;
         public Memory mem;
+        public Core core;
         public QuickDecision _quick;
         public LongDecision _long;
         public MoodGenerator mood;
@@ -41,7 +41,7 @@ namespace Awesome.AI.Core
         public Dictionary<string, IMechanics> mech { get; set; }
         public Dictionary<string, Params> parms { get; set; }
         public Dictionary<string, UNIT> unit { get; set; }
-        private Dictionary<string, string> long_deci {  get; set; }
+        private Dictionary<string, string> long_dec {  get; set; }
 
         
         public Stats stats = new Stats();
@@ -90,13 +90,13 @@ namespace Awesome.AI.Core
         public Params parms_mechanics { get { return parms["z_mech"]; } set { parms["z_mech"] = value; } }
         public Params parms_noise { get { return parms["z_noise"]; } set { parms["z_noise"] = value; } }
 
-        public TheMind(MECHANICS m, MINDS mindtype, Dictionary<string, string> long_deci)
+        public TheMind(MECHANICS m, MINDS mindtype, Dictionary<string, string> long_dec)
         {
             try
             {
                 this._mech = m;
                 this.mindtype = mindtype;
-                this.long_deci = long_deci;
+                this.long_dec = long_dec;
                 z_current = "z_mech";
 
                 parms = new Dictionary<string, Params>();
@@ -115,15 +115,23 @@ namespace Awesome.AI.Core
                 _internal = new MyInternal(this);
                 _external = new MyExternal(this);
                 filters = new Filters(this);
-                core = new Core(this);
                 _out = new Out(this);
-                _long = new LongDecision(this, this.long_deci);
+                _long = new LongDecision(this, this.long_dec);
                 _quick = new QuickDecision(this);
                 mood = new MoodGenerator(this);
                 mono = new Monologue(this);
                 quantum = new MyQubit();
                 prob = new MyProbabilityHelper();
                 mem = new Memory(this);
+
+                Random random = new Random();
+                int u_count = mem.UNITS_ALL().Count;
+                int rand1 = random.Next(u_count);
+                int rand2 = random.Next(u_count);
+                int rand3 = random.Next(u_count);
+
+                core = new Core(this, rand1, rand2, rand3);
+
                 //dir = new Direction(this);
                 //pos = new Position(this);
                 
@@ -314,7 +322,7 @@ namespace Awesome.AI.Core
             if (STATE == STATE.QUICKDECISION)
                 return;
 
-            foreach(var kv in this.long_deci)
+            foreach(var kv in this.long_dec)
                 _long.Decide(_pro, kv.Key);
 
             if (z_current == "z_noise")

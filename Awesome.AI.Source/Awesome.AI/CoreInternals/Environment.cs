@@ -19,11 +19,26 @@ namespace Awesome.AI.CoreInternals
             this.mind = mind;
         }
 
-        public bool SimulateDown()
+        public double SimulateDirection()
         {
-            bool samp = CONST.SAMPLE20.RandomSample(mind);
+            //bool samp = CONST.SAMPLE20.RandomSample(mind);
 
-            return samp;
+            double rand = mind.rand.MyRandomDouble(1)[0];
+
+            double down = rand <= 0.5d ? -1.0d : 1.0d;
+
+            return down;
+        }
+
+        public bool SimulateYes()
+        {
+            //bool samp = CONST.SAMPLE20.RandomSample(mind);
+
+            double dir = SimulateDirection();
+
+            bool down = dir <= 0.0d;
+
+            return down;
         }
     }
 

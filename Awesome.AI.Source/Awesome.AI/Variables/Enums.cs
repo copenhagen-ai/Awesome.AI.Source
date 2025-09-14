@@ -17,9 +17,10 @@
         public enum MECHANICS { NONE, NOISE, GRAVITY, TUGOFWAR, WHEEL, HILL }
         public enum LIMITTYPE { SIMPLE, SIGMOID, CHANCE }
         public enum MOOD { GOOD, BAD }
-        public enum FUZZYDOWN { VERYYES, YES, MAYBE, NO, VERYNO }
-        public enum PERIODDOWN { YES, NO }
         public enum LOGICTYPE { CLASSICAL, PROBABILITY, QUBIT }
         public enum HACKMODE { HACK, NOHACK }
+        public enum HARDDOWN { YES, NO }
+        public enum FUZZYDOWN { VERYYES, YES, MAYBE, NO, VERYNO }
+        public enum PERIODDOWN { YES, NO }
     }
 }

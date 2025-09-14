@@ -49,7 +49,7 @@ namespace Awesome.AI.Core.Mechanics
             {
                 double posxy = position_x;
 
-                if (posxy <= 0.1d && mind.goodbye.IsNo())
+                if (posxy <= 0.1d && mind.goodbye.IsNo)
                     posxy = CONST.VERY_LOW;
                 
                 if (posxy < CONST.LOWXY) posxy = CONST.LOWXY;
@@ -243,7 +243,7 @@ namespace Awesome.AI.Core.Mechanics
 
         private double ApplyDynamic(PATTERN pattern, double omega, double t, double F0, double eta)
         {
-            if(mind.goodbye.IsYes())
+            if(mind.goodbye.IsYes)
                 return 0.0d;
 
             double Fx = F0 * Sine(pattern, t, omega) + GetRandomNoise(eta); // Wind force

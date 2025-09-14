@@ -106,8 +106,6 @@ namespace Awesome.AI.Variables
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
         public PATTERN pattern;
 
-        public HACKMODE hack;
-
         public bool high_at_zero { get; set; }        
         public double low_cut { get; set; }
 

@@ -47,7 +47,7 @@ namespace Awesome.AI.Core.Mechanics
             {
                 double x_meter = position_x;
 
-                if (x_meter <= 0.1d && mind.goodbye.IsNo())
+                if (x_meter <= 0.1d && mind.goodbye.IsNo)
                     x_meter = CONST.VERY_LOW;
 
                 if (x_meter < CONST.LOWXY) x_meter = CONST.LOWXY;
@@ -250,7 +250,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyDynamic(PATTERN pattern, double Fmax, double t, double omega, double eta)
         {
-            if (mind.goodbye.IsYes())
+            if (mind.goodbye.IsYes)
                 return 0.0d;
 
             double Fapplied = Fmax * (Sine(pattern, t, omega) + eta * GetRandomNoise());  // Dynamic force

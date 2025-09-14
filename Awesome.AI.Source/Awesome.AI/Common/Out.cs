@@ -78,9 +78,9 @@ namespace Awesome.AI.Common
             if (count > 1)
                 count = 0;
 
-            ratio_yes_n = $"{mind.down.Count(true)}";
-            ratio_no_n = $"{mind.down.Count(false)}";
-            go_down = $"{(mind.down.IsNo() ? "NO" : "YES")}";
+            ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
+            ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
+            go_down = $"{(mind.down.IsNo ? "NO" : "YES")}";
         }
 
         public void SetMech()

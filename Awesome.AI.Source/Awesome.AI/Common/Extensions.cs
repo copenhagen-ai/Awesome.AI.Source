@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Core;
+﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Core;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -68,13 +69,28 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        [Obsolete("Legazy Method", true)]
+        public static bool Below(this double val)
+        {
+            return val < 0.0d;
+        }
+
+        public static bool Probability(this bool _b, TheMind mind)
+        {
+            return mind.prob.Use(_b, mind);
+        }
+
+        public static bool Qubit(this bool _b1, bool _b2, TheMind mind)
+        {
+            return mind.quantum.usage.DoQuantumXOR(_b1, _b2);
+        }
+
+        [Obsolete("Legazy Method", false)]
         public static bool TheHack(this bool _b, TheMind mind)
         {
             /*
              * >> this is the hack/cheat <<
              * */
-            bool do_hack = mind.parms[mind.z_current].hack == HACKMODE.HACK;
+            bool do_hack = CONST.hack == HACKMODE.HACK;
             if (do_hack)
                 return !_b;
             return _b;
