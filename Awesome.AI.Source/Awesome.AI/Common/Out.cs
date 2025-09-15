@@ -41,6 +41,8 @@ namespace Awesome.AI.Common
         public double norm_mood { get; set; }
         public double norm_noise {  get; set; }
 
+        public int error {  get; set; }
+
         //public string ratio_yes_c { get; set; }
         //public string ratio_no_c { get; set; }
         //public string chat_state { get; set; }
@@ -81,6 +83,7 @@ namespace Awesome.AI.Common
             ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
             go_down = $"{(mind.down.IsNo ? "NO" : "YES")}";
+            error = mind.down.Error;
         }
 
         public void SetMech()

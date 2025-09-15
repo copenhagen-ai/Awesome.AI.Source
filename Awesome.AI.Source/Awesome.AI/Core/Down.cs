@@ -2,6 +2,7 @@
 using Awesome.AI.Core;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
+using System.Runtime.Intrinsics.Arm;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Awesome.AI.Core
@@ -50,17 +51,19 @@ namespace Awesome.AI.Awesome.AI.Core
             }
         }
 
+        public int Error { get; set; }
         public List<double> Ratio { get; set; }
-
-        MyVector2D Vector { get; set; }
+        private List<bool> Errors {  get; set; }
+        private MyVector2D Vector { get; set; }
 
         private TheMind mind;
         private Down() { }
         public Down(TheMind mind)
         {
             this.mind = mind;
-            Vector = new MyVector2D(1.0d, 0.0d, 1.0d, 0.0d);
+            Vector = new MyVector2D(0.0d, 1.0d, 1.0d, 0.0d);
             Ratio = new List<double>();
+            Errors = new List<bool>();
         }
 
         public void SetYES()
@@ -91,7 +94,7 @@ namespace Awesome.AI.Awesome.AI.Core
 
             //Discrete();
 
-            Continous();            
+            Continous();
         }
 
         public int Count(HARDDOWN dir)
@@ -106,6 +109,15 @@ namespace Awesome.AI.Awesome.AI.Core
             return count;
         }
 
+        public void SetError(bool err)
+        {
+            Errors.Add(err);
+            if(Errors.Count > 100)
+                Errors.RemoveAt(0);
+
+            Error = Errors.Count(x => x == true);
+        }        
+
         public void Discrete()
         {
             /*
@@ -118,6 +130,7 @@ namespace Awesome.AI.Awesome.AI.Core
 
             bool down1 = d_curr <= 0.0d;
             bool down2 = agent.SimulateDirection() <= 0.0d;
+            bool save = down1;
 
             if (CONST.Logic == LOGICTYPE.CLASSICAL) //this a logic error..
                 down1 = down1.TheHack(mind);
@@ -127,6 +140,8 @@ namespace Awesome.AI.Awesome.AI.Core
 
             if (CONST.Logic == LOGICTYPE.QUBIT)
                 down1 = down1.Qubit(down2, mind);
+
+            SetError(save != down1);
 
             if (down1)
                 SetYES();
@@ -140,11 +155,13 @@ namespace Awesome.AI.Awesome.AI.Core
 
             double d_curr = mind.mech_current.d_curr;
             double d_norm = mind.mech_current.d_100;
+            double d_save = mind.mech_current.d_100;
 
             bool down1 = d_curr <= 0.0d;
             bool down2 = agent.SimulateDirection() <= 0.0d;
 
             d_norm = mind.calc.Normalize(d_norm, 0.0d, 100.0d, -1.0d, 1.0d);
+            d_save = mind.calc.Normalize(d_save, 0.0d, 100.0d, -1.0d, 1.0d);
 
             if (CONST.Logic == LOGICTYPE.CLASSICAL)
                 throw new NotImplementedException("Down, Continous");
@@ -154,6 +171,8 @@ namespace Awesome.AI.Awesome.AI.Core
 
             if (CONST.Logic == LOGICTYPE.QUBIT && down1.Qubit(down2, mind))
                 d_norm = d_norm * -1.0d;
+
+            SetError(d_save != d_norm);
 
             SetXX(d_norm);
         }
