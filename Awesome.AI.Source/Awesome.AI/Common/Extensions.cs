@@ -1,6 +1,7 @@
 ﻿using Awesome.AI.Awesome.AI.Core;
 using Awesome.AI.Core;
 using Awesome.AI.Variables;
+using System.Linq.Expressions;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
