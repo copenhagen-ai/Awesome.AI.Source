@@ -1,82 +1,47 @@
-﻿using Awesome.AI.Awesome.AI.Core;
-using Awesome.AI.Common;
+﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
-    public class NoiseGenerator : IMechanics
+    public class m_NoiseGenerator : IMechanics
     {
-        public double peek_momentum { get; set; }
-        public double peek_norm { get; set; }
-        public double p_100 { get; set; }
-        public double d_100 { get; set; }
-        public double p_90 { get; set; }
-        public double d_90 { get; set; }
-        public double p_curr { get; set; }
-        public double p_prev { get; set; }
-        public double d_curr { get; set; }
-        public double d_prev { get; set; }
-        public double m_out_high_p { get; set; }
-        public double m_out_low_p { get; set; }
-        public double m_out_high_n { get; set; }
-        public double m_out_low_n { get; set; }
-        public double d_out_high { get; set; }
-        public double d_out_low { get; set; }
-        public double posx_high { get; set; }
-        public double posx_low { get; set; }
-        
+        public MechParams mp { get; set; }
+        public MechHelper mh { get; set; }
+
         private TheMind mind;
-        private NoiseGenerator() { }
-        public NoiseGenerator(TheMind mind, Params parms)
+        private m_NoiseGenerator() { }
+        public m_NoiseGenerator(TheMind mind)
         {
             this.mind = mind;
 
-            posxy = CONST.STARTXY;
+            this.mh = new MechHelper() { };
 
-            m_out_high_p = -1000.0d;
-            m_out_low_p = 1000.0d;
-            m_out_high_n = -1000.0d;
-            m_out_low_n = 1000.0d;
-            d_out_high = -1000.0d;
-            d_out_low = 1000.0d;
-            posx_high = -1000.0d;
-            posx_low = 1000.0d;
+            this.mp = new MechParams() { };
+
+            mp.dt = 0.02d;
+            mp.m1 = 500.0d;
+            mp.N = mp.m1 * CONST.GRAVITY;
+
+            mp.posxy = CONST.STARTXY;
+
+            mp.m_out_high_p = -1000.0d;
+            mp.m_out_low_p = 1000.0d;
+            mp.m_out_high_n = -1000.0d;
+            mp.m_out_low_n = 1000.0d;
+            mp.d_out_high = -1000.0d;
+            mp.d_out_low = 1000.0d;
+            mp.posx_high = -1000.0d;
+            mp.posx_low = 1000.0d;
         }
-
-        private double posxy { get; set; }
+                
         public double POS_XY
         {
             get
             {
                 throw new NotImplementedException("NoiseGenerator, POS_XY");
             }
-        }
-
-        List<double> p_avg = new List<double>();
-        List<double> d_avg = new List<double>();
-        public void Normalize()
-        {
-            p_avg ??= new List<double>();
-            p_avg.Add(p_curr);
-            if (p_avg.Count > 1)
-                p_avg.RemoveAt(0);
-
-            d_avg ??= new List<double>();
-            d_avg.Add(d_curr);
-            if (d_avg.Count > 1)
-                d_avg.RemoveAt(0);
-
-
-            double p_av = p_avg.Average();
-            double d_av = d_avg.Average();
-
-            p_100 = mind.calc.Normalize(p_av, m_out_low_n - 0.1d, m_out_high_n, 0.0d, 100.0d);
-            d_100 = mind.calc.Normalize(d_av, d_out_low - 0.1d, d_out_high, 0.0d, 100.0d);
-
-            p_90 = mind.calc.Normalize(p_av, m_out_low_n - 0.1d, m_out_high_n, 10.0d, 90.0d);
-            d_90 = mind.calc.Normalize(d_av, d_out_low - 0.1d, d_out_high, 10.0d, 90.0d);
         }
 
         public void Peek(UNIT curr)
@@ -89,23 +54,16 @@ namespace Awesome.AI.Core.Mechanics
 
             Calc(curr, true, -1);
 
-            peek_norm = mind.calc.Normalize(peek_momentum, m_out_low_p, m_out_high_p, 0.0d, 100.0d);
+            mp.peek_norm = mind.calc.Normalize(mp.peek_momentum, mp.m_out_low_p, mp.m_out_high_p, 0.0d, 100.0d);
         }
 
         public void Calc(UNIT curr, bool peek, int cycles)
         {
-            if (cycles == 1)
-                Reset();
+            double Fsta = ApplyStatic(mp);
+            double Fdyn = ApplyDynamic(mp, curr);
+            double u = mh.Friction(mind, curr.credits, -2.0d);
 
-            double deltaT = 0.02d;
-            double m = 500.0d;
-            double N = m * CONST.GRAVITY;
-
-            double Fsta = ApplyStatic();
-            double Fdyn = ApplyDynamic(curr);
-            double u = Friction(curr.credits, -2.0d);
-
-            double Ffriction = u * N;
+            double Ffriction = u * mp.N;
             double Fnet = -Fsta + Fdyn + (Ffriction * -Math.Sign(-Fsta + Fdyn));
             
             //F=m*a
@@ -114,75 +72,26 @@ namespace Awesome.AI.Core.Mechanics
             //F*dt=m*dv
             //dv=(F*dt)/m
             //double dv = (Fnet * dt) / m;
-            double deltaVel = (Fnet * deltaT) / m;
+            double dv = (Fnet * mp.dt) / mp.m1;
             
             //momentum: p = m * v
             if (peek) {
-                peek_momentum = p_prev + (m * 2) * deltaVel;            
+                mp.peek_momentum = mp.p_prev + (mp.m1 * 2) * dv;            
             } else {
-                d_prev = d_curr;
-                d_curr = (m * 2) * deltaVel;
-                p_prev = p_curr;
-                p_curr += d_curr;
-            }
-
-            if (peek_momentum <= m_out_low_p) m_out_low_p = peek_momentum;
-            if (peek_momentum > m_out_high_p) m_out_high_p = peek_momentum;
-
-            if (p_curr <= m_out_low_n) m_out_low_n = p_curr;
-            if (p_curr > m_out_high_n) m_out_high_n = p_curr;
-
-            if (d_curr <= d_out_low) d_out_low = d_curr;
-            if (d_curr > d_out_high) d_out_high = d_curr;
-        }
-
-        public void CalcPattern1(PATTERN pattern, int cycles)
-        {
-            if (mind.z_current != "z_noise")
-                return;
-
-            if (pattern != PATTERN.NONE)
-                return;
-
-            Calc(mind.unit_noise, false, cycles);
-            Normalize();
-        }
-
-        public void CalcPattern2(PATTERN pattern, int cycles)
-        {
-            throw new NotImplementedException("NoiseGenerator, CalcPattern2");
-        }
-
-        public void CalcPattern3(PATTERN pattern, int cycles)
-        {
-            throw new NotImplementedException("NoiseGenerator, CalcPattern3");
-        }
-
-        private void Reset() 
-        {
-            //could be done in other ways also
-            if (!CONST.SAMPLE200.RandomSample(mind)) 
-                return;
-
-            posxy = CONST.STARTXY;
-
-            m_out_high_p = -1000.0d;
-            m_out_low_p = 1000.0d;
-            m_out_high_n = -1000.0d;
-            m_out_low_n = 1000.0d;
-            d_out_high = -1000.0d;
-            d_out_low = 1000.0d;
-            posx_high = -1000.0d;
-            posx_low = 1000.0d;
+                mp.d_prev = mp.d_curr;
+                mp.d_curr = (mp.m1 * 2) * dv;
+                mp.p_prev = mp.p_curr;
+                mp.p_curr += mp.d_curr;
+            }            
         }
 
         /*
          * force left
          * */
-        public double ApplyStatic()
+        public double ApplyStatic(MechParams mp)
         {
             double acc = CONST.MAX / 10; //divided by 10 for aprox acc
-            double m = 500.0d;
+            double m = mp.m1;
             
             double Fapplied = m * acc;
             
@@ -195,7 +104,7 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * force right
          * */
-        public double ApplyDynamic(UNIT curr)
+        public double ApplyDynamic(MechParams mp, UNIT curr)
         {
             if (curr.IsNull())
                 throw new Exception("ApplyDynamic");
@@ -203,7 +112,7 @@ namespace Awesome.AI.Core.Mechanics
             double max = CONST.MAX;
             double val = curr.Variable;
             double acc = (max - val) / 10.0d; //divided by 10 for aprox acc
-            double m = 500.0d;
+            double m = mp.m1;
 
             if (acc <= 0.0d)
                 acc = 0.0d;// jajajaa
@@ -216,22 +125,22 @@ namespace Awesome.AI.Core.Mechanics
             return Fapplied;
         }
 
-        public double Friction(double credits, double shift)
+        public void CalcPattern(PATTERN pattern, PATTERN match, int cycles)
         {
-            /*
-             * friction coeficient
-             * should friction be calculated from position???
-             * */
+            if (mind.z_current != "z_noise")
+                return;
 
-            Calc calc = mind.calc;
+            if (pattern != match)
+                return;
 
-            double _c = 10.0d - credits;
-            double x = 5.0d - _c + shift;
-            double friction = calc.Logistic(x);
+            if (cycles == 1)
+                mh.ResetNoise(mind, mp);
 
-            return friction;
+            Calc(mind.unit_noise, false, cycles);
+
+            mh.UpdateNoise(mp);
+            mh.NormalizeNoise(mind, mp);
         }
-
 
         //NewtonForce
         //public double Variable(UNIT curr)

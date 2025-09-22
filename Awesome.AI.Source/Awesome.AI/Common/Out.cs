@@ -103,8 +103,8 @@ namespace Awesome.AI.Common
             ok = mind.ok;
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            p_curr = $"{mind.mech_current.p_curr.ToString("E3")}";
-            d_curr = $"{mind.mech_current.d_curr.ToString("E3")}";
+            p_curr = $"{mind.mech_current.mp.p_curr.ToString("E3")}";
+            d_curr = $"{mind.mech_current.mp.d_curr.ToString("E3")}";
 
             user_var = $"{mind.user_var}";
 
@@ -132,7 +132,7 @@ namespace Awesome.AI.Common
             monologue_det_relevance = mind.mono.Relevance;
 
             norm_mood = mind.mood.p_90;
-            norm_noise = mind.mech_noise.p_90;
+            norm_noise = mind.mech_noise.mp.p_90;
 
             //common_unit = mind.core.most_common_unit;
             common_hub_subject = mind?.core?.most_common_unit?.HUB?.subject ?? "";

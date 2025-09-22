@@ -1,36 +1,19 @@
 ﻿using Awesome.AI.Awesome.AI.Core;
 using Awesome.AI.Core;
+using Awesome.AI.Core.Mechanics;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Interfaces
 {
     public interface IMechanics
     {
-        double posx_high { get; set; }
-        double posx_low { get; set; }
-
-        double peek_momentum { get; set; }
-        double peek_norm { get; set; }
-        double p_100 { get; set; }
-        double d_100 { get; set; }
-        double p_90 { get; set; }
-        double d_90 { get; set; }
-        double p_curr { get; set; }
-        double p_prev { get; set; }
-        double d_curr { get; set; }
-        double d_prev { get; set; }
-
-        //FUZZYDOWN FuzzyMom { get; }
-        //Down HardMom { get; }
+        MechParams mp { get; set; }
 
         double POS_XY { get; }
 
-        //these are thought patterns
-        void CalcPattern1(PATTERN pattern, int cycles);//mood general
-        void CalcPattern2(PATTERN pattern, int cycles);//good mood
-        void CalcPattern3(PATTERN pattern, int cycles);//bad mood
+        //these are thought patterns: general, good, bad
+        void CalcPattern(PATTERN pattern, PATTERN match, int cycles);
 
-        void Peek(UNIT c);
-        void Normalize();
+        void Peek(UNIT c);        
     }
 }

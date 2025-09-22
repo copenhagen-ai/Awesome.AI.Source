@@ -64,7 +64,7 @@ namespace Awesome.AI.CoreSystems
 
             currentmood = mind.parms_current.pattern;
             
-            double res = mind.mech_current.p_90;
+            double res = mind.mech_current.mp.p_90;
             p_90 = res;
 
 

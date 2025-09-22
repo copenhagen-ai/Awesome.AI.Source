@@ -10,7 +10,7 @@ namespace Awesome.AI.Common
 
         public bool Use(bool val, TheMind mind)
         {
-            double norm = mind.mech["z_noise"].d_100;
+            double norm = mind.mech["z_noise"].mp.d_100;
             norm = mind.calc.Normalize(norm, 0.0d, 100.0d, 0.0d, 10.0d);
             double per = mind.prob.NormalPDF(norm, 5.0d, 4.0d) * 100.0d;
 

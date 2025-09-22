@@ -1,12 +1,10 @@
-﻿using Awesome.AI.Awesome.AI.Core;
-using Awesome.AI.Common;
-using Awesome.AI.Interfaces;
+﻿using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
-    public class GravityAndRocket : IMechanics
+    public class m_GravityAndRocket : IMechanics
     {
         public double peek_momentum { get; set; }
         public double peek_norm { get; set; }
@@ -26,10 +24,12 @@ namespace Awesome.AI.Core.Mechanics
         public double d_out_low { get; set; }
         public double posx_high { get; set; }
         public double posx_low { get; set; }
-        
+
+        public MechParams mp { get; set; }
+
         private TheMind mind;
-        private GravityAndRocket() { }
-        public GravityAndRocket(TheMind mind, Params parms)
+        private m_GravityAndRocket() { }
+        public m_GravityAndRocket(TheMind mind, Params parms)
         {
             this.mind = mind;
 
@@ -152,12 +152,12 @@ namespace Awesome.AI.Core.Mechanics
                 r = 0.0d;        
         }
 
-        public void CalcPattern1(PATTERN pattern, int cycles)
+        public void CalcPattern(PATTERN pattern, PATTERN match, int cycles)
         {
             if (mind.z_current != "z_mech")
                 return;
 
-            if (pattern != PATTERN.MOODGENERAL)
+            if (pattern != match)
                 return;
 
             pattern_curr = pattern;
@@ -165,31 +165,31 @@ namespace Awesome.AI.Core.Mechanics
             Normalize();
         }
 
-        public void CalcPattern2(PATTERN pattern, int cycles)
-        {
-            if (mind.z_current != "z_mech")
-                return;
+        //public void CalcPattern2(PATTERN pattern, int cycles)
+        //{
+        //    if (mind.z_current != "z_mech")
+        //        return;
 
-            if (pattern != PATTERN.MOODGOOD)
-                return;
+        //    if (pattern != PATTERN.MOODGOOD)
+        //        return;
 
-            pattern_curr = pattern;
-            Calc(pattern, cycles);
-            Normalize();
-        }
+        //    pattern_curr = pattern;
+        //    Calc(pattern, cycles);
+        //    Normalize();
+        //}
 
-        public void CalcPattern3(PATTERN pattern, int cycles)
-        {
-            if (mind.z_current != "z_mech")
-                return;
+        //public void CalcPattern3(PATTERN pattern, int cycles)
+        //{
+        //    if (mind.z_current != "z_mech")
+        //        return;
 
-            if (pattern != PATTERN.MOODBAD)
-                return;
+        //    if (pattern != PATTERN.MOODBAD)
+        //        return;
 
-            pattern_curr = pattern;
-            Calc(pattern, cycles);
-            Normalize();
-        }
+        //    pattern_curr = pattern;
+        //    Calc(pattern, cycles);
+        //    Normalize();
+        //}
 
         PATTERN pattern_curr = PATTERN.NONE;
         PATTERN pattern_prev = PATTERN.NONE;

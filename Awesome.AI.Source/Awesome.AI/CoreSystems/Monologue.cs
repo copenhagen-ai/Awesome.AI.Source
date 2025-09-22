@@ -321,7 +321,7 @@ namespace Awesome.AI.CoreSystems
 
                 mt = mind.mindtype;
                 sub = mind?.core?.most_common_unit?.HUB?.subject  ?? "";
-                idx = $"{mind.mech_current.p_100}"[..1];
+                idx = $"{mind.mech_current.mp.p_100}"[..1];
                 
                 if (sub == "")
                     return;

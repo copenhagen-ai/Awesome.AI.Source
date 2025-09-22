@@ -16,7 +16,7 @@ namespace Awesome.AI.Awesome.AI.Core
                 //bool val = Vector.xx <= 0.0d;
                 //return val ? -1.0d : 1.0d;
                 
-                double d_curr = mind.mech_current.d_curr;
+                double d_curr = mind.mech_current.mp.d_curr;
                 return d_curr <= 0.0d ? -1.0d : 1.0d;
             }
         }
@@ -126,7 +126,7 @@ namespace Awesome.AI.Awesome.AI.Core
 
             SimpleAgent agent = new SimpleAgent(mind);
 
-            double d_curr = mind.mech_current.d_curr;
+            double d_curr = mind.mech_current.mp.d_curr;
 
             bool down1 = d_curr <= 0.0d;
             bool down2 = agent.SimulateDirection() <= 0.0d;
@@ -153,9 +153,9 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             SimpleAgent agent = new SimpleAgent(mind);
 
-            double d_curr = mind.mech_current.d_curr;
-            double d_norm = mind.mech_current.d_100;
-            double d_save = mind.mech_current.d_100;
+            double d_curr = mind.mech_current.mp.d_curr;
+            double d_norm = mind.mech_current.mp.d_100;
+            double d_save = mind.mech_current.mp.d_100;
 
             bool down1 = d_curr <= 0.0d;
             bool down2 = agent.SimulateDirection() <= 0.0d;

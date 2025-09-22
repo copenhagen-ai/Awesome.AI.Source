@@ -247,7 +247,7 @@ namespace Awesome.AI.Core
 
         private void PreRun(string current, bool _pro)
         {
-            rand.SaveMomentum(current, mech_current.d_curr);
+            rand.SaveMomentum(current, mech_current.mp.d_curr);
 
             _quick.Run(unit_current);            
         }
@@ -280,10 +280,10 @@ namespace Awesome.AI.Core
             if (unit[z_current].IsIDLE())
                 return true;
 
-            mech_noise.CalcPattern1(PATTERN.NONE, cycles);
-            mech_mechanics.CalcPattern1(parms_current.pattern, cycles);//mood general
-            mech_mechanics.CalcPattern2(parms_current.pattern, cycles);//mood good
-            mech_mechanics.CalcPattern3(parms_current.pattern, cycles);//mood bad
+            mech_noise.CalcPattern(PATTERN.NONE, PATTERN.NONE, cycles);
+            mech_mechanics.CalcPattern(parms_current.pattern, PATTERN.MOODGENERAL, cycles);//mood general
+            mech_mechanics.CalcPattern(parms_current.pattern, PATTERN.MOODGOOD, cycles);//mood good
+            mech_mechanics.CalcPattern(parms_current.pattern, PATTERN.MOODBAD, cycles);//mood bad
 
             down.Update();
             //pos.Update();

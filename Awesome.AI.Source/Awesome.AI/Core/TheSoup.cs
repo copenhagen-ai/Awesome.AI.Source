@@ -117,7 +117,7 @@ namespace Awesome.AI.Core
 
             mech.Peek(x);
 
-            double norm = mech.peek_norm;
+            double norm = mech.mp.peek_norm;
             
             return norm;
         }
@@ -146,7 +146,7 @@ namespace Awesome.AI.Core
         
         private double Near()
         {
-            double norm = 100.0d - mind.mech_current.p_100;
+            double norm = 100.0d - mind.mech_current.mp.p_100;
             //double norm = 100.0d - mind.down.NormX();
 
             return norm;
