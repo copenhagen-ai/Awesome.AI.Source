@@ -28,8 +28,8 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.m_out_high_p = -1000.0d;
             mp.m_out_low_p = 1000.0d;
-            mp.m_out_high_n = -1000.0d;
-            mp.m_out_low_n = 1000.0d;
+            mp.m_out_high = -1000.0d;
+            mp.m_out_low = 1000.0d;
             mp.d_out_high = -1000.0d;
             mp.d_out_low = 1000.0d;
             mp.posx_high = -1000.0d;

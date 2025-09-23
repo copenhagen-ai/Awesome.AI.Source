@@ -29,10 +29,8 @@ namespace Awesome.AI.Core.Mechanics
             mp.eta = 0.5d;                  // Random noise amplitude for wind force
             mp.m1 = 0.35d;                  // Ball mass (kg)
 
-            mp.m_out_high_c = -1000.0d;
-            mp.m_out_low_c = 1000.0d;
-            mp.m_out_high_c = -1000.0d;
-            mp.m_out_low_c = 1000.0d;
+            mp.m_out_high = -1000.0d;
+            mp.m_out_low = 1000.0d;
             mp.d_out_high = -1000.0d;
             mp.d_out_low = 1000.0d;
             mp.posx_high = -1000.0d;

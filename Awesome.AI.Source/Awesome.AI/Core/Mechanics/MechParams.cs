@@ -17,17 +17,14 @@ namespace Awesome.AI.Core.Mechanics
         public double d_prev { get; set; }
         public double m_out_high_p { get; set; }
         public double m_out_low_p { get; set; }
-        public double m_out_high_n { get; set; }
-        public double m_out_low_n { get; set; }
+        public double m_out_high { get; set; }
+        public double m_out_low { get; set; }
         public double d_out_high { get; set; }
         public double d_out_low { get; set; }
         public double posx_high { get; set; }
         public double posx_low { get; set; }
         public double posxy { get; set; }
-
-        public double m_out_high_c { get; set; }
-        public double m_out_low_c { get; set; }
-
+        
         public double velocity = 0.0;
         public double position_x = CONST.STARTXY;
 

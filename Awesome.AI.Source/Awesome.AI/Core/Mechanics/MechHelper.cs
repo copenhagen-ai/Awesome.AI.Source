@@ -16,8 +16,8 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.m_out_high_p = -1000.0d;
             mp.m_out_low_p = 1000.0d;
-            mp.m_out_high_n = -1000.0d;
-            mp.m_out_low_n = 1000.0d;
+            mp.m_out_high = -1000.0d;
+            mp.m_out_low = 1000.0d;
             mp.d_out_high = -1000.0d;
             mp.d_out_low = 1000.0d;
             mp.posx_high = -1000.0d;
@@ -47,25 +47,25 @@ namespace Awesome.AI.Core.Mechanics
 
         public void NormalizeNoise(TheMind mind, MechParams mp)
         {
-            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low_n - 0.1d, mp.m_out_high_n, 0.0d, 100.0d);
+            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - 0.1d, mp.m_out_high, 0.0d, 100.0d);
             mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - 0.1d, mp.d_out_high, 0.0d, 100.0d);
 
-            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low_n - 0.1d, mp.m_out_high_n, 10.0d, 90.0d);
+            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - 0.1d, mp.m_out_high, 10.0d, 90.0d);
             mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - 0.1d, mp.d_out_high, 10.0d, 90.0d);
         }
 
         public void Normalize(TheMind mind, MechParams mp)
         {
-            if (mp.p_curr > mp.m_out_high_c) mp.m_out_high_c = mp.p_curr;
-            if (mp.p_curr < mp.m_out_low_c) mp.m_out_low_c = mp.p_curr;
+            if (mp.p_curr > mp.m_out_high) mp.m_out_high = mp.p_curr;
+            if (mp.p_curr < mp.m_out_low) mp.m_out_low = mp.p_curr;
 
             if (mp.d_curr > mp.d_out_high) mp.d_out_high = mp.d_curr;
             if (mp.d_curr < mp.d_out_low) mp.d_out_low = mp.d_curr;
 
-            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low_c, mp.m_out_high_c, 0.0d, 100.0d);
+            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low, mp.m_out_high, 0.0d, 100.0d);
             mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low, mp.d_out_high, 0.0d, 100.0d);
 
-            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low_c, mp.m_out_high_c, 10.0d, 90.0d);
+            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low, mp.m_out_high, 10.0d, 90.0d);
             mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low, mp.d_out_high, 10.0d, 90.0d);
         }
 
@@ -74,8 +74,8 @@ namespace Awesome.AI.Core.Mechanics
             if (mp.peek_momentum <= mp.m_out_low_p) mp.m_out_low_p = mp.peek_momentum;
             if (mp.peek_momentum > mp.m_out_high_p) mp.m_out_high_p = mp.peek_momentum;
 
-            if (mp.p_curr <= mp.m_out_low_n) mp.m_out_low_n = mp.p_curr;
-            if (mp.p_curr > mp.m_out_high_n) mp.m_out_high_n = mp.p_curr;
+            if (mp.p_curr <= mp.m_out_low) mp.m_out_low = mp.p_curr;
+            if (mp.p_curr > mp.m_out_high) mp.m_out_high = mp.p_curr;
 
             if (mp.d_curr <= mp.d_out_low) mp.d_out_low = mp.d_curr;
             if (mp.d_curr > mp.d_out_high) mp.d_out_high = mp.d_curr;
@@ -83,8 +83,8 @@ namespace Awesome.AI.Core.Mechanics
 
         public void Update(MechParams mp)
         {
-            if (mp.p_curr <= mp.m_out_low_c) mp.m_out_low_c = mp.p_curr;
-            if (mp.p_curr > mp.m_out_high_c) mp.m_out_high_c = mp.p_curr;
+            if (mp.p_curr <= mp.m_out_low) mp.m_out_low = mp.p_curr;
+            if (mp.p_curr > mp.m_out_high) mp.m_out_high = mp.p_curr;
 
             if (mp.d_curr <= mp.d_out_low) mp.d_out_low = mp.d_curr;
             if (mp.d_curr > mp.d_out_high) mp.d_out_high = mp.d_curr;

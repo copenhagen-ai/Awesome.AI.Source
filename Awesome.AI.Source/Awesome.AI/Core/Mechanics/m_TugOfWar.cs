@@ -34,8 +34,8 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.position_x = CONST.STARTXY;
 
-            mp.m_out_high_c = -1000.0d;
-            mp.m_out_low_c = 1000.0d;
+            mp.m_out_high = -1000.0d;
+            mp.m_out_low = 1000.0d;
             mp.d_out_high = -1000.0d;
             mp.d_out_low = 1000.0d;
             mp.posx_high = -1000.0d;
