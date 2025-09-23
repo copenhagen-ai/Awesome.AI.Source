@@ -125,8 +125,10 @@ namespace Awesome.AI.Core.Mechanics
             return Fapplied;
         }
 
-        public void CalcPattern(PATTERN pattern, PATTERN match, int cycles)
+        public void Calculate(PATTERN match, int cycles)
         {
+            PATTERN pattern = PATTERN.NONE;
+
             if (mind.z_current != "z_noise")
                 return;
 

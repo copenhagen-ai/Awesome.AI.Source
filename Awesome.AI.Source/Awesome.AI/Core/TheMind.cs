@@ -280,10 +280,10 @@ namespace Awesome.AI.Core
             if (unit[z_current].IsIDLE())
                 return true;
 
-            mech_noise.CalcPattern(PATTERN.NONE, PATTERN.NONE, cycles);
-            mech_mechanics.CalcPattern(parms_current.pattern, PATTERN.MOODGENERAL, cycles);//mood general
-            mech_mechanics.CalcPattern(parms_current.pattern, PATTERN.MOODGOOD, cycles);//mood good
-            mech_mechanics.CalcPattern(parms_current.pattern, PATTERN.MOODBAD, cycles);//mood bad
+            mech_noise.Calculate(PATTERN.NONE, cycles);
+            mech_mechanics.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
+            mech_mechanics.Calculate(PATTERN.MOODGOOD, cycles);//mood good
+            mech_mechanics.Calculate(PATTERN.MOODBAD, cycles);//mood bad
 
             down.Update();
             //pos.Update();

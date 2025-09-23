@@ -152,8 +152,10 @@ namespace Awesome.AI.Core.Mechanics
                 r = 0.0d;        
         }
 
-        public void CalcPattern(PATTERN pattern, PATTERN match, int cycles)
+        public void Calculate(PATTERN match, int cycles)
         {
+            PATTERN pattern = mind.parms_current.pattern;
+
             if (mind.z_current != "z_mech")
                 return;
 
