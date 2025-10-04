@@ -23,9 +23,8 @@ namespace Awesome.AI.Core.Mechanics
             mp.dt = 0.02d;
             mp.m1 = 500.0d;
             mp.N = mp.m1 * CONST.GRAVITY;
-            mp.damp_forc = 0.5d;
-            mp.damp_fric = 1.0d;
-
+            mp.damp = 0.5d;
+            
             mp.posxy = CONST.STARTXY;
 
             mp.m_out_high_p = -1000.0d;
@@ -65,7 +64,7 @@ namespace Awesome.AI.Core.Mechanics
             double Fdyn = ApplyDynamic(mp, curr);
             double u = mh.Friction(mind, curr.credits, -0.0d);
 
-            double Ffriction = mp.damp_fric * u * mp.N;
+            double Ffriction = u * mp.N;
             double Fnet = -Fsta + Fdyn + (Ffriction * -Math.Sign(-Fsta + Fdyn));
             
             //F=m*a
@@ -92,10 +91,10 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyStatic(MechParams mp)
         {
-            double acc = mp.damp_forc * (CONST.MAX * CONST.BASE_REDUCTION / 10); //divided by 10 for aprox acc
+            double acc = (CONST.MAX * CONST.BASE_REDUCTION / 10); //divided by 10 for aprox acc
             double m = mp.m1;
             
-            double Fapplied = m * acc;
+            double Fapplied = mp.damp * m * acc;
             
             if (Fapplied <= 0.0d)
                 Fapplied = 0.0d;
@@ -113,13 +112,13 @@ namespace Awesome.AI.Core.Mechanics
 
             double max = CONST.MAX;
             double val = curr.Variable;
-            double acc = mp.damp_forc * ((max - val) / 10.0d); //divided by 10 for aprox acc
+            double acc = (max - val) / 10.0d; //divided by 10 for aprox acc
             double m = mp.m1;
 
             if (acc <= 0.0d)
                 acc = 0.0d;// jajajaa
                         
-            double Fapplied = m * acc;
+            double Fapplied = mp.damp * m * acc;
             
             if (Fapplied <= 0.0d)
                 Fapplied = 0.0d;
