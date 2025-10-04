@@ -45,6 +45,8 @@ namespace Awesome.AI.Core.Mechanics
 
         //Noise
         public double N { get; set; }
+        public double damp_fric { get; set; }
+        public double damp_forc { get; set; }
 
         //Tug Of War
         public double Fmax { get; set; }            // Max oscillating force for F2

@@ -1,7 +1,4 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Interfaces;
-using Awesome.AI.Variables;
-using System.Text.RegularExpressions;
+﻿using Awesome.AI.Interfaces;
 
 namespace Awesome.AI.Core
 {
@@ -97,8 +94,11 @@ namespace Awesome.AI.Core
             if (below is null)
                 res = above;
 
-            if(res is null)
-                res = near - Map(above) < Map(below) - near ? below : above;//switcharoonie
+            if (res is null)
+                res = near - Map(below) < Map(above) - near ? below : above;//switcharoonie
+
+            //if (res is null)
+            //    res = mind.cycles % 2 == 0 ? below : above;//switcharoonie
 
             UpdateUnit(near, res);
 
