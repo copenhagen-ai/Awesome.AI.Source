@@ -17,7 +17,7 @@ namespace Awesome.AI.Core
 
     public class TheMind
     {
-        public Down down;
+        public down_Property down;
         public TheSoup matrix;
         public Memory mem;
         public Core core;
@@ -49,7 +49,7 @@ namespace Awesome.AI.Core
                 
         public MINDS mindtype;
         public MECHANICS _mech;
-        public Down goodbye { get; set; }
+        public down_Property goodbye { get; set; }
 
         public bool ok { get; set; }
         public string z_current { get; set; }
@@ -107,8 +107,8 @@ namespace Awesome.AI.Core
                 mech_mechanics = parms_mechanics.GetMechanics(_mech);
                 mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
 
-                goodbye = new Down(this);
-                down = new Down(this);
+                goodbye = new down_Property(this);
+                down = new down_Property(this);
                 matrix = new TheSoup(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);

@@ -6,13 +6,83 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Awesome.AI.Core
 {
-    public class Down
+    public class down_Property
     {
-        private double Direction
+        public class MyModifiers
+        {
+            public double Mod_A(double value, string prop)
+            {
+                double _base = -0.05;
+
+                if (prop == "opinion")//stronger damping for opinion
+                    _base *= 2.0;
+
+                if (prop == "temporality")//stronger damping for temporality
+                    _base *= 2.0;
+
+                if (prop == "abstraction")//stronger damping for abstraction
+                    _base *= 1.2;
+
+                return _base * value;
+            }
+
+            public double Mod_B(double value, string prop)
+            {
+                double _base = -0.5;
+
+                if (prop == "opinion")//stronger damping for opinion
+                    _base = 1.0;
+
+                if (prop == "temporality")//stronger damping for temporality
+                    _base *= 1.5;
+
+                if (prop == "abstraction")//stronger damping for abstraction
+                    _base *= 0.5;
+
+                return _base * value;
+            }
+
+            public double Run(double value, string prop)
+            {
+                value = Mod_A(value, prop);
+                value = Mod_B(value, prop);
+
+                return value;
+            }
+        }
+
+        public class MyMatrix
+        {
+            private Dictionary<(string, string), double> _data = new();
+
+            public double this[string key1, string key2]
+            {
+                get
+                {
+                    if (_data.TryGetValue((key1, key2), out var value))
+                        return value;
+
+                    return 1.0;
+                }
+                set => _data[(key1, key2)] = value;
+            }
+
+            public double Run(string key2)
+            {
+                double res = 0.0d;
+
+                foreach(var v in _data)
+                    res *= this[v.Key.Item1, key2];
+
+                return res;
+            }
+        }
+
+        public double Direction
         {
             get
             {
-                //bool val = Vector.xx <= 0.0d;
+                //bool val = Axis[Current] <= 0.0d;
                 //return val ? -1.0d : 1.0d;
                 
                 double d_curr = mind.mech_current.mp.d_curr;
@@ -24,7 +94,7 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             get
             {
-                bool val = Vector.xx <= 0.0d;
+                bool val = Axis[Current] <= 0.0d;
                 
                 return val;
             }
@@ -34,50 +104,83 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             get
             {
-                bool val = Vector.xx > 0.0d;
+                bool val = Axis[Current] > 0.0d;
                 
                 return val;
             }
         }
 
-        public double Norm
+        public double Norm100
         {
             get
             {
-                double xx = Vector.xx;
+                double xx = Axis[Current];
 
                 return mind.calc.Normalize(xx, -1.0d, 1.0d, 0.0d, 100.0d);
             }
         }
 
+        public double NormZero
+        {
+            get
+            {
+                double xx = Axis[Current];
+
+                return xx;
+            }
+        }
+
+        private MyModifiers Mods{ get; set; }
+        private MyMatrix Matrix { get; set; }
         public int Error { get; set; }
+        public string Current { get; set; }
         public List<double> Ratio { get; set; }
         private List<bool> Errors {  get; set; }
-        private MyVector2D Vector { get; set; }
+        private List<string> Properties { get; set; }
+        private Dictionary<string, double> Axis { get; set; }
 
         private TheMind mind;
-        private Down() { }
-        public Down(TheMind mind)
+        private down_Property() { }
+        public down_Property(TheMind mind)
         {
             this.mind = mind;
-            Vector = new MyVector2D(0.0d, 1.0d, 1.0d, 0.0d);
+
             Ratio = new List<double>();
             Errors = new List<bool>();
+
+            Properties = new List<string> { "noise", "opinion", "temporality", "abstraction" };
+            Axis = new Dictionary<string, double>();
+
+            foreach (var prop in Properties)
+                Axis.Add(prop, 1.0d);
+
+            Mods = new MyModifiers();
+
+            Matrix = new MyMatrix();
+            Matrix["noise", "temporality"] = 0.65d;
+            Matrix["opinion", "temporality"] = 0.45d;
+            Matrix["abstraction", "opinion"] = 0.35d;
         }
 
         public void SetYES()
         {
-            Vector = new MyVector2D(-1.0d, 0.0d, 1.0d, null);
+            Axis[Current] = -1.0d;
         }
 
         public void SetNO()
         {
-            Vector = new MyVector2D(1.0d, 0.0d, 1.0d, null);
+            Axis[Current] = 1.0d;
         }
 
         public void SetXX(double norm)
         {
-            Vector = new MyVector2D(norm, 0.0d, 1.0d, null);
+            if (norm > 1.0d)
+                norm = 1.0d;
+
+            if (norm < -1.0d)
+                norm = -1.0d;
+
+            Axis[Current] = norm;
         }
 
 
@@ -86,14 +189,21 @@ namespace Awesome.AI.Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            //code: before or after?
-            Ratio.Add(Direction);
-            if (Ratio.Count > CONST.LAPSES)
-                Ratio.RemoveAt(0);
+            foreach (var prop in Properties)
+            {
+                Current = prop;
 
-            //Discrete();
+                //Discrete(prop);
+                Continous(prop);
 
-            Continous();
+                if (prop != "noise")
+                    continue;
+                
+                //code: before or after?
+                Ratio.Add(Direction);
+                if (Ratio.Count > CONST.LAPSES)
+                    Ratio.RemoveAt(0);
+            }
         }
 
         public int Count(HARDDOWN dir)
@@ -117,7 +227,7 @@ namespace Awesome.AI.Awesome.AI.Core
             Error = Errors.Count(x => x == true);
         }        
 
-        public void Discrete()
+        public void Discrete(string prop)
         {
             /*
              * NO is to say no to going downwards
@@ -140,7 +250,8 @@ namespace Awesome.AI.Awesome.AI.Core
             if (CONST.Logic == LOGICTYPE.QUBIT)
                 down1 = down1.Qubit(down2, mind);
 
-            SetError(save != down1);
+            if (prop == "noise")
+                SetError(save != down1);
 
             if (down1)
                 SetYES();
@@ -148,7 +259,7 @@ namespace Awesome.AI.Awesome.AI.Core
                 SetNO();
         }
 
-        public void Continous()
+        public void Continous(string prop)
         {
             SimpleAgent agent = new SimpleAgent(mind);
 
@@ -171,7 +282,11 @@ namespace Awesome.AI.Awesome.AI.Core
             if (CONST.Logic == LOGICTYPE.QUBIT && down1.Qubit(down2, mind))
                 d_norm = d_norm * -1.0d;
 
-            SetError(d_save != d_norm);
+            if (prop == "noise")
+                SetError(d_save != d_norm);
+
+            d_norm = Mods.Run(d_norm, prop);
+            d_norm = Matrix.Run(prop);
 
             SetXX(d_norm);
         }
@@ -185,7 +300,7 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public FUZZYDOWN ToFuzzy()
         {
-            switch (Norm)
+            switch (Norm100)
             {
                 case <= 20.0d: return FUZZYDOWN.VERYYES; 
                 case <= 40.0d: return FUZZYDOWN.YES; 

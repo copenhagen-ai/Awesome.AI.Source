@@ -131,6 +131,7 @@ namespace Awesome.AI.Core
             if (answer == null)
                 throw new ArgumentNullException();
 
+            mind.goodbye.Current = "noise";
             mind.goodbye.SetNO();
             if (answer == "It does not")
                 mind.goodbye.SetYES();
