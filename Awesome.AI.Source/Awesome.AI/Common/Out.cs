@@ -80,9 +80,10 @@ namespace Awesome.AI.Common
             if (count > 1)
                 count = 0;
 
+            //mind.down.Current = "noise";
+            go_down = $"{(mind.down.Direction() > 0.0d ? "NO" : "YES")}";
             ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
-            go_down = $"{(mind.down.IsNo ? "NO" : "YES")}";
             error = mind.down.Error;
         }
 

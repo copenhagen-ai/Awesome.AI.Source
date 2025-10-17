@@ -21,8 +21,7 @@ namespace Awesome.AI.Core.Mechanics
             this.mp = new MechParams() { };
 
             mp.dt = 0.02d;
-            mp.m1 = 500.0d;
-            mp.N = mp.m1 * CONST.GRAVITY;
+            mp.acc = 5.0d;
             mp.damp = 0.5d;
             
             mp.posxy = CONST.STARTXY;
@@ -60,30 +59,38 @@ namespace Awesome.AI.Core.Mechanics
 
         public void Calc(UNIT curr, bool peek, int cycles)
         {
-            double Fsta = ApplyStatic(mp);
-            double Fdyn = ApplyDynamic(mp, curr);
-            double u = mh.Friction(mind, curr.credits, -0.0d);
+            mp.m1 = CONST.MAX * CONST.BASE_REDUCTION * 5.0d; //0 - 500
+            mp.m2 = (curr.Variable) * 5.0d; //0 - 500
+            double totalMass = mp.m1 + mp.m2;
+            mp.N = totalMass * CONST.GRAVITY;
 
-            double Ffriction = u * mp.N;
-            double Fnet = -Fsta + Fdyn + (Ffriction * -Math.Sign(-Fsta + Fdyn));
-            
+            double Fsta = ApplyStatic(mp);
+            double Fdyn = ApplyDynamic(mp);
+            double u = mh.Friction(mind, curr.credits, -0.0d, 0.01d);
+
+            double Ffriction = u * mp.N * -Math.Sign(-Fsta + Fdyn);
+            double Fnet = -Fsta + Fdyn + Ffriction;
+
             //F=m*a
             //a=dv/dt
             //F=(m*dv)/dt
             //F*dt=m*dv
             //dv=(F*dt)/m
             //double dv = (Fnet * dt) / m;
-            double dv = (Fnet * mp.dt) / mp.m1;
+            double dv = (Fnet * mp.dt) / totalMass;
             
             //momentum: p = m * v
             if (peek) {
                 mp.peek_momentum = mp.p_prev + (mp.m1 * 2) * dv;            
             } else {
                 mp.d_prev = mp.d_curr;
-                mp.d_curr = (mp.m1 * 2) * dv;
+                mp.d_curr = totalMass * dv;
                 mp.p_prev = mp.p_curr;
                 mp.p_curr += mp.d_curr;
-            }            
+            }
+
+            if (double.IsNaN(mp.d_curr))
+                throw new Exception("NAN");
         }
 
         /*
@@ -91,10 +98,9 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyStatic(MechParams mp)
         {
-            double acc = (CONST.MAX * CONST.BASE_REDUCTION / 10); //divided by 10 for aprox acc
-            double m = mp.m1;
+            double acc = mp.acc;
             
-            double Fapplied = mp.damp * m * acc;
+            double Fapplied = mp.damp * mp.m1 * acc;
             
             if (Fapplied <= 0.0d)
                 Fapplied = 0.0d;
@@ -105,20 +111,11 @@ namespace Awesome.AI.Core.Mechanics
         /*
          * force right
          * */
-        public double ApplyDynamic(MechParams mp, UNIT curr)
+        public double ApplyDynamic(MechParams mp)
         {
-            if (curr.IsNull())
-                throw new Exception("ApplyDynamic");
+            double acc = mp.acc;
 
-            double max = CONST.MAX;
-            double val = curr.Variable;
-            double acc = (max - val) / 10.0d; //divided by 10 for aprox acc
-            double m = mp.m1;
-
-            if (acc <= 0.0d)
-                acc = 0.0d;// jajajaa
-                        
-            double Fapplied = mp.damp * m * acc;
+            double Fapplied = mp.damp * mp.m2 * acc;
             
             if (Fapplied <= 0.0d)
                 Fapplied = 0.0d;

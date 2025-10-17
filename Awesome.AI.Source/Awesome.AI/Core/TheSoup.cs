@@ -130,9 +130,9 @@ namespace Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            mind.down.Current = "noise";
+            //mind.down.Current = "noise";
             //double dir = mind.down.IsYes ? -1.0d : 1.0d;
-            double dir = mind.down.Direction;
+            double dir = mind.down.Direction();
             double dist = DistAbsolute(res, near);
 
             res.Update(dir, near, dist);

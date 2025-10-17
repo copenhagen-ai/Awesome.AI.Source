@@ -53,7 +53,7 @@ namespace Awesome.AI.Core.Mechanics
 
                 double x_meter = mind.calc.Normalize(position_x, posx_low, posx_high, 0.0d, 10.0d);
 
-                if (x_meter <= CONST.RS && mind.goodbye.IsNo)
+                if (x_meter <= CONST.RS && !mind.goodbye)
                     x_meter = CONST.RS + CONST.VERY_LOW;
 
                 if (x_meter < CONST.LOWXY) x_meter = CONST.LOWXY;

@@ -9,7 +9,7 @@ namespace Awesome.AI.Core.Mechanics
         public void ResetNoise(TheMind mind, MechParams mp)
         {
             //could be done in other ways also
-            if (!CONST.SAMPLE200.RandomSample(mind))
+            if (!CONST.SAMPLE20.RandomSample(mind))
                 return;
 
             mp.posxy = CONST.STARTXY;
@@ -94,7 +94,7 @@ namespace Awesome.AI.Core.Mechanics
         {
             double x_meter = mp.position_x;
 
-            if (x_meter <= 0.1d && mind.goodbye.IsNo)
+            if (x_meter <= 0.1d && !mind.goodbye)
                 x_meter = CONST.VERY_LOW;
             
             if (x_meter < CONST.LOWXY) x_meter = CONST.LOWXY;
@@ -106,7 +106,7 @@ namespace Awesome.AI.Core.Mechanics
             return x_meter;
         }
 
-        public double Friction(TheMind mind, double credits, double shift)
+        public double Friction(TheMind mind, double credits, double shift, double damp)
         {
             /*
              * friction coeficient
@@ -119,7 +119,7 @@ namespace Awesome.AI.Core.Mechanics
             double x = 5.0d - _c + shift;
             double friction = calc.Logistic(x);
 
-            return friction;
+            return friction * damp;
         }
 
         public double GetRandomNoise(TheMind mind, double noiseAmplitude)

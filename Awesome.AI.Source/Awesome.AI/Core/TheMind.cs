@@ -33,8 +33,6 @@ namespace Awesome.AI.Core
         public MyExternal _external;
         public MyQubit quantum;
         public MyProbabilityHelper prob;
-        //public Direction dir;
-        //public Position pos;
 
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
@@ -49,34 +47,22 @@ namespace Awesome.AI.Core
                 
         public MINDS mindtype;
         public MECHANICS _mech;
-        public down_Property goodbye { get; set; }
 
+        public bool goodbye { get; set; }
         public bool ok { get; set; }
-        public string z_current { get; set; }
         public bool do_process{ get; set; }
         public bool chat_answer { get; set; }
         public bool chat_asked { get; set; }
                 
+        public string z_current { get; set; }
         public string hobby = "socializing";
         public int epochs = 1;
         public int cycles = 0; // Go TRON!
         public int cycles_all = 0;
         public double user_var = 0.0d;
 
-
-        //public int correct_thinking = 0;
-        //public int not_correct_thinking = 0;
-        //public int _near_death = 0;
-        //public int valid_units = 0;
-        //public bool theme_on = false;
-        //public string theme = "none";
-        //public string theme_old = "";
-        //public List<KeyValuePair<string, int>> themes_stat = new List<KeyValuePair<string, int>>();
-
-
         public STATE STATE { get; set; } = STATE.JUSTRUNNING;
         
-
         //these coordinates could be viewed as going a long the z-axis
         public UNIT unit_current { get { return unit[z_current]; } set { unit[z_current] = value; } }
         public UNIT unit_mechanics { get { return unit["z_mech"]; } set { unit["z_mech"] = value; } }
@@ -107,7 +93,6 @@ namespace Awesome.AI.Core
                 mech_mechanics = parms_mechanics.GetMechanics(_mech);
                 mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
 
-                goodbye = new down_Property(this);
                 down = new down_Property(this);
                 matrix = new TheSoup(this);
                 calc = new Calc(this);
@@ -132,9 +117,6 @@ namespace Awesome.AI.Core
 
                 core = new Core(this, rand1, rand2, rand3);
 
-                //dir = new Direction(this);
-                //pos = new Position(this);
-                
                 unit = new Dictionary<string, UNIT>();
                 
                 foreach (string s in zzzz)
@@ -145,11 +127,8 @@ namespace Awesome.AI.Core
                         unit[s] = mem.UNITS_ALL().Where(x => x.Root == "_macho machines1").First();
                 }
 
-
-
                 parms_mechanics.UpdateLowCut();
-                //parms["noise"].UpdateLowCut();
-
+                
                 PreRun("z_noise", true);
                 PostRun(true);
 
@@ -165,10 +144,10 @@ namespace Awesome.AI.Core
             catch (Exception _e)
             {
                 string msg = "themind - " + _e.Message + "\n";
+
                 msg += _e.StackTrace;
 
-                Debug.WriteLine(msg);
-                //XmlHelper.WriteError(msg);                
+                Debug.WriteLine(msg);                
             }
         }
         

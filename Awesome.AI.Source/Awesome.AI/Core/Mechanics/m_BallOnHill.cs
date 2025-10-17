@@ -85,7 +85,7 @@ namespace Awesome.AI.Core.Mechanics
 
         private double ApplyDynamic(MechParams mp, double t)
         {
-            if(mind.goodbye.IsYes)
+            if(mind.goodbye)
                 return 0.0d;
 
             double Fx = mp.F0 * mh.Sine(mp.pattern_curr, t, mp.omega, 0.0d, 1.0d, 0.5d, 0.5d, 0.0d, 0.5d) + mh.GetRandomNoise(mind, mp.eta); // Wind force

@@ -99,7 +99,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyDynamic(MechParams mp, double t)
         {
-            if (mind.goodbye.IsYes)
+            if (mind.goodbye)
                 return 0.0d;
 
             double Fapplied = mp.Fmax * (mh.Sine(mp.pattern_curr, t, mp.omega, 0.0d, 1.0d, 0.6d, 0.4d, 0.0d, 0.4d) + mh.GetRandomNoise(mind, mp.eta));  // Dynamic force

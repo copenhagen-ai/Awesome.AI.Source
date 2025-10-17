@@ -68,9 +68,24 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        public static bool Below(this double val)
+        public static double Zero(this double _x, TheMind mind)
         {
-            return val < 0.0d;
+            double _l = 0.0d;
+            double _h = 100.0d;
+
+            double res = mind.calc.Normalize(_x, _l, _h, -1.0d, 1.0d);
+
+            return res;
+        }
+
+        public static bool Yes(this double val)
+        {
+            return val <= 0.0d;
+        }
+
+        public static bool No(this double val)
+        {
+            return val > 0.0d;
         }
 
         public static bool Probability(this bool _b, TheMind mind)

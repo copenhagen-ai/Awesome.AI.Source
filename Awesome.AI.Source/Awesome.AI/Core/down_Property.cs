@@ -1,6 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using Awesome.AI.CoreInternals;
+using Awesome.AI.CoreSystems;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -67,35 +67,32 @@ namespace Awesome.AI.Awesome.AI.Core
                 set => _data[(key1, key2)] = value;
             }
 
-            public double Run(string key2)
+            public double Run(double val, string key2)
             {
-                double res = 0.0d;
+                double res = 1.0d;
 
                 foreach(var v in _data)
                     res *= this[v.Key.Item1, key2];
 
-                return res;
+                return res * val;
             }
         }
 
-        public double Direction
+        public double Direction(string prop = "noise")
         {
-            get
-            {
-                //bool val = Axis[Current] <= 0.0d;
-                //return val ? -1.0d : 1.0d;
+            //bool val = Axis[prop] <= 0.0d;
+            //return val ? -1.0d : 1.0d;
                 
-                double d_curr = mind.mech_current.mp.d_curr;
-                return d_curr <= 0.0d ? -1.0d : 1.0d;
-            }
+            double d_curr = mind.mech_current.mp.d_curr;
+            return d_curr <= 0.0d ? -1.0d : 1.0d;            
         }
 
         public bool IsYes
         {
             get
             {
-                bool val = Axis[Current] <= 0.0d;
-                
+                bool val = Direction() <= 0.0d;
+
                 return val;
             }
         }
@@ -104,8 +101,8 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             get
             {
-                bool val = Axis[Current] > 0.0d;
-                
+                bool val = Direction() > 0.0d;
+
                 return val;
             }
         }
@@ -200,7 +197,7 @@ namespace Awesome.AI.Awesome.AI.Core
                     continue;
                 
                 //code: before or after?
-                Ratio.Add(Direction);
+                Ratio.Add(Direction());
                 if (Ratio.Count > CONST.LAPSES)
                     Ratio.RemoveAt(0);
             }
@@ -264,14 +261,11 @@ namespace Awesome.AI.Awesome.AI.Core
             SimpleAgent agent = new SimpleAgent(mind);
 
             double d_curr = mind.mech_current.mp.d_curr;
-            double d_norm = mind.mech_current.mp.d_100;
-            double d_save = mind.mech_current.mp.d_100;
+            double d_norm = mind.mech_current.mp.d_100.Zero(mind);
+            double d_save = mind.mech_current.mp.d_100.Zero(mind);
 
             bool down1 = d_curr <= 0.0d;
             bool down2 = agent.SimulateDirection() <= 0.0d;
-
-            d_norm = mind.calc.Normalize(d_norm, 0.0d, 100.0d, -1.0d, 1.0d);
-            d_save = mind.calc.Normalize(d_save, 0.0d, 100.0d, -1.0d, 1.0d);
 
             if (CONST.Logic == LOGICTYPE.CLASSICAL)
                 throw new NotImplementedException("Down, Continous");
@@ -286,7 +280,7 @@ namespace Awesome.AI.Awesome.AI.Core
                 SetError(d_save != d_norm);
 
             d_norm = Mods.Run(d_norm, prop);
-            d_norm = Matrix.Run(prop);
+            d_norm = Matrix.Run(d_norm, prop);
 
             SetXX(d_norm);
         }

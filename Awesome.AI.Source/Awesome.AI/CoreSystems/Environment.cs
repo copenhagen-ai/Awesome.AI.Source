@@ -1,10 +1,9 @@
-﻿using Awesome.AI.Access;
-using Awesome.AI.Common;
+﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.CoreInternals
+namespace Awesome.AI.CoreSystems
 {
     class SimpleAgent
     {
@@ -200,7 +199,7 @@ namespace Awesome.AI.CoreInternals
 
                 return res;
             }
-            catch 
+            catch
             {
                 return false;
             }
