@@ -81,7 +81,7 @@ namespace Awesome.AI.Core.Mechanics
             
             //momentum: p = m * v
             if (peek) {
-                mp.peek_momentum = mp.p_prev + (mp.m1 * 2) * dv;            
+                mp.peek_momentum = mp.p_prev + totalMass * dv;            
             } else {
                 mp.d_prev = mp.d_curr;
                 mp.d_curr = totalMass * dv;
