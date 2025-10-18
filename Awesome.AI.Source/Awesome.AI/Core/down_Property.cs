@@ -111,7 +111,7 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             get
             {
-                double xx = Axis[Current];
+                double xx = Props[Current];
 
                 return mind.calc.Normalize(xx, -1.0d, 1.0d, 0.0d, 100.0d);
             }
@@ -121,7 +121,7 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             get
             {
-                double xx = Axis[Current];
+                double xx = Props[Current];
 
                 return xx;
             }
@@ -134,7 +134,7 @@ namespace Awesome.AI.Awesome.AI.Core
         public List<double> Ratio { get; set; }
         private List<bool> Errors {  get; set; }
         private List<string> Properties { get; set; }
-        private Dictionary<string, double> Axis { get; set; }
+        private Dictionary<string, double> Props { get; set; }
 
         private TheMind mind;
         private down_Property() { }
@@ -146,14 +146,14 @@ namespace Awesome.AI.Awesome.AI.Core
             Errors = new List<bool>();
 
             Properties = new List<string> { "noise", "opinion", "temporality", "abstraction" };
-            Axis = new Dictionary<string, double>();
-
-            foreach (var prop in Properties)
-                Axis.Add(prop, 1.0d);
+            Props = new Dictionary<string, double>();
 
             Mods = new MyModifiers();
-
             Matrix = new MyMatrix();
+
+            foreach (var prop in Properties)
+                Props.Add(prop, 1.0d);
+
             Matrix["noise", "temporality"] = 0.65d;
             Matrix["opinion", "temporality"] = 0.45d;
             Matrix["abstraction", "opinion"] = 0.35d;
@@ -161,15 +161,15 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public void SetYES()
         {
-            Axis[Current] = -1.0d;
+            Props[Current] = -1.0d;
         }
 
         public void SetNO()
         {
-            Axis[Current] = 1.0d;
+            Props[Current] = 1.0d;
         }
 
-        public void SetXX(double norm)
+        public void SetProps(double norm)
         {
             if (norm > 1.0d)
                 norm = 1.0d;
@@ -177,7 +177,7 @@ namespace Awesome.AI.Awesome.AI.Core
             if (norm < -1.0d)
                 norm = -1.0d;
 
-            Axis[Current] = norm;
+            Props[Current] = norm;
         }
 
 
@@ -222,7 +222,7 @@ namespace Awesome.AI.Awesome.AI.Core
                 Errors.RemoveAt(0);
 
             Error = Errors.Count(x => x == true);
-        }        
+        }
 
         public void Discrete(string prop)
         {
@@ -282,7 +282,7 @@ namespace Awesome.AI.Awesome.AI.Core
             d_norm = Mods.Run(d_norm, prop);
             d_norm = Matrix.Run(d_norm, prop);
 
-            SetXX(d_norm);
+            SetProps(d_norm);
         }
 
         public HARDDOWN ToHard()
