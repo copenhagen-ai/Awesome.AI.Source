@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreInternals
@@ -28,7 +29,7 @@ namespace Awesome.AI.CoreInternals
                 return true;
 
             //because low index -> high mass
-            UNIT _u = mind.mem.UNITS_ALL(ORDER.BYINDEX)[3];
+            UNIT _u = mind.mem.UNITS_ALL(ORDER.BYINDEX)[CONST.LOWCUT];
 
             double low_cut = _u.Index;
             double index = unit.Index;

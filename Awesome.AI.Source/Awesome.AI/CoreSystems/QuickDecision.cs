@@ -80,7 +80,7 @@ namespace Awesome.AI.CoreSystems
 
         private void Setup(int count, int period)
         {
-            if (!CONST.SAMPLE4500.RandomSample(mind))
+            if (!CONST.SAMPLEHIGH.RandomSample(mind))
                 return;
             
             Period = period;

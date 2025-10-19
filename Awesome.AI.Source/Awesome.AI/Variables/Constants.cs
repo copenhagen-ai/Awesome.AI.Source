@@ -108,7 +108,7 @@ namespace Awesome.AI.Variables
         public const double RATIO = 50d;
         public const int FIRST_RUN = 5;
         public const int RUNTIME = 3;                       //minutes
-        
+        public const int LOWCUT = 3;        
         public const int NUMBER_OF_UNITS = 10;
         public const int MAX_UNITS = 20;
 
@@ -116,7 +116,7 @@ namespace Awesome.AI.Variables
         public const int SAMPLE50 = 50;
         public const int SAMPLE100 = 100;
         public const int SAMPLE200 = 200;
-        public const int SAMPLE4500 = 1500;
+        public const int SAMPLEHIGH = 1500;
 
         public const LOGICTYPE Logic = LOGICTYPE.PROBABILITY;
         public const HACKMODE hack = HACKMODE.HACK;
