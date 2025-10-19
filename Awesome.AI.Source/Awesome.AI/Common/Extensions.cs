@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Core;
 using Awesome.AI.Variables;
+using System.Runtime.CompilerServices;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
@@ -86,6 +87,16 @@ namespace Awesome.AI.Common
         public static bool No(this double val)
         {
             return val > 0.0d;
+        }
+
+        public static double HighZero(this double val)
+        {
+            return 100.0d - val;
+        }
+
+        public static double LowZero(this double val)
+        {
+            return val;
         }
 
         public static bool Probability(this bool _b, TheMind mind)

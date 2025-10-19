@@ -50,19 +50,9 @@ namespace Awesome.AI.Core
             get
             {
                 bool high_at_zero = mind.parms_current.high_at_zero;
-
-                return high_at_zero ? HighAtZero : LowAtZero;
+                
+                return high_at_zero ? Index.HighZero() : Index.LowZero();
             }
-        }
-
-        public double LowAtZero
-        {
-            get { return Index; }
-        }
-
-        public double HighAtZero
-        {
-            get { return 100.0d - Index; }
         }
 
         public static UNIT GetHigh

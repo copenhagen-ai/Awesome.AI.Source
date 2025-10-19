@@ -21,7 +21,7 @@ namespace Awesome.AI.Core.Mechanics
             this.mp = new MechParams() { };
 
             mp.dt = 0.02d;
-            mp.acc = 5.0d;
+            mp.a_max = 5.0d;
             mp.damp = 0.5d;
             
             mp.posxy = CONST.STARTXY;
@@ -61,30 +61,31 @@ namespace Awesome.AI.Core.Mechanics
         {
             mp.m1 = CONST.MAX * CONST.BASE_REDUCTION * 5.0d; //0 - 500
             mp.m2 = (curr.Variable) * 5.0d; //0 - 500
-            double totalMass = mp.m1 + mp.m2;
-            mp.N = totalMass * CONST.GRAVITY;
+            double total_mass = mp.m1 + mp.m2;
+            mp.N = total_mass * CONST.GRAVITY;
 
-            double Fsta = ApplyStatic(mp);
-            double Fdyn = ApplyDynamic(mp);
+            double f_sta = ApplyStatic(mp);
+            double f_dyn = ApplyDynamic(mp);
             double u = mh.Friction(mind, curr.credits, -0.0d, 0.01d);
 
-            double Ffriction = u * mp.N * -Math.Sign(-Fsta + Fdyn);
-            double Fnet = -Fsta + Fdyn + Ffriction;
+            double f_friction = u * mp.N * -Math.Sign(-f_sta + f_dyn);
+            double f_net = -f_sta + f_dyn + f_friction;
 
             //F=m*a
             //a=dv/dt
             //F=(m*dv)/dt
             //F*dt=m*dv
             //dv=(F*dt)/m
-            //double dv = (Fnet * dt) / m;
-            double dv = (Fnet * mp.dt) / totalMass;
+                        
+            double a_system = f_net / total_mass;
+            double dv = a_system * mp.dt;
             
             //momentum: p = m * v
             if (peek) {
-                mp.peek_momentum = mp.p_prev + totalMass * dv;            
+                mp.peek_momentum = mp.p_prev + total_mass * dv;            
             } else {
                 mp.d_prev = mp.d_curr;
-                mp.d_curr = totalMass * dv;
+                mp.d_curr = total_mass * dv;
                 mp.p_prev = mp.p_curr;
                 mp.p_curr += mp.d_curr;
             }
@@ -98,7 +99,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyStatic(MechParams mp)
         {
-            double acc = mp.acc;
+            double acc = mp.a_max;
             
             double Fapplied = mp.damp * mp.m1 * acc;
             
@@ -113,7 +114,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyDynamic(MechParams mp)
         {
-            double acc = mp.acc;
+            double acc = mp.a_max;
 
             double Fapplied = mp.damp * mp.m2 * acc;
             

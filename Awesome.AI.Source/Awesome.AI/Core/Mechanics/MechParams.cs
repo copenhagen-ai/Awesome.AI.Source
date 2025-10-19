@@ -45,7 +45,7 @@ namespace Awesome.AI.Core.Mechanics
 
         //Noise
         public double N { get; set; }
-        public double acc {  get; set; }
+        public double a_max {  get; set; }
         public double damp { get; set; }
 
         //Tug Of War

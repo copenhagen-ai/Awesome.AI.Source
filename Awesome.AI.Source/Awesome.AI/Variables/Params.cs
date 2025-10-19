@@ -38,7 +38,7 @@ namespace Awesome.AI.Variables
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     pattern = PATTERN.MOODGENERAL;
 
-                    high_at_zero = true;                    
+                    high_at_zero = false;                    
                     //update_cred = 0.030d;
 
                     break;
