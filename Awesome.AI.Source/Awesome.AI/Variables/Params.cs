@@ -38,7 +38,7 @@ namespace Awesome.AI.Variables
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     pattern = PATTERN.MOODGENERAL;
 
-                    high_at_zero = false;                    
+                    //high_at_zero = true;                    
                     //update_cred = 0.030d;
 
                     break;
@@ -62,7 +62,7 @@ namespace Awesome.AI.Variables
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     pattern = PATTERN.MOODGENERAL;
 
-                    high_at_zero = true;
+                    //high_at_zero = true;
                     //update_cred = 0.005d;
 
                     break;
@@ -74,7 +74,7 @@ namespace Awesome.AI.Variables
                     occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
                     pattern = PATTERN.MOODGENERAL;
 
-                    high_at_zero = false;
+                    //high_at_zero = false;
                     //update_cred = 0.005d;                   
 
                     break;
@@ -84,18 +84,7 @@ namespace Awesome.AI.Variables
             return _mech;
         }
 
-        public void UpdateLowCut()
-        {
-            List<UNIT> units = mind.mem.UNITS_ALL();
-
-            units = high_at_zero ?
-                units = units.OrderBy(x => x.Index).ToList() :
-                units = units.OrderByDescending(x => x.Index).ToList();
-
-            UNIT _u = units[3];
-
-            low_cut = _u.Variable + 0.1d;
-        }
+        
 
         /*
          * VARIABLE parameters
@@ -106,8 +95,8 @@ namespace Awesome.AI.Variables
         public OCCUPASION occupasion;                                   //used with SELF and BOTH
         public PATTERN pattern;
 
-        public bool high_at_zero { get; set; }        
-        public double low_cut { get; set; }
+        //public bool high_at_zero { get; set; }        
+        //public double low_cut { get; set; }
 
         //public double update_cred { get; set; }
         //public double schedule_low { get; set; }

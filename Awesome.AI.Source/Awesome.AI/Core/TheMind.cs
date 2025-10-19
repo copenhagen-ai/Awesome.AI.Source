@@ -126,8 +126,6 @@ namespace Awesome.AI.Core
                     if (mindtype == MINDS.ROBERTA)
                         unit[s] = mem.UNITS_ALL().Where(x => x.Root == "_macho machines1").First();
                 }
-
-                parms_mechanics.UpdateLowCut();
                 
                 PreRun("z_noise", true);
                 PostRun(true);

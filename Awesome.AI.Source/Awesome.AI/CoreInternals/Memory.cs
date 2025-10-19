@@ -190,7 +190,7 @@ namespace Awesome.AI.CoreInternals
             _c = mind.cycles_all;
         }
 
-        public List<UNIT> UNITS_ALL()
+        public List<UNIT> UNITS_ALL(ORDER order = ORDER.NONE)
         {
             Reset();
 
@@ -202,7 +202,12 @@ namespace Awesome.AI.CoreInternals
 
             switch (mind.STATE)
             {
-                case STATE.JUSTRUNNING: return units_running;
+                case STATE.JUSTRUNNING:
+                    if (order == ORDER.BYINDEX)
+                        return units_running.OrderBy(x=>x.Index).ToList();
+                    if (order == ORDER.BYVARIABLE)
+                        return units_running.OrderBy(x=>x.Variable).ToList();
+                    return units_running;
                 case STATE.QUICKDECISION: return units_decision;
                 default: throw new NotImplementedException();
             }

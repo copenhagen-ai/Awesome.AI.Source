@@ -12,7 +12,7 @@ namespace Awesome.AI.CoreInternals
             this.mind = mind;
         }
 
-        public bool LowCut(UNIT _u)//aka SayNo
+        public bool LowCut(UNIT unit)//aka SayNo
         {
             /*
              * Lowcut filter?
@@ -21,16 +21,19 @@ namespace Awesome.AI.CoreInternals
             if(mind.z_current == "z_noise")
                 return true;
 
-            if (_u == null)
+            if (unit == null)
                 throw new ArgumentNullException();
 
             if (mind.STATE == STATE.QUICKDECISION)
                 return true;
 
-            double lower_border = mind.parms_current.low_cut;
-            double force = _u.Variable;
+            //because low index -> high mass
+            UNIT _u = mind.mem.UNITS_ALL(ORDER.BYINDEX)[3];
 
-            if (force < lower_border)
+            double low_cut = _u.Index;
+            double index = unit.Index;
+
+            if (index <= low_cut)
                 return true;
             return false;
         }

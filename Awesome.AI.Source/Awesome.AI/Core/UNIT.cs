@@ -44,35 +44,9 @@ namespace Awesome.AI.Core
             }
         }
 
-
         public double Variable
         {
-            get
-            {
-                bool high_at_zero = mind.parms_current.high_at_zero;
-                
-                return high_at_zero ? Index.HighZero() : Index.LowZero();
-            }
-        }
-
-        public static UNIT GetHigh
-        {
-            get { return Create(null, "GUID", CONST.MAX, "MAX", "NONE", UNITTYPE.MAX, LONGTYPE.NONE); }
-        }
-
-        public static UNIT GetLow
-        {
-            get { return Create(null, "GUID", CONST.MIN, "MIN", "NONE", UNITTYPE.MIN, LONGTYPE.NONE); }
-        }
-
-        public bool IsLowCut
-        {
-            get { return mind.filters.LowCut(this); }
-        }
-
-        public bool CreditOK
-        {
-            get { return mind.filters.Credits(this); }
+            get => Index.HighZero();
         }
 
         public bool IsValid
@@ -115,15 +89,6 @@ namespace Awesome.AI.Core
             }
         }
 
-        //public List<UNIT> REL
-        //{
-        //    get
-        //    {
-        //        List<UNIT> rel = HUB.units;
-
-        //        return rel;
-        //    }
-        //}
 
         public static UNIT Create(TheMind mind, string h_guid, double index, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
         {
@@ -266,7 +231,15 @@ namespace Awesome.AI.Core
             return true;
         }
 
+        //public List<UNIT> REL
+        //{
+        //    get
+        //    {
+        //        List<UNIT> rel = HUB.units;
 
+        //        return rel;
+        //    }
+        //}
 
         //UNIT next = null;
         //public UNIT Next
