@@ -69,7 +69,7 @@ namespace Awesome.AI.Core
         public UNIT unit_noise { get { return unit["z_noise"]; } set { unit["z_noise"] = value; } }
 
         public IMechanics mech_current { get { return mech[z_current]; } set { mech[z_current] = value; } }
-        public IMechanics mech_mechanics { get { return mech["z_mech"]; } set { mech["z_mech"] = value; } }
+        public IMechanics mech_high { get { return mech["z_mech"]; } set { mech["z_mech"] = value; } }
         public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }
 
         public Params parms_current { get { return parms[z_current]; } set { parms[z_current] = value; } }
@@ -90,7 +90,7 @@ namespace Awesome.AI.Core
                     parms[s] = new Params(this);
 
                 mech = new Dictionary<string, IMechanics>();
-                mech_mechanics = parms_mechanics.GetMechanics(_mech);
+                mech_high = parms_mechanics.GetMechanics(_mech);
                 mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
 
                 down = new down_Property(this);
@@ -258,9 +258,9 @@ namespace Awesome.AI.Core
                 return true;
 
             mech_noise.Calculate(PATTERN.NONE, cycles);
-            mech_mechanics.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
-            mech_mechanics.Calculate(PATTERN.MOODGOOD, cycles);//mood good
-            mech_mechanics.Calculate(PATTERN.MOODBAD, cycles);//mood bad
+            mech_high.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
+            mech_high.Calculate(PATTERN.MOODGOOD, cycles);//mood good
+            mech_high.Calculate(PATTERN.MOODBAD, cycles);//mood bad
 
             down.Update();
             //pos.Update();

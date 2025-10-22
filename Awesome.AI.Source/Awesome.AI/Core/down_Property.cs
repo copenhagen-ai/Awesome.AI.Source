@@ -14,6 +14,9 @@ namespace Awesome.AI.Awesome.AI.Core
             {
                 double _base = -0.05;
 
+                if (prop == "noise")//stronger damping for opinion
+                    _base = 1.0;
+
                 if (prop == "opinion")//stronger damping for opinion
                     _base *= 2.0;
 
@@ -29,6 +32,9 @@ namespace Awesome.AI.Awesome.AI.Core
             public double Mod_B(double value, string prop)
             {
                 double _base = -0.5;
+
+                if (prop == "noise")//stronger damping for opinion
+                    _base = 1.0;
 
                 if (prop == "opinion")//stronger damping for opinion
                     _base = 1.0;

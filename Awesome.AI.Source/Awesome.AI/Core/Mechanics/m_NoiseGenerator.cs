@@ -20,7 +20,6 @@ namespace Awesome.AI.Core.Mechanics
 
             this.mp = new MechParams() { };
 
-            mp.dt = 0.02d;
             mp.a_max = 5.0d;
             mp.damp = 0.5d;
             
@@ -59,6 +58,12 @@ namespace Awesome.AI.Core.Mechanics
 
         public void Calc(UNIT curr, bool peek, int cycles)
         {
+            double dt_mod = 1.0d;
+            
+            if (mind.mech_high.mp.d_100 > 0.0d)
+                dt_mod = mind.mech_high.mp.d_100 / 100.0d;
+
+            mp.dt = 0.05d * dt_mod;
             mp.m1 = CONST.MAX * CONST.BASE_REDUCTION * 5.0d; //0 - 500
             mp.m2 = (curr.Variable) * 5.0d; //0 - 500
             double total_mass = mp.m1 + mp.m2;
