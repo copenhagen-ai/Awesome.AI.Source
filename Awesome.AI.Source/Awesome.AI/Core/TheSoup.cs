@@ -26,24 +26,25 @@ namespace Awesome.AI.Core
             this.mind = mind;
         }
 
-        public UNIT NextUnit(UNIT _u)
+        public void NextUnit()
         {
             if (mind.z_current != "z_noise")
-                return _u;
+                return;
 
-            if (!_u.IsIDLE())
-            {
-                UNIT w_act = Unit();
+            UNIT _u = mind.unit_current;
 
-                if (w_act is not null)
-                    return w_act;                
-            }
-            
             /*
              * with more HUBS and UNITS added, this buffer wil be used less often
              * */
-            UNIT __u = Buffer();
-            return __u;
+            
+            UNIT res;
+
+            if (_u.IsIDLE())
+                res = Buffer();
+            else
+                res = Unit();
+
+            mind.unit_current = res;        
         }
 
         /*

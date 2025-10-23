@@ -142,7 +142,7 @@ namespace Awesome.AI.Core.Mechanics
             if (cycles == 1)
                 mh.ResetNoise(mind, mp);
 
-            Calc(mind.unit_noise, false, cycles);
+            Calc(mind.unit_current, false, cycles);
 
             mh.UpdateNoise(mp);
             mh.NormalizeNoise(mind, mp);

@@ -19,7 +19,7 @@ namespace Awesome.AI.Core
     {
         public Down down;
         public Properties props;
-        public TheSoup matrix;
+        public TheSoup soup;
         public Memory mem;
         public Core core;
         public QuickDecision _quick;
@@ -39,10 +39,8 @@ namespace Awesome.AI.Core
 
         public Dictionary<string, IMechanics> mech { get; set; }
         public Dictionary<string, Params> parms { get; set; }
-        public Dictionary<string, UNIT> unit { get; set; }
         private Dictionary<string, string> long_dec {  get; set; }
-
-        
+                
         public Stats stats = new Stats();
         public UNIT theanswer;
                 
@@ -64,17 +62,14 @@ namespace Awesome.AI.Core
 
         public STATE STATE { get; set; } = STATE.JUSTRUNNING;
         
-        //these coordinates could be viewed as going a long the z-axis
-        public UNIT unit_current { get { return unit[z_current]; } set { unit[z_current] = value; } }
-        public UNIT unit_mechanics { get { return unit["z_mech"]; } set { unit["z_mech"] = value; } }
-        public UNIT unit_noise { get { return unit["z_noise"]; } set { unit["z_noise"] = value; } }
+        public UNIT unit_current { get; set; }
 
         public IMechanics mech_current { get { return mech[z_current]; } set { mech[z_current] = value; } }
         public IMechanics mech_high { get { return mech["z_mech"]; } set { mech["z_mech"] = value; } }
         public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }
 
         public Params parms_current { get { return parms[z_current]; } set { parms[z_current] = value; } }
-        public Params parms_mechanics { get { return parms["z_mech"]; } set { parms["z_mech"] = value; } }
+        public Params parms_high { get { return parms["z_mech"]; } set { parms["z_mech"] = value; } }
         public Params parms_noise { get { return parms["z_noise"]; } set { parms["z_noise"] = value; } }
 
         public TheMind(MECHANICS m, MINDS mindtype, Dictionary<string, string> long_dec)
@@ -91,12 +86,12 @@ namespace Awesome.AI.Core
                     parms[s] = new Params(this);
 
                 mech = new Dictionary<string, IMechanics>();
-                mech_high = parms_mechanics.GetMechanics(_mech);
+                mech_high = parms_high.GetMechanics(_mech);
                 mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
 
                 down = new Down(this);
                 props = new Properties(this);
-                matrix = new TheSoup(this);
+                soup = new TheSoup(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
                 _internal = new MyInternal(this);
@@ -119,14 +114,12 @@ namespace Awesome.AI.Core
 
                 core = new Core(this, rand1, rand2, rand3);
 
-                unit = new Dictionary<string, UNIT>();
-                
                 foreach (string s in zzzz)
                 {
                     if (mindtype == MINDS.ANDREW)
-                        unit[s] = mem.UNITS_ALL().Where(x => x.Root == "_fembots1").First();
+                        unit_current = mem.UNITS_ALL().Where(x => x.Root == "_fembots1").First();
                     if (mindtype == MINDS.ROBERTA)
-                        unit[s] = mem.UNITS_ALL().Where(x => x.Root == "_macho machines1").First();
+                        unit_current = mem.UNITS_ALL().Where(x => x.Root == "_macho machines1").First();
                 }
                 
                 PreRun("z_noise", true);
@@ -203,7 +196,6 @@ namespace Awesome.AI.Core
                     if (!Core(_pro))//the basics
                         ok = false;
 
-                    TheSoup();//find new curr_unit/curr_hub
                     CorePost(_pro);
                     Systems(_pro);
                     PostRun(_pro);                    
@@ -218,8 +210,7 @@ namespace Awesome.AI.Core
                 msg += _e.StackTrace;
                 
                 Debug.WriteLine(msg);
-                //XmlHelper.WriteError(msg);
-
+                
                 ok = false;
             }
         }
@@ -256,7 +247,7 @@ namespace Awesome.AI.Core
             core.UpdateCredit();
             core.AnswerQuestion();
             
-            if (unit[z_current].IsIDLE())
+            if (unit_current.IsIDLE())
                 return true;
 
             mech_noise.Calculate(PATTERN.NONE, cycles);
@@ -276,22 +267,9 @@ namespace Awesome.AI.Core
             return true;
         }
 
-        private void TheSoup() 
-        {
-            //if (unit["noise"].IsIDLE())
-            //    unit["noise"] = matrix.NextUnit(UNIT.IDLE_UNIT(this));
-
-            //if (unit["mech"].IsIDLE())
-            //    unit["mech"] = matrix.NextUnit(UNIT.IDLE_UNIT(this));
-
-            //if (unit["noise"].IsIDLE() || unit["mech"].IsIDLE())
-            //    return;
-
-            unit_current = matrix.NextUnit(unit_current);
-        }
-
         private void CorePost(bool _pro)
         {
+            soup.NextUnit();
             core.History();
             core.Common();
             core.Stats(_pro);

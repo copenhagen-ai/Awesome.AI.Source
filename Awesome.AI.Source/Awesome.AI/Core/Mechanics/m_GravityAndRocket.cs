@@ -218,7 +218,7 @@ namespace Awesome.AI.Core.Mechanics
 
         private double GetRandomNoise()
         {
-            UNIT curr_unit = mind.unit_noise;
+            UNIT curr_unit = mind.unit_current;
 
             if (curr_unit == null)
                 throw new Exception("ApplyDynamic");

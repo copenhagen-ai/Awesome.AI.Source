@@ -124,7 +124,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public double GetRandomNoise(TheMind mind, double noiseAmplitude)
         {
-            UNIT curr_unit = mind.unit_noise;
+            UNIT curr_unit = mind.unit_current;
 
             if (curr_unit == null)
                 throw new Exception("MechHelper, GetRandomNoise");
