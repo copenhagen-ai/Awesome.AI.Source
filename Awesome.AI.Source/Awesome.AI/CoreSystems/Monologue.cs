@@ -298,6 +298,19 @@ namespace Awesome.AI.CoreSystems
                 throw;
             }
         }
+
+        private string Index(double _in)
+        {
+            _in = mind.calc.Normalize(_in, -1.0d, 1.0d, 0.0d, 100.0d);
+
+            if(_in < 10.0d)
+                return "" + 0;
+
+            string idx = $"{_in}"[..1];
+
+            return idx;
+        }
+
         public void Create(bool _pro)
         {
             MINDS mt;
@@ -321,8 +334,10 @@ namespace Awesome.AI.CoreSystems
 
                 mt = mind.mindtype;
                 sub = mind?.core?.most_common_unit?.HUB?.subject  ?? "";
-                idx = $"{mind.mech_current.mp.p_100}"[..1];
-                
+                idx = $"{Index(mind.props.Props["mood"])}";
+                //idx = $"{Index(mind.down.Props["noise"])}";
+                //idx = $"{mind.mech_current.mp.p_100}"[..1];
+
                 if (sub == "")
                     return;
 

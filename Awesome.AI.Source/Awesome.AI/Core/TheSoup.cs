@@ -150,7 +150,7 @@ namespace Awesome.AI.Core
         {
             //double norm = 100.0d - mind.mech_current.mp.p_100;
 
-            mind.down.Current = "noise";
+            //mind.down.Current = "noise";
 
             double norm = 100.0d - mind.down.Norm100;
 

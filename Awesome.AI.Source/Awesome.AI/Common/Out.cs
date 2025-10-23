@@ -39,7 +39,9 @@ namespace Awesome.AI.Common
         public string mood {  get; set; }
         public bool mood_ok { get; set; }
         public double norm_mood { get; set; }
-        public double norm_noise {  get; set; }
+        public double norm_noise { get; set; }
+        public double prop_mood { get; set; }
+        //public double down_prop_noise { get; set; }
 
         public int error {  get; set; }
 
@@ -134,6 +136,8 @@ namespace Awesome.AI.Common
 
             norm_mood = mind.mood.p_90;
             norm_noise = mind.mech_noise.mp.p_90;
+            prop_mood = mind.calc.Normalize(mind.props.Props["mood"], -1.0d, 1.0d, 0.0d, 100.0d);
+            //down_prop_noise = mind.calc.Normalize(mind.down.Props["noise"], -1.0d, 1.0d, 0.0d, 100.0d);
 
             //common_unit = mind.core.most_common_unit;
             common_hub_subject = mind?.core?.most_common_unit?.HUB?.subject ?? "";
@@ -143,7 +147,6 @@ namespace Awesome.AI.Common
                 chat_answer = $"{mind._long.Result["answer"]}";
                 mind._long.Result["answer"] = "";
             }
-
 
             if (mind._long.Result["ask"] != "")
             {

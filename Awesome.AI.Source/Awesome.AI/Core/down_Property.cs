@@ -1,321 +1,321 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Core;
-using Awesome.AI.CoreSystems;
-using Awesome.AI.Variables;
-using static Awesome.AI.Variables.Enums;
+﻿//using Awesome.AI.Common;
+//using Awesome.AI.Core;
+//using Awesome.AI.CoreSystems;
+//using Awesome.AI.Variables;
+//using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Awesome.AI.Core
-{
-    public class down_Property
-    {
-        public class MyModifiers
-        {
-            public double Mod_A(double value, string prop)
-            {
-                double _base = -0.05;
+//namespace Awesome.AI.Awesome.AI.Core
+//{
+//    public class down_Property
+//    {
+//        public class MyModifiers
+//        {
+//            public double Mod_A(double value, string prop)
+//            {
+//                double _base = -0.05;
 
-                if (prop == "noise")//stronger damping for opinion
-                    _base = 1.0;
+//                if (prop == "noise")//stronger damping for opinion
+//                    _base = 1.0;
 
-                if (prop == "opinion")//stronger damping for opinion
-                    _base *= 2.0;
+//                if (prop == "opinion")//stronger damping for opinion
+//                    _base *= 2.0;
 
-                if (prop == "temporality")//stronger damping for temporality
-                    _base *= 2.0;
+//                if (prop == "temporality")//stronger damping for temporality
+//                    _base *= 2.0;
 
-                if (prop == "abstraction")//stronger damping for abstraction
-                    _base *= 1.2;
+//                if (prop == "abstraction")//stronger damping for abstraction
+//                    _base *= 1.2;
 
-                return _base * value;
-            }
+//                return _base * value;
+//            }
 
-            public double Mod_B(double value, string prop)
-            {
-                double _base = -0.5;
+//            public double Mod_B(double value, string prop)
+//            {
+//                double _base = -0.5;
 
-                if (prop == "noise")//stronger damping for opinion
-                    _base = 1.0;
+//                if (prop == "noise")//stronger damping for opinion
+//                    _base = 1.0;
 
-                if (prop == "opinion")//stronger damping for opinion
-                    _base = 1.0;
+//                if (prop == "opinion")//stronger damping for opinion
+//                    _base = 1.0;
 
-                if (prop == "temporality")//stronger damping for temporality
-                    _base *= 1.5;
+//                if (prop == "temporality")//stronger damping for temporality
+//                    _base *= 1.5;
 
-                if (prop == "abstraction")//stronger damping for abstraction
-                    _base *= 0.5;
+//                if (prop == "abstraction")//stronger damping for abstraction
+//                    _base *= 0.5;
 
-                return _base * value;
-            }
+//                return _base * value;
+//            }
 
-            public double Run(double value, string prop)
-            {
-                value = Mod_A(value, prop);
-                value = Mod_B(value, prop);
+//            public double Run(double value, string prop)
+//            {
+//                value = Mod_A(value, prop);
+//                value = Mod_B(value, prop);
 
-                return value;
-            }
-        }
+//                return value;
+//            }
+//        }
 
-        public class MyMatrix
-        {
-            private Dictionary<(string, string), double> _data = new();
+//        public class MyMatrix
+//        {
+//            private Dictionary<(string, string), double> _data = new();
 
-            public double this[string key1, string key2]
-            {
-                get
-                {
-                    if (_data.TryGetValue((key1, key2), out var value))
-                        return value;
+//            public double this[string key1, string key2]
+//            {
+//                get
+//                {
+//                    if (_data.TryGetValue((key1, key2), out var value))
+//                        return value;
 
-                    return 1.0;
-                }
-                set => _data[(key1, key2)] = value;
-            }
+//                    return 1.0;
+//                }
+//                set => _data[(key1, key2)] = value;
+//            }
 
-            public double Run(double val, string key2)
-            {
-                double res = 1.0d;
+//            public double Run(double val, string key2)
+//            {
+//                double res = 1.0d;
 
-                foreach(var v in _data)
-                    res *= this[v.Key.Item1, key2];
+//                foreach(var v in _data)
+//                    res *= this[v.Key.Item1, key2];
 
-                return res * val;
-            }
-        }
+//                return res * val;
+//            }
+//        }
 
-        public double Direction(string prop = "noise")
-        {
-            //bool val = Axis[prop] <= 0.0d;
-            //return val ? -1.0d : 1.0d;
+//        public double Direction(string prop = "noise")
+//        {
+//            //bool val = Axis[prop] <= 0.0d;
+//            //return val ? -1.0d : 1.0d;
                 
-            double d_curr = mind.mech_current.mp.d_curr;
-            return d_curr <= 0.0d ? -1.0d : 1.0d;            
-        }
+//            double d_curr = mind.mech_current.mp.d_curr;
+//            return d_curr <= 0.0d ? -1.0d : 1.0d;            
+//        }
 
-        public bool IsYes
-        {
-            get
-            {
-                bool val = Direction() <= 0.0d;
+//        public bool IsYes
+//        {
+//            get
+//            {
+//                bool val = Direction() <= 0.0d;
 
-                return val;
-            }
-        }
+//                return val;
+//            }
+//        }
 
-        public bool IsNo
-        {
-            get
-            {
-                bool val = Direction() > 0.0d;
+//        public bool IsNo
+//        {
+//            get
+//            {
+//                bool val = Direction() > 0.0d;
 
-                return val;
-            }
-        }
+//                return val;
+//            }
+//        }
 
-        public double Norm100
-        {
-            get
-            {
-                double xx = Props[Current];
+//        public double Norm100
+//        {
+//            get
+//            {
+//                double xx = Props[Current];
 
-                return mind.calc.Normalize(xx, -1.0d, 1.0d, 0.0d, 100.0d);
-            }
-        }
+//                return mind.calc.Normalize(xx, -1.0d, 1.0d, 0.0d, 100.0d);
+//            }
+//        }
 
-        public double NormZero
-        {
-            get
-            {
-                double xx = Props[Current];
+//        public double NormZero
+//        {
+//            get
+//            {
+//                double xx = Props[Current];
 
-                return xx;
-            }
-        }
+//                return xx;
+//            }
+//        }
 
-        private MyModifiers Mods{ get; set; }
-        private MyMatrix Matrix { get; set; }
-        public int Error { get; set; }
-        public string Current { get; set; }
-        public List<double> Ratio { get; set; }
-        private List<bool> Errors {  get; set; }
-        private List<string> Properties { get; set; }
-        private Dictionary<string, double> Props { get; set; }
+//        private MyModifiers Mods{ get; set; }
+//        private MyMatrix Matrix { get; set; }
+//        public int Error { get; set; }
+//        public string Current { get; set; }
+//        public List<double> Ratio { get; set; }
+//        private List<bool> Errors {  get; set; }
+//        private List<string> Properties { get; set; }
+//        public Dictionary<string, double> Props { get; set; }
 
-        private TheMind mind;
-        private down_Property() { }
-        public down_Property(TheMind mind)
-        {
-            this.mind = mind;
+//        private TheMind mind;
+//        private down_Property() { }
+//        public down_Property(TheMind mind)
+//        {
+//            this.mind = mind;
 
-            Ratio = new List<double>();
-            Errors = new List<bool>();
+//            Ratio = new List<double>();
+//            Errors = new List<bool>();
 
-            Properties = new List<string> { "noise", "opinion", "temporality", "abstraction" };
-            Props = new Dictionary<string, double>();
+//            Properties = new List<string> { "noise", "opinion", "temporality", "abstraction" };
+//            Props = new Dictionary<string, double>();
 
-            Mods = new MyModifiers();
-            Matrix = new MyMatrix();
+//            Mods = new MyModifiers();
+//            Matrix = new MyMatrix();
 
-            foreach (var prop in Properties)
-                Props.Add(prop, 1.0d);
+//            foreach (var prop in Properties)
+//                Props.Add(prop, 1.0d);
 
-            Matrix["noise", "temporality"] = 0.65d;
-            Matrix["opinion", "temporality"] = 0.45d;
-            Matrix["abstraction", "opinion"] = 0.35d;
-        }
+//            Matrix["noise", "temporality"] = 0.65d;
+//            Matrix["opinion", "temporality"] = 0.45d;
+//            Matrix["abstraction", "opinion"] = 0.35d;
+//        }
 
-        public void SetYES()
-        {
-            Props[Current] = -1.0d;
-        }
+//        public void SetYES()
+//        {
+//            Props[Current] = -1.0d;
+//        }
 
-        public void SetNO()
-        {
-            Props[Current] = 1.0d;
-        }
+//        public void SetNO()
+//        {
+//            Props[Current] = 1.0d;
+//        }
 
-        public void SetProps(double norm)
-        {
-            if (norm > 1.0d)
-                norm = 1.0d;
+//        public void SetProps(double norm)
+//        {
+//            if (norm > 1.0d)
+//                norm = 1.0d;
 
-            if (norm < -1.0d)
-                norm = -1.0d;
+//            if (norm < -1.0d)
+//                norm = -1.0d;
 
-            Props[Current] = norm;
-        }
+//            Props[Current] = norm;
+//        }
 
 
-        public void Update()
-        {
-            if (mind.z_current != "z_noise")
-                return;
+//        public void Update()
+//        {
+//            if (mind.z_current != "z_noise")
+//                return;
 
-            foreach (var prop in Properties)
-            {
-                Current = prop;
+//            foreach (var prop in Properties)
+//            {
+//                Current = prop;
 
-                //Discrete(prop);
-                Continous(prop);
+//                //Discrete(prop);
+//                Continous(prop);
 
-                if (prop != "noise")
-                    continue;
+//                if (prop != "noise")
+//                    continue;
                 
-                //code: before or after?
-                Ratio.Add(Direction());
-                if (Ratio.Count > CONST.LAPSES)
-                    Ratio.RemoveAt(0);
-            }
-        }
+//                //code: before or after?
+//                Ratio.Add(Direction());
+//                if (Ratio.Count > CONST.LAPSES)
+//                    Ratio.RemoveAt(0);
+//            }
+//        }
 
-        public int Count(HARDDOWN dir)
-        {
-            int count = 0;
-            switch (dir)
-            {
-                case HARDDOWN.YES: count = Ratio.Where(z => z <= 0.0d).Count(); break;
-                case HARDDOWN.NO: count = Ratio.Where(z => z > 0.0d).Count(); break;
-            }
+//        public int Count(HARDDOWN dir)
+//        {
+//            int count = 0;
+//            switch (dir)
+//            {
+//                case HARDDOWN.YES: count = Ratio.Where(z => z <= 0.0d).Count(); break;
+//                case HARDDOWN.NO: count = Ratio.Where(z => z > 0.0d).Count(); break;
+//            }
 
-            return count;
-        }
+//            return count;
+//        }
 
-        public void SetError(bool err)
-        {
-            Errors.Add(err);
-            if(Errors.Count > 100)
-                Errors.RemoveAt(0);
+//        public void SetError(bool err)
+//        {
+//            Errors.Add(err);
+//            if(Errors.Count > 100)
+//                Errors.RemoveAt(0);
 
-            Error = Errors.Count(x => x == true);
-        }
+//            Error = Errors.Count(x => x == true);
+//        }
 
-        public void Discrete(string prop)
-        {
-            /*
-             * NO is to say no to going downwards
-             * */
+//        public void Discrete(string prop)
+//        {
+//            /*
+//             * NO is to say no to going downwards
+//             * */
 
-            SimpleAgent agent = new SimpleAgent(mind);
+//            SimpleAgent agent = new SimpleAgent(mind);
 
-            double d_curr = mind.mech_current.mp.d_curr;
+//            double d_curr = mind.mech_current.mp.d_curr;
 
-            bool down1 = d_curr <= 0.0d;
-            bool down2 = agent.SimulateDirection() <= 0.0d;
-            bool save = down1;
+//            bool down1 = d_curr <= 0.0d;
+//            bool down2 = agent.SimulateDirection() <= 0.0d;
+//            bool save = down1;
 
-            if (CONST.Logic == LOGICTYPE.CLASSICAL) //this a logic error..
-                down1 = down1.TheHack(mind);
+//            if (CONST.Logic == LOGICTYPE.CLASSICAL) //this a logic error..
+//                down1 = down1.TheHack(mind);
 
-            if (CONST.Logic == LOGICTYPE.PROBABILITY)
-                down1 = down1.Probability(mind);
+//            if (CONST.Logic == LOGICTYPE.PROBABILITY)
+//                down1 = down1.Probability(mind);
 
-            if (CONST.Logic == LOGICTYPE.QUBIT)
-                down1 = down1.Qubit(down2, mind);
+//            if (CONST.Logic == LOGICTYPE.QUBIT)
+//                down1 = down1.Qubit(down2, mind);
 
-            if (prop == "noise")
-                SetError(save != down1);
+//            if (prop == "noise")
+//                SetError(save != down1);
 
-            if (down1)
-                SetYES();
-            else
-                SetNO();
-        }
+//            if (down1)
+//                SetYES();
+//            else
+//                SetNO();
+//        }
 
-        public void Continous(string prop)
-        {
-            SimpleAgent agent = new SimpleAgent(mind);
+//        public void Continous(string prop)
+//        {
+//            SimpleAgent agent = new SimpleAgent(mind);
 
-            double d_curr = mind.mech_current.mp.d_curr;
-            double d_norm = mind.mech_current.mp.d_100.Zero(mind);
-            double d_save = mind.mech_current.mp.d_100.Zero(mind);
+//            double d_curr = mind.mech_current.mp.d_curr;
+//            double d_norm = mind.mech_current.mp.d_100.Zero(mind);
+//            double d_save = mind.mech_current.mp.d_100.Zero(mind);
 
-            bool down1 = d_curr <= 0.0d;
-            bool down2 = agent.SimulateDirection() <= 0.0d;
+//            bool down1 = d_curr <= 0.0d;
+//            bool down2 = agent.SimulateDirection() <= 0.0d;
 
-            if (CONST.Logic == LOGICTYPE.CLASSICAL)
-                throw new NotImplementedException("Down, Continous");
+//            if (CONST.Logic == LOGICTYPE.CLASSICAL)
+//                throw new NotImplementedException("Down, Continous");
 
-            if (CONST.Logic == LOGICTYPE.PROBABILITY && down1.Probability(mind))
-                d_norm = d_norm * -1.0d;
+//            if (CONST.Logic == LOGICTYPE.PROBABILITY && down1.Probability(mind))
+//                d_norm = d_norm * -1.0d;
 
-            if (CONST.Logic == LOGICTYPE.QUBIT && down1.Qubit(down2, mind))
-                d_norm = d_norm * -1.0d;
+//            if (CONST.Logic == LOGICTYPE.QUBIT && down1.Qubit(down2, mind))
+//                d_norm = d_norm * -1.0d;
 
-            if (prop == "noise")
-                SetError(d_save != d_norm);
+//            if (prop == "noise")
+//                SetError(d_save != d_norm);
 
-            d_norm = Mods.Run(d_norm, prop);
-            d_norm = Matrix.Run(d_norm, prop);
+//            d_norm = Mods.Run(d_norm, prop);
+//            d_norm = Matrix.Run(d_norm, prop);
 
-            SetProps(d_norm);
-        }
+//            SetProps(d_norm);
+//        }
 
-        public HARDDOWN ToHard()
-        {
-            return IsYes ? 
-                HARDDOWN.YES : 
-                HARDDOWN.NO;
-        }
+//        public HARDDOWN ToHard()
+//        {
+//            return IsYes ? 
+//                HARDDOWN.YES : 
+//                HARDDOWN.NO;
+//        }
 
-        public FUZZYDOWN ToFuzzy()
-        {
-            switch (Norm100)
-            {
-                case <= 20.0d: return FUZZYDOWN.VERYYES; 
-                case <= 40.0d: return FUZZYDOWN.YES; 
-                case <= 60.0d: return FUZZYDOWN.MAYBE; 
-                case <= 80.0d: return FUZZYDOWN.NO; 
-                case <= 100.0d: return FUZZYDOWN.VERYNO; 
-                default: throw new NotSupportedException("ToFuzzy");
-            }
-        }
+//        public FUZZYDOWN ToFuzzy()
+//        {
+//            switch (Norm100)
+//            {
+//                case <= 20.0d: return FUZZYDOWN.VERYYES; 
+//                case <= 40.0d: return FUZZYDOWN.YES; 
+//                case <= 60.0d: return FUZZYDOWN.MAYBE; 
+//                case <= 80.0d: return FUZZYDOWN.NO; 
+//                case <= 100.0d: return FUZZYDOWN.VERYNO; 
+//                default: throw new NotSupportedException("ToFuzzy");
+//            }
+//        }
 
-        public PERIODDOWN ToPeriod()
-        {
-            return Count(HARDDOWN.YES) > Count(HARDDOWN.NO) ?
-                PERIODDOWN.YES :
-                PERIODDOWN.NO;
-        }
-    }
-}
+//        public PERIODDOWN ToPeriod()
+//        {
+//            return Count(HARDDOWN.YES) > Count(HARDDOWN.NO) ?
+//                PERIODDOWN.YES :
+//                PERIODDOWN.NO;
+//        }
+//    }
+//}
