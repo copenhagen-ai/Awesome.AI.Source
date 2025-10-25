@@ -113,13 +113,13 @@ namespace Awesome.AI.Awesome.AI.Core
 
             var _norm = mind.mech_high.mp.d_100.Zero(mind);
                         
-            foreach (var type in Attributes)
+            foreach (var prop in Attributes)
             {
                 double res = 0.0d;
-                res = Mods.Run(_norm, type);
-                res = Matrix.Run(res, type);
+                res = Mods.Run(_norm, prop);
+                res = Matrix.Run(res, prop);
 
-                Props[type] = res;
+                Props[prop] = res;
             }
         }        
     }
