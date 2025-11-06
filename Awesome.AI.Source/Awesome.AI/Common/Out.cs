@@ -136,7 +136,9 @@ namespace Awesome.AI.Common
 
             norm_mood = mind.mood.p_90;
             norm_noise = mind.mech_noise.mp.p_90;
-            prop_mood = mind.calc.Normalize(mind.props.Props["mood"], -1.0d, 1.0d, 0.0d, 100.0d);
+
+            string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "mood";
+            prop_mood = mind.calc.Normalize(mind.mech_high.mp.props.PropsOut[_base], -1.0d, 1.0d, 0.0d, 100.0d);
             //down_prop_noise = mind.calc.Normalize(mind.down.Props["noise"], -1.0d, 1.0d, 0.0d, 100.0d);
 
             //common_unit = mind.core.most_common_unit;

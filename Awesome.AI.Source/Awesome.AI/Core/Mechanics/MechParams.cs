@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Variables;
+﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
@@ -30,6 +31,8 @@ namespace Awesome.AI.Core.Mechanics
 
         public PATTERN pattern_curr = PATTERN.NONE;
         public PATTERN pattern_prev = PATTERN.NONE;
+
+        public Properties props {  get; set; }
 
         //Shared
         public double dt { get; set; }              // Time step (s)

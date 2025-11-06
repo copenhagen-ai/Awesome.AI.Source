@@ -55,7 +55,7 @@ namespace Awesome.AI.Variables
 
                 //    break;
                 case MECHANICS.TUGOFWAR:
-                    _mech = new m_TugOfWar(mind);
+                    _mech = new m_TugOfWar(mind, PROPS.COMMUNICATION);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
@@ -67,7 +67,7 @@ namespace Awesome.AI.Variables
 
                     break;
                 case MECHANICS.HILL:
-                    _mech = new m_BallOnHill(mind);
+                    _mech = new m_BallOnHill(mind, PROPS.BRAINWAVE);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH

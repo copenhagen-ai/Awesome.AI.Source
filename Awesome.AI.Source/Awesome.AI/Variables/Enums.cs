@@ -23,5 +23,6 @@
         public enum FUZZYDOWN { VERYYES, YES, MAYBE, NO, VERYNO }
         public enum PERIODDOWN { YES, NO }
         public enum ORDER { NONE, BYINDEX, BYVARIABLE }
+        public enum PROPS { COMMUNICATION, BRAINWAVE }
     }
 }

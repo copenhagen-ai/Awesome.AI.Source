@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Interfaces;
+﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -11,13 +12,15 @@ namespace Awesome.AI.Core.Mechanics
 
         private TheMind mind;
         private m_BallOnHill() { }
-        public m_BallOnHill(TheMind mind)
+        public m_BallOnHill(TheMind mind, PROPS props)
         {
             this.mind = mind;
 
             this.mh = new MechHelper() { };
 
             this.mp = new MechParams() { };
+
+            this.mp.props = new Properties(mind, props);
 
             // Constants
             mp.a = 0.1d;                    // Parabola coefficient (hill steepness)

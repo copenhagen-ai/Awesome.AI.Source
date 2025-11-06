@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Interfaces;
+﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -11,13 +12,15 @@ namespace Awesome.AI.Core.Mechanics
 
         private TheMind mind;
         private m_TugOfWar() { }
-        public m_TugOfWar(TheMind mind)
+        public m_TugOfWar(TheMind mind, PROPS props)
         {
             this.mind = mind;
 
             this.mh = new MechHelper() { };
 
             this.mp = new MechParams() { };
+            
+            mp.props = new Properties(mind, props);
 
             mp.Fmax = 5000.0d;                                              // Max oscillating force for F2
             mp.omega = 2 * Math.PI * 0.5;                                   // Frequency (0.5 Hz)

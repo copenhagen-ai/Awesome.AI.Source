@@ -18,7 +18,6 @@ namespace Awesome.AI.Core
     public class TheMind
     {
         public Down down;
-        public Properties props;
         public TheSoup soup;
         public Memory mem;
         public Core core;
@@ -90,7 +89,6 @@ namespace Awesome.AI.Core
                 mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
 
                 down = new Down(this);
-                props = new Properties(this);
                 soup = new TheSoup(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
@@ -256,7 +254,7 @@ namespace Awesome.AI.Core
             mech_high.Calculate(PATTERN.MOODBAD, cycles);//mood bad
 
             down.Update();
-            props.Update();
+            mech_high.mp.props.Update();
             //pos.Update();
 
             //if (curr_hub.IsIDLE())

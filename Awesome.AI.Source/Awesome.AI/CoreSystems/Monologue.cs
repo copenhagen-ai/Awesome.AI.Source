@@ -332,9 +332,10 @@ namespace Awesome.AI.CoreSystems
                 if (mind.STATE == STATE.QUICKDECISION)
                     return;
 
+                string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "mood";
                 mt = mind.mindtype;
                 sub = mind?.core?.most_common_unit?.HUB?.subject  ?? "";
-                idx = $"{Index(mind.props.Props["mood"])}";
+                idx = $"{Index(mind.mech_high.mp.props.PropsOut[_base])}";
                 //idx = $"{Index(mind.down.Props["noise"])}";
                 //idx = $"{mind.mech_current.mp.p_100}"[..1];
 

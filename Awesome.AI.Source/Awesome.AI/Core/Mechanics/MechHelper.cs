@@ -47,26 +47,24 @@ namespace Awesome.AI.Core.Mechanics
 
         public void NormalizeNoise(TheMind mind, MechParams mp)
         {
-            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - 0.1d, mp.m_out_high, 0.0d, 100.0d);
-            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - 0.1d, mp.d_out_high, 0.0d, 100.0d);
+            double adj = mp.m_out_low == mp.m_out_high ? -0.1d : 0.0d;
 
-            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - 0.1d, mp.m_out_high, 10.0d, 90.0d);
-            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - 0.1d, mp.d_out_high, 10.0d, 90.0d);
+            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj, mp.m_out_high, 0.0d, 100.0d);
+            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj, mp.d_out_high, 0.0d, 100.0d);
+
+            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj, mp.m_out_high, 10.0d, 90.0d);
+            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj, mp.d_out_high, 10.0d, 90.0d);
         }
 
         public void Normalize(TheMind mind, MechParams mp)
         {
-            if (mp.p_curr > mp.m_out_high) mp.m_out_high = mp.p_curr;
-            if (mp.p_curr < mp.m_out_low) mp.m_out_low = mp.p_curr;
+            double adj = mp.m_out_low == mp.m_out_high ? -0.1d : 0.0d;
 
-            if (mp.d_curr > mp.d_out_high) mp.d_out_high = mp.d_curr;
-            if (mp.d_curr < mp.d_out_low) mp.d_out_low = mp.d_curr;
+            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj, mp.m_out_high, 0.0d, 100.0d);
+            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj, mp.d_out_high, 0.0d, 100.0d);
 
-            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low, mp.m_out_high, 0.0d, 100.0d);
-            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low, mp.d_out_high, 0.0d, 100.0d);
-
-            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low, mp.m_out_high, 10.0d, 90.0d);
-            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low, mp.d_out_high, 10.0d, 90.0d);
+            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj, mp.m_out_high, 10.0d, 90.0d);
+            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj, mp.d_out_high, 10.0d, 90.0d);
         }
 
         public void UpdateNoise(MechParams mp)
