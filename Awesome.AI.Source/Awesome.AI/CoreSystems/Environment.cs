@@ -239,7 +239,7 @@ namespace Awesome.AI.CoreSystems
              * */
 
             if (last.IsNull())
-                throw new Exception("MyInternal, Setup");
+                return;// throw new Exception("MyInternal, Setup");
 
             if (mindtype == MINDS.ANDREW)
             {

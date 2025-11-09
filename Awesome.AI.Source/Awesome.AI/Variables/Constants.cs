@@ -34,22 +34,17 @@ namespace Awesome.AI.Variables
          * decision values
          * */
 
-        public const string location_should_yes = "AYES";
-        public const string location_should_no = "ANO";
+        public const string location_should = "A";
+        public const string answer_should = "B";
+        public const string ask_should = "C";
 
         public const string location_what_u1 = "WHATKITCHEN";
         public const string location_what_u2 = "WHATBEDROOM";
         public const string location_what_u3 = "WHATLIVINGROOM";
 
-        public const string answer_should_yes = "BYES";
-        public const string answer_should_no = "BNO";
-
         public const string answer_what_u1 = "WHATim busy right now..";
         public const string answer_what_u2 = "WHATnot right now..";
         public const string answer_what_u3 = "WHATtalk later..";
-
-        public const string ask_should_yes = "CYES";
-        public const string ask_should_no = "CNO";
 
         public const string quick_deci_should_yes = "QYES";
         public const string quick_deci_should_no = "QNO";

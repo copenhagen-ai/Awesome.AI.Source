@@ -27,14 +27,14 @@ namespace Awesome.AI.CoreInternals
         private List<string> long_decision_should = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
-            CONST.location_should_yes,//YES
-            CONST.location_should_yes,//YES
-            CONST.location_should_yes,//YES
-            CONST.location_should_yes,//YES
-            CONST.location_should_yes,//YES
-            CONST.location_should_yes,//YES
-            CONST.location_should_yes,//YES
-            CONST.location_should_yes,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
                                     
             //Constants.should_decision_u2,//NO
         };
@@ -59,16 +59,16 @@ namespace Awesome.AI.CoreInternals
         private List<string> answer_should_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
-            CONST.answer_should_yes,//YES
-            CONST.answer_should_yes,//YES
-            CONST.answer_should_yes,//YES
-            CONST.answer_should_yes,//YES
-            CONST.answer_should_yes,//YES
-            CONST.answer_should_yes,//YES
-            CONST.answer_should_yes,//YES
-            CONST.answer_should_yes,//YES
-            CONST.answer_should_no,//NO
-            CONST.answer_should_no,//NO
+            CONST.answer_should,//YES
+            CONST.answer_should,//YES
+            CONST.answer_should,//YES
+            CONST.answer_should,//YES
+            CONST.answer_should,//YES
+            CONST.answer_should,//YES
+            CONST.answer_should,//YES
+            CONST.answer_should,//YES
+            CONST.answer_should,//NO
+            CONST.answer_should,//NO
                                     
             //Constants.should_decision_u2,//NO
         };
@@ -93,16 +93,16 @@ namespace Awesome.AI.CoreInternals
         private List<string> ask_should_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
-            CONST.ask_should_yes,//YES
-            CONST.ask_should_yes,//YES
-            CONST.ask_should_yes,//YES
-            CONST.ask_should_yes,//YES
-            CONST.ask_should_yes,//YES
-            CONST.ask_should_no,//NO
-            CONST.ask_should_no,//NO
-            CONST.ask_should_no,//NO
-            CONST.ask_should_no,//NO
-            CONST.ask_should_no,//NO
+            CONST.ask_should,//YES
+            CONST.ask_should,//YES
+            CONST.ask_should,//YES
+            CONST.ask_should,//YES
+            CONST.ask_should,//YES
+            CONST.ask_should,//NO
+            CONST.ask_should,//NO
+            CONST.ask_should,//NO
+            CONST.ask_should,//NO
+            CONST.ask_should,//NO
                                     
             //Constants.should_decision_u2,//NO
         };
