@@ -10,13 +10,18 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             public double Mod(double _base, double value, string prop, Dictionary<string, double> mods)
             {
-                foreach (var mod in mods)
+                if (prop == "base")
+                    _base = 1.0d;
+                else
                 {
-                    if (prop == "base")
-                        _base = 1.0d;
+                    foreach (var mod in mods)
+                    {
+                        if (mod.Key == "base")
+                            continue;
 
-                    else if (prop == mod.Key)
-                        _base *= mod.Value;
+                        if (mod.Key == prop)
+                            _base *= mod.Value;
+                    }
                 }
                 
                 return _base * value;
@@ -53,9 +58,9 @@ namespace Awesome.AI.Awesome.AI.Core
         //private List<string> Attributes { get; set; }
         private MyModifiers Mods{ get; set; }
         private MyMatrix Matrix { get; set; }
-        public Dictionary<string, double>[] PropsIn { get; set; }
+        public Dictionary<string, double> PropsIn { get; set; }
         public Dictionary<string, double> PropsOut { get; set; }
-        public List<double> Base {  get; set; }
+        public double Base {  get; set; }
 
         private TheMind mind;
         private Properties() { }
@@ -63,33 +68,20 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             this.mind = mind;
 
-            GetProps(props, out List<double> _base, out Dictionary<string, double>[] a, out Dictionary<(string, string), double> m);
+            GetProps(props, out double _base, out Dictionary<string, double> attr, out Dictionary<(string, string), double> mat);
             
-            int count = a.Length;
+            //int count = a.Length;
 
-            PropsIn = new Dictionary<string, double>[count];
             PropsOut = new Dictionary<string, double>();
-            Base = new List<double>();
+            PropsIn = attr;
+            Base = _base;
             Mods = new MyModifiers();
             Matrix = new MyMatrix();
-
-            foreach (var v in _base)
-                Base.Add(v);
-
-            int _c = 0;
-            foreach(var v in a)
-            {
-                PropsIn[_c] = new Dictionary<string, double>();
-                PropsOut = new Dictionary<string, double>();
-                foreach (var kv in v) {
-                    PropsIn[_c].Add(kv.Key, kv.Value);
-                    if (_c == 0)
-                        PropsOut.Add(kv.Key, 0.0d);
-                }
-                _c++;
-            }
-
-            foreach (var kv in m)
+            
+            foreach (var kv in attr) 
+                PropsOut.Add(kv.Key, 0.0d);
+                        
+            foreach (var kv in mat)
                 Matrix[kv.Key.Item1, kv.Key.Item2] = kv.Value;            
         }
 
@@ -100,34 +92,26 @@ namespace Awesome.AI.Awesome.AI.Core
 
             var _norm = mind.mech_high.mp.d_100.Zero(mind);
 
-            List<string> keys = PropsIn[0].Select(x => x.Key).ToList();
-
-            int _c = 0;
-            foreach (var props in PropsIn)
+            foreach (var kv in PropsIn)
             {
+                string prop = kv.Key;
+                double _base = Base;
                 double res = 0.0d;
-                foreach (var prop in keys)
-                {
-                    res = Mods.Mod(Base[_c], _norm, prop, props);
-                    res = Matrix.Run(res, prop);
-                    PropsOut[prop] = res;
-                }
-                _c++;
+
+                res = Mods.Mod(_base, _norm, prop, PropsIn);
+                res = Matrix.Run(res, prop);
+                PropsOut[prop] = res;                        
             }
         }
 
-        private void GetProps(PROPS props, out List<double> _base, out Dictionary<string, double>[] attr, out Dictionary<(string, string), double> m)
+        private void GetProps(PROPS props, out double _base, out Dictionary<string, double> attr, out Dictionary<(string, string), double> m)
         {
             switch (props)
             {
                 case PROPS.BRAINWAVE:
-                    _base = new List<double>() { 1.0, 1.0 };
+                    _base = 1.0d;
 
-                    Dictionary<string, double> dict1 = new Dictionary<string, double> { { "base", double.NaN }, { "attention", 2.0 }, { "readiness", 2.0 } };
-                    Dictionary<string, double> dict2 = new Dictionary<string, double> { { "base", double.NaN }, { "attention", 1.0 }, { "readiness", 1.5 } };
-                    attr = new Dictionary<string, double>[2];
-                    attr[0] = dict1;
-                    attr[1] = dict2;
+                    attr = new Dictionary<string, double> { { "base", double.NaN }, { "attention", 2.0 }, { "readiness", 1.2 } };
 
                     m = new Dictionary<(string, string), double>();
                     m.Add(("base", "readiness"), 1.0d);
@@ -135,13 +119,9 @@ namespace Awesome.AI.Awesome.AI.Core
                     break;
 
                 case PROPS.COMMUNICATION:
-                    _base = new List<double>() { 1.0, 1.0 };
+                    _base = 1.0d;
 
-                    Dictionary<string, double> dict3 = new Dictionary<string, double> { { "base", double.NaN }, { "opinion", 2.0 }, { "temporality", 2.0 }, { "abstraction", 1.2 } };
-                    Dictionary<string, double> dict4 = new Dictionary<string, double> { { "base", double.NaN }, { "opinion", 1.0 }, { "temporality", 1.5 }, { "abstraction", 0.5 } };
-                    attr = new Dictionary<string, double> [2];
-                    attr[0] = dict3;
-                    attr[1] = dict4;
+                    attr = new Dictionary<string, double> { { "base", double.NaN }, { "opinion", 2.0 }, { "temporality", 0.5 }, { "abstraction", 1.2 } };
 
                     m = new Dictionary<(string, string), double>();
                     m.Add(("mood", "temporality"), 0.65d);
