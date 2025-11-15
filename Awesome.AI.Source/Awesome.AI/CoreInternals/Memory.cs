@@ -24,9 +24,21 @@ namespace Awesome.AI.CoreInternals
          * - this way certain "memories" can be forgotten/covered up (less visited)
          * */
 
-        private List<string> long_decision_should = new List<string>()
+        private List<string> location_should_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
+            CONST.location_should,//YES
             CONST.location_should,//YES
             CONST.location_should,//YES
             CONST.location_should,//YES
@@ -39,17 +51,26 @@ namespace Awesome.AI.CoreInternals
             //Constants.should_decision_u2,//NO
         };
 
-        private List<string> long_decision_what = new List<string>()
+        private List<string> location_what_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
             CONST.location_what_u1,//KITCHEN
             CONST.location_what_u1,//KITCHEN
             CONST.location_what_u1,//KITCHEN
             CONST.location_what_u1,//KITCHEN
+            CONST.location_what_u1,//KITCHEN
+            CONST.location_what_u1,//KITCHEN
+            CONST.location_what_u1,//KITCHEN
             CONST.location_what_u2,//BEDROOM
             CONST.location_what_u2,//BEDROOM
             CONST.location_what_u2,//BEDROOM
             CONST.location_what_u2,//BEDROOM
+            CONST.location_what_u2,//BEDROOM
+            CONST.location_what_u2,//BEDROOM
+            CONST.location_what_u2,//BEDROOM
+            CONST.location_what_u3,//LIVINGROOM
+            CONST.location_what_u3,//LIVINGROOM
+            CONST.location_what_u3,//LIVINGROOM
             CONST.location_what_u3,//LIVINGROOM
             CONST.location_what_u3,//LIVINGROOM
             CONST.location_what_u3,//LIVINGROOM
@@ -136,8 +157,8 @@ namespace Awesome.AI.CoreInternals
             hubs_decision = new List<HUB>();
 
             List<string> commen = Tags(mind.mindtype);
-            List<string> long_decision_should = this.long_decision_should;
-            List<string> long_decision_what = this.long_decision_what;
+            List<string> long_decision_should = this.location_should_decision;
+            List<string> long_decision_what = this.location_what_decision;
             List<string> answer_should_decision = this.answer_should_decision;
             List<string> answer_what_decision = this.answer_what_decision;
             List<string> ask_should_decision = this.ask_should_decision;
@@ -149,19 +170,19 @@ namespace Awesome.AI.CoreInternals
 
             TONE tone;
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], long_decision_should, UNITTYPE.DECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], long_decision_should, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
             
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.HIGH;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[1], long_decision_what, UNITTYPE.DECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[1], long_decision_what, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
             
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], answer_should_decision, UNITTYPE.DECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
             
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.LOW;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[1], answer_what_decision, UNITTYPE.DECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[1], answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
             
             tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.MID;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], ask_should_decision, UNITTYPE.DECISION, LONGTYPE.ASK, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
             
             Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             foreach (var kv in dict)

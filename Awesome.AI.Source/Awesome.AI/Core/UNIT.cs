@@ -13,7 +13,7 @@ namespace Awesome.AI.Core
 
         public Ticket ticket = new Ticket("NOTICKET");
         private UNITTYPE unit_type { get; set; }
-        public LONGTYPE long_deci_type { get; set; }
+        public LONGTYPE ld_type { get; set; }
         public DateTime created { get; set; }
         public string hub_guid { get; set; }//name
         public string data { get; set; }//data
@@ -97,7 +97,7 @@ namespace Awesome.AI.Core
 
             DateTime create = DateTime.Now;
 
-            UNIT _w = new UNIT() { mind = mind, created = create, hub_guid = h_guid, Index = index, data = data, unit_type = ut, long_deci_type = lt };
+            UNIT _w = new UNIT() { mind = mind, created = create, hub_guid = h_guid, Index = index, data = data, unit_type = ut, ld_type = lt };
 
             if (ticket != "")
                 _w.ticket = new Ticket(ticket);
@@ -176,7 +176,7 @@ namespace Awesome.AI.Core
 
         public bool IsIDLE() => unit_type == UNITTYPE.IDLE;
 
-        public bool IsDECISION() => unit_type == UNITTYPE.DECISION;
+        public bool IsDECISION() => unit_type == UNITTYPE.LDECISION;
 
         public bool IsQUICKDECISION() => unit_type == UNITTYPE.QDECISION;
 

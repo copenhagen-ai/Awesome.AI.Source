@@ -26,7 +26,7 @@ namespace Awesome.AI.Core
             this.mind = mind;
         }
 
-        public void NextUnit()
+        public void CurrentUnit()
         {
             if (mind.z_current != "z_noise")
                 return;

@@ -62,6 +62,7 @@ namespace Awesome.AI.Core
         public STATE STATE { get; set; } = STATE.JUSTRUNNING;
         
         public UNIT unit_current { get; set; }
+        public UNIT unit_actual { get; set; }
 
         public IMechanics mech_current { get { return mech[z_current]; } set { mech[z_current] = value; } }
         public IMechanics mech_high { get { return mech["z_mech"]; } set { mech["z_mech"] = value; } }
@@ -267,9 +268,9 @@ namespace Awesome.AI.Core
 
         private void CorePost(bool _pro)
         {
-            soup.NextUnit();
+            soup.CurrentUnit();
             core.History();
-            core.Common();
+            core.ActualUnit(_pro);
             core.Stats(_pro);
         }
 

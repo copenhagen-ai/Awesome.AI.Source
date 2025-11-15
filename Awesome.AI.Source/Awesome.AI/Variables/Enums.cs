@@ -9,7 +9,7 @@
         public enum PATTERN { NONE, MOODGENERAL, MOODGOOD, MOODBAD }
         public enum STATE { JUSTRUNNING, QUICKDECISION }
         public enum TONE { HIGH, LOW, MID, RANDOM }
-        public enum UNITTYPE { JUSTAUNIT, DECISION, QDECISION, IDLE, MIN, MAX }
+        public enum UNITTYPE { JUSTAUNIT, LDECISION, QDECISION, IDLE, MIN, MAX }
         public enum LONGTYPE { LOCATION, ANSWER, ASK, NONE }
         public enum VALIDATION { BOTH, EXTERNAL, INTERNAL }
         public enum TAGS { ALL, EVEN }

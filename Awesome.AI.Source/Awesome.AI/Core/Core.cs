@@ -6,7 +6,6 @@ namespace Awesome.AI.Core
 {
     public class Core
     {
-        public UNIT most_common_unit { get; set; }
         private Stats stats { get; set; }
 
         private List<UNIT> history { get; set; }
@@ -31,7 +30,7 @@ namespace Awesome.AI.Core
             history.Add(mind.mem.UNITS_ALL()[rand2]);
             history.Add(mind.mem.UNITS_ALL()[rand3]);
             
-            most_common_unit = history[1];
+            mind.unit_actual = history[1];
 
             for (int i = 1; i <= 10; i++)
                 hits.Add(i * 10, 0);
@@ -189,8 +188,11 @@ namespace Awesome.AI.Core
                 history.RemoveAt(history.Count - 1);
         }
 
-        public void Common()
+        public void ActualUnit(bool _pro)
         {
+            if (!_pro)
+                return;
+
             if (mind.z_current != "z_noise")
                 return;
 
@@ -200,11 +202,13 @@ namespace Awesome.AI.Core
             //if (mind.parms.state == STATE.QUICKDECISION)
             //    return;
 
-            most_common_unit = history
+            UNIT unit = history
                 .GroupBy(x => x)
                 .OrderByDescending(x => x.Count())
                 .Select(x => x.Key)
                 .First();
+
+            mind.unit_actual = unit;
         }
 
         public void Stats(bool _pro)
@@ -215,7 +219,7 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            if (!UNIT.OK2(most_common_unit))
+            if (!UNIT.OK2(mind.unit_actual))
                 return;
 
             if (mind.STATE == STATE.QUICKDECISION)
@@ -231,7 +235,7 @@ namespace Awesome.AI.Core
 
         private void Hits()
         {
-            int idx = GetIndex(most_common_unit);
+            int idx = GetIndex(mind.unit_actual);
 
             hits[idx] += 1;
 

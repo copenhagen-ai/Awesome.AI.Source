@@ -41,15 +41,15 @@ namespace Awesome.AI.CoreSystems
             if (mind.epochs < 2)
                 return;
 
-            index.Add(mind.unit_current.Index);
+            index.Add(mind.unit_actual.Index);
 
             if (index.Count > 10)
                 index.RemoveAt(0);
 
-            if (!mind.unit_current.IsDECISION())
+            if (!mind.unit_actual.IsDECISION())
                 return;
 
-            if (mind.unit_current.long_deci_type.ToString() != type.ToUpper())
+            if (mind.unit_actual.ld_type.ToString() != type.ToUpper())
                 return;
 
             if (type == "ask" && mind.chat_asked)
@@ -59,13 +59,13 @@ namespace Awesome.AI.CoreSystems
                 return;
 
             ACTION action = GetAction();
-            UNIT current = mind.unit_current;
-            string subject = current.HUB?.subject ?? "";
+            UNIT actual = mind.unit_actual;
+            string subject = actual.HUB?.subject ?? "";
             
             if (subject == "long_decision_should" && State[type] == 0)
             {
                 //location
-                if (current.data == "A" && action == ACTION.ACTION)
+                if (actual.data == "A" && action == ACTION.ACTION)
                     SetResult(type, "", 1);
 
                 //if (current.data == "A" && action == ACTION.DECLINE)
@@ -76,18 +76,18 @@ namespace Awesome.AI.CoreSystems
 
                 
                 //answer
-                if (current.data == "B" && action == ACTION.ACTION)
+                if (actual.data == "B" && action == ACTION.ACTION)
                     SetResult(type, ":YES", 0);
 
-                if (current.data == "B" && action == ACTION.DECLINE)
+                if (actual.data == "B" && action == ACTION.DECLINE)
                     SetResult(type, "Im busy right now..", 0);
 
-                if (current.data == "B" && action == ACTION.NOACTION)
+                if (actual.data == "B" && action == ACTION.NOACTION)
                     SetResult(type, "", 0);
 
 
                 //ask
-                if (current.data == "C" && action == ACTION.ACTION)
+                if (actual.data == "C" && action == ACTION.ACTION)
                     SetResult(type, GetSubject(), 0);
             }
 
@@ -95,8 +95,11 @@ namespace Awesome.AI.CoreSystems
             {
                 string res = "";
                 
-                if (mind.down.IsNo)
-                    res = current.data.Replace("WHAT", "");
+                if (mind.down.ToPeriod() == Enums.PERIODDOWN.YES)
+                    res = actual.data.Replace("WHAT", "");
+
+                if (mind.down.ToPeriod() == Enums.PERIODDOWN.NO)
+                    ;
 
                 SetResult(type, res, 0);                
             }
