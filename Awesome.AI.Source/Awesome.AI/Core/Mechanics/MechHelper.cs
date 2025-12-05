@@ -122,16 +122,9 @@ namespace Awesome.AI.Core.Mechanics
 
         public double GetRandomNoise(TheMind mind, double noiseAmplitude)
         {
-            UNIT curr_unit = mind.unit_current;
+            double will_prop = mind.down.Will_Prop;
 
-            if (curr_unit == null)
-                throw new Exception("MechHelper, GetRandomNoise");
-
-            double _var = curr_unit.Variable;
-
-            double rand = mind.calc.Normalize(_var, 0.0d, 100.0d, -1.0d, 1.0d);
-
-            return rand * noiseAmplitude;// Random value in range [-amplitude, amplitude]
+            return will_prop * noiseAmplitude;// Random value in range [-amplitude, amplitude]
         }
 
         public double Sine(PATTERN pattern, double t, double omega, double gen1, double gen2, double good1, double good2, double bad1, double bad2)

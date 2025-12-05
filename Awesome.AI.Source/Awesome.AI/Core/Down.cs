@@ -8,52 +8,24 @@ namespace Awesome.AI.Awesome.AI.Core
 {
     public class Down
     {
-        public double Direction(string prop = "noise")
-        {
-            //bool val = Axis[prop] <= 0.0d;
-            //return val ? -1.0d : 1.0d;
-
-            double d_curr = mind.mech_current.mp.d_curr;
-            return d_curr <= 0.0d ? -1.0d : 1.0d;
-        }
-
-        public bool IsYes
+        public double Dir
         {
             get
             {
-                bool val = Direction() <= 0.0d;
+                //bool val = Axis[prop] <= 0.0d;
+                //return val ? -1.0d : 1.0d;
 
-                return val;
+                double d_curr = mind.mech_current.mp.d_curr;
+                return d_curr <= 0.0d ? -1.0d : 1.0d;
             }
         }
 
-        public bool IsNo
-        {
-            get
-            {
-                bool val = Direction() > 0.0d;
-
-                return val;
-            }
-        }
-
-        public double Norm100
+        public double Norm
         {
             get
             {
                 double xx = Will_Prop;
-
-                return mind.calc.Normalize(xx, -1.0d, 1.0d, 0.0d, 100.0d);
-            }
-        }
-
-        public double NormZero
-        {
-            get
-            {
-                double xx = Will_Prop;
-
-                return xx;
+                return mind.calc.Normalize(xx, -1.0d, 1.0d, 0.0d, 100.0d);            
             }
         }
 
@@ -74,38 +46,15 @@ namespace Awesome.AI.Awesome.AI.Core
             Will_Prop = 1.0d;
         }
 
-        public void SetYES()
-        {
-            Will_Prop = -1.0d;
-        }
-
-        public void SetNO()
-        {
-            Will_Prop = 1.0d;
-        }
-
-        public void SetProp(double norm)
-        {
-            if (norm > 1.0d)
-                norm = 1.0d;
-
-            if (norm < -1.0d)
-                norm = -1.0d;
-
-            Will_Prop = norm;
-        }
-
-
         public void Update()
         {
             if (mind.z_current != "z_noise")
                 return;
 
-            //Discrete();
             Continous();
 
             //code: before or after?
-            Ratio.Add(Direction());
+            Ratio.Add(Dir);
             if (Ratio.Count > CONST.LAPSES)
                 Ratio.RemoveAt(0);            
         }
@@ -131,56 +80,35 @@ namespace Awesome.AI.Awesome.AI.Core
             Error = Errors.Count(x => x == true);
         }
 
-        public void Discrete()
+        public void SetProp(double norm)
         {
-            /*
-             * NO is to say no to going downwards
-             * */
+            if (norm > 1.0d)
+                norm = 1.0d;
 
-            SimpleAgent agent = new SimpleAgent(mind);
+            if (norm < -1.0d)
+                norm = -1.0d;
 
-            double d_curr = mind.mech_current.mp.d_curr;
-
-            bool down1 = d_curr <= 0.0d;
-            bool down2 = agent.SimulateDirection() <= 0.0d;
-            bool save = down1;
-
-            if (CONST.Logic == LOGICTYPE.CLASSICAL) //this a logic error..
-                down1 = down1.TheHack(mind);
-
-            if (CONST.Logic == LOGICTYPE.PROBABILITY)
-                down1 = down1.Probability(mind);
-
-            if (CONST.Logic == LOGICTYPE.QUBIT)
-                down1 = down1.Qubit(down2, mind);
-
-            SetError(save != down1);
-
-            if (down1)
-                SetYES();
-            else
-                SetNO();
+            Will_Prop = norm;
         }
 
         public void Continous()
         {
             SimpleAgent agent = new SimpleAgent(mind);
 
-            double d_curr = mind.mech_current.mp.d_curr;
             double d_norm = mind.mech_current.mp.d_100.Zero(mind);
             double d_save = mind.mech_current.mp.d_100.Zero(mind);
 
-            bool down1 = d_curr <= 0.0d;
+            bool down1 = Dir <= 0;
             bool down2 = agent.SimulateDirection() <= 0.0d;
 
             if (CONST.Logic == LOGICTYPE.CLASSICAL)
                 throw new NotImplementedException("Down, Continous");
 
             if (CONST.Logic == LOGICTYPE.PROBABILITY && down1.Probability(mind))
-                d_norm = d_norm * -1.0d;
+                d_norm *= -1.0d;
 
             if (CONST.Logic == LOGICTYPE.QUBIT && down1.Qubit(down2, mind))
-                d_norm = d_norm * -1.0d;
+                d_norm *= -1.0d;
 
             SetError(d_save != d_norm);
 
@@ -189,14 +117,14 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public HARDDOWN ToHard()
         {
-            return IsYes ?
+            return Dir <= 0.0d ?
                 HARDDOWN.YES :
                 HARDDOWN.NO;
         }
 
         public FUZZYDOWN ToFuzzy()
         {
-            switch (Norm100)
+            switch (Norm)
             {
                 case <= 20.0d: return FUZZYDOWN.VERYYES;
                 case <= 40.0d: return FUZZYDOWN.YES;

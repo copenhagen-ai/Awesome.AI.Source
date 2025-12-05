@@ -133,7 +133,7 @@ namespace Awesome.AI.Core
 
             //mind.down.Current = "noise";
             //double dir = mind.down.IsYes ? -1.0d : 1.0d;
-            double dir = mind.down.Direction();
+            double dir = mind.down.Dir;
             double dist = DistAbsolute(res, near);
 
             res.Update(dir, near, dist);
@@ -153,7 +153,7 @@ namespace Awesome.AI.Core
 
             //mind.down.Current = "noise";
 
-            double norm = 100.0d - mind.down.Norm100;
+            double norm = 100.0d - mind.down.Norm;
 
             return norm;
         }
