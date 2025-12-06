@@ -51,6 +51,7 @@ namespace Awesome.AI.Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
+            //Discrete();
             Continous();
 
             //code: before or after?
@@ -89,6 +90,48 @@ namespace Awesome.AI.Awesome.AI.Core
                 norm = -1.0d;
 
             Will_Prop = norm;
+        }
+
+        public void SetYES()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetNO()
+        {
+            throw new NotImplementedException();    
+        }
+
+        [Obsolete]
+        public void Discrete()
+        {
+            /*
+             * NO is to say no to going downwards
+             * */
+
+            SimpleAgent agent = new SimpleAgent(mind);
+
+            double d_curr = mind.mech_current.mp.d_curr;
+
+            bool down1 = d_curr <= 0.0d;
+            bool down2 = agent.SimulateDirection() <= 0.0d;
+            bool save = down1;
+
+            if (CONST.Logic == LOGICTYPE.CLASSICAL) //this a logic error..
+                down1 = down1.TheHack(mind);
+
+            if (CONST.Logic == LOGICTYPE.PROBABILITY)
+                down1 = down1.Probability(mind);
+
+            if (CONST.Logic == LOGICTYPE.QUBIT)
+                down1 = down1.Qubit(down2, mind);
+
+            SetError(save != down1);
+
+            if (down1)
+                SetYES();
+            else
+                SetNO();
         }
 
         public void Continous()
