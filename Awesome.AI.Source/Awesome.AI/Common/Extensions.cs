@@ -98,7 +98,7 @@ namespace Awesome.AI.Common
             return val;
         }
 
-        [Obsolete("Legazy Method", false)]
+        [Obsolete("Legacy Method", false)]
         public static bool TheHack(this bool _b, TheMind mind)
         {
             /*
