@@ -11,6 +11,8 @@ namespace Awesome.AI.CoreSystems
          * family, friends and just persons to interact with
          * */
 
+        private bool Property {  get; set; }
+
         private TheMind mind;
         private SimpleAgent() { }
         public SimpleAgent(TheMind mind)
@@ -38,6 +40,11 @@ namespace Awesome.AI.CoreSystems
             bool down = dir <= 0.0d;
 
             return down;
+        }
+
+        public void SetProperty(bool _b)
+        {
+            Property = _b;
         }
     }
 

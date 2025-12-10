@@ -31,7 +31,7 @@ namespace Awesome.AI.Core
         public Out _out;
         public MyInternal _internal;
         public MyExternal _external;
-        public MyQubit quantum;
+        public QUsage quantum;
         public MyProbabilityHelper prob;
 
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
@@ -101,7 +101,7 @@ namespace Awesome.AI.Core
                 _quick = new QuickDecision(this);
                 mood = new MoodGenerator(this);
                 mono = new Monologue(this);
-                quantum = new MyQubit();
+                quantum = new QUsage(this);
                 prob = new MyProbabilityHelper();
                 mem = new Memory(this);
 

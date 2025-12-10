@@ -98,16 +98,6 @@ namespace Awesome.AI.Common
             return val;
         }
 
-        public static bool Probability(this bool _b, TheMind mind)
-        {
-            return mind.prob.Use(_b, mind);
-        }
-
-        public static bool Qubit(this bool _b1, bool _b2, TheMind mind)
-        {
-            return mind.quantum.usage.DoQuantumXOR(_b1, _b2);
-        }
-
         [Obsolete("Legazy Method", false)]
         public static bool TheHack(this bool _b, TheMind mind)
         {

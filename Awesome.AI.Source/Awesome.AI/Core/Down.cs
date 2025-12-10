@@ -109,26 +109,20 @@ namespace Awesome.AI.Awesome.AI.Core
              * NO is to say no to going downwards
              * */
 
-            SimpleAgent agent = new SimpleAgent(mind);
-
             double d_curr = mind.mech_current.mp.d_curr;
 
-            bool down1 = d_curr <= 0.0d;
-            bool down2 = agent.SimulateDirection() <= 0.0d;
-            bool save = down1;
-
-            if (CONST.Logic == LOGICTYPE.CLASSICAL) //this a logic error..
-                down1 = down1.TheHack(mind);
+            bool down = d_curr <= 0.0d;
+            bool save = down;
 
             if (CONST.Logic == LOGICTYPE.PROBABILITY)
-                down1 = down1.Probability(mind);
+                down = Probability(down, mind);
 
             if (CONST.Logic == LOGICTYPE.QUBIT)
-                down1 = down1.Qubit(down2, mind);
+                down = Qubit(mind);
 
-            SetError(save != down1);
+            SetError(save != down);
 
-            if (down1)
+            if (down)
                 SetYES();
             else
                 SetNO();
@@ -136,26 +130,41 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public void Continous()
         {
-            SimpleAgent agent = new SimpleAgent(mind);
 
             double d_norm = mind.mech_current.mp.d_100.Zero(mind);
             double d_save = mind.mech_current.mp.d_100.Zero(mind);
 
             bool down1 = Dir <= 0;
-            bool down2 = agent.SimulateDirection() <= 0.0d;
 
-            if (CONST.Logic == LOGICTYPE.CLASSICAL)
-                throw new NotImplementedException("Down, Continous");
-
-            if (CONST.Logic == LOGICTYPE.PROBABILITY && down1.Probability(mind))
+            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down1, mind))
                 d_norm *= -1.0d;
 
-            if (CONST.Logic == LOGICTYPE.QUBIT && down1.Qubit(down2, mind))
+            if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind))
                 d_norm *= -1.0d;
 
             SetError(d_save != d_norm);
 
             SetProp(d_norm);
+        }
+
+        public static bool Probability(bool _b, TheMind mind)
+        {
+            return mind.prob.Use(_b, mind);
+        }
+
+        public static bool Qubit(TheMind mind)
+        {
+            /*
+             * proof of concept
+             * */
+
+            int measure = mind.quantum.Run();
+
+            SimpleAgent agent = new SimpleAgent(mind);
+
+            agent.SetProperty(measure > 0);
+
+            return measure > 0;
         }
 
         public HARDDOWN ToHard()
