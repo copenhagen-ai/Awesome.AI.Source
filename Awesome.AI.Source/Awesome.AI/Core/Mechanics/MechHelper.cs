@@ -122,7 +122,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public double GetRandomNoise(TheMind mind, double noiseAmplitude)
         {
-            double will_prop = mind.down.Will_Prop;
+            double will_prop = mind.down.WillProp;
 
             return will_prop * noiseAmplitude;// Random value in range [-amplitude, amplitude]
         }

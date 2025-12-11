@@ -147,15 +147,28 @@ namespace Awesome.AI.Core
             return res;
         }
         
+        private double prev_dir { get; set; }
         private double Near()
         {
             //double norm = 100.0d - mind.mech_current.mp.p_100;
 
             //mind.down.Current = "noise";
 
-            double norm = 100.0d - mind.down.Norm;
+            //double norm = 100.0d - mind.down.WillNorm;
 
-            return norm;
+            double dir = mind.down.Dir;
+            double mom = mind.mech_current.mp.p_100;
+            double res = 0.0d;
+            bool same = dir == prev_dir;
+
+            if (same)
+                res = mom;
+            if (!same)
+                res = 100.0d - mom;
+            
+            prev_dir = dir;
+
+            return res;
         }
 
         /*

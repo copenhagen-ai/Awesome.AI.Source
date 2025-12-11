@@ -47,7 +47,7 @@ namespace Awesome.AI.Common
         public int Qubits { get; }
         private Random random;
 
-        public QuantumRegister(int nQubits, int? randomSeed = null)
+        public QuantumRegister(int nQubits, Random rand)
         {
             if (nQubits <= 0) throw new ArgumentException(nameof(nQubits));
             Qubits = nQubits;
@@ -55,7 +55,7 @@ namespace Awesome.AI.Common
             // initialize to |0...0>
             state[0] = Complex.One;
             for (int i = 1; i < state.Length; ++i) state[i] = Complex.Zero;
-            random = randomSeed.HasValue ? new Random(randomSeed.Value) : new Random();
+            random = rand;
         }
 
         // Normalizes the whole state vector
@@ -192,17 +192,25 @@ namespace Awesome.AI.Common
     // Example usage / test
     public class QUsage
     {
+        /*
+         * proof of concept
+         * */
+
+        private Random random;
+
         private TheMind mind;
         private QUsage() { }
         public QUsage(TheMind mind)
         {
             this.mind = mind;
+
+            random = new Random(1234);
         }
 
         public int Run()
         {
             // Build 2-qubit register (qubit 0 is the least-significant bit in this implementation)
-            QuantumRegister qr = new QuantumRegister(2, randomSeed: 1234);
+            QuantumRegister qr = new QuantumRegister(2, random);
 
             // Create Bell state: (|00> + |11>) / sqrt(2)
             qr.ApplyHadamard(0);     // H on qubit 0

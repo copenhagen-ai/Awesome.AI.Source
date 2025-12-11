@@ -78,14 +78,25 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        public static bool Yes(this double val)
+        public static double Norm(this double _x, TheMind mind)
         {
-            return val <= 0.0d;
+            double _l = -1.0d;
+            double _h = 1.0d;
+
+            double res = mind.calc.Normalize(_x, _l, _h, 0.0d, 100.0d);
+
+            return res;
         }
 
-        public static bool No(this double val)
+        public static double Flip(this double _x, double _l, double _h, TheMind mind)
         {
-            return val > 0.0d;
+            double res = mind.calc.Normalize(_x, _l, _h, -1.0d, 0.0d);
+
+            res *= -1.0d;
+
+            res = mind.calc.Normalize(_x, -1.0d, 1.0d, _l, _h);
+
+            return res;
         }
 
         public static double HighZero(this double val)

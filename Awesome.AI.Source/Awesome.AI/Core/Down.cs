@@ -10,26 +10,12 @@ namespace Awesome.AI.Awesome.AI.Core
     {
         public double Dir
         {
-            get
-            {
-                //bool val = Axis[prop] <= 0.0d;
-                //return val ? -1.0d : 1.0d;
-
-                double d_curr = mind.mech_current.mp.d_curr;
-                return d_curr <= 0.0d ? -1.0d : 1.0d;
-            }
+            get => WillCurr <= 0.0d ? -1.0d : 1.0d;
         }
 
-        public double Norm
-        {
-            get
-            {
-                double xx = Will_Prop;
-                return mind.calc.Normalize(xx, -1.0d, 1.0d, 0.0d, 100.0d);            
-            }
-        }
-
-        public double Will_Prop { get; set; }
+        public double WillCurr { get; set; }
+        public double WillNorm { get; set; }
+        public double WillProp { get; set; }//zero
         public int Error { get; set; }
         public List<double> Ratio { get; set; }
         private List<bool> Errors { get; set; }
@@ -43,7 +29,7 @@ namespace Awesome.AI.Awesome.AI.Core
             Ratio = new List<double>();
             Errors = new List<bool>();
 
-            Will_Prop = 1.0d;
+            WillProp = 1.0d;
         }
 
         public void Update()
@@ -55,7 +41,7 @@ namespace Awesome.AI.Awesome.AI.Core
             Continous();
 
             //code: before or after?
-            Ratio.Add(Dir);
+            Ratio.Add(WillCurr);
             if (Ratio.Count > CONST.LAPSES)
                 Ratio.RemoveAt(0);            
         }
@@ -79,17 +65,6 @@ namespace Awesome.AI.Awesome.AI.Core
                 Errors.RemoveAt(0);
 
             Error = Errors.Count(x => x == true);
-        }
-
-        public void SetProp(double norm)
-        {
-            if (norm > 1.0d)
-                norm = 1.0d;
-
-            if (norm < -1.0d)
-                norm = -1.0d;
-
-            Will_Prop = norm;
         }
 
         public void SetYES()
@@ -130,21 +105,35 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public void Continous()
         {
-
-            double d_norm = mind.mech_current.mp.d_100.Zero(mind);
+            double d_curr = mind.mech_current.mp.d_curr;
+            double d_zero = mind.mech_current.mp.d_100.Zero(mind);
             double d_save = mind.mech_current.mp.d_100.Zero(mind);
 
-            bool down1 = Dir <= 0;
-
-            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down1, mind))
-                d_norm *= -1.0d;
+            bool down = d_curr <= 0;
+            
+            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind))
+                d_zero *= -1.0d;
 
             if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind))
-                d_norm *= -1.0d;
+                d_zero *= -1.0d;
 
-            SetError(d_save != d_norm);
+            bool flip = d_save != d_zero;
+            DoFlip(flip, d_curr, out d_curr);
+            SetError(flip);
 
-            SetProp(d_norm);
+            WillProp = d_zero;
+            WillNorm = d_zero.Norm(mind);
+            WillCurr = d_curr;
+        }
+
+        private void DoFlip(bool flip, double d_curr, out double _out)
+        {
+            double low = mind.mech_current.mp.d_out_low;
+            double high = mind.mech_current.mp.d_out_high;
+
+            _out = flip ? 
+                d_curr.Flip(low, high, mind) : 
+                d_curr;
         }
 
         public static bool Probability(bool _b, TheMind mind)
@@ -169,14 +158,14 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public HARDDOWN ToHard()
         {
-            return Dir <= 0.0d ?
+            return WillCurr <= 0.0d ?
                 HARDDOWN.YES :
                 HARDDOWN.NO;
         }
 
         public FUZZYDOWN ToFuzzy()
         {
-            switch (Norm)
+            switch (WillNorm)
             {
                 case <= 20.0d: return FUZZYDOWN.VERYYES;
                 case <= 40.0d: return FUZZYDOWN.YES;
