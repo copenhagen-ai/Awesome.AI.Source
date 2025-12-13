@@ -27,7 +27,7 @@ namespace Awesome.AI.Core.Mechanics
         public double posxy { get; set; }
         
         public double velocity = 0.0;
-        public double position_x = CONST.STARTXY;
+        public double pos_x = CONST.STARTXY;
 
         public PATTERN pattern_curr = PATTERN.NONE;
         public PATTERN pattern_prev = PATTERN.NONE;
@@ -47,8 +47,12 @@ namespace Awesome.AI.Core.Mechanics
         public double frictionForce { get; set; }
 
         //Noise
-        public double N { get; set; }
-        public double a_max {  get; set; }
+        public double f_sta { get; set; }
+        public double f_dyn { get; set; }
+        public double f_friction { get; set; }
+
+
+        public double acc_max {  get; set; }
         public double damp { get; set; }
 
         //Tug Of War

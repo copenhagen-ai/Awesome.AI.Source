@@ -14,7 +14,7 @@
         public enum VALIDATION { BOTH, EXTERNAL, INTERNAL }
         public enum TAGS { ALL, EVEN }
         public enum OCCUPASION { FIXED, DYNAMIC }
-        public enum MECHANICS { NONE, NOISE, GRAVITY, TUGOFWAR, WHEEL, HILL }
+        public enum MECHANICS { NONE, NOISE, GRAVITY, TUGOFWAR, HILL }
         public enum LIMITTYPE { SIMPLE, SIGMOID, CHANCE }
         public enum MOOD { GOOD, BAD }
         public enum LOGICTYPE { CLASSICAL, PROBABILITY, QUBIT }

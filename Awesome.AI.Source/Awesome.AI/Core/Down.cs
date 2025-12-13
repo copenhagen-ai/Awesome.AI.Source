@@ -105,6 +105,11 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public void Continous()
         {
+            /*
+             * this can be extended with a mechanism to alter between the two
+             * thereby expressing levels of social entanglement
+             * */
+
             double d_curr = mind.mech_current.mp.d_curr;
             double d_zero = mind.mech_current.mp.d_100.Zero(mind);
             double d_save = mind.mech_current.mp.d_100.Zero(mind);
@@ -124,6 +129,9 @@ namespace Awesome.AI.Awesome.AI.Core
             WillProp = d_zero;
             WillNorm = d_zero.Norm(mind);
             WillCurr = d_curr;
+
+            if (double.IsNaN(WillProp))
+                throw new Exception("NAN");
         }
 
         private void DoFlip(bool flip, double d_curr, out double _out)

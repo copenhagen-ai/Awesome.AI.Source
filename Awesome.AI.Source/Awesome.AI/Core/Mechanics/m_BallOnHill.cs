@@ -70,7 +70,7 @@ namespace Awesome.AI.Core.Mechanics
 
             // Update velocity and position
             mp.velocity += a_tangent * mp.dt;
-            mp.position_x += mp.velocity * mp.dt;
+            mp.pos_x += mp.velocity * mp.dt;
 
             mp.p_prev = mp.p_curr;
             mp.p_curr = mp.m1 * mp.velocity;
@@ -79,7 +79,7 @@ namespace Awesome.AI.Core.Mechanics
 
         private double ApplyStatic(MechParams mp)
         {
-            double slope = 2 * mp.a * mp.position_x; // Slope dy/dx
+            double slope = 2 * mp.a * mp.pos_x; // Slope dy/dx
             double sinTheta = slope / Math.Sqrt(1 + slope * slope);
             double Fgravity = -(mp.m1 * mp.g) * sinTheta;
 

@@ -31,7 +31,7 @@ namespace Awesome.AI.Variables
             switch (run)
             {
                 case MECHANICS.NOISE:
-                    _mech = new m_NoiseGenerator(mind);
+                    _mech = new m_NoiseGenerator(mind, CONST.MechType);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH

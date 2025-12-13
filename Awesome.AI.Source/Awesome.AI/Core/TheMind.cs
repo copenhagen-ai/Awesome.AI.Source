@@ -250,11 +250,13 @@ namespace Awesome.AI.Core
                 return true;
 
             mech_noise.Calculate(PATTERN.NONE, cycles);
+
+            down.Update();
+
             mech_high.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
             mech_high.Calculate(PATTERN.MOODGOOD, cycles);//mood good
             mech_high.Calculate(PATTERN.MOODBAD, cycles);//mood bad
 
-            down.Update();
             mech_high.mp.props.Update();
             //pos.Update();
 

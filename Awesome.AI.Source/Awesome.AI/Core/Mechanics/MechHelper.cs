@@ -31,7 +31,7 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.pattern_prev = mp.pattern_curr;
 
-            mp.position_x = CONST.STARTXY;
+            mp.pos_x = CONST.STARTXY;
             mp.velocity = 0.0d;
             mp.p_curr = 0.0d;
             mp.d_curr = 0.0d;
@@ -47,24 +47,32 @@ namespace Awesome.AI.Core.Mechanics
 
         public void NormalizeNoise(TheMind mind, MechParams mp)
         {
-            double adj = mp.m_out_low == mp.m_out_high ? -0.1d : 0.0d;
+            double adj1 = mp.m_out_low == mp.m_out_high ? 0.1d : 0.0d;
+            double adj2 = mp.d_out_low == mp.d_out_high ? 0.1d : 0.0d;
 
-            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj, mp.m_out_high, 0.0d, 100.0d);
-            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj, mp.d_out_high, 0.0d, 100.0d);
+            if (adj1 == 0.1d || adj2 == 0.1d)
+                ;
 
-            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj, mp.m_out_high, 10.0d, 90.0d);
-            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj, mp.d_out_high, 10.0d, 90.0d);
+            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj1, mp.m_out_high, 0.0d, 100.0d);
+            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj2, mp.d_out_high, 0.0d, 100.0d);
+
+            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj1, mp.m_out_high, 10.0d, 90.0d);
+            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj2, mp.d_out_high, 10.0d, 90.0d);
         }
 
         public void Normalize(TheMind mind, MechParams mp)
         {
-            double adj = mp.m_out_low == mp.m_out_high ? -0.1d : 0.0d;
+            double adj1 = mp.m_out_low == mp.m_out_high ? 0.1d : 0.0d;
+            double adj2 = mp.d_out_low == mp.d_out_high ? 0.1d : 0.0d;
 
-            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj, mp.m_out_high, 0.0d, 100.0d);
-            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj, mp.d_out_high, 0.0d, 100.0d);
+            if (adj1 == 0.1d || adj2 == 0.1d)
+                ;
 
-            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj, mp.m_out_high, 10.0d, 90.0d);
-            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj, mp.d_out_high, 10.0d, 90.0d);
+            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj1, mp.m_out_high, 0.0d, 100.0d);
+            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj2, mp.d_out_high, 0.0d, 100.0d);
+
+            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj1, mp.m_out_high, 10.0d, 90.0d);
+            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj2, mp.d_out_high, 10.0d, 90.0d);
         }
 
         public void UpdateNoise(MechParams mp)
@@ -90,7 +98,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public double PosXY(TheMind mind, MechParams mp)
         {
-            double x_meter = mp.position_x;
+            double x_meter = mp.pos_x;
 
             if (x_meter <= 0.1d && !mind.goodbye)
                 x_meter = CONST.VERY_LOW;

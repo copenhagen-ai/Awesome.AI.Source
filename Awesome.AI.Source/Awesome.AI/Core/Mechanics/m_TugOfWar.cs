@@ -35,7 +35,7 @@ namespace Awesome.AI.Core.Mechanics
             mp.g = CONST.GRAVITY;                                           // Gravity in m/s^2
             mp.frictionForce = mp.mu * mp.totalMass * mp.g;
 
-            mp.position_x = CONST.STARTXY;
+            mp.pos_x = CONST.STARTXY;
 
             mp.m_out_high = -1000.0d;
             mp.m_out_low = 1000.0d;
@@ -80,11 +80,14 @@ namespace Awesome.AI.Core.Mechanics
 
             // Update velocity and position
             mp.velocity += acceleration * mp.dt;                                // Integrate acceleration to get velocity
-            mp.position_x += mp.velocity * mp.dt;                               // Integrate velocity to get position
+            mp.pos_x += mp.velocity * mp.dt;                               // Integrate velocity to get position
             
             mp.p_prev = mp.p_curr;                                              // Store current momentum for next iteration
             mp.p_curr = mp.totalMass * mp.velocity;
-            mp.d_curr = mp.p_curr - mp.p_prev;                                  // Compute change in momentum            
+            mp.d_curr = mp.p_curr - mp.p_prev;                                  // Compute change in momentum
+
+            if (double.IsNaN(mp.velocity))
+                ;// throw new Exception("NAN");
         }
 
         /*
