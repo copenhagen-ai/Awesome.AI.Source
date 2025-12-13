@@ -116,10 +116,10 @@ namespace Awesome.AI.Awesome.AI.Core
 
             bool down = d_curr <= 0;
             
-            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind))
+            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && !Inertia())
                 d_zero *= -1.0d;
 
-            if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind))
+            if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind) && !Inertia())
                 d_zero *= -1.0d;
 
             bool flip = d_save != d_zero;
@@ -132,6 +132,24 @@ namespace Awesome.AI.Awesome.AI.Core
 
             if (double.IsNaN(WillProp))
                 throw new Exception("NAN");
+        }
+
+        private bool Inertia()
+        {
+            /*
+             * very simple, should be multistep
+             * cancels out some of the direction changes
+             * */
+
+            //return false;
+
+            double p_curr = mind.mech_current.mp.p_curr;
+            double p_prev = mind.mech_current.mp.p_prev;
+
+            bool p_up = p_curr > p_prev;
+            bool d_up = Dir > 0.0d;
+
+            return (p_up && d_up) || (!p_up && !d_up);
         }
 
         private void DoFlip(bool flip, double d_curr, out double _out)
