@@ -104,8 +104,8 @@ namespace Awesome.AI.Core.Mechanics
                 mp.vv_prev = mp.vv_curr;
                 mp.vv_curr += mp.dv_curr;
 
-                mp.velocity += a_system * mp.dt;
-                mp.pos_x += mp.velocity * mp.dt;
+                //mp.velocity += a_system * mp.dt;
+                mp.pos_x += mp.vv_curr * mp.dt;
             }
 
             if (double.IsNaN(mp.dv_prev))

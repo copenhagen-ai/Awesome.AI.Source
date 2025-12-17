@@ -44,7 +44,6 @@ namespace Awesome.AI.Core.Mechanics
         public double posx_low { get; set; }
         public double posxy { get; set; }
         
-        public double velocity = 0.0;
         public double pos_x = CONST.STARTXY;
 
         public PATTERN pattern_curr = PATTERN.NONE;
@@ -65,7 +64,6 @@ namespace Awesome.AI.Core.Mechanics
         public double frictionForce { get; set; }
 
         //Curcuit
-        //public double voltageMax { get; set; }
         public double batteryVoltage { get; set; }
         public double variableResistance { get; set; }
         public double inductance { get; set; }
@@ -73,10 +71,7 @@ namespace Awesome.AI.Core.Mechanics
         public double currentCurrent { get; set; }
         public double deltaCurrent { get; set; }
         public double previousCurrent { get; set; }
-        //public double cumulativeCharge { get; set; }
-        //public double previousFluxLinkage { get; set; }
-        //public double currentFluxLinkage { get; set; }
-        
+                
 
         //Noise 
         public double f_sta { get; set; }
@@ -90,6 +85,7 @@ namespace Awesome.AI.Core.Mechanics
         public double totalMass { get; set; }
         
         //Ball On Hill
+        public double velocity = 0.0;
         public double a { get; set; }              // Parabola coefficient (hill steepness)
         public double F0 { get; set; }             // Wind force amplitude (N)
         public double beta { get; set; }           // Friction coefficient
