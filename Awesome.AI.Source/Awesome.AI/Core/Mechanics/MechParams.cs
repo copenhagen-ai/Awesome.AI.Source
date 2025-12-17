@@ -24,22 +24,6 @@ namespace Awesome.AI.Core.Mechanics
 
 
 
-        //public double peek_momentum { get; set; }
-        //public double peek_norm { get; set; }
-        //public double pp_100 { get; set; }
-        //public double dp_100 { get; set; }
-        //public double pp_90 { get; set; }
-        //public double dp_90 { get; set; }
-        //public double pp_curr { get; set; }
-        //public double pp_prev { get; set; }
-        //public double dp_curr { get; set; }
-        //public double dp_prev { get; set; }
-        //public double pp_out_high_peek { get; set; }
-        //public double pp_out_low_peek { get; set; }
-        //public double pp_out_high { get; set; }
-        //public double pp_out_low { get; set; }
-        //public double dp_out_high { get; set; }
-        //public double dp_out_low { get; set; }
         public double peek_velocity { get; set; }
         public double peek_norm { get; set; }
         public double vv_100 { get; set; }
