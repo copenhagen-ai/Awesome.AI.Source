@@ -6,22 +6,56 @@ namespace Awesome.AI.Core.Mechanics
 {
     public  class MechParams
     {
-        public double peek_momentum { get; set; }
+        public double pp_elec_max { get; set; }
+        public double pp_elec_min { get; set; }
+        public double dp_elec_max { get; set; }
+        public double dp_elec_min { get; set; }
+        public double pp_elec_100 { get; set; }
+        public double dp_elec_100 { get; set; }
+        public double pp_elec_90 { get; set; }
+        public double dp_elec_90 { get; set; }
+        public double pp_elec_prev { get; set; }
+        public double pp_elec_curr { get; set; }
+        public double dp_elec_prev { get; set; }
+        public double dp_elec_curr { get; set; }
+        public double peek_pp_elec { get; set; }
+        public double peek_max { get; set; }
+        public double peek_min { get; set; }
+
+
+
+        //public double peek_momentum { get; set; }
+        //public double peek_norm { get; set; }
+        //public double pp_100 { get; set; }
+        //public double dp_100 { get; set; }
+        //public double pp_90 { get; set; }
+        //public double dp_90 { get; set; }
+        //public double pp_curr { get; set; }
+        //public double pp_prev { get; set; }
+        //public double dp_curr { get; set; }
+        //public double dp_prev { get; set; }
+        //public double pp_out_high_peek { get; set; }
+        //public double pp_out_low_peek { get; set; }
+        //public double pp_out_high { get; set; }
+        //public double pp_out_low { get; set; }
+        //public double dp_out_high { get; set; }
+        //public double dp_out_low { get; set; }
+        public double peek_velocity { get; set; }
         public double peek_norm { get; set; }
-        public double p_100 { get; set; }
-        public double d_100 { get; set; }
-        public double p_90 { get; set; }
-        public double d_90 { get; set; }
-        public double p_curr { get; set; }
-        public double p_prev { get; set; }
-        public double d_curr { get; set; }
-        public double d_prev { get; set; }
-        public double m_out_high_p { get; set; }
-        public double m_out_low_p { get; set; }
-        public double m_out_high { get; set; }
-        public double m_out_low { get; set; }
-        public double d_out_high { get; set; }
-        public double d_out_low { get; set; }
+        public double vv_100 { get; set; }
+        public double dv_100 { get; set; }
+        public double vv_90 { get; set; }
+        public double dv_90 { get; set; }
+        public double vv_curr { get; set; }
+        public double vv_prev { get; set; }
+        public double dv_curr { get; set; }
+        public double dv_prev { get; set; }
+        public double vv_out_high_peek { get; set; }
+        public double vv_out_low_peek { get; set; }
+        public double vv_out_high { get; set; }
+        public double vv_out_low { get; set; }
+        public double dv_out_high { get; set; }
+        public double dv_out_low { get; set; }
         public double posx_high { get; set; }
         public double posx_low { get; set; }
         public double posxy { get; set; }
@@ -42,16 +76,28 @@ namespace Awesome.AI.Core.Mechanics
         public double eta { get; set; }             // Random noise amplitude for wind force
         public double g { get; set; }               // Gravity in m/s^2
 
-        // Friction parameters
+        //Friction parameters
         public double mu { get; set; }              // Coefficient of kinetic friction
         public double frictionForce { get; set; }
 
-        //Noise
+        //Curcuit
+        //public double voltageMax { get; set; }
+        public double batteryVoltage { get; set; }
+        public double variableResistance { get; set; }
+        public double inductance { get; set; }
+        public double dampingFactor { get; set; }
+        public double currentCurrent { get; set; }
+        public double deltaCurrent { get; set; }
+        public double previousCurrent { get; set; }
+        //public double cumulativeCharge { get; set; }
+        //public double previousFluxLinkage { get; set; }
+        //public double currentFluxLinkage { get; set; }
+        
+
+        //Noise 
         public double f_sta { get; set; }
         public double f_dyn { get; set; }
         public double f_friction { get; set; }
-
-
         public double acc_max {  get; set; }
         public double damp { get; set; }
 

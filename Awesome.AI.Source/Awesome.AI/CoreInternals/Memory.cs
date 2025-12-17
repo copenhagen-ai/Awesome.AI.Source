@@ -169,25 +169,25 @@ namespace Awesome.AI.CoreInternals
             int count1 = 1;
 
             TONE tone;
-            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
             count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], long_decision_should, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
             
-            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.HIGH;
+            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.HIGH;
             count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[1], long_decision_what, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
             
-            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
             count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
             
-            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.LOW;
+            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.LOW;
             count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[1], answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
             
-            tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.MID;
+            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.MID;
             count1 = Decide(STATE.JUSTRUNNING, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[0], ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
             
             Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             foreach (var kv in dict)
             {
-                tone = mind._mech == MECHANICS.GRAVITY ? TONE.RANDOM : TONE.RANDOM;
+                tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
                 Quick(CONST.MAX_UNITS, kv.Value[1], CONST.DECI_SUBJECTS[2], kv.Key, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
             }
         }

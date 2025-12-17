@@ -24,12 +24,12 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.posxy = CONST.STARTXY;
 
-            mp.m_out_high_p = -1000.0d;
-            mp.m_out_low_p = 1000.0d;
-            mp.m_out_high = -1000.0d;
-            mp.m_out_low = 1000.0d;
-            mp.d_out_high = -1000.0d;
-            mp.d_out_low = 1000.0d;
+            mp.vv_out_high_peek = -1000.0d;
+            mp.vv_out_low_peek = 1000.0d;
+            mp.vv_out_high = -1000.0d;
+            mp.vv_out_low = 1000.0d;
+            mp.dv_out_high = -1000.0d;
+            mp.dv_out_low = 1000.0d;
             mp.posx_high = -1000.0d;
             mp.posx_low = 1000.0d;
         }
@@ -52,7 +52,7 @@ namespace Awesome.AI.Core.Mechanics
 
             Calc(curr, true, -1);
 
-            mp.peek_norm = mind.calc.Normalize(mp.peek_momentum, mp.m_out_low_p, mp.m_out_high_p, 0.0d, 100.0d);
+            mp.peek_norm = mind.calc.Normalize(mp.peek_velocity, mp.vv_out_low_peek, mp.vv_out_high_peek, 0.0d, 100.0d);
         }
 
         public void Calc(UNIT curr, bool peek, int cycles)
@@ -63,21 +63,21 @@ namespace Awesome.AI.Core.Mechanics
 
             switch (type)
             {
-                case MECHANICS.TUGOFWAR:
+                case MECHANICS.TUGOFWAR_LOW:
                     mp.acc_max = 5.0d;
-                    mp.damp = 0.5d;
+                    mp.damp = 0.2d;
                     mp.m1 = CONST.MAX * CONST.BASE_REDUCTION * 5.0d; //0 - 500
                     mp.m2 = (curr.Variable) * 5.0d; //0 - 500
                     total_mass = mp.m1 + mp.m2; 
                     break;
-                case MECHANICS.HILL:
+                case MECHANICS.BALLONHILL_LOW:
                     mp.damp = 1.0d;
                     mp.a = 0.1d;// Parabola coefficient (hill steepness)
                     mp.g = CONST.GRAVITY;// Gravity (m/s^2)
                     mp.m1 = 0.35d;// Ball mass (kg)
                     total_mass = mp.m1;
                     break;
-                default: throw new Exception("m_NoiseGenerator, ApplyDynamics, Update");
+                default: throw new Exception("m_NoiseGenerator, Calc");
             }
 
             mp.f_sta = ApplyStatic(mp, this.type);
@@ -97,34 +97,34 @@ namespace Awesome.AI.Core.Mechanics
             
             //momentum: p = m * v
             if (peek) {
-                mp.peek_momentum = mp.p_prev + total_mass * dv;            
+                mp.peek_velocity = mp.vv_prev + /*total_mass + */dv;            
             } else {
-                mp.d_prev = mp.d_curr;
-                mp.d_curr = total_mass * dv;
-                mp.p_prev = mp.p_curr;
-                mp.p_curr += mp.d_curr;
+                mp.dv_prev = mp.dv_curr;
+                mp.dv_curr = /*total_mass */dv;
+                mp.vv_prev = mp.vv_curr;
+                mp.vv_curr += mp.dv_curr;
 
                 mp.velocity += a_system * mp.dt;
                 mp.pos_x += mp.velocity * mp.dt;
             }
 
-            if (double.IsNaN(mp.d_prev))
+            if (double.IsNaN(mp.dv_prev))
                 throw new Exception("NAN");
-            if (double.IsNaN(mp.d_curr))
+            if (double.IsNaN(mp.dv_curr))
                 throw new Exception("NAN");
-            if (double.IsNaN(mp.p_prev))
+            if (double.IsNaN(mp.vv_prev))
                 throw new Exception("NAN");
-            if (double.IsNaN(mp.p_curr))
+            if (double.IsNaN(mp.vv_curr))
                 throw new Exception("NAN");
         }
 
         public void DeltaTime()
         {
-            double delta = mind.mech_high.mp.d_100;
+            double delta = mind.mech_high.mp.dv_100;
 
-            double dt_mod = delta > 0.0d ? delta / 100.0d : 1.0d;
+            double mod = delta > 0.0d ? delta / 100.0d : 1.0d;
 
-            mp.dt = 0.05d * dt_mod;
+            mp.dt = 0.05d * mod;
         }
 
         public double Friction(MechParams mp, MECHANICS type)
@@ -133,12 +133,12 @@ namespace Awesome.AI.Core.Mechanics
 
             switch (type)
             {
-                case MECHANICS.TUGOFWAR: total_mass = mp.m1 + mp.m2; break;
-                case MECHANICS.HILL: total_mass = mp.m1; break;
-                default: throw new Exception("m_NoiseGenerator, ApplyDynamics, Update");
+                case MECHANICS.TUGOFWAR_LOW: total_mass = mp.m1 + mp.m2; break;
+                case MECHANICS.BALLONHILL_LOW: total_mass = mp.m1; break;
+                default: throw new Exception("m_NoiseGenerator, Friction");
             }
 
-            double u = mh.Friction(mind, mind.unit_current.credits, -0.0d, 0.01d);
+            double u = mh.Friction(mind, mind.unit_current.credits, 0.01d);
             double N = total_mass * CONST.GRAVITY;
             double f_friction = u * N * -Math.Sign(mp.f_sta + mp.f_dyn);
 
@@ -149,17 +149,17 @@ namespace Awesome.AI.Core.Mechanics
         {
             switch (type)
             {
-                case MECHANICS.TUGOFWAR:
+                case MECHANICS.TUGOFWAR_LOW:
                     // force left
                     double Fapplied = mp.m1 * mp.acc_max;
                     return -(mp.damp * Fapplied);
-                case MECHANICS.HILL:
+                case MECHANICS.BALLONHILL_LOW:
                     //slope force
                     double slope = 2 * mp.a * mp.pos_x; // Slope dy/dx
                     double sinTheta = slope / Math.Sqrt(1 + slope * slope);
                     double Fgravity = (mp.m1 * mp.g) * sinTheta;
                     return -(mp.damp * Fgravity);
-                default: throw new Exception("m_NoiseGenerator, ApplyDynamics, ApplyStatic");
+                default: throw new Exception("m_NoiseGenerator, ApplyStatic");
             }
         }
 
@@ -167,16 +167,16 @@ namespace Awesome.AI.Core.Mechanics
         {
             switch (type)
             {
-                case MECHANICS.TUGOFWAR:
+                case MECHANICS.TUGOFWAR_LOW:
                     //force right
-                    double Fapplied = mp.damp * mp.m2 * mp.acc_max;            
-                    return Fapplied;
-                case MECHANICS.HILL:
+                    double Fapplied = mp.m2 * mp.acc_max;            
+                    return mp.damp * Fapplied;
+                case MECHANICS.BALLONHILL_LOW:
                     //wind force
                     double windAccel = mind.unit_current.Variable * 0.2d; // constant wind acceleration
                     double windforce = mp.m1 * windAccel;
                     return mp.damp * windforce;
-                default: throw new Exception("m_NoiseGenerator, ApplyDynamics");
+                default: throw new Exception("m_NoiseGenerator, ApplyDynamic");
             }
         }
 
@@ -195,7 +195,7 @@ namespace Awesome.AI.Core.Mechanics
 
             Calc(mind.unit_current, false, cycles);
 
-            mh.UpdateNoise(mp);
+            mh.ExtremesNoise(mp);
             mh.NormalizeNoise(mind, mp);
         }
 

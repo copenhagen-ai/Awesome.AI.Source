@@ -37,10 +37,10 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.pos_x = CONST.STARTXY;
 
-            mp.m_out_high = -1000.0d;
-            mp.m_out_low = 1000.0d;
-            mp.d_out_high = -1000.0d;
-            mp.d_out_low = 1000.0d;
+            mp.vv_out_high = -1000.0d;
+            mp.vv_out_low = 1000.0d;
+            mp.dv_out_high = -1000.0d;
+            mp.dv_out_low = 1000.0d;
             mp.posx_high = -1000.0d;
             mp.posx_low = 1000.0d;
         }
@@ -82,9 +82,9 @@ namespace Awesome.AI.Core.Mechanics
             mp.velocity += acceleration * mp.dt;                                // Integrate acceleration to get velocity
             mp.pos_x += mp.velocity * mp.dt;                               // Integrate velocity to get position
             
-            mp.p_prev = mp.p_curr;                                              // Store current momentum for next iteration
-            mp.p_curr = mp.totalMass * mp.velocity;
-            mp.d_curr = mp.p_curr - mp.p_prev;                                  // Compute change in momentum
+            mp.vv_prev = mp.vv_curr;                                              // Store current momentum for next iteration
+            mp.vv_curr = /*mp.totalMass * */mp.velocity;
+            mp.dv_curr = mp.vv_curr - mp.vv_prev;                                  // Compute change in momentum
 
             if (double.IsNaN(mp.velocity))
                 ;// throw new Exception("NAN");
@@ -130,7 +130,7 @@ namespace Awesome.AI.Core.Mechanics
 
             Calc(pattern, cycles);
 
-            mh.Update(mp);
+            mh.Extremes(mp);
             mh.Normalize(mind, mp);
         }
 

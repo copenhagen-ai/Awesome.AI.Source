@@ -6,6 +6,30 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class MechHelper
     {
+        public void ResetCircuit(TheMind mind, MechParams mp)
+        {
+            if (!CONST.SAMPLE20.RandomSample(mind))
+                return;
+
+            mp.posxy = CONST.STARTXY;
+
+            mp.peek_max = -1000.0d;
+            mp.peek_min = 1000.0d;
+            mp.pp_elec_max = -1000.0d;
+            mp.pp_elec_min = 1000.0d;
+            mp.dp_elec_max = -1000.0d;
+            mp.dp_elec_min = 1000.0d;
+
+            mp.vv_out_high_peek = -1000.0d;
+            mp.vv_out_low_peek = 1000.0d;
+            mp.vv_out_high = -1000.0d;
+            mp.vv_out_low = 1000.0d;
+            mp.dv_out_high = -1000.0d;
+            mp.dv_out_low = 1000.0d;
+            mp.posx_high = -1000.0d;
+            mp.posx_low = 1000.0d;
+        }
+
         public void ResetNoise(TheMind mind, MechParams mp)
         {
             //could be done in other ways also
@@ -14,12 +38,12 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.posxy = CONST.STARTXY;
 
-            mp.m_out_high_p = -1000.0d;
-            mp.m_out_low_p = 1000.0d;
-            mp.m_out_high = -1000.0d;
-            mp.m_out_low = 1000.0d;
-            mp.d_out_high = -1000.0d;
-            mp.d_out_low = 1000.0d;
+            mp.vv_out_high_peek = -1000.0d;
+            mp.vv_out_low_peek = 1000.0d;
+            mp.vv_out_high = -1000.0d;
+            mp.vv_out_low = 1000.0d;
+            mp.dv_out_high = -1000.0d;
+            mp.dv_out_low = 1000.0d;
             mp.posx_high = -1000.0d;
             mp.posx_low = 1000.0d;
         }
@@ -33,9 +57,9 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.pos_x = CONST.STARTXY;
             mp.velocity = 0.0d;
-            mp.p_curr = 0.0d;
-            mp.d_curr = 0.0d;
-            mp.p_prev = 0.0d;
+            mp.vv_curr = 0.0d;
+            mp.dv_curr = 0.0d;
+            mp.vv_prev = 0.0d;
 
             //m_out_high = -1000.0d;
             //m_out_low = 1000.0d;
@@ -45,55 +69,111 @@ namespace Awesome.AI.Core.Mechanics
             mp.posx_low = 1E10d;
         }
 
+        public void ConvertCircuit(MechParams mp)
+        {
+            mp.peek_velocity = mp.peek_pp_elec;
+            mp.vv_out_low_peek = mp.peek_min;
+            mp.vv_out_high_peek = mp.peek_max;
+
+            mp.vv_curr = mp.currentCurrent;
+            mp.dv_curr = mp.deltaCurrent;
+
+            mp.vv_out_low = mp.pp_elec_min;
+            mp.vv_out_high = mp.pp_elec_max;
+            mp.dv_out_low = mp.dp_elec_min;
+            mp.dv_out_high = mp.dp_elec_max;
+
+
+            mp.vv_100 = mp.pp_elec_100;
+            mp.dv_100 = mp.dp_elec_100;
+
+            mp.vv_90 = mp.pp_elec_90;
+            mp.dv_90 = mp.dp_elec_90;
+        }
+
+
+
+
+
+        public void NormalizeCircuit(TheMind mind, MechParams mp)
+        {
+            // Adjust for degenerate ranges
+            double currentAdj = mp.pp_elec_min == mp.pp_elec_max ? 0.1d : 0.0d;
+            double chargeAdj = mp.dp_elec_min == mp.dp_elec_max ? 0.1d : 0.0d;
+
+            // Normalize current (0-100%) and charge (0-100%) for UI or scaling purposes
+            mp.pp_elec_100 = mind.calc.Normalize(mp.currentCurrent, mp.pp_elec_min - currentAdj, mp.pp_elec_max, 0.0d, 100.0d);
+            mp.dp_elec_100 = mind.calc.Normalize(mp.deltaCurrent, mp.dp_elec_min - chargeAdj, mp.dp_elec_max, 0.0d, 100.0d);
+
+            // Optional 10-90% normalized range
+            mp.pp_elec_90 = mind.calc.Normalize(mp.currentCurrent, mp.pp_elec_min - currentAdj, mp.pp_elec_max, 10.0d, 90.0d);
+            mp.dp_elec_90 = mind.calc.Normalize(mp.deltaCurrent, mp.dp_elec_min - chargeAdj, mp.dp_elec_max, 10.0d, 90.0d);
+        }
+
+        public void ExtremesCircuit(MechParams mp)
+        {
+            // Update flux linkage extremes
+            if (mp.peek_pp_elec <= mp.peek_min) mp.peek_min = mp.peek_pp_elec;
+            if (mp.peek_pp_elec > mp.peek_max) mp.peek_max = mp.peek_pp_elec;
+
+            // Update current extremes
+            if (mp.currentCurrent <= mp.pp_elec_min) mp.pp_elec_min = mp.currentCurrent;
+            if (mp.currentCurrent > mp.pp_elec_max) mp.pp_elec_max = mp.currentCurrent;
+
+            // Update cumulative charge extremes
+            if (mp.deltaCurrent <= mp.dp_elec_min) mp.dp_elec_min = mp.deltaCurrent;
+            if (mp.deltaCurrent > mp.dp_elec_max) mp.dp_elec_max = mp.deltaCurrent;
+        }
+
         public void NormalizeNoise(TheMind mind, MechParams mp)
         {
-            double adj1 = mp.m_out_low == mp.m_out_high ? 0.1d : 0.0d;
-            double adj2 = mp.d_out_low == mp.d_out_high ? 0.1d : 0.0d;
+            double adj1 = mp.vv_out_low == mp.vv_out_high ? 0.1d : 0.0d;
+            double adj2 = mp.dv_out_low == mp.dv_out_high ? 0.1d : 0.0d;
 
             if (adj1 == 0.1d || adj2 == 0.1d)
                 ;
 
-            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj1, mp.m_out_high, 0.0d, 100.0d);
-            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj2, mp.d_out_high, 0.0d, 100.0d);
+            mp.vv_100 = mind.calc.Normalize(mp.vv_curr, mp.vv_out_low - adj1, mp.vv_out_high, 0.0d, 100.0d);
+            mp.dv_100 = mind.calc.Normalize(mp.dv_curr, mp.dv_out_low - adj2, mp.dv_out_high, 0.0d, 100.0d);
 
-            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj1, mp.m_out_high, 10.0d, 90.0d);
-            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj2, mp.d_out_high, 10.0d, 90.0d);
+            mp.vv_90 = mind.calc.Normalize(mp.vv_curr, mp.vv_out_low - adj1, mp.vv_out_high, 10.0d, 90.0d);
+            mp.dv_90 = mind.calc.Normalize(mp.dv_curr, mp.dv_out_low - adj2, mp.dv_out_high, 10.0d, 90.0d);
+        }
+
+        public void ExtremesNoise(MechParams mp)
+        {
+            if (mp.peek_velocity <= mp.vv_out_low_peek) mp.vv_out_low_peek = mp.peek_velocity;
+            if (mp.peek_velocity > mp.vv_out_high_peek) mp.vv_out_high_peek = mp.peek_velocity;
+
+            if (mp.vv_curr <= mp.vv_out_low) mp.vv_out_low = mp.vv_curr;
+            if (mp.vv_curr > mp.vv_out_high) mp.vv_out_high = mp.vv_curr;
+
+            if (mp.dv_curr <= mp.dv_out_low) mp.dv_out_low = mp.dv_curr;
+            if (mp.dv_curr > mp.dv_out_high) mp.dv_out_high = mp.dv_curr;
         }
 
         public void Normalize(TheMind mind, MechParams mp)
         {
-            double adj1 = mp.m_out_low == mp.m_out_high ? 0.1d : 0.0d;
-            double adj2 = mp.d_out_low == mp.d_out_high ? 0.1d : 0.0d;
+            double adj1 = mp.vv_out_low == mp.vv_out_high ? 0.1d : 0.0d;
+            double adj2 = mp.dv_out_low == mp.dv_out_high ? 0.1d : 0.0d;
 
             if (adj1 == 0.1d || adj2 == 0.1d)
                 ;
 
-            mp.p_100 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj1, mp.m_out_high, 0.0d, 100.0d);
-            mp.d_100 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj2, mp.d_out_high, 0.0d, 100.0d);
+            mp.vv_100 = mind.calc.Normalize(mp.vv_curr, mp.vv_out_low - adj1, mp.vv_out_high, 0.0d, 100.0d);
+            mp.dv_100 = mind.calc.Normalize(mp.dv_curr, mp.dv_out_low - adj2, mp.dv_out_high, 0.0d, 100.0d);
 
-            mp.p_90 = mind.calc.Normalize(mp.p_curr, mp.m_out_low - adj1, mp.m_out_high, 10.0d, 90.0d);
-            mp.d_90 = mind.calc.Normalize(mp.d_curr, mp.d_out_low - adj2, mp.d_out_high, 10.0d, 90.0d);
+            mp.vv_90 = mind.calc.Normalize(mp.vv_curr, mp.vv_out_low - adj1, mp.vv_out_high, 10.0d, 90.0d);
+            mp.dv_90 = mind.calc.Normalize(mp.dv_curr, mp.dv_out_low - adj2, mp.dv_out_high, 10.0d, 90.0d);
         }
 
-        public void UpdateNoise(MechParams mp)
+        public void Extremes(MechParams mp)
         {
-            if (mp.peek_momentum <= mp.m_out_low_p) mp.m_out_low_p = mp.peek_momentum;
-            if (mp.peek_momentum > mp.m_out_high_p) mp.m_out_high_p = mp.peek_momentum;
+            if (mp.vv_curr <= mp.vv_out_low) mp.vv_out_low = mp.vv_curr;
+            if (mp.vv_curr > mp.vv_out_high) mp.vv_out_high = mp.vv_curr;
 
-            if (mp.p_curr <= mp.m_out_low) mp.m_out_low = mp.p_curr;
-            if (mp.p_curr > mp.m_out_high) mp.m_out_high = mp.p_curr;
-
-            if (mp.d_curr <= mp.d_out_low) mp.d_out_low = mp.d_curr;
-            if (mp.d_curr > mp.d_out_high) mp.d_out_high = mp.d_curr;
-        }
-
-        public void Update(MechParams mp)
-        {
-            if (mp.p_curr <= mp.m_out_low) mp.m_out_low = mp.p_curr;
-            if (mp.p_curr > mp.m_out_high) mp.m_out_high = mp.p_curr;
-
-            if (mp.d_curr <= mp.d_out_low) mp.d_out_low = mp.d_curr;
-            if (mp.d_curr > mp.d_out_high) mp.d_out_high = mp.d_curr;
+            if (mp.dv_curr <= mp.dv_out_low) mp.dv_out_low = mp.dv_curr;
+            if (mp.dv_curr > mp.dv_out_high) mp.dv_out_high = mp.dv_curr;
         }
 
         public double PosXY(TheMind mind, MechParams mp)
@@ -112,7 +192,7 @@ namespace Awesome.AI.Core.Mechanics
             return x_meter;
         }
 
-        public double Friction(TheMind mind, double credits, double shift, double damp)
+        public double Friction(TheMind mind, double credits, double damp)
         {
             /*
              * friction coeficient
@@ -122,7 +202,7 @@ namespace Awesome.AI.Core.Mechanics
             Calc calc = mind.calc;
 
             double _c = 10.0d - credits;
-            double x = 5.0d - _c + shift;
+            double x = 5.0d - _c;
             double friction = calc.Logistic(x);
 
             return friction * damp;

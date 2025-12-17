@@ -157,7 +157,7 @@ namespace Awesome.AI.Core
             //double norm = 100.0d - mind.down.WillNorm;
 
             double dir = mind.down.Dir;
-            double mom = mind.mech_current.mp.p_100;
+            double mom = mind.mech_current.mp.vv_100;
             double res = 0.0d;
             bool same = dir == prev_dir;
 

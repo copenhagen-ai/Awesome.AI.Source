@@ -16,8 +16,8 @@ namespace Awesome.AI.Common
         public bool ok {  get; set; }
         public string cycles { get; set; }
         public string cycles_total { get; set; }
-        public string p_curr { get; set; }
-        public string d_curr { get; set; }
+        public string vv_curr { get; set; }
+        public string dv_curr { get; set; }
 
         public string user_var { get; set; }
         public string position { get; set; }
@@ -41,18 +41,13 @@ namespace Awesome.AI.Common
         public double norm_mood { get; set; }
         public double norm_noise { get; set; }
         public double prop_mood { get; set; }
-        //public double down_prop_noise { get; set; }
 
-        public int error {  get; set; }
+        public int error { get; set; }
+        public bool SetLow { get; set; }
+        public bool SetHigh { get; set; }
 
-        //public string ratio_yes_c { get; set; }
-        //public string ratio_no_c { get; set; }
-        //public string chat_state { get; set; }
-        //public string common_hub { get; set; }
-        //public string chat_index { get; set; }
 
-        //public UNIT common_unit { get; set; }
-        //public HUB common_hub { get; set; }
+
         public string common_hub_subject { get; set; }
 
         public async Task<string> GetAnswer()
@@ -76,8 +71,8 @@ namespace Awesome.AI.Common
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
-            if (!CONST.SAMPLE200.RandomSample(mind))
-                return;
+            //if (!CONST.SAMPLE200.RandomSample(mind))
+            //    return;
 
             if (count > 1)
                 count = 0;
@@ -87,6 +82,8 @@ namespace Awesome.AI.Common
             ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
             error = mind.down.Error;
+
+            SetLow = true;
         }
 
         public void SetMech()
@@ -97,8 +94,8 @@ namespace Awesome.AI.Common
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
-            if (!CONST.SAMPLE200.RandomSample(mind))
-                return;
+            //if (!CONST.SAMPLE200.RandomSample(mind))
+            //    return;
 
             if (count > 1)
                 count = 0;
@@ -106,17 +103,17 @@ namespace Awesome.AI.Common
             ok = mind.ok;
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            p_curr = $"{mind.mech_current.mp.p_curr.ToString("E3")}";
-            d_curr = $"{mind.mech_current.mp.d_curr.ToString("E3")}";
+            vv_curr = $"{mind.mech_current.mp.vv_curr.ToString("E3")}";
+            dv_curr = $"{mind.mech_current.mp.dv_curr.ToString("E3")}";
 
             user_var = $"{mind.user_var}";
 
-            if (mind._mech == MECHANICS.HILL)
+            if (mind._mech == MECHANICS.BALLONHILL_HIGH)
                 position = $"{mind.mech_current.POS_XY}";
-            if (mind._mech == MECHANICS.TUGOFWAR)
+            if (mind._mech == MECHANICS.TUGOFWAR_HIGH)
                 position = $"{mind.mech_current.POS_XY}";
-            if (mind._mech == MECHANICS.GRAVITY)
-                position = $"{mind.mech_current.POS_XY}";
+            //if (mind._mech == MECHANICS.GRAVITY_HIGH)
+            //    position = $"{mind.mech_current.POS_XY}";
 
             epochs = $"{mind.epochs}";
             runtime = $"{CONST.RUNTIME}";
@@ -135,7 +132,7 @@ namespace Awesome.AI.Common
             monologue_det_relevance = mind.mono.Relevance;
 
             norm_mood = mind.mood.p_90;
-            norm_noise = mind.mech_noise.mp.p_90;
+            norm_noise = mind.mech_noise.mp.vv_90;
 
             string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "base";
             prop_mood = mind.calc.Normalize(mind.mech_high.mp.props.PropsOut[_base], -1.0d, 1.0d, 0.0d, 100.0d);
@@ -157,6 +154,8 @@ namespace Awesome.AI.Common
             }
 
             count++;
+
+            SetHigh = true;
         }
     }
 }

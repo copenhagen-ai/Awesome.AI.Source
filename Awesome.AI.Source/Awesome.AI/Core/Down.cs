@@ -84,7 +84,7 @@ namespace Awesome.AI.Awesome.AI.Core
              * NO is to say no to going downwards
              * */
 
-            double d_curr = mind.mech_current.mp.d_curr;
+            double d_curr = mind.mech_current.mp.dv_curr;
 
             bool down = d_curr <= 0.0d;
             bool save = down;
@@ -110,16 +110,16 @@ namespace Awesome.AI.Awesome.AI.Core
              * thereby expressing levels of social entanglement
              * */
 
-            double d_curr = mind.mech_current.mp.d_curr;
-            double d_zero = mind.mech_current.mp.d_100.Zero(mind);
-            double d_save = mind.mech_current.mp.d_100.Zero(mind);
+            double d_curr = mind.mech_current.mp.dv_curr;
+            double d_zero = mind.mech_current.mp.dv_100.Zero(mind);
+            double d_save = mind.mech_current.mp.dv_100.Zero(mind);
 
-            bool down = d_curr <= 0;
+            bool down = DoDown(d_curr);
             
-            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && !Inertia())
+            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && NoInertia())
                 d_zero *= -1.0d;
 
-            if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind) && !Inertia())
+            if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind) && NoInertia())
                 d_zero *= -1.0d;
 
             bool flip = d_save != d_zero;
@@ -134,28 +134,52 @@ namespace Awesome.AI.Awesome.AI.Core
                 throw new Exception("NAN");
         }
 
-        private bool Inertia()
+        private bool DoDown(double d_curr)
+        {
+            double low = mind.mech_current.mp.dv_out_low;
+            double high = mind.mech_current.mp.dv_out_high;
+
+            switch (CONST.MechType)
+            {
+                case MECHANICS.TUGOFWAR_LOW:
+                case MECHANICS.BALLONHILL_LOW:
+                case MECHANICS.CIRCUIT_1_LOW:
+                    return d_curr <= 0;
+                    //double avg = (low + high) / 2;
+
+                    //return d_curr <= avg;                    
+                default:
+                    throw new Exception("Down, Down");
+            }
+        }
+
+        private int i_decay {  get; set; }
+        private bool NoInertia()
         {
             /*
-             * very simple, should be multistep
+             * simple
              * cancels out some of the direction changes
              * */
 
             //return false;
 
-            double p_curr = mind.mech_current.mp.p_curr;
-            double p_prev = mind.mech_current.mp.p_prev;
+            i_decay++;
 
-            bool p_up = p_curr > p_prev;
-            bool d_up = Dir > 0.0d;
+            double vv_curr = mind.mech_current.mp.vv_curr;
+            double dv_curr = mind.mech_current.mp.dv_curr;
+            
+            bool inertia = Math.Abs(vv_curr + dv_curr) < 0.15d;
 
-            return (p_up && d_up) || (!p_up && !d_up);
+            if(!inertia && i_decay > 100)
+                i_decay = 0;
+
+            return !inertia && i_decay < 2;
         }
 
         private void DoFlip(bool flip, double d_curr, out double _out)
         {
-            double low = mind.mech_current.mp.d_out_low;
-            double high = mind.mech_current.mp.d_out_high;
+            double low = mind.mech_current.mp.dv_out_low;
+            double high = mind.mech_current.mp.dv_out_high;
 
             _out = flip ? 
                 d_curr.Flip(low, high, mind) : 

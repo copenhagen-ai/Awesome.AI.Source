@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Core.Electrical;
 using Awesome.AI.Core.Mechanics;
 using Awesome.AI.Interfaces;
 using static Awesome.AI.Variables.Enums;
@@ -12,6 +13,19 @@ namespace Awesome.AI.Variables
         public Params(TheMind mind)
         {
             this.mind = mind;
+        }
+
+        private IMechanics Mech(MECHANICS type)
+        {
+            switch (type)
+            {
+                case MECHANICS.TUGOFWAR_LOW:
+                case MECHANICS.BALLONHILL_LOW:
+                    return new m_NoiseGenerator(mind, type);
+                case MECHANICS.CIRCUIT_1_LOW:
+                    return new e_CircuitSimulator(mind, type);
+                default: throw new Exception("Params, Mech");
+            }
         }
 
         public IMechanics GetMechanics(MECHANICS run = MECHANICS.NONE)
@@ -31,7 +45,7 @@ namespace Awesome.AI.Variables
             switch (run)
             {
                 case MECHANICS.NOISE:
-                    _mech = new m_NoiseGenerator(mind, CONST.MechType);
+                    _mech = Mech(CONST.MechType);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
                     tags = TAGS.ALL;                                                    //used with TAGS and BOTH
@@ -54,7 +68,7 @@ namespace Awesome.AI.Variables
                 //    //update_cred = 0.05d;
 
                 //    break;
-                case MECHANICS.TUGOFWAR:
+                case MECHANICS.TUGOFWAR_HIGH:
                     _mech = new m_TugOfWar(mind, PROPS.COMMUNICATION);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or OCCU
@@ -66,7 +80,7 @@ namespace Awesome.AI.Variables
                     //update_cred = 0.005d;
 
                     break;
-                case MECHANICS.HILL:
+                case MECHANICS.BALLONHILL_HIGH:
                     _mech = new m_BallOnHill(mind, PROPS.BRAINWAVE);
 
                     validation = VALIDATION.BOTH;                                       //BOTH or TAGS

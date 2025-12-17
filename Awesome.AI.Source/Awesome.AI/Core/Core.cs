@@ -54,13 +54,13 @@ namespace Awesome.AI.Core
             bool ok;
             switch (mind._mech)
             {
-                case MECHANICS.TUGOFWAR: 
+                case MECHANICS.TUGOFWAR_HIGH: 
                     ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);
                     return ok;
-                case MECHANICS.HILL: 
+                case MECHANICS.BALLONHILL_HIGH: 
                     ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);
                     return ok;
-                case MECHANICS.GRAVITY:
+                case MECHANICS.GRAVITY_HIGH:
                     ok = EventHorizonOK(mind.mech_current.POS_XY, out user_var);
                     return ok;
                 default: 

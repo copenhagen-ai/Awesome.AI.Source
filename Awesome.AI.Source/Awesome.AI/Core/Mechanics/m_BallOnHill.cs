@@ -32,10 +32,10 @@ namespace Awesome.AI.Core.Mechanics
             mp.eta = 0.5d;                  // Random noise amplitude for wind force
             mp.m1 = 0.35d;                  // Ball mass (kg)
 
-            mp.m_out_high = -1000.0d;
-            mp.m_out_low = 1000.0d;
-            mp.d_out_high = -1000.0d;
-            mp.d_out_low = 1000.0d;
+            mp.vv_out_high = -1000.0d;
+            mp.vv_out_low = 1000.0d;
+            mp.dv_out_high = -1000.0d;
+            mp.dv_out_low = 1000.0d;
             mp.posx_high = -1000.0d;
             mp.posx_low = 1000.0d;
         }
@@ -72,9 +72,9 @@ namespace Awesome.AI.Core.Mechanics
             mp.velocity += a_tangent * mp.dt;
             mp.pos_x += mp.velocity * mp.dt;
 
-            mp.p_prev = mp.p_curr;
-            mp.p_curr = mp.m1 * mp.velocity;
-            mp.d_curr = mp.p_curr - mp.p_prev;            
+            mp.vv_prev = mp.vv_curr;
+            mp.vv_curr = /*mp.m1 * */mp.velocity;
+            mp.dv_curr = mp.vv_curr - mp.vv_prev;            
         }
 
         private double ApplyStatic(MechParams mp)
@@ -116,7 +116,7 @@ namespace Awesome.AI.Core.Mechanics
 
             Calc(cycles);
 
-            mh.Update(mp);
+            mh.Extremes(mp);
             mh.Normalize(mind, mp);
         }
 

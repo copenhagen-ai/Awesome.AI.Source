@@ -216,9 +216,15 @@ namespace Awesome.AI.Core
 
         private void PreRun(string current, bool _pro)
         {
-            rand.SaveMomentum(current, mech_current.mp.d_curr);
+            rand.SaveMomentum(current, mech_current.mp.dv_curr);
 
-            _quick.Run(unit_current);            
+            _quick.Run(unit_current);
+
+            if (!_pro)
+                return;
+
+            _internal.Reset();
+            _external.Reset();
         }
 
         private void PostRun(bool _pro)
@@ -232,8 +238,8 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            _internal.Reset();
-            _external.Reset();
+            //_internal.Reset();
+            //_external.Reset();
         }
 
         private bool Core(bool _pro)
