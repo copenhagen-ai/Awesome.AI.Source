@@ -53,7 +53,7 @@ namespace Awesome.AI.Core.Electrical
 
             Calc(curr, true, -1);
 
-            mp.peek_norm = mind.calc.Normalize(mp.peek_pp_elec, mp.vv_out_low_peek, mp.vv_out_high_peek, 0.0d, 100.0d);
+            mp.peek_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_min, mp.peek_max, 0.0d, 100.0d);
         }
 
         public void Calc(UNIT curr, bool peek, int cycles)
@@ -65,9 +65,9 @@ namespace Awesome.AI.Core.Electrical
             switch (type)
             {
                 case MECHANICS.CIRCUIT_1_LOW:
-                    //mp.voltageMax = 5.0d;                                           // Max voltage scaling
-                    mp.dampingFactor = 0.2d;                                        // Scaling for resistor/damping
-                    mp.batteryVoltage = CONST.MAX * CONST.BASE_REDUCTION * 0.05d;    // Constant voltage source
+                    mp.damp = 0.2d;                                                 // Scaling for resistor/damping
+                    mp.inertia_lim = 0.0015d;
+                    mp.batteryVoltage = CONST.MAX * CONST.BASE_REDUCTION * 0.05d;   // Constant voltage source
                     mp.variableResistance = curr.Variable * 0.1d;                   // Dynamic resistance
                     mp.inductance = 1.0d;                                           // Inductor as electrical inertia
                     inductance = mp.inductance;
@@ -85,33 +85,17 @@ namespace Awesome.AI.Core.Electrical
             // Inductor: L * di/dt = V_net => di = V_net / L * dt
             double deltaCurrent = (netVoltage / inductance) * mp.dt;
 
-            if (peek)
-            {
-                mp.peek_pp_elec = mp.currentCurrent + deltaCurrent;
+            if (peek) {
+                mp.peek_cc_elec = mp.cc_elec_curr + deltaCurrent;
             }
-            else
-            {
-                //mp.previousCurrent = mp.currentCurrent;
-                //mp.currentCurrent += deltaCurrent;
-                //mp.previousFluxLinkage = mp.currentFluxLinkage;
-                //mp.currentFluxLinkage = mp.inductance * mp.currentCurrent;
-
-                // Integrate current to get charge
-                //mp.cumulativeCharge += mp.currentCurrent * mp.dt;
-
-
-
-                mp.previousCurrent = mp.currentCurrent; // update for next step
-                mp.currentCurrent += deltaCurrent * mp.dt;
-
-                mp.pp_elec_prev = mp.pp_elec_curr;
-                mp.dp_elec_prev = mp.dp_elec_curr;
-                mp.pp_elec_curr = inductance * mp.currentCurrent; // p = L * I
-                mp.dp_elec_curr = inductance * (mp.currentCurrent - mp.previousCurrent); // Δp = L * ΔI
-
+            else {
+                mp.dc_elec_prev = mp.dc_elec_curr;
+                mp.dc_elec_curr = deltaCurrent;
+                mp.cc_elec_prev = mp.cc_elec_curr;
+                mp.cc_elec_curr += deltaCurrent;
             }
 
-            if (double.IsNaN(mp.previousCurrent) || double.IsNaN(mp.currentCurrent)/* || double.IsNaN(mp.cumulativeCharge)*/)
+            if (double.IsNaN(mp.cc_elec_curr) || double.IsNaN(mp.cc_elec_prev) || double.IsNaN(mp.dc_elec_curr) || double.IsNaN(mp.dc_elec_prev))
                 throw new Exception("NAN in CircuitSimulator");
         }
 
@@ -129,7 +113,7 @@ namespace Awesome.AI.Core.Electrical
             switch (type)
             {
                 case MECHANICS.CIRCUIT_1_LOW:
-                    return -mp.batteryVoltage * mp.dampingFactor;
+                    return -mp.batteryVoltage * mp.damp;
                 default: throw new Exception("CircuitSimulator, ApplyBattery");
             }
         }
@@ -139,7 +123,7 @@ namespace Awesome.AI.Core.Electrical
             switch (type)
             {
                 case MECHANICS.CIRCUIT_1_LOW:
-                    return mp.variableResistance * mp.dampingFactor;
+                    return mp.variableResistance * mp.damp;
                 default: throw new Exception("CircuitSimulator, ApplyResistor");
             }
         }
@@ -148,7 +132,7 @@ namespace Awesome.AI.Core.Electrical
         {
             // Resistive damping proportional to current
             double damping = mh.Friction(mind, mind.unit_current.credits, 0.1d);
-            return damping * mp.currentCurrent * mp.dampingFactor;
+            return damping * mp.cc_elec_curr * mp.damp;
         }
 
         // --------------------------------------------------------
@@ -170,7 +154,7 @@ namespace Awesome.AI.Core.Electrical
 
             mh.ExtremesCircuit(mp);
             mh.NormalizeCircuit(mind, mp);
-            mh.ConvertCircuit(mp);
+            mh.SymbolicCircuit(mp);
         }
     }
 }

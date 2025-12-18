@@ -114,7 +114,7 @@ namespace Awesome.AI.Variables
         public const int SAMPLEHIGH = 1500;
 
         public const LOGICTYPE Logic = LOGICTYPE.PROBABILITY;
-        public const MECHANICS MechType = MECHANICS.TUGOFWAR_LOW;
+        public const MECHANICS MechType = MECHANICS.CIRCUIT_1_LOW;
         public const HACKMODE hack = HACKMODE.HACK;
 
         public const int MICRO_SEC = 10000;                 //call micro timer every 1000µs (1ms)

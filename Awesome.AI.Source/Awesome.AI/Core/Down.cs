@@ -165,8 +165,9 @@ namespace Awesome.AI.Awesome.AI.Core
 
             double vv_curr = mind.mech_current.mp.vv_curr;
             double dv_curr = mind.mech_current.mp.dv_curr;
-            
-            bool inertia = Math.Abs(vv_curr + dv_curr) < 0.15d;
+            double lim = mind.mech_current.mp.inertia_lim;
+
+            bool inertia = Math.Abs(vv_curr + dv_curr) < lim;
 
             if(!inertia && i_decay > 100)
                 i_decay = 0;

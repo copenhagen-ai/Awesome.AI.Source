@@ -15,10 +15,10 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.peek_max = -1000.0d;
             mp.peek_min = 1000.0d;
-            mp.pp_elec_max = -1000.0d;
-            mp.pp_elec_min = 1000.0d;
-            mp.dp_elec_max = -1000.0d;
-            mp.dp_elec_min = 1000.0d;
+            mp.cc_elec_max = -1000.0d;
+            mp.cc_elec_min = 1000.0d;
+            mp.dc_elec_max = -1000.0d;
+            mp.dc_elec_min = 1000.0d;
 
             mp.vv_out_high_peek = -1000.0d;
             mp.vv_out_low_peek = 1000.0d;
@@ -69,26 +69,25 @@ namespace Awesome.AI.Core.Mechanics
             mp.posx_low = 1E10d;
         }
 
-        public void ConvertCircuit(MechParams mp)
+        public void SymbolicCircuit(MechParams mp)
         {
-            mp.peek_velocity = mp.peek_pp_elec;
+            mp.peek_velocity = mp.peek_cc_elec;
             mp.vv_out_low_peek = mp.peek_min;
             mp.vv_out_high_peek = mp.peek_max;
 
-            mp.vv_curr = mp.currentCurrent;
-            mp.dv_curr = mp.deltaCurrent;
+            mp.vv_curr = mp.cc_elec_curr;
+            mp.dv_curr = mp.dc_elec_curr;
 
-            mp.vv_out_low = mp.pp_elec_min;
-            mp.vv_out_high = mp.pp_elec_max;
-            mp.dv_out_low = mp.dp_elec_min;
-            mp.dv_out_high = mp.dp_elec_max;
+            mp.vv_out_low = mp.cc_elec_min;
+            mp.vv_out_high = mp.cc_elec_max;
+            mp.dv_out_low = mp.dc_elec_min;
+            mp.dv_out_high = mp.dc_elec_max;
 
+            mp.vv_100 = mp.cc_elec_100;
+            mp.dv_100 = mp.dc_elec_100;
 
-            mp.vv_100 = mp.pp_elec_100;
-            mp.dv_100 = mp.dp_elec_100;
-
-            mp.vv_90 = mp.pp_elec_90;
-            mp.dv_90 = mp.dp_elec_90;
+            mp.vv_90 = mp.cc_elec_90;
+            mp.dv_90 = mp.dc_elec_90;
         }
 
 
@@ -98,31 +97,31 @@ namespace Awesome.AI.Core.Mechanics
         public void NormalizeCircuit(TheMind mind, MechParams mp)
         {
             // Adjust for degenerate ranges
-            double currentAdj = mp.pp_elec_min == mp.pp_elec_max ? 0.1d : 0.0d;
-            double chargeAdj = mp.dp_elec_min == mp.dp_elec_max ? 0.1d : 0.0d;
+            double currentAdj = mp.cc_elec_min == mp.cc_elec_max ? 0.1d : 0.0d;
+            double chargeAdj = mp.dc_elec_min == mp.dc_elec_max ? 0.1d : 0.0d;
 
             // Normalize current (0-100%) and charge (0-100%) for UI or scaling purposes
-            mp.pp_elec_100 = mind.calc.Normalize(mp.currentCurrent, mp.pp_elec_min - currentAdj, mp.pp_elec_max, 0.0d, 100.0d);
-            mp.dp_elec_100 = mind.calc.Normalize(mp.deltaCurrent, mp.dp_elec_min - chargeAdj, mp.dp_elec_max, 0.0d, 100.0d);
+            mp.cc_elec_100 = mind.calc.Normalize(mp.cc_elec_curr, mp.cc_elec_min - currentAdj, mp.cc_elec_max, 0.0d, 100.0d);
+            mp.dc_elec_100 = mind.calc.Normalize(mp.dc_elec_curr, mp.dc_elec_min - chargeAdj, mp.dc_elec_max, 0.0d, 100.0d);
 
             // Optional 10-90% normalized range
-            mp.pp_elec_90 = mind.calc.Normalize(mp.currentCurrent, mp.pp_elec_min - currentAdj, mp.pp_elec_max, 10.0d, 90.0d);
-            mp.dp_elec_90 = mind.calc.Normalize(mp.deltaCurrent, mp.dp_elec_min - chargeAdj, mp.dp_elec_max, 10.0d, 90.0d);
+            mp.cc_elec_90 = mind.calc.Normalize(mp.cc_elec_curr, mp.cc_elec_min - currentAdj, mp.cc_elec_max, 10.0d, 90.0d);
+            mp.dc_elec_90 = mind.calc.Normalize(mp.dc_elec_curr, mp.dc_elec_min - chargeAdj, mp.dc_elec_max, 10.0d, 90.0d);
         }
 
         public void ExtremesCircuit(MechParams mp)
         {
             // Update flux linkage extremes
-            if (mp.peek_pp_elec <= mp.peek_min) mp.peek_min = mp.peek_pp_elec;
-            if (mp.peek_pp_elec > mp.peek_max) mp.peek_max = mp.peek_pp_elec;
+            if (mp.peek_cc_elec <= mp.peek_min) mp.peek_min = mp.peek_cc_elec;
+            if (mp.peek_cc_elec > mp.peek_max) mp.peek_max = mp.peek_cc_elec;
 
             // Update current extremes
-            if (mp.currentCurrent <= mp.pp_elec_min) mp.pp_elec_min = mp.currentCurrent;
-            if (mp.currentCurrent > mp.pp_elec_max) mp.pp_elec_max = mp.currentCurrent;
+            if (mp.cc_elec_curr <= mp.cc_elec_min) mp.cc_elec_min = mp.cc_elec_curr;
+            if (mp.cc_elec_curr > mp.cc_elec_max) mp.cc_elec_max = mp.cc_elec_curr;
 
             // Update cumulative charge extremes
-            if (mp.deltaCurrent <= mp.dp_elec_min) mp.dp_elec_min = mp.deltaCurrent;
-            if (mp.deltaCurrent > mp.dp_elec_max) mp.dp_elec_max = mp.deltaCurrent;
+            if (mp.dc_elec_curr <= mp.dc_elec_min) mp.dc_elec_min = mp.dc_elec_curr;
+            if (mp.dc_elec_curr > mp.dc_elec_max) mp.dc_elec_max = mp.dc_elec_curr;
         }
 
         public void NormalizeNoise(TheMind mind, MechParams mp)

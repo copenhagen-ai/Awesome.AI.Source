@@ -6,19 +6,19 @@ namespace Awesome.AI.Core.Mechanics
 {
     public  class MechParams
     {
-        public double pp_elec_max { get; set; }
-        public double pp_elec_min { get; set; }
-        public double dp_elec_max { get; set; }
-        public double dp_elec_min { get; set; }
-        public double pp_elec_100 { get; set; }
-        public double dp_elec_100 { get; set; }
-        public double pp_elec_90 { get; set; }
-        public double dp_elec_90 { get; set; }
-        public double pp_elec_prev { get; set; }
-        public double pp_elec_curr { get; set; }
-        public double dp_elec_prev { get; set; }
-        public double dp_elec_curr { get; set; }
-        public double peek_pp_elec { get; set; }
+        public double cc_elec_max { get; set; }
+        public double cc_elec_min { get; set; }
+        public double dc_elec_max { get; set; }
+        public double dc_elec_min { get; set; }
+        public double cc_elec_100 { get; set; }
+        public double dc_elec_100 { get; set; }
+        public double cc_elec_90 { get; set; }
+        public double dc_elec_90 { get; set; }
+        public double cc_elec_prev { get; set; }
+        public double cc_elec_curr { get; set; }
+        public double dc_elec_prev { get; set; }
+        public double dc_elec_curr { get; set; }
+        public double peek_cc_elec { get; set; }
         public double peek_max { get; set; }
         public double peek_min { get; set; }
 
@@ -58,6 +58,8 @@ namespace Awesome.AI.Core.Mechanics
         public double omega { get; set; }           // Frequency (0.5 Hz)
         public double eta { get; set; }             // Random noise amplitude for wind force
         public double g { get; set; }               // Gravity in m/s^2
+        public double damp { get; set; }
+        public double inertia_lim { get; set; }
 
         //Friction parameters
         public double mu { get; set; }              // Coefficient of kinetic friction
@@ -67,10 +69,10 @@ namespace Awesome.AI.Core.Mechanics
         public double batteryVoltage { get; set; }
         public double variableResistance { get; set; }
         public double inductance { get; set; }
-        public double dampingFactor { get; set; }
-        public double currentCurrent { get; set; }
-        public double deltaCurrent { get; set; }
-        public double previousCurrent { get; set; }
+        //public double dampingFactor { get; set; }
+        //public double currentCurrent { get; set; }
+        //public double deltaCurrent { get; set; }
+        //public double previousCurrent { get; set; }
                 
 
         //Noise 
@@ -78,7 +80,6 @@ namespace Awesome.AI.Core.Mechanics
         public double f_dyn { get; set; }
         public double f_friction { get; set; }
         public double acc_max {  get; set; }
-        public double damp { get; set; }
 
         //Tug Of War
         public double Fmax { get; set; }            // Max oscillating force for F2

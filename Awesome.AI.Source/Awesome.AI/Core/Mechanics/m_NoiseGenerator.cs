@@ -64,14 +64,16 @@ namespace Awesome.AI.Core.Mechanics
             switch (type)
             {
                 case MECHANICS.TUGOFWAR_LOW:
-                    mp.acc_max = 5.0d;
                     mp.damp = 0.2d;
+                    mp.inertia_lim = 0.15d;
+                    mp.acc_max = 5.0d;
                     mp.m1 = CONST.MAX * CONST.BASE_REDUCTION * 5.0d; //0 - 500
                     mp.m2 = (curr.Variable) * 5.0d; //0 - 500
-                    total_mass = mp.m1 + mp.m2; 
+                    total_mass = mp.m1 + mp.m2;
                     break;
                 case MECHANICS.BALLONHILL_LOW:
                     mp.damp = 1.0d;
+                    mp.inertia_lim = 0.15d;
                     mp.a = 0.1d;// Parabola coefficient (hill steepness)
                     mp.g = CONST.GRAVITY;// Gravity (m/s^2)
                     mp.m1 = 0.35d;// Ball mass (kg)
