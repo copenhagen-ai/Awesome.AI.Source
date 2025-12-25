@@ -74,7 +74,10 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.vv_prev = mp.vv_curr;
             mp.vv_curr = /*mp.m1 * */mp.velocity;
-            mp.dv_curr = mp.vv_curr - mp.vv_prev;            
+            mp.dv_curr = mp.vv_curr - mp.vv_prev;
+
+            if (double.IsNaN(mp.cc_elec_curr) || double.IsNaN(mp.cc_elec_prev) || double.IsNaN(mp.dc_elec_curr) || double.IsNaN(mp.dc_elec_prev))
+                throw new Exception("m_BallOnHill, Calc");
         }
 
         private double ApplyStatic(MechParams mp)
@@ -95,7 +98,10 @@ namespace Awesome.AI.Core.Mechanics
 
             if (Fx < 0.0d)
                 Fx = 0.0d;
-            
+
+            if (double.IsNaN(Fx))
+                throw new Exception("m_BallOnHill, ApplyDynamic");
+
             return Fx;
         }
 

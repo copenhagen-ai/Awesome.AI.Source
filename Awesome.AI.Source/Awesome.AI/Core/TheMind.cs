@@ -86,8 +86,8 @@ namespace Awesome.AI.Core
                     parms[s] = new Params(this);
 
                 mech = new Dictionary<string, IMechanics>();
-                mech_high = parms_high.GetMechanics(_mech);
-                mech_noise = parms_noise.GetMechanics(MECHANICS.NOISE);
+                mech_high = parms_high.Mechanics(_mech);
+                mech_noise = parms_noise.Mechanics(CONST.MechType);
 
                 down = new Down(this);
                 soup = new TheSoup(this);

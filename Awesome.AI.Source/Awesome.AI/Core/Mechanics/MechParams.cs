@@ -69,9 +69,8 @@ namespace Awesome.AI.Core.Mechanics
         public double batteryVoltage { get; set; }
         public double variableResistance { get; set; }
         public double inductance { get; set; }
-        //public double dampingFactor { get; set; }
+        public double deltaCurrent { get; set; }
         //public double currentCurrent { get; set; }
-        //public double deltaCurrent { get; set; }
         //public double previousCurrent { get; set; }
                 
 

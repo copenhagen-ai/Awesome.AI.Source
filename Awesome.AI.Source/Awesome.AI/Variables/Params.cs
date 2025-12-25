@@ -15,23 +15,8 @@ namespace Awesome.AI.Variables
             this.mind = mind;
         }
 
-        private IMechanics Mech(MECHANICS type)
+        public IMechanics Mechanics(MECHANICS run)
         {
-            switch (type)
-            {
-                case MECHANICS.TUGOFWAR_LOW:
-                case MECHANICS.BALLONHILL_LOW:
-                    return new m_NoiseGenerator(mind, type);
-                case MECHANICS.CIRCUIT_1_LOW:
-                    return new e_CircuitSimulator(mind, type);
-                default: throw new Exception("Params, Mech");
-            }
-        }
-
-        public IMechanics GetMechanics(MECHANICS run = MECHANICS.NONE)
-        {
-            IMechanics _mech = null;
-
             /*
                 * INFO (not used)
                 * earth mass:      5.972 × 10^24 kg
@@ -44,77 +29,33 @@ namespace Awesome.AI.Variables
 
             switch (run)
             {
-                case MECHANICS.NOISE:
-                    _mech = Mech(CONST.MechType);
+                // low
+                case MECHANICS.TUGOFWAR_LOW:
+                case MECHANICS.BALLONHILL_LOW: 
+                    return new m_NoiseGenerator(mind, run);
+                case MECHANICS.CIRCUIT_1_LOW:
+                case MECHANICS.CIRCUIT_2_LOW: 
+                    return new e_CircuitSimulator(mind, run);
 
-                    validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
-                    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                    pattern = PATTERN.MOODGENERAL;
-
-                    //high_at_zero = true;                    
-                    //update_cred = 0.030d;
-
-                    break;
+                case MECHANICS.TUGOFWAR_HIGH: 
+                    return new m_TugOfWar(mind, PROPS.COMMUNICATION);
+                case MECHANICS.BALLONHILL_HIGH: 
+                    return new m_BallOnHill(mind, PROPS.BRAINWAVE);
+                
                 //case MECHANICS.GRAVITY:
-                //    _mech = new GravityAndRocket(mind, this);
-
-                //    validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                //    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
-                //    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                //    pattern = PATTERN.MOODGENERAL;
-
-                //    high_at_zero = true;
-                //    //update_cred = 0.05d;
-
-                //    break;
-                case MECHANICS.TUGOFWAR_HIGH:
-                    _mech = new m_TugOfWar(mind, PROPS.COMMUNICATION);
-
-                    validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
-                    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                    pattern = PATTERN.MOODGENERAL;
-
-                    //high_at_zero = true;
-                    //update_cred = 0.005d;
-
-                    break;
-                case MECHANICS.BALLONHILL_HIGH:
-                    _mech = new m_BallOnHill(mind, PROPS.BRAINWAVE);
-
-                    validation = VALIDATION.BOTH;                                       //BOTH or TAGS
-                    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
-                    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                    pattern = PATTERN.MOODGENERAL;
-
-                    //high_at_zero = false;
-                    //update_cred = 0.005d;                   
-
-                    break;
-                default: throw new Exception("GetMechanics");
+                //return new GravityAndRocket(mind, this);
+                default: 
+                    throw new Exception("GetMechanics");
             }
-
-            return _mech;
         }
-
-        
 
         /*
          * VARIABLE parameters
          * */
 
-        public VALIDATION validation;
-        public TAGS tags;                                               //used with WORLD and BOTH
-        public OCCUPASION occupasion;                                   //used with SELF and BOTH
-        public PATTERN pattern;
-
-        //public bool high_at_zero { get; set; }        
-        //public double low_cut { get; set; }
-
-        //public double update_cred { get; set; }
-        //public double schedule_low { get; set; }
-        //public double schedule_mid { get; set; }
-        //public double schedule_high { get; set; }
+        public VALIDATION validation = VALIDATION.BOTH;     //BOTH or TAGS
+        public OCCUPASION occupasion = OCCUPASION.DYNAMIC;  //used with OCCU and BOTH
+        public PATTERN pattern = PATTERN.MOODGENERAL;       
+        public TAGS tags = TAGS.ALL;                        //used with TAGS and BOTH
     }
 }

@@ -68,29 +68,54 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        public static double Zero(this double _x, TheMind mind)
+        public static double Norm0(this double _x, TheMind mind, double _l = -1d, double _h = -1d)
         {
-            double _l = 0.0d;
-            double _h = 100.0d;
+            if(_l == -1d && _h == -1d)
+            {
+                _l = mind.mech_current.mp.dv_out_low;
+                _h = mind.mech_current.mp.dv_out_high;
+                _l = _l == _h ? _l - 0.1d : _l;
+            }
 
             double res = mind.calc.Normalize(_x, _l, _h, -1.0d, 1.0d);
 
             return res;
         }
 
-        public static double Norm(this double _x, TheMind mind)
+        public static double Norm1(this double _x, TheMind mind, double _l = -1d, double _h = -1d)
         {
-            double _l = -1.0d;
-            double _h = 1.0d;
+            if (_l == -1d && _h == -1d)
+            {
+                _l = mind.mech_current.mp.dv_out_low;
+                _h = mind.mech_current.mp.dv_out_high;
+                _l = _l == _h ? _l - 0.1d : _l;
+            }
+
+            double res = mind.calc.Normalize(_x, _l, _h, 0.0d, 1.0d);
+
+            return res;
+        }
+
+        public static double Norm100(this double _x, TheMind mind, double _l = -1d, double _h = -1d)
+        {
+            if (_l == -1d && _h == -1d)
+            {
+                _l = mind.mech_current.mp.dv_out_low;
+                _h = mind.mech_current.mp.dv_out_high;
+                _l = _l == _h ? _l - 0.1d : _l;
+            }
 
             double res = mind.calc.Normalize(_x, _l, _h, 0.0d, 100.0d);
 
             return res;
         }
 
-        public static double Flip(this double _x, double _l, double _h, TheMind mind)
+        public static double Flip(this double _x, TheMind mind)
         {
-            double res = mind.calc.Normalize(_x, _l, _h, -1.0d, 0.0d);
+            double _l = mind.mech_current.mp.dv_out_low;
+            double _h = mind.mech_current.mp.dv_out_high;
+
+            double res = mind.calc.Normalize(_x, _l, _h, -1.0d, 1.0d);
 
             res *= -1.0d;
 

@@ -6,6 +6,92 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class MechHelper
     {
+        public class RCStage
+        {
+            public double Capacitance;
+            public double rFixed;
+
+            public double CapacitorVoltage;
+            public double Current;
+            public double DeltaCurrent;
+
+            private double previousCurrent;
+
+            public RCStage(double r, double c)
+            {
+                Capacitance = c;
+                rFixed = r;
+                CapacitorVoltage = 0;
+                previousCurrent = 0;
+            }
+
+            public double Step(double inputVoltage, double weight1, double weight2, double dt)
+            {
+                double rEffetive = rFixed * weight1 * weight2;
+                Current = (inputVoltage - CapacitorVoltage) / rEffetive;
+                DeltaCurrent = Current - previousCurrent;
+                CapacitorVoltage += (Current / Capacitance) * dt;
+                previousCurrent = Current;
+
+                //Clamp or saturate voltage
+                //CapacitorVoltage = Math.Max(-1.0, Math.Min(1.0, CapacitorVoltage));
+                
+                //Or, for smooth saturation:
+                //CapacitorVoltage = Math.Tanh(CapacitorVoltage);
+                
+                if (double.IsNaN(CapacitorVoltage) || double.IsInfinity(CapacitorVoltage))
+                    throw new Exception("MechHelper, Step");
+
+                return CapacitorVoltage;
+            }
+        }
+
+        public class FeedbackRegister
+        {
+            private double[] buffer;
+            private int index = 0;
+
+            public FeedbackRegister(int size)
+            {
+                buffer = new double[size];
+            }
+
+            public double Average()
+            {
+                double sum = 0;
+                foreach (var v in buffer)
+                    sum += v;
+                return sum / buffer.Length;
+            }
+
+            public void Push(double value)
+            {
+                buffer[index] = value;
+                index = (index + 1) % buffer.Length;
+            }
+        }
+
+        public void SymbolicCircuit(MechParams mp)
+        {
+            mp.peek_velocity = mp.peek_cc_elec;
+            mp.vv_out_low_peek = mp.peek_min;
+            mp.vv_out_high_peek = mp.peek_max;
+
+            mp.vv_curr = mp.cc_elec_curr;
+            mp.dv_curr = mp.dc_elec_curr;
+
+            mp.vv_out_low = mp.cc_elec_min;
+            mp.vv_out_high = mp.cc_elec_max;
+            mp.dv_out_low = mp.dc_elec_min;
+            mp.dv_out_high = mp.dc_elec_max;
+
+            mp.vv_100 = mp.cc_elec_100;
+            mp.dv_100 = mp.dc_elec_100;
+
+            mp.vv_90 = mp.cc_elec_90;
+            mp.dv_90 = mp.dc_elec_90;
+        }
+
         public void ResetCircuit(TheMind mind, MechParams mp)
         {
             if (!CONST.SAMPLE20.RandomSample(mind))
@@ -69,26 +155,6 @@ namespace Awesome.AI.Core.Mechanics
             mp.posx_low = 1E10d;
         }
 
-        public void SymbolicCircuit(MechParams mp)
-        {
-            mp.peek_velocity = mp.peek_cc_elec;
-            mp.vv_out_low_peek = mp.peek_min;
-            mp.vv_out_high_peek = mp.peek_max;
-
-            mp.vv_curr = mp.cc_elec_curr;
-            mp.dv_curr = mp.dc_elec_curr;
-
-            mp.vv_out_low = mp.cc_elec_min;
-            mp.vv_out_high = mp.cc_elec_max;
-            mp.dv_out_low = mp.dc_elec_min;
-            mp.dv_out_high = mp.dc_elec_max;
-
-            mp.vv_100 = mp.cc_elec_100;
-            mp.dv_100 = mp.dc_elec_100;
-
-            mp.vv_90 = mp.cc_elec_90;
-            mp.dv_90 = mp.dc_elec_90;
-        }
 
 
 
@@ -107,6 +173,9 @@ namespace Awesome.AI.Core.Mechanics
             // Optional 10-90% normalized range
             mp.cc_elec_90 = mind.calc.Normalize(mp.cc_elec_curr, mp.cc_elec_min - currentAdj, mp.cc_elec_max, 10.0d, 90.0d);
             mp.dc_elec_90 = mind.calc.Normalize(mp.dc_elec_curr, mp.dc_elec_min - chargeAdj, mp.dc_elec_max, 10.0d, 90.0d);
+
+            if (double.IsNaN(mp.cc_elec_100) || double.IsNaN(mp.cc_elec_90) || double.IsNaN(mp.dc_elec_100) || double.IsNaN(mp.dc_elec_90))
+                throw new Exception("MechHelper, NormalizeCircuit");
         }
 
         public void ExtremesCircuit(MechParams mp)
@@ -191,7 +260,7 @@ namespace Awesome.AI.Core.Mechanics
             return x_meter;
         }
 
-        public double Friction(TheMind mind, double credits, double damp)
+        public double Friction(TheMind mind)
         {
             /*
              * friction coeficient
@@ -200,16 +269,16 @@ namespace Awesome.AI.Core.Mechanics
 
             Calc calc = mind.calc;
 
-            double _c = 10.0d - credits;
-            double x = 5.0d - _c;
-            double friction = calc.Logistic(x);
 
-            return friction * damp;
+            double credits = 10.0d - mind.unit_current.credits;
+            double friction = calc.Logistic(credits - 5.0d);
+
+            return friction;
         }
 
         public double GetRandomNoise(TheMind mind, double noiseAmplitude)
         {
-            double will_prop = mind.down.WillProp;
+            double will_prop = mind.down.WillPropNorm0;
 
             return will_prop * noiseAmplitude;// Random value in range [-amplitude, amplitude]
         }

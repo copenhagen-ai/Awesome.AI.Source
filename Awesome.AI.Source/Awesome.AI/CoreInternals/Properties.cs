@@ -90,7 +90,7 @@ namespace Awesome.AI.Awesome.AI.Core
             if (mind.z_current != "z_mech")
                 return;
 
-            var _norm = mind.mech_high.mp.dv_100.Zero(mind);
+            var _norm = mind.mech_high.mp.dv_100.Norm0(mind, 0.0d, 100.0d);
 
             foreach (var kv in PropsIn)
             {

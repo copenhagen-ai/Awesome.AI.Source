@@ -2,6 +2,8 @@
 using Awesome.AI.Core.Mechanics;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
+using Microsoft.Win32;
+using static Awesome.AI.Core.Mechanics.MechHelper;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Electrical
@@ -11,6 +13,16 @@ namespace Awesome.AI.Core.Electrical
         MECHANICS type;
         public MechParams mp { get; set; }
         public MechHelper mh { get; set; }
+
+        // Feedback register (memory)
+        FeedbackRegister register = new FeedbackRegister(64);
+        // RC circuit
+        public RCStage[] circuit = 
+        {
+            new RCStage(1000, 0.0005),
+            new RCStage(2200, 0.001),
+            new RCStage(4700, 0.002)
+        };
 
         private TheMind mind;
         private e_CircuitSimulator() { }
@@ -33,6 +45,14 @@ namespace Awesome.AI.Core.Electrical
             mp.dv_out_low = 1000.0d;
             mp.posx_high = -1000.0d;
             mp.posx_low = 1000.0d;
+
+            //double[] vol = mind.rand.MyRandomDouble(64);
+            // Seed the system with tiny initial noise
+            //for (int i = 0; i < 64; i++)
+            //    register.Push((vol[i] - 0.5d > 0 ? 1 : -1) * 0.0001);
+
+            for (int i = 0; i < 64; i++)
+                register.Push((i % 2 == 0 ? 1 : -1) * 0.0001);
         }
 
         public double POS_XY
@@ -53,50 +73,99 @@ namespace Awesome.AI.Core.Electrical
 
             Calc(curr, true, -1);
 
-            mp.peek_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_min, mp.peek_max, 0.0d, 100.0d);
+            double adj = mp.peek_min == mp.peek_max ? 0.1d : 0.0d;
+
+            mp.peek_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_min - adj, mp.peek_max, 0.0d, 100.0d);
         }
 
         public void Calc(UNIT curr, bool peek, int cycles)
         {
             DeltaTime();
 
-            double inductance = 0.0d;
-
             switch (type)
             {
                 case MECHANICS.CIRCUIT_1_LOW:
-                    mp.damp = 0.2d;                                                 // Scaling for resistor/damping
+                    /*
+                     * Tug-Of-War
+                     * */
+
+                    mp.damp = 0.2d;             // Scaling for resistor/damping
                     mp.inertia_lim = 0.0015d;
-                    mp.batteryVoltage = CONST.MAX * CONST.BASE_REDUCTION * 0.05d;   // Constant voltage source
-                    mp.variableResistance = curr.Variable * 0.1d;                   // Dynamic resistance
-                    mp.inductance = 1.0d;                                           // Inductor as electrical inertia
-                    inductance = mp.inductance;
+                    mp.inductance = 1.0d;       // Inductor as electrical inertia
+                                        
                     break;
-                default: throw new Exception("e_CircuitSimulator, Unsupported type");
+                case MECHANICS.CIRCUIT_2_LOW:
+                    /*
+                     * Pink Noise
+                     * */
+
+                    mp.damp = 80.0d;             // Scaling for resistor/damping
+                    mp.inertia_lim = 0.0015d;
+                    mp.dt = 0.01;
+
+                    break;
+                default: throw new Exception("e_CircuitSimulator, Calc 1");
             }
 
-            // Calculate voltages
-            double vBattery = ApplyBattery(mp, type);
-            double vResistor = ApplyResistor(mp, type);
-            double vLoss = ApplyResistiveLoss(mp, type);
-
-            double netVoltage = vBattery + vResistor + vLoss;
-
-            // Inductor: L * di/dt = V_net => di = V_net / L * dt
-            double deltaCurrent = (netVoltage / inductance) * mp.dt;
-
-            if (peek) {
-                mp.peek_cc_elec = mp.cc_elec_curr + deltaCurrent;
+            if (peek) 
+            {
+                mp.peek_cc_elec = mp.cc_elec_curr + mp.deltaCurrent;
             }
-            else {
-                mp.dc_elec_prev = mp.dc_elec_curr;
-                mp.dc_elec_curr = deltaCurrent;
-                mp.cc_elec_prev = mp.cc_elec_curr;
-                mp.cc_elec_curr += deltaCurrent;
+            else 
+            {
+                switch (type)
+                {
+                    case MECHANICS.CIRCUIT_1_LOW:
+                        // Calculate voltages
+                        double vBattery = -(CONST.MAX * CONST.BASE_REDUCTION * 0.05d) * mp.damp;
+                        double vResistor = (curr.Variable * 0.1d) * mp.damp;
+                        double vLoss = mp.cc_elec_curr * mh.Friction(mind) * mp.damp;
+                        double netVoltage = vBattery + vResistor + vLoss;
+
+                        // Inductor: L * di/dt = V_net => di = V_net / L * dt
+                        mp.deltaCurrent = (netVoltage / mp.inductance) * mp.dt;
+
+                        mp.dc_elec_prev = mp.dc_elec_curr;
+                        mp.dc_elec_curr = mp.deltaCurrent;
+                        mp.cc_elec_prev = mp.cc_elec_curr;
+                        mp.cc_elec_curr += mp.deltaCurrent;
+
+                        break;
+                    case MECHANICS.CIRCUIT_2_LOW:
+                        double voltage = register.Average();
+                        double dCurrent = 0.0d;
+                        
+                        double w1 = curr.Variable.Norm1(mind, 0.0d, 100.0d);
+                        double w2 = mh.Friction(mind);
+
+                        double weight1 = w1 * mp.damp;
+                        double weight2 = w2 * mp.damp;
+
+                        foreach (var stage in circuit)
+                        {
+                            //stage.Resistance = 1000 + 500 * Math.Sin(2 * Math.PI * time * 0.1);
+                            voltage = stage.Step(voltage, weight1, weight2, mp.dt);
+                            dCurrent += stage.DeltaCurrent;
+
+                            if (double.IsNaN(dCurrent) || double.IsInfinity(dCurrent))
+                                throw new Exception("e_CircuitSimulator, Calc 2");
+                        }
+
+                        register.Push(voltage);
+
+                        mp.dc_elec_prev = mp.dc_elec_curr;
+                        mp.dc_elec_curr = dCurrent;
+                        mp.cc_elec_prev = mp.cc_elec_curr;
+                        mp.cc_elec_curr += dCurrent;
+
+                        break;
+                    default : throw new Exception("e_CircuitSimulator, Calc 3");
+                }
+
             }
 
             if (double.IsNaN(mp.cc_elec_curr) || double.IsNaN(mp.cc_elec_prev) || double.IsNaN(mp.dc_elec_curr) || double.IsNaN(mp.dc_elec_prev))
-                throw new Exception("NAN in CircuitSimulator");
+                throw new Exception("e_CircuitSimulator, Calc 4");
         }
 
         public void DeltaTime()
@@ -105,37 +174,6 @@ namespace Awesome.AI.Core.Electrical
             double mod = delta > 0.0d ? delta / 100.0d : 1.0d;
             mp.dt = 0.0005d * mod;
         }
-
-        // ---------------- Electrical Functions ----------------
-
-        public double ApplyBattery(MechParams mp, MECHANICS type)
-        {
-            switch (type)
-            {
-                case MECHANICS.CIRCUIT_1_LOW:
-                    return -mp.batteryVoltage * mp.damp;
-                default: throw new Exception("CircuitSimulator, ApplyBattery");
-            }
-        }
-
-        public double ApplyResistor(MechParams mp, MECHANICS type)
-        {
-            switch (type)
-            {
-                case MECHANICS.CIRCUIT_1_LOW:
-                    return mp.variableResistance * mp.damp;
-                default: throw new Exception("CircuitSimulator, ApplyResistor");
-            }
-        }
-
-        public double ApplyResistiveLoss(MechParams mp, MECHANICS type)
-        {
-            // Resistive damping proportional to current
-            double damping = mh.Friction(mind, mind.unit_current.credits, 0.1d);
-            return damping * mp.cc_elec_curr * mp.damp;
-        }
-
-        // --------------------------------------------------------
 
         public void Calculate(PATTERN match, int cycles)
         {

@@ -52,7 +52,9 @@ namespace Awesome.AI.Core.Mechanics
 
             Calc(curr, true, -1);
 
-            mp.peek_norm = mind.calc.Normalize(mp.peek_velocity, mp.vv_out_low_peek, mp.vv_out_high_peek, 0.0d, 100.0d);
+            double adj = mp.vv_out_low_peek == mp.vv_out_high_peek ? 0.1d : 0.0d;
+
+            mp.peek_norm = mind.calc.Normalize(mp.peek_velocity, mp.vv_out_low_peek - adj, mp.vv_out_high_peek, 0.0d, 100.0d);
         }
 
         public void Calc(UNIT curr, bool peek, int cycles)
@@ -140,7 +142,7 @@ namespace Awesome.AI.Core.Mechanics
                 default: throw new Exception("m_NoiseGenerator, Friction");
             }
 
-            double u = mh.Friction(mind, mind.unit_current.credits, 0.01d);
+            double u = mh.Friction(mind) * 0.05d;
             double N = total_mass * CONST.GRAVITY;
             double f_friction = u * N * -Math.Sign(mp.f_sta + mp.f_dyn);
 

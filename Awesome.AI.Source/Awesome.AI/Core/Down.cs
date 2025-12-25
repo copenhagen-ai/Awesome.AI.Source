@@ -10,12 +10,14 @@ namespace Awesome.AI.Awesome.AI.Core
     {
         public double Dir
         {
-            get => WillCurr <= 0.0d ? -1.0d : 1.0d;
+            get => IsDown(Orig) ? -1.0d : 1.0d;
         }
 
-        public double WillCurr { get; set; }
-        public double WillNorm { get; set; }
-        public double WillProp { get; set; }//zero
+        public double Orig { get; set; }
+        public double WillPropNorm0 { get => Orig.Norm0(mind); }//zero
+        public double WillPropNorm1 { get => Orig.Norm1(mind); }
+        public double WillPropNorm100 { get => Orig.Norm100(mind); }
+
         public int Error { get; set; }
         public List<double> Ratio { get; set; }
         private List<bool> Errors { get; set; }
@@ -29,7 +31,7 @@ namespace Awesome.AI.Awesome.AI.Core
             Ratio = new List<double>();
             Errors = new List<bool>();
 
-            WillProp = 1.0d;
+            //WillPropNorm0 = 1.0d;
         }
 
         public void Update()
@@ -41,7 +43,7 @@ namespace Awesome.AI.Awesome.AI.Core
             Continous();
 
             //code: before or after?
-            Ratio.Add(WillCurr);
+            Ratio.Add(WillPropNorm0);
             if (Ratio.Count > CONST.LAPSES)
                 Ratio.RemoveAt(0);            
         }
@@ -111,10 +113,10 @@ namespace Awesome.AI.Awesome.AI.Core
              * */
 
             double d_curr = mind.mech_current.mp.dv_curr;
-            double d_zero = mind.mech_current.mp.dv_100.Zero(mind);
-            double d_save = mind.mech_current.mp.dv_100.Zero(mind);
+            double d_zero = d_curr.Norm0(mind);
+            double d_save = d_curr.Norm0(mind);
 
-            bool down = DoDown(d_curr);
+            bool down = IsDown(d_curr);
             
             if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && NoInertia())
                 d_zero *= -1.0d;
@@ -126,28 +128,21 @@ namespace Awesome.AI.Awesome.AI.Core
             DoFlip(flip, d_curr, out d_curr);
             SetError(flip);
 
-            WillProp = d_zero;
-            WillNorm = d_zero.Norm(mind);
-            WillCurr = d_curr;
+            Orig = d_curr;
 
-            if (double.IsNaN(WillProp))
+            if (double.IsNaN(Orig))
                 throw new Exception("NAN");
         }
 
-        private bool DoDown(double d_curr)
+        private bool IsDown(double d_curr)
         {
-            double low = mind.mech_current.mp.dv_out_low;
-            double high = mind.mech_current.mp.dv_out_high;
-
             switch (CONST.MechType)
             {
                 case MECHANICS.TUGOFWAR_LOW:
                 case MECHANICS.BALLONHILL_LOW:
                 case MECHANICS.CIRCUIT_1_LOW:
-                    return d_curr <= 0;
-                    //double avg = (low + high) / 2;
-
-                    //return d_curr <= avg;                    
+                case MECHANICS.CIRCUIT_2_LOW:
+                    return d_curr <= 0;                                        
                 default:
                     throw new Exception("Down, Down");
             }
@@ -172,16 +167,13 @@ namespace Awesome.AI.Awesome.AI.Core
             if(!inertia && i_decay > 100)
                 i_decay = 0;
 
-            return !inertia && i_decay < 2;
+            return !inertia && i_decay < 10;
         }
 
         private void DoFlip(bool flip, double d_curr, out double _out)
         {
-            double low = mind.mech_current.mp.dv_out_low;
-            double high = mind.mech_current.mp.dv_out_high;
-
             _out = flip ? 
-                d_curr.Flip(low, high, mind) : 
+                d_curr.Flip(mind) : 
                 d_curr;
         }
 
@@ -207,14 +199,14 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public HARDDOWN ToHard()
         {
-            return WillCurr <= 0.0d ?
+            return WillPropNorm0 <= 0.0d ?
                 HARDDOWN.YES :
                 HARDDOWN.NO;
         }
 
         public FUZZYDOWN ToFuzzy()
         {
-            switch (WillNorm)
+            switch (WillPropNorm100)
             {
                 case <= 20.0d: return FUZZYDOWN.VERYYES;
                 case <= 40.0d: return FUZZYDOWN.YES;
