@@ -7,6 +7,7 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class m_BallOnHill : IMechanics
     {
+        public MechSymbolicOut ms { get; set; }
         public MechParams mp { get; set; }
         public MechHelper mh { get; set; }
 
@@ -15,6 +16,8 @@ namespace Awesome.AI.Core.Mechanics
         public m_BallOnHill(TheMind mind, PROPS props)
         {
             this.mind = mind;
+
+            this.ms = new MechSymbolicOut() { };
 
             this.mh = new MechHelper() { };
 
@@ -124,6 +127,7 @@ namespace Awesome.AI.Core.Mechanics
 
             mh.Extremes(mp);
             mh.Normalize(mind, mp);
+            ms.Convert(mp, MECHANICS.BALLONHILL_HIGH);
         }
 
         //Weight

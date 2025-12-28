@@ -74,6 +74,7 @@ namespace Awesome.AI.Core.Electrical
     public class e_CircuitSimulator : IMechanics
     {
         MECHANICS type;
+        public MechSymbolicOut ms { get; set; }
         public MechParams mp { get; set; }
         public MechHelper mh { get; set; }
 
@@ -233,7 +234,7 @@ namespace Awesome.AI.Core.Electrical
 
         public void DeltaTime()
         {
-            double delta = mind.mech_high.mp.dv_100;
+            double delta = mind.mech_high.ms.dv_sym_100;
             double mod = delta > 0.0d ? delta / 100.0d : 1.0d;
             mp.dt = 0.0005d * mod;
         }
@@ -255,7 +256,7 @@ namespace Awesome.AI.Core.Electrical
 
             mh.ExtremesCircuit(mp);
             mh.NormalizeCircuit(mind, mp);
-            mh.SymbolicCircuit(mp);
+            ms.Convert(mp, this.type);
         }
     }
 }

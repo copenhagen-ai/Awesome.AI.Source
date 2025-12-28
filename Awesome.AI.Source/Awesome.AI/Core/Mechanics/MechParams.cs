@@ -42,8 +42,8 @@ namespace Awesome.AI.Core.Mechanics
         public double dv_out_low { get; set; }
         public double posx_high { get; set; }
         public double posx_low { get; set; }
-        public double posxy { get; set; }
-        
+
+        public double posxy { get; set; }        
         public double pos_x = CONST.STARTXY;
 
         public PATTERN pattern_curr = PATTERN.NONE;
@@ -78,7 +78,7 @@ namespace Awesome.AI.Core.Mechanics
         public double f_sta { get; set; }
         public double f_dyn { get; set; }
         public double f_friction { get; set; }
-        public double acc_max {  get; set; }
+        //public double acc_max {  get; set; }
 
         //Tug Of War
         public double Fmax { get; set; }            // Max oscillating force for F2

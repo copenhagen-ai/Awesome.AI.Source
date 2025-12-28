@@ -103,8 +103,8 @@ namespace Awesome.AI.Common
             ok = mind.ok;
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            vv_curr = $"{mind.mech_current.mp.vv_curr.ToString("E3")}";
-            dv_curr = $"{mind.mech_current.mp.dv_curr.ToString("E3")}";
+            vv_curr = $"{mind.mech_current.ms.vv_sym_curr.ToString("E3")}";
+            dv_curr = $"{mind.mech_current.ms.dv_sym_curr.ToString("E3")}";
 
             user_var = $"{mind.user_var}";
 
@@ -132,7 +132,7 @@ namespace Awesome.AI.Common
             monologue_det_relevance = mind.mono.Relevance;
 
             norm_mood = mind.mood.p_90;
-            norm_noise = mind.mech_noise.mp.vv_90;
+            norm_noise = mind.mech_noise.ms.vv_sym_90;
 
             string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "base";
             prop_mood = mind.calc.Normalize(mind.mech_high.mp.props.PropsOut[_base], -1.0d, 1.0d, 0.0d, 100.0d);

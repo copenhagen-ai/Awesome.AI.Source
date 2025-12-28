@@ -6,27 +6,6 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class MechHelper
     {
-        public void SymbolicCircuit(MechParams mp)
-        {
-            mp.peek_velocity = mp.peek_cc_elec;
-            mp.vv_out_low_peek = mp.peek_min;
-            mp.vv_out_high_peek = mp.peek_max;
-
-            mp.vv_curr = mp.cc_elec_curr;
-            mp.dv_curr = mp.dc_elec_curr;
-
-            mp.vv_out_low = mp.cc_elec_min;
-            mp.vv_out_high = mp.cc_elec_max;
-            mp.dv_out_low = mp.dc_elec_min;
-            mp.dv_out_high = mp.dc_elec_max;
-
-            mp.vv_100 = mp.cc_elec_100;
-            mp.dv_100 = mp.dc_elec_100;
-
-            mp.vv_90 = mp.cc_elec_90;
-            mp.dv_90 = mp.dc_elec_90;
-        }
-
         public void ResetCircuit(TheMind mind, MechParams mp)
         {
             if (!CONST.SAMPLE20.RandomSample(mind))

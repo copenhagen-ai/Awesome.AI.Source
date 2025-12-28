@@ -8,6 +8,7 @@ namespace Awesome.AI.Core.Mechanics
     public class m_NoiseGenerator : IMechanics
     {
         MECHANICS type;
+        public MechSymbolicOut ms { get; set; }
         public MechParams mp { get; set; }
         public MechHelper mh { get; set; }
 
@@ -17,6 +18,8 @@ namespace Awesome.AI.Core.Mechanics
         {
             this.mind = mind;
             this.type = type;
+
+            this.ms = new MechSymbolicOut() { };
 
             this.mh = new MechHelper() { };
 
@@ -68,7 +71,7 @@ namespace Awesome.AI.Core.Mechanics
                 case MECHANICS.TUGOFWAR_LOW:
                     mp.damp = 0.2d;
                     mp.inertia_lim = 0.15d;
-                    mp.acc_max = 5.0d;
+                    //mp.acc_max = 5.0d;
                     mp.m1 = CONST.MAX * CONST.BASE_REDUCTION * 5.0d; //0 - 500
                     mp.m2 = (curr.Variable) * 5.0d; //0 - 500
                     total_mass = mp.m1 + mp.m2;
@@ -124,7 +127,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void DeltaTime()
         {
-            double delta = mind.mech_high.mp.dv_100;
+            double delta = mind.mech_high.ms.dv_sym_100;
 
             double mod = delta > 0.0d ? delta / 100.0d : 1.0d;
 
@@ -155,7 +158,8 @@ namespace Awesome.AI.Core.Mechanics
             {
                 case MECHANICS.TUGOFWAR_LOW:
                     // force left
-                    double Fapplied = mp.m1 * mp.acc_max;
+                    double acc = mp.dv_curr == 0.0d ? 0.1d : mp.dv_curr / mp.dt;
+                    double Fapplied = mp.m1 * acc;
                     return -(mp.damp * Fapplied);
                 case MECHANICS.BALLONHILL_LOW:
                     //slope force
@@ -173,7 +177,8 @@ namespace Awesome.AI.Core.Mechanics
             {
                 case MECHANICS.TUGOFWAR_LOW:
                     //force right
-                    double Fapplied = mp.m2 * mp.acc_max;            
+                    double acc = mp.dv_curr == 0.0d ? 0.1d : mp.dv_curr / mp.dt;
+                    double Fapplied = mp.m2 * acc;            
                     return mp.damp * Fapplied;
                 case MECHANICS.BALLONHILL_LOW:
                     //wind force
@@ -201,6 +206,7 @@ namespace Awesome.AI.Core.Mechanics
 
             mh.ExtremesNoise(mp);
             mh.NormalizeNoise(mind, mp);
+            ms.Convert(mp, this.type);
         }
 
         //NewtonForce

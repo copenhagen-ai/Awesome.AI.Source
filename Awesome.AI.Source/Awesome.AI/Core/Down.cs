@@ -86,7 +86,7 @@ namespace Awesome.AI.Awesome.AI.Core
              * NO is to say no to going downwards
              * */
 
-            double d_curr = mind.mech_current.mp.dv_curr;
+            double d_curr = mind.mech_current.ms.dv_sym_curr;
 
             bool down = d_curr <= 0.0d;
             bool save = down;
@@ -112,7 +112,7 @@ namespace Awesome.AI.Awesome.AI.Core
              * thereby expressing levels of social entanglement
              * */
 
-            double d_curr = mind.mech_current.mp.dv_curr;
+            double d_curr = mind.mech_current.ms.dv_sym_curr;
             double d_zero = d_curr.Norm0(mind);
             double d_save = d_curr.Norm0(mind);
 
@@ -158,8 +158,8 @@ namespace Awesome.AI.Awesome.AI.Core
 
             i_decay++;
 
-            double vv_curr = mind.mech_current.mp.vv_curr;
-            double dv_curr = mind.mech_current.mp.dv_curr;
+            double vv_curr = mind.mech_current.ms.vv_sym_curr;
+            double dv_curr = mind.mech_current.ms.dv_sym_curr;
             double lim = mind.mech_current.mp.inertia_lim;
 
             bool inertia = Math.Abs(vv_curr + dv_curr) < lim;

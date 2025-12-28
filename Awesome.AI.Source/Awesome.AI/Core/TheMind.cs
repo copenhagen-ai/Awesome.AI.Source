@@ -216,7 +216,7 @@ namespace Awesome.AI.Core
 
         private void PreRun(string current, bool _pro)
         {
-            rand.SaveMomentum(current, mech_current.mp.dv_curr);
+            rand.SaveMomentum(current, mech_current.ms.dv_sym_curr);
 
             _quick.Run(unit_current);
 

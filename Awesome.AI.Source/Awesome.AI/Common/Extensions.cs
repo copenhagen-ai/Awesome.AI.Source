@@ -72,8 +72,8 @@ namespace Awesome.AI.Common
         {
             if(_l == -1d && _h == -1d)
             {
-                _l = mind.mech_current.mp.dv_out_low;
-                _h = mind.mech_current.mp.dv_out_high;
+                _l = mind.mech_current.ms.dv_sym_low;
+                _h = mind.mech_current.ms.dv_sym_high;
                 _l = _l == _h ? _l - 0.1d : _l;
             }
 
@@ -86,8 +86,8 @@ namespace Awesome.AI.Common
         {
             if (_l == -1d && _h == -1d)
             {
-                _l = mind.mech_current.mp.dv_out_low;
-                _h = mind.mech_current.mp.dv_out_high;
+                _l = mind.mech_current.ms.dv_sym_low;
+                _h = mind.mech_current.ms.dv_sym_high;
                 _l = _l == _h ? _l - 0.1d : _l;
             }
 
@@ -100,8 +100,8 @@ namespace Awesome.AI.Common
         {
             if (_l == -1d && _h == -1d)
             {
-                _l = mind.mech_current.mp.dv_out_low;
-                _h = mind.mech_current.mp.dv_out_high;
+                _l = mind.mech_current.ms.dv_sym_low;
+                _h = mind.mech_current.ms.dv_sym_high;
                 _l = _l == _h ? _l - 0.1d : _l;
             }
 
@@ -112,8 +112,8 @@ namespace Awesome.AI.Common
 
         public static double Flip(this double _x, TheMind mind)
         {
-            double _l = mind.mech_current.mp.dv_out_low;
-            double _h = mind.mech_current.mp.dv_out_high;
+            double _l = mind.mech_current.ms.dv_sym_low;
+            double _h = mind.mech_current.ms.dv_sym_high;
 
             double res = mind.calc.Normalize(_x, _l, _h, -1.0d, 1.0d);
 
