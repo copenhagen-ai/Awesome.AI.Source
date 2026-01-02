@@ -4,7 +4,7 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreSystems
 {
-    public class Monologue
+    public class Monologue1
     {
         Dictionary<string, string> map_andrew = new Dictionary<string, string>()
         {
@@ -254,9 +254,9 @@ namespace Awesome.AI.CoreSystems
         };
 
         private TheMind mind;
-        private Monologue() { }
+        private Monologue1() { }
 
-        public Monologue(TheMind mind)
+        public Monologue1(TheMind mind)
         {
             this.mind = mind;
         }
@@ -334,7 +334,7 @@ namespace Awesome.AI.CoreSystems
 
                 string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "base";
                 mt = mind.mindtype;
-                sub = mind?.unit_actual?.HUB?.subject  ?? "";
+                sub = mind?.unit_actual?.HUB?.subject ?? "";
                 idx = $"{Index(mind.mech_high.mp.props.PropsOut[_base])}";
                 //idx = $"{Index(mind.down.Props["noise"])}";
                 //idx = $"{mind.mech_current.mp.p_100}"[..1];

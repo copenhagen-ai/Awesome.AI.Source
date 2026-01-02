@@ -177,11 +177,11 @@ namespace Awesome.AI.Core
             //if (mind.curr_unit.IsDECISION())
             //    return;
 
-            //if (mind.curr_unit.IsQUICKDECISION())
-            //    return;
+            if (mind.unit_current.IsQUICKDECISION())
+                return;
 
-            //if (mind.parms.state == STATE.QUICKDECISION)
-            //    return;
+            if (mind.STATE == STATE.QUICKDECISION)
+                return;
 
             history.Insert(0, mind.unit_current);
             if (history.Count > CONST.HIST_TOTAL)
@@ -196,11 +196,11 @@ namespace Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            //if (mind.curr_unit.IsQUICKDECISION())
-            //    return;
+            if (mind.unit_current.IsQUICKDECISION())
+                return;
 
-            //if (mind.parms.state == STATE.QUICKDECISION)
-            //    return;
+            if (mind.STATE == STATE.QUICKDECISION)
+                return;
 
             UNIT unit = history
                 .GroupBy(x => x)

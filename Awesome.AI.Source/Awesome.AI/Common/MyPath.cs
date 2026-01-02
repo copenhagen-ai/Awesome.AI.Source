@@ -4,7 +4,7 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
 {
-    public class Path
+    public class MyPath
     {
         public static string Root
         {
@@ -26,7 +26,7 @@ namespace Awesome.AI.Common
             }
         }
 
-        public static string MyPath(MINDS mindtype)
+        public static string Path(MINDS mindtype)
         {
             string root = Root;
             

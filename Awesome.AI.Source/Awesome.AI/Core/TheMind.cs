@@ -24,7 +24,8 @@ namespace Awesome.AI.Core
         public QuickDecision _quick;
         public LongDecision _long;
         public MoodGenerator mood;
-        public Monologue mono;
+        public WordGenerator word;
+        public Monologue2 mono;
         public Calc calc;
         public MyRandom rand;
         public Filters filters;
@@ -100,7 +101,8 @@ namespace Awesome.AI.Core
                 _long = new LongDecision(this, this.long_dec);
                 _quick = new QuickDecision(this);
                 mood = new MoodGenerator(this);
-                mono = new Monologue(this);
+                word = new WordGenerator(this);
+                mono = new Monologue2(this);
                 quantum = new QUsage(this);
                 prob = new MyProbabilityHelper();
                 mem = new Memory(this);
