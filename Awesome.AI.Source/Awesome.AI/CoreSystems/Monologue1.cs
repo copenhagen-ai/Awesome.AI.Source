@@ -344,7 +344,7 @@ namespace Awesome.AI.CoreSystems
 
                 if (CONST.DECI_SUBJECTS.Contains(sub))
                     return;
-
+                
                 Dictionary<string, string> arr = mind.mindtype == MINDS.ROBERTA ? map_roberta : map_andrew;
                 curr = arr.Where(x => x.Key[..3] == $"[{idx}]" && x.Value == sub).First().Key;
                 curr = curr.Trim().ToLower()

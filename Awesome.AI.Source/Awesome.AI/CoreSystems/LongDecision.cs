@@ -68,13 +68,7 @@ namespace Awesome.AI.CoreSystems
                 if (actual.data == "A" && action == ACTION.ACTION)
                     SetResult(type, "", 1);
 
-                //if (current.data == "A" && action == ACTION.DECLINE)
-                //    SetResult(type, "", 0);
-
-                //if (current.data == "A" && action == ACTION.NOACTION)
-                //    SetResult(type, "", 0);
-
-                
+                                
                 //answer
                 if (actual.data == "B" && action == ACTION.ACTION)
                     SetResult(type, ":YES", 0);
@@ -95,11 +89,8 @@ namespace Awesome.AI.CoreSystems
             {
                 string res = "";
                 
-                if (mind.down.ToPeriod() == Enums.PERIODDOWN.YES)
-                    res = actual.data.Replace("WHAT", "");
-
                 if (mind.down.ToPeriod() == Enums.PERIODDOWN.NO)
-                    ;
+                    res = actual.data.Replace("WHAT", "");
 
                 SetResult(type, res, 0);                
             }

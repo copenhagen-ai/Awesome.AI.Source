@@ -35,7 +35,9 @@ namespace Awesome.AI.Common
         public string monologue_det_result { get; set; }
         public string monologue_det_subject { get; set; }
         public string monologue_det_relevance { get; set; }
-
+        public string monologue_lat_result { get; set; }
+        public string monologue_lat_subject { get; set; }
+        public string monologue_lat_relevance { get; set; }
         public string mood {  get; set; }
         public bool mood_ok { get; set; }
         public double norm_mood { get; set; }
@@ -94,11 +96,8 @@ namespace Awesome.AI.Common
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
-            //if (!CONST.SAMPLE200.RandomSample(mind))
-            //    return;
-
             if (count > 1)
-                count = 0;
+                count = 0;            
 
             ok = mind.ok;
             cycles = $"{mind.cycles}";
@@ -127,9 +126,13 @@ namespace Awesome.AI.Common
             mood = mind.parms_current.pattern.ToString();
             mood_ok = mind.mood.ResColor == PATTERNCOLOR.GREEN;
 
-            monologue_det_result = mind.mono.Result;
-            monologue_det_subject = mind.mono.Subject;
-            monologue_det_relevance = mind.mono.Relevance;
+            monologue_det_result = mind.mono1.Result;
+            monologue_det_subject = mind.mono1.Subject;
+            monologue_det_relevance = mind.mono1.Relevance;
+
+            monologue_lat_result = mind.mono2.Result;
+            monologue_lat_subject = mind.mono2.Subject;
+            monologue_lat_relevance = mind.mono2.Relevance;
 
             norm_mood = mind.mood.p_90;
             norm_noise = mind.mech_noise.ms.vv_sym_90;

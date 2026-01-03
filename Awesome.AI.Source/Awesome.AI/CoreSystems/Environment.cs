@@ -129,9 +129,11 @@ namespace Awesome.AI.CoreSystems
 
         private Occupasion occu = new Occupasion() { name = "init", max_epochs = 10, values = null };
         private bool run = false;
+        private bool stabile = false;
         private int epoch_old = -1;
         public int epoch_count = 0;
         public int epoch_stop = -1;
+
 
         public string Occu
         {
@@ -140,10 +142,15 @@ namespace Awesome.AI.CoreSystems
                 /*
                  * run is only true once per cycle
                  * */
+
                 run = mind.epochs != epoch_old;
                 epoch_old = mind.epochs;
+
                 if (run)
                 {
+                    if (!stabile)
+                        return "unstabile";
+
                     switch (mind.parms_current.occupasion)
                     {
                         case OCCUPASION.FIXED:
@@ -164,7 +171,7 @@ namespace Awesome.AI.CoreSystems
                             int index = mind.rand.MyRandomInt(1, occus.Count - 1)[0];
 
                             occu = occus[index];
-
+                            
                             if (occu == null)
                                 throw new Exception("Occu");
 
@@ -200,6 +207,9 @@ namespace Awesome.AI.CoreSystems
 
             try
             {
+                if (!stabile)
+                    return false;
+
                 Occupasion occu = occus.Where(x => x.name == Occu).First();
                 List<HUB> _hubs = occu.values;
                 bool res = _hubs.Contains(_u.HUB);
@@ -239,16 +249,22 @@ namespace Awesome.AI.CoreSystems
         //}
 
         //process occupation
-        public void Setup(HUB last, MINDS mindtype)
+        public void Setup()
         {
             /*
              * these should be set according to hobbys, mood, location, interests etc..
              * */
 
+            HUB last = mind.unit_current.HUB;
+
             if (last.IsNull())
                 return;// throw new Exception("MyInternal, Setup");
 
-            if (mindtype == MINDS.ANDREW)
+            stabile = false;
+
+            occus = new List<Occupasion>();
+
+            if (mind.mindtype == MINDS.ANDREW)
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in andrew1)
@@ -264,7 +280,7 @@ namespace Awesome.AI.CoreSystems
 
             }
 
-            if (mindtype == MINDS.ROBERTA)
+            if (mind.mindtype == MINDS.ROBERTA)
             {
                 List<HUB> list = new List<HUB>();
                 foreach (string s in roberta1)
@@ -278,6 +294,9 @@ namespace Awesome.AI.CoreSystems
                 list.Add(last);
                 occus.Add(new Occupasion() { name = "hobbys", max_epochs = 30, values = list });/**/
             }
+
+            if (occus.Any())
+                stabile = true;
         }
 
         public void Reset()
@@ -295,8 +314,7 @@ namespace Awesome.AI.CoreSystems
                 //if (mind.unit_current.HUB is null)
                 //    return;
 
-                occus = new List<Occupasion>();
-                Setup(mind.unit_current.HUB, mind.mindtype);
+                Setup();
             }
         }
     }

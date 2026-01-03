@@ -184,8 +184,8 @@ namespace Awesome.AI.Core.Mechanics
             Calc calc = mind.calc;
 
 
-            double credits = 10.0d - mind.unit_current.credits;
-            double friction = calc.Logistic(credits - 5.0d);
+            double credits = CONST.MAX_CREDIT - mind.unit_current.credits;
+            double friction = calc.Logistic(credits - ((double)CONST.MAX_CREDIT / 2.0d));
 
             return friction;
         }

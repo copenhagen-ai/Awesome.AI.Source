@@ -83,6 +83,22 @@ namespace Awesome.AI.CoreSystems
             return str;
         }
 
+        private string Clean(string str)
+        {
+            List<string> l1 = new List<string>() { " ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+
+            str = str.Trim().ToLower();
+
+            string res = "";
+
+            foreach(char c in str) {
+                if (l1.Contains("" + c))
+                    res += "" + c;
+            }
+
+            return res;
+        }
+
         public string Generate(string idx, string sub)
         {
             LoadData();
@@ -99,6 +115,7 @@ namespace Awesome.AI.CoreSystems
             string res = $"[{idx}]{word1} {word2} {word3}";
 
             res = Format(res);
+            res = Clean(res);
 
             return res;
         }

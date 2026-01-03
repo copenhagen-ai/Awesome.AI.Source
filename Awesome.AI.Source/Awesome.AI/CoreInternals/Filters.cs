@@ -47,7 +47,7 @@ namespace Awesome.AI.CoreInternals
             if (mind.STATE == STATE.QUICKDECISION)
                 return true;
 
-            return unit.credits > 1.0d;
+            return unit.credits > CONST.LOW_CREDIT;
         }
 
         //public bool Direction(UNIT _x)

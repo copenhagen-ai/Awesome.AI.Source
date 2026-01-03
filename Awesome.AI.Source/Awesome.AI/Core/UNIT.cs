@@ -71,24 +71,33 @@ namespace Awesome.AI.Core
         {
             get
             {
+                if (mind.STATE == STATE.QUICKDECISION)
+                    return null;
+
+                if (IsQUICKDECISION())
+                    return null;
+
                 if (IsIDLE())
                     return HUB.Create("GUID", "IDLE", new List<UNIT>(), TONE.RANDOM, -1);
 
                 STATE state = mind.STATE;
+
                 List<HUB> list = mind.mem.HUBS_ALL(state);
 
-                try
-                {
-                    return list.Where(x => x.hub_guid == this.hub_guid).First();
-                } 
-                catch 
-                {
-                    //it can be null, when quick desicion and roomhub -> monologue
-                    return null;
-                }
+                HUB hub = list.Where(x => x.hub_guid == this.hub_guid).First();
+
+                return hub;
+                
+                //try
+                //{
+                //} 
+                //catch (Exception ex)
+                //{
+                //    //it can be null, when quick desicion and roomhub -> monologue
+                //    //return null;
+                //}
             }
         }
-
 
         public static UNIT Create(TheMind mind, string h_guid, double index, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
         {

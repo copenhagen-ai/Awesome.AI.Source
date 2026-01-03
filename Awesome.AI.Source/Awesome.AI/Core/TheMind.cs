@@ -25,7 +25,8 @@ namespace Awesome.AI.Core
         public LongDecision _long;
         public MoodGenerator mood;
         public WordGenerator word;
-        public Monologue2 mono;
+        public Monologue1 mono1;
+        public Monologue2 mono2;
         public Calc calc;
         public MyRandom rand;
         public Filters filters;
@@ -102,7 +103,8 @@ namespace Awesome.AI.Core
                 _quick = new QuickDecision(this);
                 mood = new MoodGenerator(this);
                 word = new WordGenerator(this);
-                mono = new Monologue2(this);
+                mono1 = new Monologue1(this);
+                mono2 = new Monologue2(this);
                 quantum = new QUsage(this);
                 prob = new MyProbabilityHelper();
                 mem = new Memory(this);
@@ -297,7 +299,8 @@ namespace Awesome.AI.Core
 
             mood.Generate(_pro);
             mood.MoodOK(_pro);
-            mono.Create(_pro);
+            mono1.Create(_pro);
+            mono2.Create(_pro);
         }
 
         private async void ProcessPass()

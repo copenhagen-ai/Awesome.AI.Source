@@ -287,9 +287,9 @@ namespace Awesome.AI.CoreInternals
 
             List<string> list = Tags(mind.mindtype);
             int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
-            string ticket = "" + unit.HUB.subject + rand;
 
-            string guid = unit.hub_guid;
+            string ticket = "" + unit.HUB.subject + rand;
+            string guid = "" + unit.hub_guid;
 
             UNIT _u = UNIT.Create(mind, guid, idx, "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
             HUB _h = _u.HUB;

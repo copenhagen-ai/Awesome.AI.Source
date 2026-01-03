@@ -156,6 +156,8 @@ namespace Awesome.AI.Awesome.AI.Core
              * cancels out some of the direction changes
              * */
 
+            //return true;
+
             i_decay++;
 
             double vv_curr = mind.mech_current.ms.vv_sym_curr;
