@@ -162,8 +162,8 @@ namespace Awesome.AI.Core
             }
 
             mind.unit_current.credits -= 1.0d;
-            if (mind.unit_current.credits < CONST.LOW_CREDIT)
-                mind.unit_current.credits = CONST.LOW_CREDIT;
+            if (mind.unit_current.credits < 0.0d)
+                mind.unit_current.credits = 0.0d;
         }
 
         public void History()
@@ -177,11 +177,11 @@ namespace Awesome.AI.Core
             //if (mind.curr_unit.IsDECISION())
             //    return;
 
-            if (mind.unit_current.IsQUICKDECISION())
-                return;
+            //if (mind.unit_current.IsQUICKDECISION())
+            //    return;
 
-            if (mind.STATE == STATE.QUICKDECISION)
-                return;
+            //if (mind.STATE == STATE.QUICKDECISION)
+            //    return;
 
             history.Insert(0, mind.unit_current);
             if (history.Count > CONST.HIST_TOTAL)
@@ -196,11 +196,11 @@ namespace Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            if (mind.unit_current.IsQUICKDECISION())
-                return;
+            //if (mind.unit_current.IsQUICKDECISION())
+            //    return;
 
-            if (mind.STATE == STATE.QUICKDECISION)
-                return;
+            //if (mind.STATE == STATE.QUICKDECISION)
+            //    return;
 
             UNIT unit = history
                 .GroupBy(x => x)

@@ -1,14 +1,13 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
-using System.Globalization;
 
 namespace Awesome.AI.CoreSystems
 {
     public class WordGenerator
     {
-        private string path {get;set;}
-        private List<string> lines;
-        private Random rand = new Random();
+        private string path { get; set; }
+        private List<string> lines { get; set; }
+        private Random rand { get; set; }
 
         private TheMind mind;
         private WordGenerator() { }
@@ -16,7 +15,7 @@ namespace Awesome.AI.CoreSystems
         public WordGenerator(TheMind mind)
         {
             this.mind = mind;
-
+            this.rand = new Random();
         }
 
         private void LoadData()
@@ -103,14 +102,16 @@ namespace Awesome.AI.CoreSystems
         {
             LoadData();
 
-            string word1 = "", word2 = "", word3 = "";
+            string word1 = "...", word2 = "...", word3 = "...";
 
-            while (word1 == "" || word2 == "" || word3 == "")
-            {
+            while (word1 == "...")
                 word1 = PickWord();
+
+            while (word2 == "...")
                 word2 = PickWord();
+
+            while (word3 == "...")
                 word3 = PickWord();
-            }
 
             string res = $"[{idx}]{word1} {word2} {word3}";
 

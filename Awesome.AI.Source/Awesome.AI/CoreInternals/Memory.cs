@@ -1,5 +1,4 @@
-﻿using Awesome.AI.Access;
-using Awesome.AI.Common;
+﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
@@ -9,21 +8,6 @@ namespace Awesome.AI.CoreInternals
 
     public class Memory
     {
-        /*
-         * ---UNITS---
-         * how should mass/dist be chosen?
-         * - index_x is -> mass of the UNIT, mass
-         * - index_y is -> relevance to lowest UNIT, dist
-         * - maybe think of shortest distance from one UNIT (lowest) to the next (current)
-         * 
-         * some sort of voting system(general opinion?), giving a generel mapping
-         * 
-         * these are just some thoughts
-         * should mass/dist be unique?
-         * maybe HUB->UNITS should have weights (more visited)
-         * - this way certain "memories" can be forgotten/covered up (less visited)
-         * */
-
         private List<string> location_should_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
@@ -606,144 +590,6 @@ namespace Awesome.AI.CoreInternals
             HUB _h = HUB.Create(guid, subject, _u, tone, max_units);
 
             HUBS_ADD(STATE.JUSTRUNNING, _h);
-        }
-
-        //public void HubsCommon(string guid, int u_count, List<string> list, TONE tone)
-        //{
-        //    //XElement xdoc;
-        //    //if (mind.parms.setup_tags == TAGSETUP.PRIME)
-        //    //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
-        //    //else
-        //    //    throw new Exception();
-
-        //    foreach (string s in list)
-        //    {
-        //        List<UNIT> _u = new List<UNIT>();
-
-        //        for (int i = 1; i <= u_count; i++)
-        //        {
-        //            UNIT _un;
-
-        //            switch (mind.parms[mind.current].state)
-        //            {
-        //                case STATE.JUSTRUNNING: _un = units_running.Where(x => x.Root == "_" + s + i).First(); break;
-        //                case STATE.QUICKDECISION: _un = units_decision.Where(x => x.Root == "_" + s + i).First(); break;
-        //                default: throw new NotImplementedException();
-        //            }
-        //            _u.Add(_un);
-        //        }
-
-        //        HUB _h = HUB.Create(guid, s, _u, tone);
-
-        //        HUBS_ADD(mind.parms[mind.current].state, _h);
-        //    }
-        //}
-
-        //public int HubsDecide(STATE state, string guid, string subject, List<string> list, UNITTYPE type, int count, TONE tone)
-        //{
-        //    //XElement xdoc;
-        //    //if (mind.parms.setup_tags == TAGSETUP.PRIME)
-        //    //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
-        //    //else
-        //    //    throw new Exception();
-
-        //    List<UNIT> _u = new List<UNIT>();
-
-        //    foreach (string s in list)
-        //    {
-        //        UNIT _un;
-
-        //        switch (state)
-        //        {
-        //            case STATE.JUSTRUNNING: _un = units_running.Where(x => x.Root == "_" + type.ToString().ToLower() + count).First(); break;
-        //            case STATE.QUICKDECISION: _un = units_decision.Where(x => x.Root == "_" + s.ToLower() + count).First(); break;
-        //            default: throw new NotImplementedException();
-        //        }
-        //        _u.Add(_un);
-
-        //        count++;
-        //    }
-
-        //    HUB _h = HUB.Create(guid, subject, _u, tone);
-
-        //    HUBS_ADD(state, _h);
-
-        //    return count;
-        //}
-
-        //public void HubsQuick(string guid, string subject, string name, int count, UNITTYPE type, TONE tone)
-        //{
-        //    //XElement xdoc;
-        //    //if (mind.parms.setup_tags == TAGSETUP.PRIME)
-        //    //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
-        //    //else
-        //    //    throw new Exception();
-
-        //    List<UNIT> _u = new List<UNIT>();
-
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        UNIT _un = units_running.Where(x => x.Root == "_" + name.ToLower() + i).First();
-        //        _u.Add(_un);
-        //    }
-
-        //    HUB _h = HUB.Create(guid, subject, _u, tone);
-
-        //    HUBS_ADD(STATE.JUSTRUNNING, _h);
-        //}
-
-        //public void SetupUnits()
-        //{
-
-        //    XElement xdoc;
-        //    if (mind.parms.case_occupasion == OCCUPASION.DYNAMIC)
-        //        xdoc = XElement.Load(PathSetup.MyPath(mind.mindtype));
-        //    else
-        //        throw new Exception();
-
-        //    List<XElement> xunits = xdoc.Element("words").Elements().ToList();
-        //    string previous = "prev";
-        //    foreach (XElement xw in xunits)
-        //    {
-        //        if (previous != xw.Attribute("root").Value)
-        //        {
-        //            units.Add(
-        //            UNIT.Create(
-        //                mind,
-        //                double.Parse(xw.Attribute("index_x").Value, CultureInfo.InvariantCulture),
-        //                xw.Attribute("root").Value,
-        //                "null",
-        //                xw.Attribute("ticket").Value,
-        //                TYPE.JUSTAUNIT
-        //                ));
-        //        }
-        //        previous = xw.Attribute("root").Value;
-        //    }
-        //}
-
-        //public void SetupHubs()
-        //{
-        //    XElement xdoc;
-        //    if (mind.parms.case_occupasion == OCCUPASION.DYNAMIC)
-        //        xdoc = XElement.Load(PathSetup.MyPath(mind.mindtype));
-        //    else
-        //        throw new Exception();
-
-        //    List<XElement> xhubs = xdoc.Element("hubs").Elements().ToList();
-
-        //    foreach (XElement el in xhubs)
-        //    {
-        //        List<XElement> xws = xhubs.Where(x => x.Attribute("val").Value == el.Attribute("val").Value).Elements("ws").ToList();
-
-        //        List<UNIT> _u = new List<UNIT>();
-
-        //        foreach (XElement xw in xws)
-        //            _u.Add(units.Where(x => x.root == xw.Attribute("val").Value).FirstOrDefault());
-
-        //        HUB _h = HUB.Create(el.Attribute("val").Value, _u, true, null, -1.0d, -1.0d);
-
-        //        HUBS_ADD(_h);
-        //    }
-        //}
+        }        
     }
 }
