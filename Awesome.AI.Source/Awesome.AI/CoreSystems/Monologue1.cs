@@ -329,6 +329,12 @@ namespace Awesome.AI.CoreSystems
 
                 counter = 0;
 
+                if (mind.unit_actual.IsDECISION())
+                    return;
+
+                if (mind.unit_actual.IsQUICKDECISION())
+                    return;
+
                 if (mind.STATE == STATE.QUICKDECISION)
                     return;
 
