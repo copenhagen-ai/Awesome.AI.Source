@@ -202,7 +202,7 @@ namespace Awesome.AI.CoreSystems
             if (mind.z_current == "z_noise")
                 return true;
 
-            if (!UNIT.OK3(_u))
+            if (!mind.FilterThinking(FILTERUNIT.NONE, FILTERTYPE.THREE, _u))
                 return true;
 
             try

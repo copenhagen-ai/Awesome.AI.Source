@@ -24,5 +24,7 @@
         public enum PERIODDOWN { YES, NO }
         public enum ORDER { NONE, BYINDEX, BYVARIABLE }
         public enum PROPS { COMMUNICATION, BRAINWAVE }
+        public enum FILTERUNIT { NONE, CURRENT, ACTUAL }
+        public enum FILTERTYPE { ONE, TWO, THREE }
     }
 }

@@ -134,6 +134,38 @@ namespace Awesome.AI.Common
             return val;
         }
 
+        public static bool FilterThinking(this TheMind mind, FILTERUNIT funit, FILTERTYPE ftype, UNIT unit = null)
+        {
+            UNIT _u = unit;
+
+            if (unit == null)
+                _u = funit == FILTERUNIT.CURRENT ? mind.unit_current : mind.unit_actual;
+
+            switch (ftype)
+            {
+                case FILTERTYPE.ONE:
+                    if (_u.IsNull()) return false;
+                    if (_u.Root == "xxxx") return false;
+                    if (_u.IsIDLE()) return false;
+                    if (_u.IsQUICKDECISION()) return false;
+                    if (_u.IsDECISION()) return false;
+                    return true;
+                case FILTERTYPE.TWO:
+                    if (_u.IsNull()) return false;
+                    if (_u.Root == "xxxx") return false;
+                    if (_u.IsQUICKDECISION()) return false;
+                    return true;
+                case FILTERTYPE.THREE:
+                    if (_u.IsNull()) return false;
+                    if (_u.Root == "xxxx") return false;
+                    if (_u.IsQUICKDECISION()) return false;
+                    if (_u.IsDECISION()) return false;
+                    return true;
+            }
+
+            throw new Exception("Extensions, FilterThinking");
+        }
+
         [Obsolete("Legacy Method", false)]
         public static bool TheHack(this bool _b, TheMind mind)
         {

@@ -189,55 +189,55 @@ namespace Awesome.AI.Core
 
         public bool IsQUICKDECISION() => unit_type == UNITTYPE.QDECISION;
 
-        public static bool OK1(UNIT _u)
-        {
-            if (_u.IsNull())
-                return false;
+        //public static bool OK1(UNIT _u)
+        //{
+        //    if (_u.IsNull())
+        //        return false;
 
-            if (_u.Root == "xxxx")
-                return false;
+        //    if (_u.Root == "xxxx")
+        //        return false;
 
-            if (_u.IsIDLE())
-                return false;
+        //    if (_u.IsIDLE())
+        //        return false;
 
-            if (_u.IsQUICKDECISION())
-                return false;
+        //    if (_u.IsQUICKDECISION())
+        //        return false;
 
-            if (_u.IsDECISION())
-                return false;
+        //    if (_u.IsDECISION())
+        //        return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public static bool OK2(UNIT _u)
-        {
-            if (_u.IsNull())
-                return false;
+        //public static bool OK2(UNIT _u)
+        //{
+        //    if (_u.IsNull())
+        //        return false;
 
-            if (_u.Root == "xxxx")
-                return false;
+        //    if (_u.Root == "xxxx")
+        //        return false;
 
-            if (_u.IsQUICKDECISION())
-                return false;
+        //    if (_u.IsQUICKDECISION())
+        //        return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public static bool OK3(UNIT _u)
-        {
-            if (_u.IsNull())
-                return false;
+        //public static bool OK3(UNIT _u)
+        //{
+        //    if (_u.IsNull())
+        //        return false;
 
-            if (_u.Root == "xxxx")
-                return false;
+        //    if (_u.Root == "xxxx")
+        //        return false;
 
-            if (_u.IsQUICKDECISION())
-                return false;
+        //    if (_u.IsQUICKDECISION())
+        //        return false;
 
-            if (_u.IsDECISION())
-                return false;
+        //    if (_u.IsDECISION())
+        //        return false;
 
-            return true;
-        }        
+        //    return true;
+        //}
     }
 }

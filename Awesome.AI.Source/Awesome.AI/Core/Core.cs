@@ -140,7 +140,7 @@ namespace Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            if (!UNIT.OK2(mind.unit_current))
+            if (!mind.FilterThinking(FILTERUNIT.CURRENT, FILTERTYPE.TWO))
                 return;
 
             List<UNIT> list = mind.mem.UNITS_ALL();
@@ -148,7 +148,7 @@ namespace Awesome.AI.Core
             //this could be a problem with many hubs
             foreach (UNIT _u in list)
             {
-                if (!UNIT.OK2(_u))
+                if (!mind.FilterThinking(FILTERUNIT.NONE, FILTERTYPE.TWO, _u))
                     continue;
 
                 if (_u.Root == mind.unit_current.Root)
@@ -220,7 +220,7 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            if (!UNIT.OK2(mind.unit_actual))
+            if (!mind.FilterThinking(FILTERUNIT.ACTUAL, FILTERTYPE.TWO))
                 return;
 
             if (mind.STATE == STATE.QUICKDECISION)
