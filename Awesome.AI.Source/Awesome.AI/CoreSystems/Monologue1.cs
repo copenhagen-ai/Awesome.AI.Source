@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Core;
+﻿using Awesome.AI.Common;
+using Awesome.AI.Core;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -329,13 +330,16 @@ namespace Awesome.AI.CoreSystems
 
                 counter = 0;
 
-                if (mind.unit_actual.IsDECISION())
+                if (mind.STATE == STATE.QUICKDECISION)
                     return;
 
                 if (mind.unit_actual.IsQUICKDECISION())
                     return;
 
-                if (mind.STATE == STATE.QUICKDECISION)
+                if (mind.unit_actual.IsDECISION())
+                    return;
+
+                if (!CONST.SAMPLE20.RandomSample(mind))
                     return;
 
                 string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "base";

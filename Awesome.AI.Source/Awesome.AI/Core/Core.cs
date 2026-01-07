@@ -174,14 +174,15 @@ namespace Awesome.AI.Core
             if (mind.unit_current.IsIDLE())
                 return;
 
+            if (mind.STATE == STATE.QUICKDECISION)
+                return;
+
+            if (mind.unit_current.IsQUICKDECISION())
+                return;
+
             //if (mind.curr_unit.IsDECISION())
             //    return;
 
-            //if (mind.unit_current.IsQUICKDECISION())
-            //    return;
-
-            //if (mind.STATE == STATE.QUICKDECISION)
-            //    return;
 
             history.Insert(0, mind.unit_current);
             if (history.Count > CONST.HIST_TOTAL)

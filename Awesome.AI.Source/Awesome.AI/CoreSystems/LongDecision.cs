@@ -89,7 +89,7 @@ namespace Awesome.AI.CoreSystems
             {
                 string res = "";
                 
-                if (mind.down.ToPeriod() == Enums.PERIODDOWN.NO)
+                if (mind.down.ToPeriod() == Enums.PERIODDOWN.YES)
                     res = actual.data.Replace("WHAT", "");
 
                 SetResult(type, res, 0);                

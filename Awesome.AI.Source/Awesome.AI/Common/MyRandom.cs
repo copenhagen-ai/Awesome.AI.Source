@@ -60,7 +60,7 @@ namespace Awesome.AI.Common
 
                 return res;
             }
-            catch (Exception _e)
+            catch (Exception ex)
             {
                 throw new Exception("MyRandomDouble");
             }
@@ -75,7 +75,7 @@ namespace Awesome.AI.Common
                  * 0 <= res < i_max
                  */
 
-                if (i_max > 9999)
+                if (i_max > 99999)
                     throw new Exception("MyRandomInt");
 
                 int[] res = new int[count];
@@ -84,13 +84,13 @@ namespace Awesome.AI.Common
                 {
                     string rand = Rand(i);
 
-                    double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}{rand[3]}") / 10000;
+                    double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}{rand[3]}{rand[4]}") / 100000;
                     res[i] = mind.calc.RoundInt((double)i_max * dec);
                 }
 
                 return res;
             }
-            catch
+            catch (Exception ex)
             {
                 throw new Exception("MyRandomInt");
             }
@@ -118,7 +118,7 @@ namespace Awesome.AI.Common
 
                 return res;
             }
-            catch
+            catch (Exception ex)
             {
                 throw new Exception("Rand");
             }

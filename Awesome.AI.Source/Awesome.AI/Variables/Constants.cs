@@ -111,7 +111,7 @@ namespace Awesome.AI.Variables
         public const int SAMPLE50 = 50;
         public const int SAMPLE100 = 100;
         public const int SAMPLE200 = 200;
-        public const int SAMPLEHIGH = 1500;
+        public const int SAMPLEHIGH = 40000;
 
         public const LOGICTYPE Logic = LOGICTYPE.PROBABILITY;
         public const MECHANICS MechType = MECHANICS.TUGOFWAR_LOW;
