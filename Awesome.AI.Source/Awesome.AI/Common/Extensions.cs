@@ -134,7 +134,7 @@ namespace Awesome.AI.Common
             return val;
         }
 
-        public static bool FilterThinking(this TheMind mind, FILTERUNIT funit, FILTERTYPE ftype, UNIT unit = null)
+        public static bool FilterUnit(this TheMind mind, FILTERUNIT funit, FILTERTYPE ftype, UNIT unit = null)
         {
             UNIT _u = unit;
 
