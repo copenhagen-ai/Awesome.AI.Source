@@ -25,6 +25,7 @@ namespace Awesome.AI.Core.Mechanics
         public double posx_high { get; set; }
         public double posx_low { get; set; }
 
+        public MECHANICS type { get; set; }
         public MechSymbolicOut ms { get; set; }
         public MechParams mp { get; set; }
 

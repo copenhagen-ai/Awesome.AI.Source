@@ -7,7 +7,7 @@ namespace Awesome.AI.Core.Mechanics
 {
     public class m_NoiseGenerator : IMechanics
     {
-        MECHANICS type;
+        public MECHANICS type { get; set; }
         public MechSymbolicOut ms { get; set; }
         public MechParams mp { get; set; }
         public MechHelper mh { get; set; }

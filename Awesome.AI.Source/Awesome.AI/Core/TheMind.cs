@@ -40,7 +40,7 @@ namespace Awesome.AI.Core
 
         public Dictionary<string, IMechanics> mech { get; set; }
         public Dictionary<string, Params> parms { get; set; }
-        private Dictionary<string, string> long_dec {  get; set; }
+        private Dictionary<LONGTYPE, string> lng_dec {  get; set; }
                 
         public Stats stats = new Stats();
         public UNIT theanswer;
@@ -74,13 +74,13 @@ namespace Awesome.AI.Core
         public Params parms_high { get { return parms["z_mech"]; } set { parms["z_mech"] = value; } }
         public Params parms_noise { get { return parms["z_noise"]; } set { parms["z_noise"] = value; } }
 
-        public TheMind(MECHANICS m, MINDS mindtype, Dictionary<string, string> long_dec)
+        public TheMind(MECHANICS m, MINDS mindtype, Dictionary<LONGTYPE, string> lng_dec)
         {
             try
             {
                 this._mech = m;
                 this.mindtype = mindtype;
-                this.long_dec = long_dec;
+                this.lng_dec = lng_dec;
                 z_current = "z_mech";
 
                 parms = new Dictionary<string, Params>();
@@ -99,7 +99,7 @@ namespace Awesome.AI.Core
                 _external = new MyExternal(this);
                 filters = new Filters(this);
                 _out = new Out(this);
-                _long = new LongDecision(this, this.long_dec);
+                _long = new LongDecision(this, this.lng_dec);
                 _quick = new QuickDecision(this);
                 mood = new MoodGenerator(this);
                 word = new WordGenerator(this);
@@ -222,7 +222,7 @@ namespace Awesome.AI.Core
         {
             rand.SaveMomentum(current, mech_current.ms.dv_sym_curr);
 
-            _quick.Run(unit_current);
+            _quick.Run(_pro, unit_current);
 
             if (!_pro)
                 return;
@@ -291,7 +291,7 @@ namespace Awesome.AI.Core
             if (STATE == STATE.QUICKDECISION)
                 return;
 
-            foreach(var kv in this.long_dec)
+            foreach(var kv in this.lng_dec)
                 _long.Decide(_pro, kv.Key);
 
             if (z_current == "z_noise")

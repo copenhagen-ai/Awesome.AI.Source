@@ -7,6 +7,7 @@ namespace Awesome.AI.Interfaces
 {
     public interface IMechanics
     {
+        MECHANICS type { get; set; }
         MechSymbolicOut ms { get; set; }
         MechParams mp { get; set; }
 

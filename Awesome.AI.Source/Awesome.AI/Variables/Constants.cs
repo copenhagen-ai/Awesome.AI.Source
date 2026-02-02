@@ -49,26 +49,30 @@ namespace Awesome.AI.Variables
         public const string quick_deci_should_yes = "QYES";
         public const string quick_deci_should_no = "QNO";
 
-        public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
-        {
-            { "WHISTLE", new int[]{ 5, 5 } },
-        };
 
-        public static readonly Dictionary<string, int[]> DECISIONS_R = new Dictionary<string, int[]>
-        {
-            { "WHISTLE", new int[]{ 5, 15 } },
-        };
+        public const string DECI_SUBJECT_A = "long_decision_should";
+        public const string DECI_SUBJECT_B = "long_decision_what";
+        public const string DECI_SUBJECT_C = "quick_decision_should";
+        public static bool DECI_SUBJECT_CONTAINS(string str) { return DECI_SUBJECT_A == str || DECI_SUBJECT_B == str || DECI_SUBJECT_C == str; }
+        
+        //public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
+        //{
+        //    { "WHISTLE", new int[]{ 5, 4 } },
+        //};
 
-        public static readonly string[] DECI_SUBJECTS = { "long_decision_should", "long_decision_what", "quick_decision_should" };
+        //public static readonly Dictionary<string, int[]> DECISIONS_R = new Dictionary<string, int[]>
+        //{
+        //    { "WHISTLE", new int[]{ 5, 4 } },
+        //};
 
-        public static readonly Dictionary<string, string> long_deci_roberta = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> lng_dec_roberta = new Dictionary<string, string>
         {
             { "location", "KITCHEN" },
             { "answer", "" },
             { "ask", "" }
         };
 
-        public static readonly Dictionary<string, string> long_deci_andrew = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> lng_dec_andrew = new Dictionary<string, string>
         {
             { "location", "LIVINGROOM" },
             { "answer", "" },
@@ -111,7 +115,7 @@ namespace Awesome.AI.Variables
         public const int SAMPLE50 = 50;
         public const int SAMPLE100 = 100;
         public const int SAMPLE200 = 200;
-        public const int SAMPLEHIGH = 40000;
+        public const int SAMPLEHIGH = 80000;
 
         public const LOGICTYPE Logic = LOGICTYPE.PROBABILITY;
         public const MECHANICS MechType = MECHANICS.TUGOFWAR_LOW;

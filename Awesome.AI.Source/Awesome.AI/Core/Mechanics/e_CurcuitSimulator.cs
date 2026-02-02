@@ -73,7 +73,7 @@ namespace Awesome.AI.Core.Electrical
 
     public class e_CircuitSimulator : IMechanics
     {
-        MECHANICS type;
+        public MECHANICS type { get; set; }
         public MechSymbolicOut ms { get; set; }
         public MechParams mp { get; set; }
         public MechHelper mh { get; set; }

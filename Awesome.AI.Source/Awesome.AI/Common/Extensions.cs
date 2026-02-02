@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Core;
 using Awesome.AI.Variables;
+using System;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
@@ -31,6 +32,11 @@ namespace Awesome.AI.Common
                 list[k] = list[n];
                 list[n] = value;
             }
+        }
+
+        public static T ToEnum<T>(this string value)
+        {
+            return (T)Enum.Parse(typeof(T), value.ToUpper(), true);
         }
 
         public static bool IsNull<T>(this T source)
@@ -132,6 +138,16 @@ namespace Awesome.AI.Common
         public static double LowZero(this double val)
         {
             return val;
+        }
+
+        public static bool Roberta(this TheMind mind)
+        {
+            return mind.mindtype == MINDS.ROBERTA;
+        }
+
+        public static bool Andrew(this TheMind mind)
+        {
+            return mind.mindtype == MINDS.ANDREW;
         }
 
         public static bool FilterUnit(this TheMind mind, FILTERUNIT funit, FILTERTYPE ftype, UNIT unit = null)

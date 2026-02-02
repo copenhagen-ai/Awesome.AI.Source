@@ -157,14 +157,15 @@ namespace Awesome.AI.Core
             //double norm = 100.0d - mind.down.WillNorm;
 
             double dir = mind.down.Dir;
-            double mom = mind.mech_current.ms.vv_sym_100;
+            double vel = mind.mech_current.ms.vv_sym_100;
             double res = 0.0d;
             bool same = dir == prev_dir;
 
             if (same)
-                res = mom;
+                res = vel;
+
             if (!same)
-                res = 100.0d - mom;
+                res = 100.0d - vel;
             
             prev_dir = dir;
 

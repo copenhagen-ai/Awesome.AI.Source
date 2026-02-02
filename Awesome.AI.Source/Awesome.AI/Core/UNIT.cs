@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.CoreSystems;
+using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -46,7 +47,22 @@ namespace Awesome.AI.Core
 
         public double Variable
         {
-            get => Index.HighZero();
+            get
+            {
+                IMechanics mech = mind.mech["z_noise"];
+                switch (mech.type)
+                {
+                    case MECHANICS.CIRCUIT_1_LOW:
+                        throw new Exception("UNIT, Variable");
+                    case MECHANICS.CIRCUIT_2_LOW:
+                        throw new Exception("UNIT, Variable");
+                    case MECHANICS.TUGOFWAR_LOW:
+                        return Index.HighZero();
+                    case MECHANICS.BALLONHILL_LOW:
+                        return Index.LowZero();
+                    default: throw new Exception("UNIT, Variable");
+                }
+            } 
         }
 
         public bool IsValid

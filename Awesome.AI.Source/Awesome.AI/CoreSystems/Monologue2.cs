@@ -92,8 +92,8 @@ namespace Awesome.AI.CoreSystems
                 if (mind.unit_actual.IsDECISION())
                     return;
 
-                if (!CONST.SAMPLE20.RandomSample(mind))
-                    return;
+                //if (!CONST.SAMPLE20.RandomSample(mind))
+                //    return;
 
                 string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "base";
                 mt = mind.mindtype;
@@ -105,7 +105,7 @@ namespace Awesome.AI.CoreSystems
                 if (sub == "")
                     return;
 
-                if (CONST.DECI_SUBJECTS.Contains(sub))
+                if (CONST.DECI_SUBJECT_CONTAINS(sub))
                     return;
 
                 curr = mind.mindtype == MINDS.ROBERTA ? mind.word.Generate(idx, sub) : mind.word.Generate(idx, sub);

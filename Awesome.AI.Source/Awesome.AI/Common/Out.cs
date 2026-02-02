@@ -93,8 +93,8 @@ namespace Awesome.AI.Common
             //if (mind.z_current == "z_noise")
             //    return;
 
-            if (mind.STATE == STATE.QUICKDECISION)
-                return;
+            //if (mind.STATE == STATE.QUICKDECISION)
+            //    return;
 
             if (count > 1)
                 count = 0;            
@@ -118,8 +118,8 @@ namespace Awesome.AI.Common
             runtime = $"{CONST.RUNTIME}";
 
             occu = $"{mind._internal.Occu}";
-            location = $"{mind._long.Result["location"]}";
-            loc_state = mind._long.State["location"] > 0 ? "making a decision" : "just thinking";
+            location = $"{mind._long.Result[LONGTYPE.LOCATION]}";
+            loc_state = mind._long.State[LONGTYPE.LOCATION] > 0 ? "making a decision" : "just thinking";
 
             whistle = mind._quick.Result ? "[Whistling to my self..]" : gimmick[count];
 
@@ -144,16 +144,16 @@ namespace Awesome.AI.Common
             //common_unit = mind.core.most_common_unit;
             common_hub_subject = mind?.unit_actual?.HUB?.subject ?? "";
 
-            if (mind._long.Result["answer"] != "")
+            if (mind._long.Result[LONGTYPE.ANSWER] != "")
             {
-                chat_answer = $"{mind._long.Result["answer"]}";
-                mind._long.Result["answer"] = "";
+                chat_answer = $"{mind._long.Result[LONGTYPE.ANSWER]}";
+                mind._long.Result[LONGTYPE.ANSWER] = "";
             }
 
-            if (mind._long.Result["ask"] != "")
+            if (mind._long.Result[LONGTYPE.ASK] != "")
             {
-                chat_subject = $"{mind._long.Result["ask"]}";
-                mind._long.Result["ask"] = "";
+                chat_subject = $"{mind._long.Result[LONGTYPE.ASK]}";
+                mind._long.Result[LONGTYPE.ASK] = "";
             }
 
             count++;

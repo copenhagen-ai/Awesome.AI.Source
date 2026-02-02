@@ -10,13 +10,13 @@ namespace Awesome.AI.Awesome.AI.Core
     {
         public double Dir
         {
-            get => IsDown(Orig) ? -1.0d : 1.0d;
+            get => IsDown(WillProp) ? -1.0d : 1.0d;
         }
 
-        public double Orig { get; set; }
-        public double WillPropNorm0 { get => Orig.Norm0(mind); }//zero
-        public double WillPropNorm1 { get => Orig.Norm1(mind); }
-        public double WillPropNorm100 { get => Orig.Norm100(mind); }
+        public double WillProp { get; set; }
+        //public double WillPropNorm0 { get => Orig.Norm0(mind); }//zero
+        //public double WillPropNorm1 { get => Orig.Norm1(mind); }
+        //public double WillPropNorm100 { get => Orig.Norm100(mind); }
 
         public int Error { get; set; }
         public List<double> Ratio { get; set; }
@@ -43,7 +43,7 @@ namespace Awesome.AI.Awesome.AI.Core
             Continous();
 
             //code: before or after?
-            Ratio.Add(WillPropNorm0);
+            Ratio.Add(Dir);
             if (Ratio.Count > CONST.LAPSES)
                 Ratio.RemoveAt(0);            
         }
@@ -128,9 +128,9 @@ namespace Awesome.AI.Awesome.AI.Core
             DoFlip(flip, d_curr, out d_curr);
             SetError(flip);
 
-            Orig = d_curr;
+            WillProp = d_curr;
 
-            if (double.IsNaN(Orig))
+            if (double.IsNaN(WillProp))
                 throw new Exception("NAN");
         }
 
@@ -199,31 +199,31 @@ namespace Awesome.AI.Awesome.AI.Core
             return measure > 0;
         }
 
-        public HARDDOWN ToHard()
-        {
-            return WillPropNorm0 <= 0.0d ?
-                HARDDOWN.YES :
-                HARDDOWN.NO;
-        }
+        //public HARDDOWN ToHard()
+        //{
+        //    return WillPropNorm0 <= 0.0d ?
+        //        HARDDOWN.YES :
+        //        HARDDOWN.NO;
+        //}
 
-        public FUZZYDOWN ToFuzzy()
-        {
-            switch (WillPropNorm100)
-            {
-                case <= 20.0d: return FUZZYDOWN.VERYYES;
-                case <= 40.0d: return FUZZYDOWN.YES;
-                case <= 60.0d: return FUZZYDOWN.MAYBE;
-                case <= 80.0d: return FUZZYDOWN.NO;
-                case <= 100.0d: return FUZZYDOWN.VERYNO;
-                default: throw new NotSupportedException("ToFuzzy");
-            }
-        }
+        //public FUZZYDOWN ToFuzzy()
+        //{
+        //    switch (WillPropNorm100)
+        //    {
+        //        case <= 20.0d: return FUZZYDOWN.VERYYES;
+        //        case <= 40.0d: return FUZZYDOWN.YES;
+        //        case <= 60.0d: return FUZZYDOWN.MAYBE;
+        //        case <= 80.0d: return FUZZYDOWN.NO;
+        //        case <= 100.0d: return FUZZYDOWN.VERYNO;
+        //        default: throw new NotSupportedException("ToFuzzy");
+        //    }
+        //}
 
-        public PERIODDOWN ToPeriod()
-        {
-            return Count(HARDDOWN.YES) > Count(HARDDOWN.NO) ?
-                PERIODDOWN.YES :
-                PERIODDOWN.NO;
-        }
+        //public PERIODDOWN ToPeriod()
+        //{
+        //    return Count(HARDDOWN.YES) > Count(HARDDOWN.NO) ?
+        //        PERIODDOWN.YES :
+        //        PERIODDOWN.NO;
+        //}
     }
 }

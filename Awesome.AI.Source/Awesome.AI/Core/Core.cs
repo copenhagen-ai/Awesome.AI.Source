@@ -231,7 +231,10 @@ namespace Awesome.AI.Core
                 Hits();
                 Units();
             }
-            catch { return; }
+            catch (Exception _e)
+            { 
+                return; 
+            }
         }
 
         private void Hits()

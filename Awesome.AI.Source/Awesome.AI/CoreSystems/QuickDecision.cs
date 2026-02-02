@@ -45,7 +45,7 @@ namespace Awesome.AI.CoreSystems
             }
         }
 
-        public void Run(UNIT curr)
+        public void Run(bool pro, UNIT curr)
         {
             if (mind.z_current != "z_noise")
                 return;
@@ -53,13 +53,27 @@ namespace Awesome.AI.CoreSystems
             if (new_res)
                 return;
 
+            if (!curr.IsQUICKDECISION())
+                return;
+
+            if (mind.Roberta())
+                ;
+
+            if (mind.Andrew())
+                ;
+
             if (mind.STATE == STATE.QUICKDECISION && mind.mem.QDCOUNT() > 0)
             {
-                if (mind.mem.QDCOUNT() <= 1)
+                if (mind.mem.QDCOUNT() == 1)
                 {
                     res = curr.data == "QYES";
                     new_res = true;
                     mind.STATE = STATE.JUSTRUNNING;
+
+                    mind.mem.QDRESETU();
+                    mind.mem.QDRESETH();
+
+                    return;
                 }
 
                 mind.mem.QDREMOVE(curr);
@@ -67,23 +81,24 @@ namespace Awesome.AI.CoreSystems
                 return;
             }
 
-            if (!curr.IsQUICKDECISION())
+            if (!pro)
                 return;
 
-            Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
-            foreach (var kv in dict)
-            {
-                if (curr.data == kv.Key)
-                    Setup(kv.Value[0], 5);
-            }
+            if (curr.data == "WHISTLE")
+                Setup(5, 5);
         }
 
+        int sample_count = 0;
         private void Setup(int count, int period)
         {
-            if (!CONST.SAMPLEHIGH.RandomSample(mind))
-                return;
+            sample_count++;
+
+            if (sample_count < 20) return;
+
+            sample_count = 0;
             
             Period = period;
+            
             Count = 0;
 
             List<string> should_decision = new List<string>();
@@ -98,9 +113,9 @@ namespace Awesome.AI.CoreSystems
             mind.mem.QDRESETH();
 
             TONE tone = TONE.RANDOM;
-            mind.mem.Decide(STATE.QUICKDECISION, CONST.MAX_UNITS, CONST.DECI_SUBJECTS[2], should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
+            mind.mem.Decide(STATE.QUICKDECISION, CONST.MAX_UNITS, CONST.DECI_SUBJECT_C, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
             
             mind.STATE = STATE.QUICKDECISION;
-        }        
+        }
     }
 }
