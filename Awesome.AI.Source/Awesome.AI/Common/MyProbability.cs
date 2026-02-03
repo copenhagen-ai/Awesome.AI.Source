@@ -3,7 +3,7 @@ using System;
 
 namespace Awesome.AI.Common
 {
-    public class MyProbabilityHelper
+    public class MyProbability
     {
         // Constants
         private const double SQRT2PI = 2.5066282746310002;

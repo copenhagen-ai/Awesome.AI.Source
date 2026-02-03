@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -202,7 +203,7 @@ namespace Awesome.AI.CoreSystems
             if (mind.z_current == "z_noise")
                 return true;
 
-            if (!mind.FilterUnit(FILTERUNIT.NONE, FILTERTYPE.THREE, _u))
+            if (!Filters.FilterUnit(mind, FILTERUNIT.NONE, FILTERTYPE.THREE, _u))
                 return true;
 
             try

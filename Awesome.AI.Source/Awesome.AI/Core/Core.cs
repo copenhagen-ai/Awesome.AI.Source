@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Common;
+using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -140,7 +141,7 @@ namespace Awesome.AI.Core
             if (mind.z_current != "z_noise")
                 return;
 
-            if (!mind.FilterUnit(FILTERUNIT.CURRENT, FILTERTYPE.TWO))
+            if (!Filters.FilterUnit(mind, FILTERUNIT.CURRENT, FILTERTYPE.TWO))
                 return;
 
             List<UNIT> list = mind.mem.UNITS_ALL();
@@ -148,7 +149,7 @@ namespace Awesome.AI.Core
             //this could be a problem with many hubs
             foreach (UNIT _u in list)
             {
-                if (!mind.FilterUnit(FILTERUNIT.NONE, FILTERTYPE.TWO, _u))
+                if (!Filters.FilterUnit(mind, FILTERUNIT.NONE, FILTERTYPE.TWO, _u))
                     continue;
 
                 if (_u.Root == mind.unit_current.Root)
@@ -220,7 +221,7 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            if (!mind.FilterUnit(FILTERUNIT.ACTUAL, FILTERTYPE.TWO))
+            if (!Filters.FilterUnit(mind, FILTERUNIT.ACTUAL, FILTERTYPE.TWO))
                 return;
 
             if (mind.STATE == STATE.QUICKDECISION)
