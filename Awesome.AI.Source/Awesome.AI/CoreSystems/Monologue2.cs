@@ -116,7 +116,7 @@ namespace Awesome.AI.CoreSystems
                     .Replace("[5]", "").Replace("[4]", "")
                     .Replace("[3]", "").Replace("[2]", "")
                     .Replace("[1]", "").Replace("[0]", "");
-                curr += $" [{idx}]";
+                curr = $" [{sub}, {idx}] " + curr;
 
                 Relevance = GetRelevance(prev, curr);
 

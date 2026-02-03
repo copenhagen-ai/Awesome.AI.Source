@@ -26,7 +26,8 @@ namespace Awesome.AI.CoreSystems
                 return;
 
             string root = MyPath.Root;
-            string path = root + "Data\\latin.txt";
+            string data = GeneralHelper.IsDebug() ? "Data" : "DataFiles";
+            string path = root + data + "\\latin.txt";
 
             lines = File.ReadAllLines(path).ToList();
         }
@@ -49,6 +50,7 @@ namespace Awesome.AI.CoreSystems
             string res = "";
             res = l2[r2].Split(":")[0];
             res = res.Split(",")[0];
+            res = res.Split(" ")[0];
 
             if (res.Count() == 1)
                 return "...";
@@ -113,7 +115,7 @@ namespace Awesome.AI.CoreSystems
             while (word3 == "...")
                 word3 = PickWord();
 
-            string res = $"[{idx}]{word1} {word2} {word3}";
+            string res = $"{word1} {word2} {word3}";
 
             res = Format(res);
             res = Clean(res);
