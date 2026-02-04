@@ -3,6 +3,7 @@ using Awesome.AI.Common;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
+using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using System.Diagnostics;
 using static Awesome.AI.Variables.Enums;
@@ -74,13 +75,17 @@ namespace Awesome.AI.Core
         public Params parms_high { get { return parms["z_mech"]; } set { parms["z_mech"] = value; } }
         public Params parms_noise { get { return parms["z_noise"]; } set { parms["z_noise"] = value; } }
 
-        public TheMind(MECHANICS m, MINDS mindtype, Dictionary<LONGTYPE, string> lng_dec)
+        public TheMind(MINDS mindtype)
         {
             try
             {
-                this._mech = m;
-                this.mindtype = mindtype;
-                this.lng_dec = lng_dec;
+                Bots bot = new Bots();
+                IBot bot1 = bot.GetBot(mindtype);
+
+                this.mindtype = bot1.mindtype;
+                this._mech = bot1.mech;
+                this.lng_dec = bot1.lng_dec;
+
                 z_current = "z_mech";
 
                 parms = new Dictionary<string, Params>();

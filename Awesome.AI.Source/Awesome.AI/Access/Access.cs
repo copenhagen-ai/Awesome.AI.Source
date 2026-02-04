@@ -9,7 +9,7 @@ namespace Awesome.AI.Access
 
     public class ApiRequestSetup
     {
-        public List<ApiBot> bots { get; set; }
+        public List<MINDS> bots { get; set; }
     }
 
     public class ApiRequestUpdate
@@ -24,13 +24,13 @@ namespace Awesome.AI.Access
         public MINDS mindtype { get; set; }
     }
 
-    public class ApiBot
-    {
-        public MECHANICS mech { get; set; }
-        public MINDS mindtype { get; set; }
+    //public class ApiBot
+    //{
+    //    public MECHANICS mech { get; set; }
+    //    public MINDS mindtype { get; set; }
 
-        public Dictionary<string, string> long_deci { get; set; }
-    }
+    //    public Dictionary<string, string> long_deci { get; set; }
+    //}
 
     public class ApiInstance
     {

@@ -54,7 +54,7 @@ namespace Awesome.AI.Variables
         public const string DECI_SUBJECT_B = "long_decision_what";
         public const string DECI_SUBJECT_C = "quick_decision_should";
         public static bool DECI_SUBJECT_CONTAINS(string str) { return DECI_SUBJECT_A == str || DECI_SUBJECT_B == str || DECI_SUBJECT_C == str; }
-        
+
         //public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
         //{
         //    { "WHISTLE", new int[]{ 5, 4 } },
@@ -65,18 +65,32 @@ namespace Awesome.AI.Variables
         //    { "WHISTLE", new int[]{ 5, 4 } },
         //};
 
-        public static readonly Dictionary<string, string> lng_dec_roberta = new Dictionary<string, string>
+        //public static readonly Dictionary<string, string> lng_dec_roberta = new Dictionary<string, string>
+        //{
+        //    { "location", "KITCHEN" },
+        //    { "answer", "" },
+        //    { "ask", "" }
+        //};
+
+        //public static readonly Dictionary<string, string> lng_dec_andrew = new Dictionary<string, string>
+        //{
+        //    { "location", "LIVINGROOM" },
+        //    { "answer", "" },
+        //    { "ask", "" }
+        //};
+
+        public static readonly Dictionary<LONGTYPE, string> lng_dec_roberta = new Dictionary<LONGTYPE, string>
         {
-            { "location", "KITCHEN" },
-            { "answer", "" },
-            { "ask", "" }
+            { LONGTYPE.LOCATION, "KITCHEN" },
+            { LONGTYPE.ANSWER, "" },
+            { LONGTYPE.ASK, "" }
         };
 
-        public static readonly Dictionary<string, string> lng_dec_andrew = new Dictionary<string, string>
+        public static readonly Dictionary<LONGTYPE, string> lng_dec_andrew = new Dictionary<LONGTYPE, string>
         {
-            { "location", "LIVINGROOM" },
-            { "answer", "" },
-            { "ask", "" }
+            { LONGTYPE.LOCATION, "LIVINGROOM" },
+            { LONGTYPE.ANSWER, "" },
+            { LONGTYPE.ASK, "" }
         };
 
         /*
