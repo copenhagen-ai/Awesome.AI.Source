@@ -2,7 +2,7 @@
 
 namespace Awesome.AI.Core
 {
-    public class TheSoup
+    public class UNIT_SPACE
     {
         /*
          * as it is now, it is very simple just up or down
@@ -20,8 +20,8 @@ namespace Awesome.AI.Core
          * */
 
         private TheMind mind;
-        private TheSoup() { }
-        public TheSoup(TheMind mind)
+        private UNIT_SPACE() { }
+        public UNIT_SPACE(TheMind mind)
         {
             this.mind = mind;
         }
@@ -101,12 +101,13 @@ namespace Awesome.AI.Core
             //if (res is null)
             //    res = mind.cycles % 2 == 0 ? below : above;//switcharoonie
 
-            UpdateUnit(near, res);
-
+            double map = Map(res);
+            res.Update(near, map);
+            
             return res;
         }
 
-        private double Map(UNIT x)
+        public double Map(UNIT x)
         {
             //is this ok?
             //return x.Variable;
@@ -121,31 +122,7 @@ namespace Awesome.AI.Core
             double norm = mech.ms.peek_sym_norm;
             
             return norm;
-        }
-
-        private void UpdateUnit(double near, UNIT res)
-        {
-            //return;
-
-            //i think it makes sense only noise can update unit
-            if (mind.z_current != "z_noise")
-                return;
-
-            //mind.down.Current = "noise";
-            //double dir = mind.down.IsYes ? -1.0d : 1.0d;
-            double dir = mind.down.Dir;
-            double dist = DistAbsolute(res, near);
-
-            res.Update(dir, near, dist);
-        }
-
-        private double DistAbsolute(UNIT unit, double near)
-        {
-            double _var = Map(unit);
-            double res = Math.Abs(_var -  near);
-
-            return res;
-        }
+        }        
         
         private double prev_dir { get; set; }
         private double Near()
@@ -189,7 +166,7 @@ namespace Awesome.AI.Core
                                 ).OrderByDescending(x => x.Variable).ToList();
             
             int rand = mind.rand.MyRandomInt(1,units.Count - 1)[0];
-            UNIT _u = units.Any() ? units[rand] : UNIT.IDLE_UNIT(mind);
+            UNIT _u = units.Any() ? units[rand] : UNIT.CreateIdle(mind);
             return _u;
         }
     }

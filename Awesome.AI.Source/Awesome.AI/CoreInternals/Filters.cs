@@ -32,8 +32,8 @@ namespace Awesome.AI.CoreInternals
             //because low index -> high mass
             UNIT _u = mind.mem.UNITS_ALL(ORDER.BYINDEX)[CONST.LOWCUT];
 
-            double low_cut = _u.Index;
-            double index = unit.Index;
+            double low_cut = _u.UnitIndex;
+            double index = unit.UnitIndex;
 
             if (index <= low_cut)
                 return true;
@@ -62,19 +62,19 @@ namespace Awesome.AI.CoreInternals
             {
                 case FILTERTYPE.ONE:
                     if (_u.IsNull()) return false;
-                    if (_u.Root == "xxxx") return false;
+                    if (_u.Root == "") return false;
                     if (_u.IsIDLE()) return false;
                     if (_u.IsQUICKDECISION()) return false;
                     if (_u.IsDECISION()) return false;
                     return true;
                 case FILTERTYPE.TWO:
                     if (_u.IsNull()) return false;
-                    if (_u.Root == "xxxx") return false;
+                    if (_u.Root == "") return false;
                     if (_u.IsQUICKDECISION()) return false;
                     return true;
                 case FILTERTYPE.THREE:
                     if (_u.IsNull()) return false;
-                    if (_u.Root == "xxxx") return false;
+                    if (_u.Root == "") return false;
                     if (_u.IsQUICKDECISION()) return false;
                     if (_u.IsDECISION()) return false;
                     return true;

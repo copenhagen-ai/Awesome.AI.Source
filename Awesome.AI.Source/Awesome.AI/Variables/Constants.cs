@@ -29,7 +29,10 @@ namespace Awesome.AI.Variables
         public const string roberta_s8 = "hobbys";
         public const string roberta_s9 = "the weather";
         public const string roberta_s10 = "having fun";
-        
+
+        public static string[] sub_roberta = { CONST.roberta_s1, CONST.roberta_s2, CONST.roberta_s3, CONST.roberta_s4, CONST.roberta_s5, CONST.roberta_s6, CONST.roberta_s7, CONST.roberta_s8, CONST.roberta_s9, CONST.roberta_s10 };
+        public static string[] sub_andrew = { CONST.andrew_s1, CONST.andrew_s2, CONST.andrew_s3, CONST.andrew_s4, CONST.andrew_s5, CONST.andrew_s6, CONST.andrew_s7, CONST.andrew_s8, CONST.andrew_s9, CONST.andrew_s10 };
+
         /*
          * decision values
          * */
@@ -104,7 +107,8 @@ namespace Awesome.AI.Variables
         public const double MAX = 99.5d;
         public const double LOW_CREDIT = 1.0d;
         public const double MAX_CREDIT = 10.0d;
-        public const double UPD_CREDIT = 0.03d;          //credit update
+        public const double UPD_CREDIT = 0.0001d;          //credit update
+        public const double MAX_HUBSPACE = 100.0;
 
         public const double ETA = 0.05d;                    //learningrate
         public const double ALPHA = 0.001d;                 //distance
@@ -123,7 +127,6 @@ namespace Awesome.AI.Variables
         public const int RUNTIME = 3;                       //minutes
         public const int LOWCUT = 3;        
         public const int NUMBER_OF_UNITS = 10;
-        public const int MAX_UNITS = 20;
 
         public const int SAMPLE20 = 20;
         public const int SAMPLE50 = 50;

@@ -117,7 +117,7 @@ namespace Awesome.AI.Common
             epochs = $"{mind.epochs}";
             runtime = $"{CONST.RUNTIME}";
 
-            occu = $"{mind._internal.Occu}";
+            occu = $"{mind._internal.Occu.name}";
             location = $"{mind._long.Result[LONGTYPE.LOCATION]}";
             loc_state = mind._long.State[LONGTYPE.LOCATION] > 0 ? "making a decision" : "just thinking";
 
@@ -142,7 +142,7 @@ namespace Awesome.AI.Common
             //down_prop_noise = mind.calc.Normalize(mind.down.Props["noise"], -1.0d, 1.0d, 0.0d, 100.0d);
 
             //common_unit = mind.core.most_common_unit;
-            common_hub_subject = mind?.unit_actual?.HUB?.subject ?? "";
+            common_hub_subject = mind?.unit_actual?.HUB?.Subject ?? "";
 
             if (mind._long.Result[LONGTYPE.ANSWER] != "")
             {

@@ -97,7 +97,7 @@ namespace Awesome.AI.CoreSystems
 
                 string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "base";
                 mt = mind.mindtype;
-                sub = mind?.unit_actual?.HUB?.subject ?? "";
+                sub = mind?.unit_actual?.HUB?.Subject ?? "";
                 idx = $"{Index(mind.mech_high.mp.props.PropsOut[_base])}";
                 //idx = $"{Index(mind.down.Props["noise"])}";
                 //idx = $"{mind.mech_current.mp.p_100}"[..1];

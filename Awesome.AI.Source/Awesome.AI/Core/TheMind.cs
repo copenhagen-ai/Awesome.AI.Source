@@ -19,7 +19,7 @@ namespace Awesome.AI.Core
     public class TheMind
     {
         public Down down;
-        public TheSoup soup;
+        public UNIT_SPACE soup;
         public Memory mem;
         public Core core;
         public QuickDecision _quick;
@@ -97,7 +97,7 @@ namespace Awesome.AI.Core
                 mech_noise = parms_noise.Mechanics(CONST.MechType);
 
                 down = new Down(this);
-                soup = new TheSoup(this);
+                soup = new UNIT_SPACE(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
                 _internal = new MyInternal(this);
@@ -121,15 +121,16 @@ namespace Awesome.AI.Core
                 int rand3 = random.Next(u_count);
 
                 core = new Core(this, rand1, rand2, rand3);
-
+                
                 foreach (string s in zzzz)
                 {
+                    int half = mem.UNITS_ALL().Count / 2;
                     if (mindtype == MINDS.ANDREW)
-                        unit_current = mem.UNITS_ALL().Where(x => x.Root == "_fembots1").First();
+                        unit_current = mem.UNITS_ALL()[half];//.Where(x => x.Root == "_fembots1").First();
                     if (mindtype == MINDS.ROBERTA)
-                        unit_current = mem.UNITS_ALL().Where(x => x.Root == "_macho machines1").First();
+                        unit_current = mem.UNITS_ALL()[half];//.Where(x => x.Root == "_macho machines1").First();
                 }
-                
+
                 PreRun("z_noise", true);
                 PostRun(true);
 
@@ -152,29 +153,29 @@ namespace Awesome.AI.Core
             }
         }
         
-        private void Lists()
-        {
-            if (z_current == "z_noise")
-                return;
+        //private void Lists()
+        //{
+        //    if (z_current == "z_noise")
+        //        return;
 
-            List<UNIT> list = mem.UNITS_VAL();
+        //    List<UNIT> list = mem.UNITS_VAL();
 
-            List<Tuple<string, bool, double>> units_force = new List<Tuple<string, bool, double>>();
-            foreach (UNIT u in list.OrderBy(x => x.Variable).ToList())
-                units_force.Add(new Tuple<string, bool, double>(u.Root, u.IsValid, u.Variable));
+        //    List<Tuple<string, bool, double>> units_force = new List<Tuple<string, bool, double>>();
+        //    foreach (UNIT u in list.OrderBy(x => x.Variable).ToList())
+        //        units_force.Add(new Tuple<string, bool, double>(u.Root, u.IsValid, u.Variable));
 
-            //List<Tuple<string, bool, double>> units_mass = new List<Tuple<string, bool, double>>();
-            //foreach (UNIT u in list.OrderBy(x => x.HighAtZero).ToList())
-            //    units_mass.Add(new Tuple<string, bool, double>(u.root, u.IsValid, u.HighAtZero));
+        //    //List<Tuple<string, bool, double>> units_mass = new List<Tuple<string, bool, double>>();
+        //    //foreach (UNIT u in list.OrderBy(x => x.HighAtZero).ToList())
+        //    //    units_mass.Add(new Tuple<string, bool, double>(u.root, u.IsValid, u.HighAtZero));
 
-            List<UNIT> list1 = list.OrderBy(x => x.Index).ToList();
-            List<UNIT> list2 = list.OrderBy(x => x.Variable).ToList();
-            List<UNIT> list3 = list.Where(x => filters.LowCut(x)).OrderBy(x => x.Variable).ToList();
+        //    List<UNIT> list1 = list.OrderBy(x => x.UnitIndex).ToList();
+        //    List<UNIT> list2 = list.OrderBy(x => x.Variable).ToList();
+        //    List<UNIT> list3 = list.Where(x => filters.LowCut(x)).OrderBy(x => x.Variable).ToList();
 
-            int valid_units = units_force.Count;
+        //    int valid_units = units_force.Count;
 
-            ;
-        }
+        //    ;
+        //}
         
         public void Run(object sender, MicroLibrary.MicroTimerEventArgs timerEventArgs)
         {

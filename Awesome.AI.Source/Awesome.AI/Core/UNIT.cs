@@ -1,6 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
+using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -16,11 +17,23 @@ namespace Awesome.AI.Core
         private UNITTYPE unit_type { get; set; }
         public LONGTYPE ld_type { get; set; }
         public DateTime created { get; set; }
-        public string hub_guid { get; set; }//name
-        public string data { get; set; }//data
+        public string guid { get; set; }//name
         public double credits { get; set; }
-        public double Index { get; set; }
-        
+
+        private double ui { get; set; }
+        public double UnitIndex
+        {
+            get => IsIDLE() ? 50.0 : ui;
+            set { ui = value; }
+        }
+
+        private double hi {  get; set; }
+        public double HubIndex 
+        { 
+            get => IsIDLE() ? 50.0 : hi; 
+            set { hi = value; } 
+        }
+
         private TheMind mind;
         private UNIT() { }
         public UNIT(TheMind mind)
@@ -28,18 +41,40 @@ namespace Awesome.AI.Core
             this.mind = mind;
         }
 
+        private string data { get; set; }//data
+        public string Data
+        {
+            get
+            {
+                if(data != "DATA")
+                    return data;
+
+                string sub = HUB.Subject;
+                double _i = mind.mech_high.mp.props.PropsOut["base"];
+                string idx = $"{_i.Index(mind)}";
+
+                if (CONST.DECI_SUBJECT_CONTAINS(sub))
+                    return "";
+
+                Lookup lookup = new Lookup();
+
+                string _data = lookup.GetDATA(mind, idx, sub);
+
+                return _data;
+            }
+            set { data = value; }
+        }
+
         public string Root
         {
             get
             {
-                HUB hub = HUB;
+                if (HUB is null)
+                    return "";
 
-                if (hub is null)
-                    return "xxxx";
-
-                List<UNIT> list = hub.units.OrderBy(x => x.created).ToList();
+                List<UNIT> list = HUB.Units.OrderBy(x => x.created).ToList();
                 int idx = list.IndexOf(this) + 1;
-                string res = "_" + hub.subject + idx;
+                string res = "_" + HUB.Subject + idx;
 
                 return res;
             }
@@ -57,9 +92,9 @@ namespace Awesome.AI.Core
                     case MECHANICS.CIRCUIT_2_LOW:
                         throw new Exception("UNIT, Variable");
                     case MECHANICS.TUGOFWAR_LOW:
-                        return Index.HighZero();
+                        return UnitIndex.HighZero();
                     case MECHANICS.BALLONHILL_LOW:
-                        return Index.LowZero();
+                        return UnitIndex.LowZero();
                     default: throw new Exception("UNIT, Variable");
                 }
             } 
@@ -83,7 +118,7 @@ namespace Awesome.AI.Core
             }
         }
 
-        public HUB HUB
+        public HUB_SPACE HUB
         {
             get
             {
@@ -94,24 +129,11 @@ namespace Awesome.AI.Core
                     return null;
 
                 if (IsIDLE())
-                    return HUB.Create("GUID", "IDLE", new List<UNIT>(), TONE.RANDOM, -1);
+                    return null;
 
-                STATE state = mind.STATE;
-
-                List<HUB> list = mind.mem.HUBS_ALL(state);
-
-                HUB hub = list.Where(x => x.hub_guid == this.hub_guid).First();
+                HUB_SPACE hub = HUB_SPACE.Create(mind, this.guid);
 
                 return hub;
-                
-                //try
-                //{
-                //} 
-                //catch (Exception ex)
-                //{
-                //    //it can be null, when quick desicion and roomhub -> monologue
-                //    //return null;
-                //}
             }
         }
 
@@ -122,24 +144,52 @@ namespace Awesome.AI.Core
 
             DateTime create = DateTime.Now;
 
-            UNIT _w = new UNIT() { mind = mind, created = create, hub_guid = h_guid, Index = index, data = data, unit_type = ut, ld_type = lt };
+            UNIT _w = new UNIT() { mind = mind, created = create, guid = h_guid, UnitIndex = index, data = data, unit_type = ut, ld_type = lt };
 
             if (ticket != "")
                 _w.ticket = new Ticket(ticket);
 
+            Random rand = new Random();
+
             _w.credits = CONST.MAX_CREDIT;
+            _w.HubIndex = rand.NextDouble();
 
             return _w;
         }
 
-        public void Update(double dir, double near, double dist)
+        public static UNIT CreateIdle(TheMind mind)
+        {
+            return Create(mind, "GUID", -1d, "IDLE", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
+        }
+
+        public void Update(double near, double map)
+        {
+            UpdateUS(near, map);
+            UpdateHS();
+        }
+
+        private void UpdateHS()
+        {
+            //not implemented
+            return;
+        }
+
+        private void UpdateUS(double near, double map)
         {
             /*
              * it is difficult determinating if the does as supposed, but the logic seems correct
+             * i think it makes sense only noise can update unit
              * */
+            if (mind.z_current != "z_noise")
+                return;
 
             if (!CONST.ACTIVATOR.RandomSample(mind))
                 return;
+            
+            //return;
+
+            double dir = mind.down.Dir;
+            double dist = Math.Abs(map - near);
 
             if (Add(near, dist))
                 return;
@@ -153,12 +203,8 @@ namespace Awesome.AI.Core
             if (HUB is null)
                 return true;
 
-            int count = HUB.units.Count;
-            int max = HUB.max_num_units;
+            int count = HUB.Units.Count;
             double avg = 100.0d / count;
-
-            if (count > max)
-                return false;
 
             if (dist < avg)
                 return false;
@@ -186,16 +232,11 @@ namespace Awesome.AI.Core
 
             double rand = mind.rand.MyRandomDouble(10)[5];
 
-            Index += (rand * CONST.ETA * dir);
+            UnitIndex += (rand * CONST.ETA * dir);
 
-            if (Index <= CONST.MIN) Index = CONST.MIN;
-            if (Index >= CONST.MAX) Index = CONST.MAX;
-        }
-
-        public static UNIT IDLE_UNIT(TheMind mind)
-        {
-            return Create(mind, "GUID", -1d, "DATA", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
-        }
+            if (UnitIndex <= CONST.MIN) UnitIndex = CONST.MIN;
+            if (UnitIndex >= CONST.MAX) UnitIndex = CONST.MAX;
+        }        
 
         public bool IsUNIT() => unit_type == UNITTYPE.JUSTAUNIT;
 
@@ -204,56 +245,5 @@ namespace Awesome.AI.Core
         public bool IsDECISION() => unit_type == UNITTYPE.LDECISION;
 
         public bool IsQUICKDECISION() => unit_type == UNITTYPE.QDECISION;
-
-        //public static bool OK1(UNIT _u)
-        //{
-        //    if (_u.IsNull())
-        //        return false;
-
-        //    if (_u.Root == "xxxx")
-        //        return false;
-
-        //    if (_u.IsIDLE())
-        //        return false;
-
-        //    if (_u.IsQUICKDECISION())
-        //        return false;
-
-        //    if (_u.IsDECISION())
-        //        return false;
-
-        //    return true;
-        //}
-
-        //public static bool OK2(UNIT _u)
-        //{
-        //    if (_u.IsNull())
-        //        return false;
-
-        //    if (_u.Root == "xxxx")
-        //        return false;
-
-        //    if (_u.IsQUICKDECISION())
-        //        return false;
-
-        //    return true;
-        //}
-
-        //public static bool OK3(UNIT _u)
-        //{
-        //    if (_u.IsNull())
-        //        return false;
-
-        //    if (_u.Root == "xxxx")
-        //        return false;
-
-        //    if (_u.IsQUICKDECISION())
-        //        return false;
-
-        //    if (_u.IsDECISION())
-        //        return false;
-
-        //    return true;
-        //}
     }
 }

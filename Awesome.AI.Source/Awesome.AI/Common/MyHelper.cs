@@ -1,6 +1,6 @@
 ﻿namespace Awesome.AI.Common
 {
-    public class GeneralHelper
+    public class MyHelper
     {
         public static bool IsDebug()
         {

@@ -61,7 +61,7 @@ namespace Awesome.AI.CoreSystems
             ACTION actionA = GetActionA(mind);
             ACTION actionB = GetActionB(mind);
             UNIT unit = mind.unit_current;
-            string subject = unit.HUB?.subject ?? "";
+            string subject = unit.HUB?.Subject ?? "";
 
             if (mind.Roberta())
                 ;
@@ -72,31 +72,31 @@ namespace Awesome.AI.CoreSystems
             if (subject == "long_decision_should" && State[type] == 0)
             {
                 //location
-                if (unit.data == "A" && actionB == ACTION.ACTION)
+                if (unit.Data == "A" && actionB == ACTION.ACTION)
                     SetResult(type, "", 1);
 
 
                 //answer
-                if (unit.data == "B" && actionB == ACTION.ACTION)
+                if (unit.Data == "B" && actionB == ACTION.ACTION)
                     SetResult(type, ":YES", 0);
 
-                if (unit.data == "B" && actionB == ACTION.DECLINE)
+                if (unit.Data == "B" && actionB == ACTION.DECLINE)
                     SetResult(type, "Im busy right now..", 0);
 
                 
                 //ask
-                if (unit.data == "C" && actionB == ACTION.ACTION)
+                if (unit.Data == "C" && actionB == ACTION.ACTION)
                     SetResult(type, GetSubject(), 0);
             }
 
             if (subject == "long_decision_what" && State[type] == 1)
             {
-                string _new = unit.data.Replace("WHAT", "");
+                string _new = unit.Data.Replace("WHAT", "");
 
                 if (mind.down.Dir > 0.0)
                     SetResult(type, "", 0);
 
-                else if (unit.data != "WHAT" + Result[type])
+                else if (unit.Data != "WHAT" + Result[type])
                     SetResult(type, _new, 0);
             }
         }
@@ -120,7 +120,7 @@ namespace Awesome.AI.CoreSystems
             if (type != LONGTYPE.LOCATION) //only want the first
                 return;
 
-            index.Add(mind.unit_current.Index);
+            index.Add(mind.unit_current.UnitIndex);
 
             if (index.Count > 10)
                 index.RemoveAt(0);            
@@ -151,7 +151,7 @@ namespace Awesome.AI.CoreSystems
                 ;
 
             double avg = index.Average();
-            double curr = mind.unit_current.Index;
+            double curr = mind.unit_current.UnitIndex;
 
             if (curr >= avg)
                 return ACTION.ACTION;
@@ -161,8 +161,8 @@ namespace Awesome.AI.CoreSystems
 
         private string GetSubject()
         {
-            HUB _hub = null;
-            List<HUB> list = mind.mem.HUBS_ALL(mind.STATE);
+            string _hub = null;
+            List<string> list = mind._internal.Occu.values;
             int count = list.Count;
             int i = 0;
             int[] _r = mind.rand.MyRandomInt(100, count - 1);
@@ -171,9 +171,9 @@ namespace Awesome.AI.CoreSystems
             {
                 _hub = list[_r[i]];
                 i++;
-            } while (CONST.DECI_SUBJECT_CONTAINS(_hub.subject));
+            } while (CONST.DECI_SUBJECT_CONTAINS(_hub));
 
-            return _hub.subject;
+            return _hub;
         }
 
         //public void _Decide(bool _pro, string type)

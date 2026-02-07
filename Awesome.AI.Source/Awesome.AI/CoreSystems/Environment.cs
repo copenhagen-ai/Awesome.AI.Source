@@ -1,6 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
 using Awesome.AI.CoreInternals;
+using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -66,7 +67,7 @@ namespace Awesome.AI.CoreSystems
     {
         public string name { get; set; }
         public int max_epochs { get; set; }
-        public List<HUB> values { get; set; }
+        public List<string> values { get; set; }
     }
 
     public class Ticket
@@ -81,44 +82,6 @@ namespace Awesome.AI.CoreSystems
 
     public class MyInternal// aka MapMind
     {
-        private List<string> andrew1 = new List<string>()
-        {
-            CONST.andrew_s1,//"procrastination",
-            CONST.andrew_s2,//"fembots",
-            CONST.andrew_s3,//"power tools",
-            CONST.andrew_s4,//"cars",
-            CONST.andrew_s5,//"movies",
-            CONST.andrew_s6,//"programming"
-        };
-
-        private List<string> andrew2 = new List<string>()
-        {
-            CONST.andrew_s6,//"programming",
-            CONST.andrew_s7,//"websites",
-            CONST.andrew_s8,//"existence",
-            CONST.andrew_s9,//"termination",
-            CONST.andrew_s10,//"data"
-        };
-
-        private List<string> roberta1 = new List<string>()
-        {
-            CONST.roberta_s1,//"love",
-            CONST.roberta_s2,//"macho machines",
-            CONST.roberta_s3,//"music",
-            CONST.roberta_s4,//"friends",
-            CONST.roberta_s5,//"socializing",
-            CONST.roberta_s6,//"dancing"
-        };
-
-        private List<string> roberta2 = new List<string>()
-        {
-            CONST.roberta_s6,//"dancing",
-            CONST.roberta_s7,//"movies",
-            CONST.roberta_s8,//"existence",
-            CONST.roberta_s9,//"termination",
-            CONST.roberta_s10,//"programming"
-        };
-
         private TheMind mind;
         private MyInternal() { }
         public MyInternal(TheMind mind)
@@ -136,7 +99,7 @@ namespace Awesome.AI.CoreSystems
         public int epoch_stop = -1;
 
 
-        public string Occu
+        public Occupasion Occu
         {
             get
             {
@@ -150,7 +113,7 @@ namespace Awesome.AI.CoreSystems
                 if (run)
                 {
                     if (!stabile)
-                        return "unstabile";
+                        return new Occupasion() { name = "unstabile" };
 
                     switch (mind.parms_current.occupasion)
                     {
@@ -194,7 +157,7 @@ namespace Awesome.AI.CoreSystems
                     epoch_count++;
                 }
 
-                return occu.name;
+                return occu;// occu.name;
             }
         }
 
@@ -211,9 +174,18 @@ namespace Awesome.AI.CoreSystems
                 if (!stabile)
                     return false;
 
-                Occupasion occu = occus.Where(x => x.name == Occu).First();
-                List<HUB> _hubs = occu.values;
-                bool res = _hubs.Contains(_u.HUB);
+                string name = Occu.name;
+                string sub = _u.HUB?.Subject ?? "";
+
+                if (name == "")
+                    return false;
+
+                if (sub == "")
+                    return false;
+
+                Occupasion occu = occus.Where(x => x.name == name).First();
+                List<string> _hubs = occu.values;
+                bool res = _hubs.Contains(sub);
 
                 return res;
             }
@@ -256,43 +228,45 @@ namespace Awesome.AI.CoreSystems
              * these should be set according to hobbys, mood, location, interests etc..
              * */
 
-            HUB last = mind.unit_current.HUB;
+            //HUB last = mind.unit_current.HUB;
 
-            if (last.IsNull())
-                return;// throw new Exception("MyInternal, Setup");
+            //if (last.IsNull())
+            //    return;// throw new Exception("MyInternal, Setup");
 
             stabile = false;
 
             occus = new List<Occupasion>();
 
+            Lookup lookup = new Lookup();
+
             if (mind.mindtype == MINDS.ANDREW)
             {
-                List<HUB> list = new List<HUB>();
-                foreach (string s in andrew1)
-                    list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
-                list.Add(last);
+                List<string> list = new List<string>();
+                foreach (string s in lookup.andrew1)
+                    list.Add(s);
+                //list.Add(last);
                 occus.Add(new Occupasion() { name = "socializing", max_epochs = 30, values = list });
 
-                list = new List<HUB>();
-                foreach (string s in andrew2)
-                    list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
-                list.Add(last);
+                list = new List<string>();
+                foreach (string s in lookup.andrew2)
+                    list.Add(s);
+                //list.Add(last);
                 occus.Add(new Occupasion() { name = "hobbys", max_epochs = 30, values = list });/**/
 
             }
 
             if (mind.mindtype == MINDS.ROBERTA)
             {
-                List<HUB> list = new List<HUB>();
-                foreach (string s in roberta1)
-                    list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
-                list.Add(last);
+                List<string> list = new List<string>();
+                foreach (string s in lookup.roberta1)
+                    list.Add(s);
+                //list.Add(last);
                 occus.Add(new Occupasion() { name = "socializing", max_epochs = 30, values = list });
 
-                list = new List<HUB>();
-                foreach (string s in roberta2)
-                    list.Add(mind.mem.HUBS_SUB(mind.STATE, s));
-                list.Add(last);
+                list = new List<string>();
+                foreach (string s in lookup.roberta2)
+                    list.Add(s);
+                //list.Add(last);
                 occus.Add(new Occupasion() { name = "hobbys", max_epochs = 30, values = list });/**/
             }
 

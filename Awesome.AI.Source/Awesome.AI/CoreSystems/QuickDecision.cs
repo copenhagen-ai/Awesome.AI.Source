@@ -66,13 +66,12 @@ namespace Awesome.AI.CoreSystems
             {
                 if (mind.mem.QDCOUNT() == 1)
                 {
-                    res = curr.data == "QYES";
+                    res = curr.Data == "QYES";
                     new_res = true;
                     mind.STATE = STATE.JUSTRUNNING;
 
                     mind.mem.QDRESETU();
-                    mind.mem.QDRESETH();
-
+                    
                     return;
                 }
 
@@ -84,7 +83,7 @@ namespace Awesome.AI.CoreSystems
             if (!pro)
                 return;
 
-            if (curr.data == "WHISTLE")
+            if (curr.Data == "WHISTLE")
                 Setup(5, 5);
         }
 
@@ -110,10 +109,10 @@ namespace Awesome.AI.CoreSystems
                 should_decision.Add(/*NO*/CONST.quick_deci_should_no);
 
             mind.mem.QDRESETU();
-            mind.mem.QDRESETH();
+            //mind.mem.QDRESETH();
 
             TONE tone = TONE.RANDOM;
-            mind.mem.Decide(STATE.QUICKDECISION, CONST.MAX_UNITS, CONST.DECI_SUBJECT_C, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
+            mind.mem.Decide(STATE.QUICKDECISION, CONST.DECI_SUBJECT_C, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
             
             mind.STATE = STATE.QUICKDECISION;
         }

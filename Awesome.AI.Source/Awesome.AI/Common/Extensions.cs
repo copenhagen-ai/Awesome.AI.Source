@@ -1,6 +1,5 @@
 ﻿using Awesome.AI.Core;
 using Awesome.AI.Variables;
-using System;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
@@ -72,6 +71,31 @@ namespace Awesome.AI.Common
             double res = mind.calc.Normalize(_x, _l, _h, CONST.MIN, CONST.MAX);
 
             return res;
+        }
+
+        public static string Index(this double _in, TheMind mind)
+        {
+            _in = mind.calc.Normalize(_in, -1.0d, 1.0d, 0.0d, 100.0d);
+
+            if (_in < 10.0d)
+                return "" + 0;
+
+            string idx = $"{_in}"[..1];
+
+            return idx;
+        }
+
+        public static int Index(this UNIT unit)
+        {
+            int index = (int)unit.UnitIndex;
+
+            for (int i = 9; i >= 0; i--)
+            {
+                if (index > i * 10)
+                    return (i + 1) * 10;
+            }
+
+            throw new Exception("Extensions, Index");
         }
 
         public static double Norm0(this double _x, TheMind mind, double _l = -1d, double _h = -1d)

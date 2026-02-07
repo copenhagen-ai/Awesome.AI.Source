@@ -123,10 +123,10 @@ namespace Awesome.AI.Core
             for (int i = 0; i <= 20; i++)
             {
                 if ((mind.epochs - i) == (60 * CONST.RUNTIME))
-                    mind.theanswer.data = "It does not";
+                    mind.theanswer.Data = "It does not";
             }
             
-            string answer = mind.theanswer.data;
+            string answer = mind.theanswer.Data;
             
             if (answer == null)
                 throw new ArgumentNullException();
@@ -240,7 +240,7 @@ namespace Awesome.AI.Core
 
         private void Hits()
         {
-            int idx = GetIndex(mind.unit_actual);
+            int idx = mind.unit_actual.Index();
 
             hits[idx] += 1;
 
@@ -269,24 +269,11 @@ namespace Awesome.AI.Core
 
             foreach (UNIT unit in units2)
             {
-                int idx = GetIndex(unit);
+                int idx = unit.Index();
                 units[idx] += 1;
             }
 
             mind.stats.units = units;
-        }
-
-        private int GetIndex(UNIT unit)
-        {
-            int index = (int)unit.Index;
-
-            for (int i = 9; i >= 0; i--)
-            {
-                if (index > i * 10)
-                    return (i + 1) * 10;
-            }
-
-            throw new Exception("Core, GetIndex");
-        }
+        }        
     }
 }
