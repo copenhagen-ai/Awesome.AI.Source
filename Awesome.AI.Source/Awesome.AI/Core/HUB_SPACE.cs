@@ -1,4 +1,4 @@
-﻿using Awesome.AI.Source.Awesome.AI.Common;
+﻿using Awesome.AI.CoreInternals;
 
 namespace Awesome.AI.Core
 {

@@ -1,9 +1,9 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Source.Awesome.AI.Common;
+using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
+using Awesome.AI.CoreSystems;
 
 namespace Awesome.AI.Core
 {
@@ -152,7 +152,7 @@ namespace Awesome.AI.Core
             Random rand = new Random();
 
             _w.credits = CONST.MAX_CREDIT;
-            _w.HubIndex = rand.NextDouble();
+            _w.HubIndex = rand.NextDouble() * CONST.MAX_HUBSPACE;
 
             return _w;
         }

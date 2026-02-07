@@ -1,7 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
 
-namespace Awesome.AI.CoreSystems
+namespace Awesome.AI.Generators
 {
     public class WordGenerator
     {
@@ -15,7 +15,7 @@ namespace Awesome.AI.CoreSystems
         public WordGenerator(TheMind mind)
         {
             this.mind = mind;
-            this.rand = new Random();
+            rand = new Random();
         }
 
         private void LoadData()
@@ -62,14 +62,16 @@ namespace Awesome.AI.CoreSystems
         {
             string test = "";
             bool _do = false;
-            foreach(char c in str)
+            foreach (char c in str)
             {
-                if (c == '(') {
+                if (c == '(')
+                {
                     //test += "(";
                     _do = true;
                 }
 
-                if (c == ')') {
+                if (c == ')')
+                {
                     test += ")";
                     _do = false;
                 }
@@ -92,7 +94,8 @@ namespace Awesome.AI.CoreSystems
 
             string res = "";
 
-            foreach(char c in str) {
+            foreach (char c in str)
+            {
                 if (l1.Contains("" + c))
                     res += "" + c;
             }

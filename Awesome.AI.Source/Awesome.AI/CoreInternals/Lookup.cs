@@ -2,7 +2,7 @@
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Source.Awesome.AI.Common
+namespace Awesome.AI.CoreInternals
 {
     public class Lookup
     {
@@ -335,7 +335,7 @@ namespace Awesome.AI.Source.Awesome.AI.Common
             int num_regions = ax.Count;
 
             double hub_space = CONST.MAX_HUBSPACE;
-            double region_len = hub_space / (double)num_regions;
+            double region_len = hub_space / num_regions;
 
             int index = 0;
             double count = 0;
@@ -372,7 +372,7 @@ namespace Awesome.AI.Source.Awesome.AI.Common
             int num_regions = ax.Count;
 
             double hub_space = CONST.MAX_HUBSPACE;
-            double region_len = hub_space / (double)num_regions;
+            double region_len = hub_space / num_regions;
 
             int index = 0;
             double count_upper = 0;
@@ -387,9 +387,33 @@ namespace Awesome.AI.Source.Awesome.AI.Common
             index--;
 
             List<UNIT> units = mind.mem.UNITS_ALL();
-            units = units.Where(x=>x.HubIndex <= count_upper && x.HubIndex >= count_lower).ToList();
+            units = units.Where(x => x.HubIndex <= count_upper && x.HubIndex >= count_lower).ToList();
 
             return units;
+        }
+
+        public string[] occupasions = { "socializing", "hobbys" };
+        public List<string> GetOCCU(MINDS mindtype, int count, out string occu)
+        {
+            if (count >= occupasions.Length)
+                throw new Exception("Lookup, GetOCCU 1");
+
+            occu = occupasions[count];
+
+            List<string> res = null;
+
+            switch (occu)
+            {
+                case "socializing":
+                    res = mindtype == MINDS.ROBERTA ? roberta1 : andrew1;
+                    break;
+                case "hobbys":
+                    res = mindtype == MINDS.ROBERTA ? roberta2 : andrew2;
+                    break;
+                default: throw new Exception("Lookup, GetOCCU 2");
+            }
+
+            return res;
         }
     }
 }

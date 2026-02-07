@@ -2,6 +2,7 @@
 using Awesome.AI.Common;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
+using Awesome.AI.Generators;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
