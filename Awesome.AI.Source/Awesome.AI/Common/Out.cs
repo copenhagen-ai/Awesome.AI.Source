@@ -84,6 +84,7 @@ namespace Awesome.AI.Common
             ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
             error = mind.down.Error;
+            vv_curr = $"{mind.mech_current.ms.dv_sym_curr.ToString("E3")}";
 
             SetLow = true;
         }
@@ -102,7 +103,6 @@ namespace Awesome.AI.Common
             ok = mind.ok;
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            vv_curr = $"{mind.mech_current.ms.vv_sym_curr.ToString("E3")}";
             dv_curr = $"{mind.mech_current.ms.dv_sym_curr.ToString("E3")}";
 
             user_var = $"{mind.user_var}";

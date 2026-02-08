@@ -11,6 +11,13 @@ namespace Awesome.AI.Core.Mechanics
 
         public double vv_sym_curr { get; set; }
         public double dv_sym_curr { get; set; }
+        //public double mo_sym_curr {  set; get; }
+
+        public double m1_sym { get; set; }
+        public double m2_sym { get; set; }
+
+        public double fsta_sym { get; set; }
+        public double fdyn_sym { get; set; }
 
         public double vv_sym_low { get; set; }
         public double vv_sym_high { get; set; }
@@ -19,9 +26,11 @@ namespace Awesome.AI.Core.Mechanics
 
         public double vv_sym_100 { get; set; }
         public double dv_sym_100 { get; set; }
+        //public double mo_sym_100 {  set; get; }
 
         public double vv_sym_90 { get; set; }
         public double dv_sym_90 { get; set; }
+        //public double mo_sym_90 { set; get; }
 
         public double peek_sym_norm { get; set; }
         //public double inertia_sym { get; set; }
@@ -38,6 +47,7 @@ namespace Awesome.AI.Core.Mechanics
 
                     vv_sym_curr = mp.vv_curr;
                     dv_sym_curr = mp.dv_curr;
+                    //mo_sym_curr = mp.mo_curr;
 
                     vv_sym_low = mp.vv_out_low;
                     vv_sym_high = mp.vv_out_high;
@@ -51,6 +61,12 @@ namespace Awesome.AI.Core.Mechanics
                     dv_sym_90 = mp.dv_90;
 
                     peek_sym_norm = mp.peek_norm;
+
+                    m1_sym = mp.m1;
+                    m2_sym = mp.m2;
+
+                    fsta_sym = mp.f_sta;
+                    fdyn_sym = mp.f_dyn;
                     //inertia_sym = mp.inertia_lim;
                     break;
                 case MECHANICS.CIRCUIT_1_LOW:

@@ -73,7 +73,7 @@ namespace Awesome.AI.Core.Mechanics
                     mp.inertia_lim = 0.15d;
                     //mp.acc_max = 5.0d;
                     mp.m1 = CONST.MAX * CONST.BASE_REDUCTION * 5.0d; //0 - 500
-                    mp.m2 = (curr.Variable) * 5.0d; //0 - 500
+                    mp.m2 = 500.0d;// (curr.Variable) * 5.0d; //0 - 500
                     total_mass = mp.m1 + mp.m2;
                     break;
                 case MECHANICS.BALLONHILL_LOW:
@@ -88,7 +88,7 @@ namespace Awesome.AI.Core.Mechanics
             }
 
             mp.f_sta = ApplyStatic(mp, this.type);
-            mp.f_dyn = ApplyDynamic(mp, this.type);
+            mp.f_dyn = ApplyDynamic(mp, this.type, curr);
             mp.f_friction = Friction(mp, type);
 
             double f_net = mp.f_sta + mp.f_dyn + mp.f_friction;
@@ -134,6 +134,32 @@ namespace Awesome.AI.Core.Mechanics
             mp.dt = 0.05d * mod;
         }
 
+        public double Logic(UNIT curr)
+        {
+            /*
+             * logic optional
+             * */
+
+            double res = 0;
+            switch (type)
+            {
+                case MECHANICS.TUGOFWAR_LOW:
+                    double _v = curr.Variable;
+                    double pedal_push = mp.dv_curr < 0.0 ? (_v) : (_v * 0.5d);
+                    res = pedal_push / 100.0d;
+                    break;
+                case MECHANICS.BALLONHILL_LOW:
+                    double windAccel = mind.unit_current.Variable * 0.2d; // constant wind acceleration
+                    res = windAccel;
+                    break;
+                default: throw new Exception("m_NoiseGenerator, Friction");
+            }
+
+            //res = 1.0d;
+
+            return res;
+        }
+
         public double Friction(MechParams mp, MECHANICS type)
         {
             double total_mass = 0.0d;
@@ -147,7 +173,10 @@ namespace Awesome.AI.Core.Mechanics
 
             double u = mh.Friction(mind) * 0.05d;
             double N = total_mass * CONST.GRAVITY;
-            double f_friction = u * N * -Math.Sign(mp.f_sta + mp.f_dyn);
+            //double sign = -Math.Sign(mp.f_sta + mp.f_dyn);
+            double sign = -Math.Sign(mp.vv_curr);
+            //double sign = -Math.Sign(mp.dv_curr);
+            double f_friction = u * N * sign;
 
             return f_friction;
         }
@@ -171,18 +200,19 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public double ApplyDynamic(MechParams mp, MECHANICS type)
+        public double ApplyDynamic(MechParams mp, MECHANICS type, UNIT curr)
         {
             switch (type)
             {
                 case MECHANICS.TUGOFWAR_LOW:
+                    double pedal = Logic(curr);
                     //force right
                     double acc = mp.dv_curr == 0.0d ? 0.1d : mp.dv_curr / mp.dt;
                     double Fapplied = mp.m2 * acc;            
-                    return mp.damp * Fapplied;
+                    return pedal * mp.damp * Fapplied;
                 case MECHANICS.BALLONHILL_LOW:
                     //wind force
-                    double windAccel = mind.unit_current.Variable * 0.2d; // constant wind acceleration
+                    double windAccel = Logic(curr);// mind.unit_current.Variable * 0.2d; // constant wind acceleration
                     double windforce = mp.m1 * windAccel;
                     return mp.damp * windforce;
                 default: throw new Exception("m_NoiseGenerator, ApplyDynamic");

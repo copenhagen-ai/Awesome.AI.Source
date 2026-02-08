@@ -82,9 +82,14 @@ namespace Awesome.AI.Common
 
                 for (int i = 0; i < count; i++)
                 {
-                    string rand = Rand(i);
+                    string rand1 = Rand(i);
+                    string rand2 = Rand(i + 1);
+                    string rand3 = Rand(i + 2);
 
-                    double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}{rand[3]}{rand[4]}") / 100000;
+                    if (rand1.Length < 5)
+                        rand1 += rand2 + rand3;
+
+                    double dec = double.Parse($"{rand1[0]}{rand1[1]}{rand1[2]}{rand1[3]}{rand1[4]}") / 100000;
                     res[i] = mind.calc.RoundInt((double)i_max * dec);
                 }
 

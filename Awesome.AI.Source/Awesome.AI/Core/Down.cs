@@ -118,10 +118,10 @@ namespace Awesome.AI.Awesome.AI.Core
 
             bool down = IsDown(d_curr);
             
-            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && NoInertia())
+            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && NoInertia() && NoMomentum())
                 d_zero *= -1.0d;
 
-            if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind) && NoInertia())
+            if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind) && NoInertia() && NoMomentum())
                 d_zero *= -1.0d;
 
             bool flip = d_save != d_zero;
@@ -148,7 +148,7 @@ namespace Awesome.AI.Awesome.AI.Core
             }
         }
 
-        private int i_decay {  get; set; }
+        private int i_decay { get; set; }
         private bool NoInertia()
         {
             /*
@@ -156,7 +156,7 @@ namespace Awesome.AI.Awesome.AI.Core
              * cancels out some of the direction changes
              * */
 
-            //return true;
+            return true;
 
             i_decay++;
 
@@ -166,10 +166,35 @@ namespace Awesome.AI.Awesome.AI.Core
 
             bool inertia = Math.Abs(vv_curr + dv_curr) < lim;
 
-            if(!inertia && i_decay > 100)
+            if (!inertia && i_decay > 100)
                 i_decay = 0;
 
             return !inertia && i_decay < 10;
+        }
+
+        private bool NoMomentum()
+        {
+            /*
+             * simple
+             * cancels out some of the direction changes
+             * */
+
+            //return true;
+            //double sign = Math.Sign(mind.mech_current.ms.fsta_sym + mind.mech_current.ms.fdyn_sym);
+
+            double vel = mind.mech_current.ms.vv_sym_curr;
+            double mass = mind.mech_current.ms.m1_sym + mind.mech_current.ms.m2_sym;
+            double mom = mass * vel;
+
+            if (mom >= 0.0)
+                ;
+
+            if (mom < 0.0)
+                ;
+
+            bool abs = Math.Abs(mom) < 5.0;
+
+            return abs;
         }
 
         private void DoFlip(bool flip, double d_curr, out double _out)
