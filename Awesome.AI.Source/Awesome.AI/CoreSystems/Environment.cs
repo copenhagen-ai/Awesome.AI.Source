@@ -2,6 +2,7 @@
 using Awesome.AI.Core;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
+using System.Linq;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreSystems
@@ -113,7 +114,10 @@ namespace Awesome.AI.CoreSystems
                     switch (mind.parms_current.occupasion)
                     {
                         case OCCUPASION.FIXED:
-                            occu = new Occupasion() { name = mind.hobby, max_epochs = -1, values = null }; ;
+                            Lookup lookup = new Lookup();
+                            MINDS mindtype = mind.mindtype;
+                            List<string> list = lookup.GetOCCU(mindtype, 0, out string _o);
+                            occu = new Occupasion() { name = _o, max_epochs = 30, values = list };
                             break;
                         case OCCUPASION.DYNAMIC:
 

@@ -57,7 +57,6 @@ namespace Awesome.AI.Core
         public bool chat_asked { get; set; }
                 
         public string z_current { get; set; }
-        public string hobby = "socializing";
         public int epochs = 1;
         public int cycles = 0; // Go TRON!
         public int cycles_all = 0;
