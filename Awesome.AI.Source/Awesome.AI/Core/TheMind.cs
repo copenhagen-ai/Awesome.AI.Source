@@ -196,6 +196,12 @@ namespace Awesome.AI.Core
                 bool _pro = do_process;
                 do_process = false;
 
+                if (this.Roberta())
+                    ;
+
+                if (this.Andrew())
+                    ;
+
                 foreach (string s in zzzz)
                 {
                     z_current = s;

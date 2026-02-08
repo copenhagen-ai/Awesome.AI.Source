@@ -31,7 +31,7 @@ namespace Awesome.AI.Core
 
                 string occu = mind._internal.Occu.name;
 
-                string hub = lookup.GetHUB(mind.mindtype, occu, unit.HubIndex);
+                string hub = lookup.GetSUB(mind.mindtype, occu, unit.HubIndex);
 
                 return hub;
             }

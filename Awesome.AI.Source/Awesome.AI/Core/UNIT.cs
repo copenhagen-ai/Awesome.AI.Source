@@ -19,6 +19,7 @@ namespace Awesome.AI.Core
         public DateTime created { get; set; }
         public string guid { get; set; }//name
         public double credits { get; set; }
+        public Dictionary<string, int> affinitys { get; set; }
 
         private double ui { get; set; }
         public double UnitIndex
@@ -92,7 +93,7 @@ namespace Awesome.AI.Core
                     case MECHANICS.CIRCUIT_2_LOW:
                         throw new Exception("UNIT, Variable");
                     case MECHANICS.TUGOFWAR_LOW:
-                        return UnitIndex.HighZero();
+                        return UnitIndex.LowZero();
                     case MECHANICS.BALLONHILL_LOW:
                         return UnitIndex.LowZero();
                     default: throw new Exception("UNIT, Variable");
@@ -154,6 +155,11 @@ namespace Awesome.AI.Core
             _w.credits = CONST.MAX_CREDIT;
             _w.HubIndex = rand.NextDouble() * CONST.MAX_HUBSPACE;
 
+            Lookup lookup = new Lookup();
+            _w.affinitys = new Dictionary<string, int>();
+            foreach (string occu in lookup.occupasions)
+                _w.affinitys.Add(occu, 0);
+
             return _w;
         }
 
@@ -162,16 +168,63 @@ namespace Awesome.AI.Core
             return Create(mind, "GUID", -1d, "IDLE", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
         }
 
+        private int _do {  get; set; }
         public void Update(double near, double map)
         {
+            UpdateAF();
+
             UpdateUS(near, map);
             UpdateHS();
+
+            _do++;
+            if (_do > 100)
+                _do = 0;
+        }
+
+        private string last_affinity {  get; set; }
+        private void UpdateAF()
+        {
+            if (_do > 0)
+                return;
+
+            string occu = mind._internal.Occu.name;
+            affinitys[occu]++;
+
+            int count = 0;
+            Lookup lookup = new Lookup();
+            foreach (string _o in lookup.occupasions)
+                count += affinitys[_o];
+
+            if (count > 1000)//promil
+                affinitys[last_affinity]--;
+
+            last_affinity = occu;
+            return;
         }
 
         private void UpdateHS()
         {
-            //not implemented
-            return;
+            if (_do > 0)
+                return;
+
+            if (HUB == null)
+                return;
+
+            Lookup lookup = new Lookup();
+
+            MINDS mindtype = mind.mindtype;
+
+            int max = affinitys.Values.Max();
+            string af_occu = affinitys.First(x=>x.Value == max).Key;
+            string occu = mind._internal.Occu.name;
+            string sub = HUB.Subject;
+
+            if (af_occu != occu)
+                return;
+
+            double index = lookup.GetIDX(mindtype, occu, sub);
+
+            HubIndex += HubIndex < index ? 0.001 : -0.001;
         }
 
         private void UpdateUS(double near, double map)
