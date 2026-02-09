@@ -2,11 +2,11 @@
 
 namespace Awesome.AI.Core.Spaces
 {
-    public class UnitSpaceUpdate
+    public class UnitSpaceSoup
     {
         private TheMind mind;
-        private UnitSpaceUpdate() { }
-        public UnitSpaceUpdate(TheMind mind)
+        private UnitSpaceSoup() { }
+        public UnitSpaceSoup(TheMind mind)
         {
             this.mind = mind;
         }

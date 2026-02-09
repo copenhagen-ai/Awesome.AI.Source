@@ -21,7 +21,7 @@ namespace Awesome.AI.Core
     public class TheMind
     {
         public Down down;
-        public UnitSpaceUpdate soup;
+        public UnitSpaceSoup soup;
         public UnitSpaceSetup memory; 
         public UnitSpaceAccess access;
         public Core core;
@@ -113,7 +113,7 @@ namespace Awesome.AI.Core
                 mono2 = new Monologue2(this);
                 quantum = new QUsage(this);
                 prob = new MyProbability();
-                soup = new UnitSpaceUpdate(this);
+                soup = new UnitSpaceSoup(this);
                 memory = new UnitSpaceSetup(this);
                 access = new UnitSpaceAccess(this);
 
