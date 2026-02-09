@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Common;
+using Awesome.AI.Core.Spaces;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
@@ -27,9 +28,9 @@ namespace Awesome.AI.Core
             hits = new Dictionary<int, int>();
             units = new Dictionary<int, int>();
 
-            history.Add(mind.mem.UNITS_ALL()[rand1]);
-            history.Add(mind.mem.UNITS_ALL()[rand2]);
-            history.Add(mind.mem.UNITS_ALL()[rand3]);
+            history.Add(mind.access.UNITS_ALL()[rand1]);
+            history.Add(mind.access.UNITS_ALL()[rand2]);
+            history.Add(mind.access.UNITS_ALL()[rand3]);
             
             mind.unit_actual = history[1];
 
@@ -144,7 +145,7 @@ namespace Awesome.AI.Core
             if (!Filters.FilterUnit(mind, FILTERUNIT.CURRENT, FILTERTYPE.TWO))
                 return;
 
-            List<UNIT> list = mind.mem.UNITS_ALL();
+            List<UNIT> list = mind.access.UNITS_ALL();
 
             //this could be a problem with many hubs
             foreach (UNIT _u in list)
@@ -265,7 +266,7 @@ namespace Awesome.AI.Core
             for (int i = 1; i <= 10; i++)
                 units.Add(i * 10, 0);
 
-            List<UNIT> units2 = mind.mem.UNITS_ALL();
+            List<UNIT> units2 = mind.access.UNITS_ALL();
 
             foreach (UNIT unit in units2)
             {

@@ -1,8 +1,8 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Core.Spaces;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
-using System.Linq;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreSystems
@@ -270,7 +270,7 @@ namespace Awesome.AI.CoreSystems
 
             List<string> list;
 
-            list = mind.mem.Tags(mindtype);
+            list = mind.memory.Tags(mindtype);
 
             foreach (string s in list)
             {

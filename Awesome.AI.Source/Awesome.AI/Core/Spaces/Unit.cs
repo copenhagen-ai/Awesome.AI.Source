@@ -4,8 +4,9 @@ using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 using Awesome.AI.CoreSystems;
+using Awesome.AI.Core;
 
-namespace Awesome.AI.Core
+namespace Awesome.AI.Core.Spaces
 {
     public class UNIT
     {
@@ -28,11 +29,11 @@ namespace Awesome.AI.Core
             set { ui = value; }
         }
 
-        private double hi {  get; set; }
-        public double HubIndex 
-        { 
-            get => IsIDLE() ? 50.0 : hi; 
-            set { hi = value; } 
+        private double hi { get; set; }
+        public double HubIndex
+        {
+            get => IsIDLE() ? 50.0 : hi;
+            set { hi = value; }
         }
 
         private TheMind mind;
@@ -47,7 +48,7 @@ namespace Awesome.AI.Core
         {
             get
             {
-                if(data != "DATA")
+                if (data != "DATA")
                     return data;
 
                 string sub = HUB.Subject;
@@ -98,7 +99,7 @@ namespace Awesome.AI.Core
                         return UnitIndex.LowZero();
                     default: throw new Exception("UNIT, Variable");
                 }
-            } 
+            }
         }
 
         public bool IsValid
@@ -119,7 +120,7 @@ namespace Awesome.AI.Core
             }
         }
 
-        public HUB_SPACE HUB
+        public HubSpace HUB
         {
             get
             {
@@ -132,7 +133,7 @@ namespace Awesome.AI.Core
                 if (IsIDLE())
                     return null;
 
-                HUB_SPACE hub = HUB_SPACE.Create(mind, this.guid);
+                HubSpace hub = HubSpace.Create(mind, guid);
 
                 return hub;
             }
@@ -168,7 +169,7 @@ namespace Awesome.AI.Core
             return Create(mind, "GUID", -1d, "IDLE", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
         }
 
-        private int _do {  get; set; }
+        private int _do { get; set; }
         public void Update(double near, double map)
         {
             UpdateAF();
@@ -181,7 +182,7 @@ namespace Awesome.AI.Core
                 _do = 0;
         }
 
-        private string last_affinity {  get; set; }
+        private string last_affinity { get; set; }
         private void UpdateAF()
         {
             if (_do > 0)
@@ -215,7 +216,7 @@ namespace Awesome.AI.Core
             MINDS mindtype = mind.mindtype;
 
             int max = affinitys.Values.Max();
-            string af_occu = affinitys.First(x=>x.Value == max).Key;
+            string af_occu = affinitys.First(x => x.Value == max).Key;
             string occu = mind._internal.Occu.name;
             string sub = HUB.Subject;
 
@@ -238,7 +239,7 @@ namespace Awesome.AI.Core
 
             if (!CONST.ACTIVATOR.RandomSample(mind))
                 return;
-            
+
             //return;
 
             double dir = mind.down.Dir;
@@ -265,8 +266,8 @@ namespace Awesome.AI.Core
             double low = near - CONST.ALPHA <= CONST.MIN ? CONST.MIN : near - CONST.ALPHA;
             double high = near + CONST.ALPHA >= CONST.MAX ? CONST.MAX : near + CONST.ALPHA;
 
-            mind.mem.UNITS_ADD(this, low, high);
-            
+            mind.access.UNITS_ADD(this, low, high);
+
             return true;
         }
 
@@ -275,7 +276,7 @@ namespace Awesome.AI.Core
             double low = near - CONST.ALPHA;
             double high = near + CONST.ALPHA;
 
-            mind.mem.UNITS_REM(this, low, high);
+            mind.access.UNITS_REM(this, low, high);
         }
 
         private void Adjust(double dir, double dist)
@@ -285,11 +286,11 @@ namespace Awesome.AI.Core
 
             double rand = mind.rand.MyRandomDouble(10)[5];
 
-            UnitIndex += (rand * CONST.ETA * dir);
+            UnitIndex += rand * CONST.ETA * dir;
 
             if (UnitIndex <= CONST.MIN) UnitIndex = CONST.MIN;
             if (UnitIndex >= CONST.MAX) UnitIndex = CONST.MAX;
-        }        
+        }
 
         public bool IsUNIT() => unit_type == UNITTYPE.JUSTAUNIT;
 

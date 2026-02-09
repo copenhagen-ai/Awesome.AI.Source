@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Awesome.AI.Core;
 using Awesome.AI.Common;
+using Awesome.AI.Core.Spaces;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Generators;
@@ -20,8 +21,9 @@ namespace Awesome.AI.Core
     public class TheMind
     {
         public Down down;
-        public UNIT_SPACE soup;
-        public Memory mem;
+        public UnitSpaceUpdate soup;
+        public UnitSpaceSetup memory; 
+        public UnitSpaceAccess access;
         public Core core;
         public QuickDecision _quick;
         public LongDecision _long;
@@ -97,7 +99,6 @@ namespace Awesome.AI.Core
                 mech_noise = parms_noise.Mechanics(CONST.MechType);
 
                 down = new Down(this);
-                soup = new UNIT_SPACE(this);
                 calc = new Calc(this);
                 rand = new MyRandom(this);
                 _internal = new MyInternal(this);
@@ -112,10 +113,12 @@ namespace Awesome.AI.Core
                 mono2 = new Monologue2(this);
                 quantum = new QUsage(this);
                 prob = new MyProbability();
-                mem = new Memory(this);
+                soup = new UnitSpaceUpdate(this);
+                memory = new UnitSpaceSetup(this);
+                access = new UnitSpaceAccess(this);
 
                 Random random = new Random();
-                int u_count = mem.UNITS_ALL().Count;
+                int u_count = access.UNITS_ALL().Count;
                 int rand1 = random.Next(u_count);
                 int rand2 = random.Next(u_count);
                 int rand3 = random.Next(u_count);
@@ -124,11 +127,11 @@ namespace Awesome.AI.Core
                 
                 foreach (string s in zzzz)
                 {
-                    int half = mem.UNITS_ALL().Count / 2;
+                    int half = access.UNITS_ALL().Count / 2;
                     if (mindtype == MINDS.ANDREW)
-                        unit_current = mem.UNITS_ALL()[half];//.Where(x => x.Root == "_fembots1").First();
+                        unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_fembots1").First();
                     if (mindtype == MINDS.ROBERTA)
-                        unit_current = mem.UNITS_ALL()[half];//.Where(x => x.Root == "_macho machines1").First();
+                        unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_macho machines1").First();
                 }
 
                 PreRun("z_noise", true);

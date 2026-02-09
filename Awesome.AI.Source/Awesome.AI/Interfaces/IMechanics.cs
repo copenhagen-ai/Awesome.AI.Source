@@ -1,6 +1,5 @@
-﻿using Awesome.AI.Awesome.AI.Core;
-using Awesome.AI.Core;
-using Awesome.AI.Core.Mechanics;
+﻿using Awesome.AI.Core.Mechanics;
+using Awesome.AI.Core.Spaces;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Interfaces

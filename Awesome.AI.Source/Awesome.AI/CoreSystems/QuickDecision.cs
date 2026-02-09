@@ -1,6 +1,6 @@
-﻿using Awesome.AI.Access;
-using Awesome.AI.Common;
+﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Core.Spaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -62,20 +62,20 @@ namespace Awesome.AI.CoreSystems
             if (mind.Andrew())
                 ;
 
-            if (mind.STATE == STATE.QUICKDECISION && mind.mem.QDCOUNT() > 0)
+            if (mind.STATE == STATE.QUICKDECISION && mind.access.QDCOUNT() > 0)
             {
-                if (mind.mem.QDCOUNT() == 1)
+                if (mind.access.QDCOUNT() == 1)
                 {
                     res = curr.Data == "QYES";
                     new_res = true;
                     mind.STATE = STATE.JUSTRUNNING;
 
-                    mind.mem.QDRESETU();
+                    mind.access.QDRESETU();
                     
                     return;
                 }
 
-                mind.mem.QDREMOVE(curr);
+                mind.access.QDREMOVE(curr);
 
                 return;
             }
@@ -108,11 +108,11 @@ namespace Awesome.AI.CoreSystems
             for (int i = 0; i < count; i++)
                 should_decision.Add(/*NO*/CONST.quick_deci_should_no);
 
-            mind.mem.QDRESETU();
+            mind.access.QDRESETU();
             //mind.mem.QDRESETH();
 
             TONE tone = TONE.RANDOM;
-            mind.mem.Decide(STATE.QUICKDECISION, CONST.DECI_SUBJECT_C, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
+            mind.memory.Decide(STATE.QUICKDECISION, CONST.DECI_SUBJECT_C, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
             
             mind.STATE = STATE.QUICKDECISION;
         }

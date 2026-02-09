@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Core.Spaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 

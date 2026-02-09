@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Core.Spaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -386,7 +387,7 @@ namespace Awesome.AI.CoreInternals
             count_lower = count_upper - region_len;
             index--;
 
-            List<UNIT> units = mind.mem.UNITS_ALL();
+            List<UNIT> units = mind.access.UNITS_ALL();
             units = units.Where(x => x.HubIndex <= count_upper && x.HubIndex >= count_lower).ToList();
 
             return units;

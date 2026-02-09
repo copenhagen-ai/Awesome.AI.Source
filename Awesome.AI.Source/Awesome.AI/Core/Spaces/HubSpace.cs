@@ -1,8 +1,9 @@
-﻿using Awesome.AI.CoreInternals;
+﻿using Awesome.AI.Core;
+using Awesome.AI.CoreInternals;
 
-namespace Awesome.AI.Core
+namespace Awesome.AI.Core.Spaces
 {
-    public class HUB_SPACE
+    public class HubSpace
     {
         /*
          * these are groups of UNITs
@@ -11,13 +12,13 @@ namespace Awesome.AI.Core
         public string u_guid { get; set; }
 
         private TheMind mind;
-        private HUB_SPACE(TheMind mind, string u_guid)
+        private HubSpace(TheMind mind, string u_guid)
         {
             this.mind = mind;
-            this.u_guid = u_guid;            
+            this.u_guid = u_guid;
         }
 
-        public string Subject 
+        public string Subject
         {
             get
             {
@@ -25,7 +26,7 @@ namespace Awesome.AI.Core
                  * these are named axis
                  * */
 
-                UNIT unit = mind.mem.UNIT_GUID(u_guid);
+                UNIT unit = mind.access.UNIT_GUID(u_guid);
 
                 Lookup lookup = new Lookup();
 
@@ -41,7 +42,7 @@ namespace Awesome.AI.Core
         {
             get
             {
-                UNIT unit = mind.mem.UNIT_GUID(u_guid);
+                UNIT unit = mind.access.UNIT_GUID(u_guid);
 
                 Lookup lookup = new Lookup();
 
@@ -53,10 +54,10 @@ namespace Awesome.AI.Core
             }
         }
 
-        public static HUB_SPACE Create(TheMind mind, string u_guid)
+        public static HubSpace Create(TheMind mind, string u_guid)
         {
-            HUB_SPACE h = new HUB_SPACE(mind, u_guid);
+            HubSpace h = new HubSpace(mind, u_guid);
             return h;
-        }        
+        }
     }
 }

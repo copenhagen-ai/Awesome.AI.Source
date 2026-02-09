@@ -1,27 +1,12 @@
 ﻿using Awesome.AI.Interfaces;
 
-namespace Awesome.AI.Core
+namespace Awesome.AI.Core.Spaces
 {
-    public class UNIT_SPACE
+    public class UnitSpaceUpdate
     {
-        /*
-         * as it is now, it is very simple just up or down
-         * 
-         * expansion 1:
-         * - still using up or down approach
-         * - implement a theme system, and say GiveMeYourTheme and follow(follow by mood, interest, environment etc?)
-         * - topic: most common HUB in related
-         * 
-         * expansion 2:
-         * - still using up or down approach
-         * - the closer to zero Calc.PythDist(UNIT.CreateMIN(), unit) is, the further up we want to jump
-         * - maybe a limit or fuzzy: if Calc.PythDist(UNIT.CreateMIN(), unit) < 20.0 -> its critical -> jump far (similar to Meters.SayNO())
-         * 
-         * */
-
         private TheMind mind;
-        private UNIT_SPACE() { }
-        public UNIT_SPACE(TheMind mind)
+        private UnitSpaceUpdate() { }
+        public UnitSpaceUpdate(TheMind mind)
         {
             this.mind = mind;
         }
@@ -36,7 +21,7 @@ namespace Awesome.AI.Core
             /*
              * with more HUBS and UNITS added, this buffer wil be used less often
              * */
-            
+
             UNIT res;
 
             if (_u.IsIDLE())
@@ -44,7 +29,7 @@ namespace Awesome.AI.Core
             else
                 res = Unit();
 
-            mind.unit_current = res;        
+            mind.unit_current = res;
         }
 
         /*
@@ -52,24 +37,24 @@ namespace Awesome.AI.Core
          * */
         private UNIT Unit()
         {
-            List<UNIT> units = mind.mem.UNITS_VAL();
+            List<UNIT> units = mind.access.UNITS_VAL();
 
             units = units.Where(x =>
-                //   mind.filters.Direction(x) //comment to turn off
+                   //   mind.filters.Direction(x) //comment to turn off
                    mind.filters.LowCut(x)          //comment to turn off
                 && mind.filters.Credits(x)         //comment to turn off
-                //   mind.filters.UnitIsValid(x)   //comment to turn off
-                //&& mind.filters.Theme(x)         //comment to turn off
-                //&& Filters.Elastic2(dir)         //comment to turn off
-                //&& Filters.Ideal(x)              //comment to turn off
-                //&& Filters.Neighbor(x)
+                                                   //   mind.filters.UnitIsValid(x)   //comment to turn off
+                                                   //&& mind.filters.Theme(x)         //comment to turn off
+                                                   //&& Filters.Elastic2(dir)         //comment to turn off
+                                                   //&& Filters.Ideal(x)              //comment to turn off
+                                                   //&& Filters.Neighbor(x)
                 ).ToList();
 
             if (units is null)
                 throw new Exception("TheSoup, Unit");
 
             UNIT _u = Jump(units);
-            
+
             return _u;
         }
 
@@ -85,7 +70,7 @@ namespace Awesome.AI.Core
             UNIT above = units.Where(x => Map(x) < near).FirstOrDefault();
             UNIT below = units.Where(x => Map(x) >= near).LastOrDefault();
             UNIT res = null;
-         
+
             if (above is null && below is null)
                 return null;
 
@@ -103,7 +88,7 @@ namespace Awesome.AI.Core
 
             double map = Map(res);
             res.Update(near, map);
-            
+
             return res;
         }
 
@@ -120,10 +105,10 @@ namespace Awesome.AI.Core
             mech.Peek(x);
 
             double norm = mech.ms.peek_sym_norm;
-            
+
             return norm;
-        }        
-        
+        }
+
         private double prev_dir { get; set; }
         private double Near()
         {
@@ -143,7 +128,7 @@ namespace Awesome.AI.Core
 
             if (!same)
                 res = 100.0d - vel;
-            
+
             prev_dir = dir;
 
             return res;
@@ -158,14 +143,14 @@ namespace Awesome.AI.Core
              * not sure if the buffer should be here(because of the random in topic an here)
              * but maybe it wont have such a big part later on, when more HUBS and UNITS are added
              * */
-                        
-            List<UNIT> units = mind.mem.UNITS_VAL().Where(x => 
-                                //mind.filters.UnitIsValid(x) 
-                                   mind.filters.Credits(x) 
+
+            List<UNIT> units = mind.access.UNITS_VAL().Where(x =>
+                                   //mind.filters.UnitIsValid(x) 
+                                   mind.filters.Credits(x)
                                 && mind.filters.LowCut(x)
                                 ).OrderByDescending(x => x.Variable).ToList();
-            
-            int rand = mind.rand.MyRandomInt(1,units.Count - 1)[0];
+
+            int rand = mind.rand.MyRandomInt(1, units.Count - 1)[0];
             UNIT _u = units.Any() ? units[rand] : UNIT.CreateIdle(mind);
             return _u;
         }
