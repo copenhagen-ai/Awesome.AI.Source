@@ -24,8 +24,8 @@ namespace Awesome.AI.Core.Spaces
             Random rand = new Random();
             foreach (string occ in occus)
             {
-                List<string> ax = lookup.GetAXIS(mindtype, occ);
-                foreach (string hub in ax)
+                List<string> hubs = lookup.GetHUBS(mindtype, occ);
+                foreach (string hub in hubs)
                 {
                     if (hubs_all.ContainsKey(hub))
                         continue;
@@ -44,14 +44,14 @@ namespace Awesome.AI.Core.Spaces
                 MINDS mindtype = mind.mindtype;
 
                 Lookup lookup = new Lookup();
-                List<string> ax = lookup.GetAXIS(mindtype, occu);
+                List<string> hubs = lookup.GetHUBS(mindtype, occu);
 
-                var hubs = new Dictionary<string, double>();
-                ax.ForEach(x => hubs.Add(x, hubs_all[x]));
+                var hubs_curr = new Dictionary<string, double>();
+                hubs.ForEach(x => hubs_curr.Add(x, hubs_all[x]));
 
                 // no ordering, should be based on semantics
-                var weights = hubs.ToList();
-                var sum = hubs.Sum(x => x.Value);
+                var weights = hubs_curr.ToList();
+                var sum = hubs_curr.Sum(x => x.Value);
 
                 double res = 0.0d;
                 double count = 0.0d;
@@ -89,13 +89,13 @@ namespace Awesome.AI.Core.Spaces
                 MINDS mindtype = mind.mindtype;
 
                 Lookup lookup = new Lookup();
-                List<string> ax = lookup.GetAXIS(mindtype, occu);
+                List<string> hubs = lookup.GetHUBS(mindtype, occu);
 
-                var hubs = new Dictionary<string, double>();
-                ax.ForEach(x => hubs.Add(x, hubs_all[x]));
+                var hubs_curr = new Dictionary<string, double>();
+                hubs.ForEach(x => hubs_curr.Add(x, hubs_all[x]));
 
                 // no ordering, should be based on semantics
-                var weights = hubs.ToList();
+                var weights = hubs_curr.ToList();
                 var sum = weights.Sum(x => x.Value);
 
                 string sub = "";
@@ -129,13 +129,13 @@ namespace Awesome.AI.Core.Spaces
                 MINDS mindtype = mind.mindtype;
 
                 Lookup lookup = new Lookup();
-                List<string> ax = lookup.GetAXIS(mindtype, occu);
+                List<string> hubs = lookup.GetHUBS(mindtype, occu);
 
-                var hubs = new Dictionary<string, double>();
-                ax.ForEach(x => hubs.Add(x, hubs_all[x]));
+                var hubs_curr = new Dictionary<string, double>();
+                hubs.ForEach(x => hubs_curr.Add(x, hubs_all[x]));
 
                 // no ordering, should be based on semantics
-                var weights = hubs.ToList();
+                var weights = hubs_curr.ToList();
                 var sum = weights.Sum(x => x.Value);
 
                 string sub = "";
@@ -169,18 +169,18 @@ namespace Awesome.AI.Core.Spaces
                 MINDS mindtype = mind.mindtype;
 
                 Lookup lookup = new Lookup();
-                List<string> ax = lookup.GetAXIS(mindtype, occu);
+                List<string> hubs = lookup.GetHUBS(mindtype, occu);
 
                 var units = mind.access.UNITS_ALL();
-                var hubs = new List<string>();
-                ax.ForEach(x => hubs.Add(x));
+                var hubs_curr = new List<string>();
+                hubs.ForEach(x => hubs_curr.Add(x));
 
                 List<UNIT> res = new List<UNIT>();
 
                 foreach (var unit in units)
                 {
                     var max = Max(unit.affinitys);
-                    if (hubs.Contains(max) && !res.Contains(unit))
+                    if (hubs_curr.Contains(max) && !res.Contains(unit))
                         res.Add(unit);
                 }            
             

@@ -313,7 +313,7 @@ namespace Awesome.AI.CoreInternals
             CONST.roberta_s10,//"having fun"
         };
 
-        public List<string> GetAXIS(MINDS mind, string axis)
+        public List<string> GetHUBS(MINDS mind, string axis)
         {
             /*
              * call LLM here
