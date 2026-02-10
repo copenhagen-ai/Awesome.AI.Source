@@ -21,8 +21,9 @@ namespace Awesome.AI.Core
     public class TheMind
     {
         public Down down;
+        public HubSpace hub;
         public UnitSpaceSoup soup;
-        public UnitSpaceSetup memory; 
+        public UnitSpaceSetup memory;
         public UnitSpaceAccess access;
         public Core core;
         public QuickDecision _quick;
@@ -116,6 +117,7 @@ namespace Awesome.AI.Core
                 soup = new UnitSpaceSoup(this);
                 memory = new UnitSpaceSetup(this);
                 access = new UnitSpaceAccess(this);
+                hub = new HubSpace(this);
 
                 Random random = new Random();
                 int u_count = access.UNITS_ALL().Count;

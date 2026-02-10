@@ -62,7 +62,7 @@ namespace Awesome.AI.CoreSystems
             ACTION actionA = GetActionA(mind);
             ACTION actionB = GetActionB(mind);
             UNIT unit = mind.unit_current;
-            string subject = unit.HUB?.Subject ?? "";
+            string subject = mind.hub.GetSubject(unit) ?? "";
 
             if (mind.Roberta())
                 ;

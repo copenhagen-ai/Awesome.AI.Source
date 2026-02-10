@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Core.Spaces;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreSystems
@@ -81,7 +82,7 @@ namespace Awesome.AI.CoreSystems
                 //if (!CONST.SAMPLE20.RandomSample(mind))
                 //    return;
 
-                sub = mind?.unit_actual?.HUB?.Subject ?? "";
+                sub = mind.hub.GetSubject(mind.unit_actual) ?? "";
                 curr = mind?.unit_actual?.Data ?? "";
 
                 if (sub == "")

@@ -142,7 +142,7 @@ namespace Awesome.AI.Common
             //down_prop_noise = mind.calc.Normalize(mind.down.Props["noise"], -1.0d, 1.0d, 0.0d, 100.0d);
 
             //common_unit = mind.core.most_common_unit;
-            common_hub_subject = mind?.unit_actual?.HUB?.Subject ?? "";
+            common_hub_subject = mind.hub.GetSubject(mind.unit_actual) ?? "";
 
             if (mind._long.Result[LONGTYPE.ANSWER] != "")
             {

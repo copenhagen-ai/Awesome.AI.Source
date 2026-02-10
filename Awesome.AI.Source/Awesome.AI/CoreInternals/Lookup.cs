@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Core;
-using Awesome.AI.Core.Spaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -314,85 +313,6 @@ namespace Awesome.AI.CoreInternals
             CONST.roberta_s10,//"having fun"
         };
 
-        public string GetSUB(MINDS mind, string axis, double hub_index)
-        {
-            /*
-             * call LLM here
-             * */
-            List<string> ax = null;
-            switch (mind)
-            {
-                case MINDS.ROBERTA:
-                    if (axis == "socializing") ax = roberta1;
-                    if (axis == "hobbys") ax = roberta2;
-                    break;
-                case MINDS.ANDREW:
-                    if (axis == "socializing") ax = andrew1;
-                    if (axis == "hobbys") ax = andrew2;
-                    break;
-                default: throw new Exception("Lookup, GetHUB");
-            }
-
-            int num_regions = ax.Count;
-
-            double hub_space = CONST.MAX_HUBSPACE;
-            double region_len = hub_space / num_regions;
-
-            int index = 0;
-            double count = 0;
-            while (count < hub_index)
-            {
-                count += region_len;
-                index++;
-            }
-            count -= region_len;
-            index--;
-
-            return ax[index];
-        }
-
-        public List<UNIT> GetUNITS(TheMind mind, MINDS mindtype, string axis, double hub_index)
-        {
-            /*
-             * call LLM here
-             * */
-            List<string> ax = null;
-            switch (mindtype)
-            {
-                case MINDS.ROBERTA:
-                    if (axis == "socializing") ax = roberta1;
-                    if (axis == "hobbys") ax = roberta2;
-                    break;
-                case MINDS.ANDREW:
-                    if (axis == "socializing") ax = andrew1;
-                    if (axis == "hobbys") ax = andrew2;
-                    break;
-                default: throw new Exception("Lookup, GetUNITS");
-            }
-
-            int num_regions = ax.Count;
-
-            double hub_space = CONST.MAX_HUBSPACE;
-            double region_len = hub_space / num_regions;
-
-            int index = 0;
-            double count_upper = 0;
-            double count_lower = 0;
-            while (count_upper < hub_index)
-            {
-                count_upper += region_len;
-                index++;
-            }
-            count_upper -= region_len;
-            count_lower = count_upper - region_len;
-            index--;
-
-            List<UNIT> units = mind.access.UNITS_ALL();
-            units = units.Where(x => x.HubIndex <= count_upper && x.HubIndex >= count_lower).ToList();
-
-            return units;
-        }
-
         public List<string> GetAXIS(MINDS mind, string axis)
         {
             /*
@@ -413,43 +333,7 @@ namespace Awesome.AI.CoreInternals
             }
 
             return ax;
-        }
-
-        public double GetIDX(MINDS mind, string axis, string sub)
-        {
-            /*
-             * call LLM here
-             * */
-            List<string> ax = null;
-            switch (mind)
-            {
-                case MINDS.ROBERTA:
-                    if (axis == "socializing") ax = roberta1;
-                    if (axis == "hobbys") ax = roberta2;
-                    break;
-                case MINDS.ANDREW:
-                    if (axis == "socializing") ax = andrew1;
-                    if (axis == "hobbys") ax = andrew2;
-                    break;
-                default: throw new Exception("Lookup, GetHUB");
-            }
-
-            int num_regions = ax.Count;
-
-            double hub_space = CONST.MAX_HUBSPACE;
-            double region_len = hub_space / num_regions;
-
-            int index = 0;
-            double count = 0;
-            while (sub != ax[index])
-            {
-                count += region_len;
-                index++;
-            }
-            count += region_len / 2;
-            
-            return count;
-        }
+        }        
 
         public string[] occupasions = { "socializing", "hobbys" };
         public List<string> GetOCCU(MINDS mindtype, int count, out string occu)

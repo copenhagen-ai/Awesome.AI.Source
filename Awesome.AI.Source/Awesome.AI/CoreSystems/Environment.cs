@@ -158,7 +158,7 @@ namespace Awesome.AI.CoreSystems
             try
             {
                 string name = Occu.name;
-                string sub = _u.HUB?.Subject ?? "";
+                string sub = mind.hub.GetSubject(_u) ?? "";
 
                 if (name == "")
                     return false;

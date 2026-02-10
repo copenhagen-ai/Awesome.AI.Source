@@ -1,5 +1,5 @@
-﻿using Awesome.AI.Core;
-using Awesome.AI.CoreInternals;
+﻿using Awesome.AI.CoreInternals;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
 {
@@ -9,55 +9,204 @@ namespace Awesome.AI.Core.Spaces
          * these are groups of UNITs
          * */
 
-        public string u_guid { get; set; }
+        public Dictionary<string, double> hubs_all { get; set; }
 
         private TheMind mind;
-        private HubSpace(TheMind mind, string u_guid)
+        public HubSpace(TheMind mind)
         {
             this.mind = mind;
-            this.u_guid = u_guid;
-        }
+            this.hubs_all = new Dictionary<string, double>();
 
-        public string Subject
-        {
-            get
+            MINDS mindtype = mind.mindtype;
+            Lookup lookup = new Lookup();
+            string[] occus = lookup.occupasions;
+
+            Random rand = new Random();
+            foreach (string occ in occus)
             {
-                /*
-                 * these are named axis
-                 * */
+                List<string> ax = lookup.GetAXIS(mindtype, occ);
+                foreach (string hub in ax)
+                {
+                    if (hubs_all.ContainsKey(hub))
+                        continue;
 
-                UNIT unit = mind.access.UNIT_GUID(u_guid);
-
-                Lookup lookup = new Lookup();
-
-                string occu = mind._internal.Occu.name;
-
-                string hub = lookup.GetSUB(mind.mindtype, occu, unit.HubIndex);
-
-                return hub;
+                    double _r = rand.NextDouble();
+                    hubs_all.Add(hub, _r);
+                }
             }
         }
 
-        public List<UNIT> Units
+        public double GetIndex(string sub_get)
         {
-            get
+            try
             {
-                UNIT unit = mind.access.UNIT_GUID(u_guid);
+                string occu = mind._internal.Occu.name;
+                MINDS mindtype = mind.mindtype;
 
                 Lookup lookup = new Lookup();
+                List<string> ax = lookup.GetAXIS(mindtype, occu);
 
-                string occu = mind._internal.Occu.name;
+                var hubs = new Dictionary<string, double>();
+                ax.ForEach(x => hubs.Add(x, hubs_all[x]));
 
-                List<UNIT> units = lookup.GetUNITS(mind, mind.mindtype, occu, unit.HubIndex);
+                // no ordering, should be based on semantics
+                var weights = hubs.ToList();
+                var sum = hubs.Sum(x => x.Value);
 
-                return units;
+                double res = 0.0d;
+                double count = 0.0d;
+                for (int i = 0; i < weights.Count(); i++)
+                {
+                    var weight = weights[i].Value;
+                    var area = (weight / sum) * 100.0d;
+
+                    count += area;
+
+                    var sub = GetSubject(count);
+
+                    if (sub_get == sub)
+                        break;
+
+                    var weight_next = weights[i + 1].Value;
+                    var area_next = (weight_next / sum) * 100.0d;
+
+                    res = count + area_next / 2;
+                }
+
+                return res;                
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
 
-        public static HubSpace Create(TheMind mind, string u_guid)
+        public string GetSubject(UNIT unit)
         {
-            HubSpace h = new HubSpace(mind, u_guid);
-            return h;
+            try
+            {
+                string occu = mind._internal.Occu.name;
+                MINDS mindtype = mind.mindtype;
+
+                Lookup lookup = new Lookup();
+                List<string> ax = lookup.GetAXIS(mindtype, occu);
+
+                var hubs = new Dictionary<string, double>();
+                ax.ForEach(x => hubs.Add(x, hubs_all[x]));
+
+                // no ordering, should be based on semantics
+                var weights = hubs.ToList();
+                var sum = weights.Sum(x => x.Value);
+
+                string sub = "";
+                double count = 0.0d;
+                for (int i = 0; i < weights.Count(); i++)
+                {
+                    var weight = weights[i].Value;
+                    var area = (weight / sum) * 100.0d;
+
+                    count += area;
+
+                    sub = weights[i].Key;
+
+                    if (count >= unit.HubIndex)
+                        break;
+                }
+
+                return sub;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public string GetSubject(double hub_index)
+        {
+            try
+            {
+                string occu = mind._internal.Occu.name;
+                MINDS mindtype = mind.mindtype;
+
+                Lookup lookup = new Lookup();
+                List<string> ax = lookup.GetAXIS(mindtype, occu);
+
+                var hubs = new Dictionary<string, double>();
+                ax.ForEach(x => hubs.Add(x, hubs_all[x]));
+
+                // no ordering, should be based on semantics
+                var weights = hubs.ToList();
+                var sum = weights.Sum(x => x.Value);
+
+                string sub = "";
+                double count = 0.0d;
+                for (int i = 0; i < weights.Count(); i++)
+                {
+                    var weight = weights[i].Value;
+                    var area = (weight / sum) * 100.0d;
+
+                    count += area;
+
+                    sub = weights[i].Key;
+                 
+                    if (count >= hub_index)
+                        break;
+                }
+
+                return sub;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public List<UNIT> GetUnits()
+        {
+            try
+            {
+                string occu = mind._internal.Occu.name;
+                MINDS mindtype = mind.mindtype;
+
+                Lookup lookup = new Lookup();
+                List<string> ax = lookup.GetAXIS(mindtype, occu);
+
+                var units = mind.access.UNITS_ALL();
+                var hubs = new List<string>();
+                ax.ForEach(x => hubs.Add(x));
+
+                List<UNIT> res = new List<UNIT>();
+
+                foreach (var unit in units)
+                {
+                    var max = Max(unit.affinitys);
+                    if (hubs.Contains(max) && !res.Contains(unit))
+                        res.Add(unit);
+                }            
+            
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        private string Max(Dictionary<string, int> dict)
+        {
+            string res = "";
+            int max = -1;
+
+            foreach (var kvp in dict)
+            {
+                if (kvp.Value > max)
+                {
+                    max = kvp.Value;
+                    res = kvp.Key;
+                }
+            }
+
+            return res;
         }
     }
 }

@@ -104,7 +104,7 @@ namespace Awesome.AI.Core.Spaces
             List<string> list = mind.memory.Tags(mind.mindtype);
             int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
 
-            string ticket = "" + unit.HUB.Subject + rand;
+            string ticket = "" + mind.hub.GetSubject(unit) + rand;
             string guid = "" + unit.guid;
 
             UNIT _u = UNIT.Create(mind, guid, idx, "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);

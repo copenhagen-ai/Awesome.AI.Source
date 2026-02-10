@@ -1,10 +1,9 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.Interfaces;
 using Awesome.AI.CoreInternals;
+using Awesome.AI.CoreSystems;
+using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
-using Awesome.AI.CoreSystems;
-using Awesome.AI.Core;
 
 namespace Awesome.AI.Core.Spaces
 {
@@ -51,7 +50,7 @@ namespace Awesome.AI.Core.Spaces
                 if (data != "DATA")
                     return data;
 
-                string sub = HUB.Subject;
+                string sub = mind.hub.GetSubject(this);
                 double _i = mind.mech_high.mp.props.PropsOut["base"];
                 string idx = $"{_i.Index(mind)}";
 
@@ -71,12 +70,13 @@ namespace Awesome.AI.Core.Spaces
         {
             get
             {
-                if (HUB is null)
+                List<UNIT> list = mind.hub.GetUnits().OrderBy(x => x.created).ToList();
+
+                if (!list.Any())
                     return "";
 
-                List<UNIT> list = HUB.Units.OrderBy(x => x.created).ToList();
                 int idx = list.IndexOf(this) + 1;
-                string res = "_" + HUB.Subject + idx;
+                string res = "_" + mind.hub.GetSubject(this) + idx;
 
                 return res;
             }
@@ -117,25 +117,6 @@ namespace Awesome.AI.Core.Spaces
                     default:
                         throw new Exception("IsValid");
                 }
-            }
-        }
-
-        public HubSpace HUB
-        {
-            get
-            {
-                if (mind.STATE == STATE.QUICKDECISION)
-                    return null;
-
-                if (IsQUICKDECISION())
-                    return null;
-
-                if (IsIDLE())
-                    return null;
-
-                HubSpace hub = HubSpace.Create(mind, guid);
-
-                return hub;
             }
         }
 
@@ -208,9 +189,6 @@ namespace Awesome.AI.Core.Spaces
             if (_do > 0)
                 return;
 
-            if (HUB == null)
-                return;
-
             Lookup lookup = new Lookup();
 
             MINDS mindtype = mind.mindtype;
@@ -218,12 +196,12 @@ namespace Awesome.AI.Core.Spaces
             int max = affinitys.Values.Max();
             string af_occu = affinitys.First(x => x.Value == max).Key;
             string occu = mind._internal.Occu.name;
-            string sub = HUB.Subject;
+            string sub = mind.hub.GetSubject(this);
 
             if (af_occu != occu)
                 return;
 
-            double index = lookup.GetIDX(mindtype, occu, sub);
+            double index = mind.hub.GetIndex(sub);
 
             HubIndex += HubIndex < index ? 0.001 : -0.001;
         }
@@ -254,10 +232,7 @@ namespace Awesome.AI.Core.Spaces
 
         private bool Add(double near, double dist)
         {
-            if (HUB is null)
-                return true;
-
-            int count = HUB.Units.Count;
+            int count = mind.hub.GetUnits().Count;
             double avg = 100.0d / count;
 
             if (dist < avg)
