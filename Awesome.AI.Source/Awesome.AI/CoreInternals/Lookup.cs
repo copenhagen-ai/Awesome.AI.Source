@@ -336,7 +336,7 @@ namespace Awesome.AI.CoreInternals
         }        
 
         public string[] occupasions = { "socializing", "hobbys" };
-        public List<string> GetOCCU(MINDS mindtype, int count, out string occu)
+        public List<string> GetHUBS(MINDS mindtype, int count, out string occu)
         {
             if (count >= occupasions.Length)
                 throw new Exception("Lookup, GetOCCU 1");

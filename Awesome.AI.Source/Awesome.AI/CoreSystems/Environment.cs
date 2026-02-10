@@ -116,7 +116,7 @@ namespace Awesome.AI.CoreSystems
                         case OCCUPASION.FIXED:
                             Lookup lookup = new Lookup();
                             MINDS mindtype = mind.mindtype;
-                            List<string> list = lookup.GetOCCU(mindtype, 0, out string _o);
+                            List<string> list = lookup.GetHUBS(mindtype, 0, out string _o);
                             occu = new Occupasion() { name = _o, max_epochs = 30, values = list };
                             break;
                         case OCCUPASION.DYNAMIC:
@@ -195,7 +195,7 @@ namespace Awesome.AI.CoreSystems
             {
                 for (int i = 0; i < occu_count; i++)
                 {
-                    List<string> list = lookup.GetOCCU(mind, i, out string occu);
+                    List<string> list = lookup.GetHUBS(mind, i, out string occu);
                     occus.Add(new Occupasion() { name = occu, max_epochs = 30, values = list });                
                 }
             }
