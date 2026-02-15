@@ -73,7 +73,34 @@ namespace Awesome.AI.Core.Spaces
                     res = count + area_next / 2;
                 }
 
-                return res;                
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void SetWeights(string sub, double _val)
+        {
+            try
+            {
+                string occu = mind._internal.Occu.name;
+                MINDS mindtype = mind.mindtype;
+
+                Lookup lookup = new Lookup();
+                List<string> hubs = lookup.GetHUBS(mindtype, occu);
+
+                double _val1 = _val;
+                double _val2 = _val * 0.1d;
+
+                foreach (string hub in hubs) 
+                    hubs_all[hub] -= _val2;
+
+                foreach (string hub in hubs)
+                    hubs_all[hub] = hubs_all[hub] < 0.0d ? 0.0d : hubs_all[hub]; 
+                
+                hubs_all[sub] += _val1;                
             }
             catch (Exception ex)
             {
@@ -179,7 +206,7 @@ namespace Awesome.AI.Core.Spaces
 
                 foreach (var unit in units)
                 {
-                    var max = Max(unit.affinitys);
+                    var max = Max(unit.register);
                     if (hubs_curr.Contains(max) && !res.Contains(unit))
                         res.Add(unit);
                 }            

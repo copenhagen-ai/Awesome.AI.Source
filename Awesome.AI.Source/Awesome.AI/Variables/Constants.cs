@@ -112,6 +112,7 @@ namespace Awesome.AI.Variables
 
         public const double ETA = 0.05d;                    //learningrate
         public const double ALPHA = 0.001d;                 //distance
+        public const double GAMMA = 0.001d;
         public const int ACTIVATOR = 8000;                  //randomness, turn it way down
 
         public const double GRAVITY = 9.81d;

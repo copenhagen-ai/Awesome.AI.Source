@@ -19,7 +19,7 @@ namespace Awesome.AI.Core.Spaces
         public DateTime created { get; set; }
         public string guid { get; set; }//name
         public double credits { get; set; }
-        public Dictionary<string, int> affinitys { get; set; }
+        public Dictionary<string, int> register { get; set; }
 
         private double ui { get; set; }
         public double UnitIndex
@@ -138,9 +138,9 @@ namespace Awesome.AI.Core.Spaces
             _w.HubIndex = rand.NextDouble() * CONST.MAX_HUBSPACE;
 
             Lookup lookup = new Lookup();
-            _w.affinitys = new Dictionary<string, int>();
+            _w.register = new Dictionary<string, int>();
             foreach (string occu in lookup.occupasions)
-                _w.affinitys.Add(occu, 0);
+                _w.register.Add(occu, 0);
 
             return _w;
         }
@@ -154,9 +154,8 @@ namespace Awesome.AI.Core.Spaces
         public void Update(double near, double map)
         {
             UpdateAF();
-
-            UpdateUS(near, map);
             UpdateHS();
+            UpdateUS(near, map);
 
             _do++;
             if (_do > 100)
@@ -169,18 +168,17 @@ namespace Awesome.AI.Core.Spaces
             if (_do > 0)
                 return;
 
-            string occu = mind._internal.Occu.name;
-            affinitys[occu]++;
+            string af_occo = mind._internal.Occu.name;
 
-            int count = 0;
-            Lookup lookup = new Lookup();
-            foreach (string _o in lookup.occupasions)
-                count += affinitys[_o];
+            register[af_occo]++;
+
+            int count = register.Sum(x=>x.Value);
 
             if (count > 1000)//promil
-                affinitys[last_affinity]--;
+                register[last_affinity]--;
 
-            last_affinity = occu;
+            last_affinity = af_occo;
+
             return;
         }
 
@@ -193,8 +191,8 @@ namespace Awesome.AI.Core.Spaces
 
             MINDS mindtype = mind.mindtype;
 
-            int max = affinitys.Values.Max();
-            string af_occu = affinitys.First(x => x.Value == max).Key;
+            int max = register.Values.Max();
+            string af_occu = register.First(x => x.Value == max).Key;
             string occu = mind._internal.Occu.name;
             string sub = mind.hub.GetSubject(this);
 
@@ -203,7 +201,9 @@ namespace Awesome.AI.Core.Spaces
 
             double index = mind.hub.GetIndex(sub);
 
-            HubIndex += HubIndex < index ? 0.001 : -0.001;
+            HubIndex += HubIndex < index ? CONST.GAMMA : -CONST.GAMMA;
+
+            mind.hub.SetWeights(sub, CONST.GAMMA * 0.1d);
         }
 
         private void UpdateUS(double near, double map)
