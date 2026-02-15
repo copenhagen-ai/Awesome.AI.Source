@@ -9,26 +9,26 @@ namespace Awesome.AI.Core.Spaces
         private List<string> location_should_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
-            CONST.location_should,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
+            CONST.LDAT_LOC_SHOULD,//YES
                                     
             //Constants.should_decision_u2,//NO
         };
@@ -62,16 +62,16 @@ namespace Awesome.AI.Core.Spaces
         private List<string> answer_should_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
-            CONST.answer_should,//YES
-            CONST.answer_should,//YES
-            CONST.answer_should,//YES
-            CONST.answer_should,//YES
-            CONST.answer_should,//YES
-            CONST.answer_should,//YES
-            CONST.answer_should,//YES
-            CONST.answer_should,//YES
-            CONST.answer_should,//NO
-            CONST.answer_should,//NO
+            CONST.LDAT_ANS_SHOULD,//YES
+            CONST.LDAT_ANS_SHOULD,//YES
+            CONST.LDAT_ANS_SHOULD,//YES
+            CONST.LDAT_ANS_SHOULD,//YES
+            CONST.LDAT_ANS_SHOULD,//YES
+            CONST.LDAT_ANS_SHOULD,//YES
+            CONST.LDAT_ANS_SHOULD,//YES
+            CONST.LDAT_ANS_SHOULD,//YES
+            CONST.LDAT_ANS_SHOULD,//NO
+            CONST.LDAT_ANS_SHOULD,//NO
                                     
             //Constants.should_decision_u2,//NO
         };
@@ -96,16 +96,16 @@ namespace Awesome.AI.Core.Spaces
         private List<string> ask_should_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
-            CONST.ask_should,//YES
-            CONST.ask_should,//YES
-            CONST.ask_should,//YES
-            CONST.ask_should,//YES
-            CONST.ask_should,//YES
-            CONST.ask_should,//NO
-            CONST.ask_should,//NO
-            CONST.ask_should,//NO
-            CONST.ask_should,//NO
-            CONST.ask_should,//NO
+            CONST.LDAT_ASK_SHOULD,//YES
+            CONST.LDAT_ASK_SHOULD,//YES
+            CONST.LDAT_ASK_SHOULD,//YES
+            CONST.LDAT_ASK_SHOULD,//YES
+            CONST.LDAT_ASK_SHOULD,//YES
+            CONST.LDAT_ASK_SHOULD,//NO
+            CONST.LDAT_ASK_SHOULD,//NO
+            CONST.LDAT_ASK_SHOULD,//NO
+            CONST.LDAT_ASK_SHOULD,//NO
+            CONST.LDAT_ASK_SHOULD,//NO
                                     
             //Constants.should_decision_u2,//NO
         };
@@ -147,25 +147,25 @@ namespace Awesome.AI.Core.Spaces
 
             TONE tone;
             tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.DECI_SUBJECT_A, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
             tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.HIGH;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.DECI_SUBJECT_B, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
             tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.DECI_SUBJECT_A, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
             tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.LOW;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.DECI_SUBJECT_B, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
             tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.MID;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.DECI_SUBJECT_A, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
 
             //Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             //foreach (var kv in dict)
             {
                 tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-                Quick(5 /*kv.Value[1]*/, CONST.DECI_SUBJECT_C, "WHISTLE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
+                Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "WHISTLE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
             }
         }
 

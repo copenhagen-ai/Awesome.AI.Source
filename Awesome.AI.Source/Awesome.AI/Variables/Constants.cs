@@ -37,10 +37,6 @@ namespace Awesome.AI.Variables
          * decision values
          * */
 
-        public const string location_should = "A";
-        public const string answer_should = "B";
-        public const string ask_should = "C";
-
         public const string location_what_u1 = "WHATKITCHEN";
         public const string location_what_u2 = "WHATBEDROOM";
         public const string location_what_u3 = "WHATLIVINGROOM";
@@ -52,11 +48,14 @@ namespace Awesome.AI.Variables
         public const string quick_deci_should_yes = "QYES";
         public const string quick_deci_should_no = "QNO";
 
+        public const string LDAT_LOC_SHOULD = "A";
+        public const string LDAT_ANS_SHOULD = "B";
+        public const string LDAT_ASK_SHOULD = "C";
 
-        public const string DECI_SUBJECT_A = "long_decision_should";
-        public const string DECI_SUBJECT_B = "long_decision_what";
-        public const string DECI_SUBJECT_C = "quick_decision_should";
-        public static bool DECI_SUBJECT_CONTAINS(string str) { return DECI_SUBJECT_A == str || DECI_SUBJECT_B == str || DECI_SUBJECT_C == str; }
+        public const string LSUB_SHOULD = "long_decision_should";
+        public const string LSUB_WHAT = "long_decision_what";
+        public const string QSUB_SHOULD = "quick_decision_should";
+        public static bool DECI_SUBJECT_CONTAINS(string str) { return LSUB_SHOULD == str || LSUB_WHAT == str || QSUB_SHOULD == str; }
 
         //public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
         //{

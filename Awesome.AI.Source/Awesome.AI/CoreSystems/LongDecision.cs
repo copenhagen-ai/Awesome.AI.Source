@@ -70,27 +70,27 @@ namespace Awesome.AI.CoreSystems
             if (mind.Andrew())
                 ;
 
-            if (subject == "long_decision_should" && State[type] == 0)
+            if (subject == CONST.LSUB_SHOULD && State[type] == 0)
             {
                 //location
-                if (unit.Data == "A" && actionB == ACTION.ACTION)
+                if (unit.Data == CONST.LDAT_LOC_SHOULD && actionB == ACTION.ACTION)
                     SetResult(type, "", 1);
 
 
                 //answer
-                if (unit.Data == "B" && actionB == ACTION.ACTION)
+                if (unit.Data == CONST.LDAT_ANS_SHOULD && actionB == ACTION.ACTION)
                     SetResult(type, ":YES", 0);
 
-                if (unit.Data == "B" && actionB == ACTION.DECLINE)
+                if (unit.Data == CONST.LDAT_ANS_SHOULD && actionB == ACTION.DECLINE)
                     SetResult(type, "Im busy right now..", 0);
 
                 
                 //ask
-                if (unit.Data == "C" && actionB == ACTION.ACTION)
+                if (unit.Data == CONST.LDAT_ASK_SHOULD && actionB == ACTION.ACTION)
                     SetResult(type, GetSubject(), 0);
             }
 
-            if (subject == "long_decision_what" && State[type] == 1)
+            if (subject == CONST.LSUB_WHAT && State[type] == 1)
             {
                 string _new = unit.Data.Replace("WHAT", "");
 
