@@ -36,6 +36,33 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
+        public void AdjustWeights(string sub, double _val)
+        {
+            try
+            {
+                string occu = mind._internal.Occu.name;
+                MINDS mindtype = mind.mindtype;
+
+                Lookup lookup = new Lookup();
+                List<string> hubs = lookup.GetHUBS(mindtype, occu);
+
+                double _val1 = _val;
+                double _val2 = _val * 0.1d;
+
+                foreach (string hub in hubs) 
+                    hubs_all[hub] -= _val2;
+
+                foreach (string hub in hubs)
+                    hubs_all[hub] = hubs_all[hub] < 0.0d ? 0.0d : hubs_all[hub]; 
+                
+                hubs_all[sub] += _val1;                
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public double GetIndex(string sub_get)
         {
             try
@@ -74,33 +101,6 @@ namespace Awesome.AI.Core.Spaces
                 }
 
                 return res;
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-
-        public void SetWeights(string sub, double _val)
-        {
-            try
-            {
-                string occu = mind._internal.Occu.name;
-                MINDS mindtype = mind.mindtype;
-
-                Lookup lookup = new Lookup();
-                List<string> hubs = lookup.GetHUBS(mindtype, occu);
-
-                double _val1 = _val;
-                double _val2 = _val * 0.1d;
-
-                foreach (string hub in hubs) 
-                    hubs_all[hub] -= _val2;
-
-                foreach (string hub in hubs)
-                    hubs_all[hub] = hubs_all[hub] < 0.0d ? 0.0d : hubs_all[hub]; 
-                
-                hubs_all[sub] += _val1;                
             }
             catch (Exception ex)
             {

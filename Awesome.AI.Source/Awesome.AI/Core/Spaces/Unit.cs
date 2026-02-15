@@ -13,7 +13,7 @@ namespace Awesome.AI.Core.Spaces
          * maybe later there will be other types, like: SOUND, IMAGE, VIDEO
          * */
 
-        public Ticket ticket = new Ticket("NOTICKET");
+        public Ticket ticket { get; set; }
         private UNITTYPE unit_type { get; set; }
         public LONGTYPE ld_type { get; set; }
         public DateTime created { get; set; }
@@ -126,21 +126,21 @@ namespace Awesome.AI.Core.Spaces
             "hello world!".BusyWait(10);
 
             DateTime create = DateTime.Now;
+            Random rand = new Random();
+            Lookup lookup = new Lookup();
+            List<string> occus = new List<string>();
 
             UNIT _w = new UNIT() { mind = mind, created = create, guid = h_guid, UnitIndex = index, data = data, unit_type = ut, ld_type = lt };
 
-            if (ticket != "")
-                _w.ticket = new Ticket(ticket);
-
-            Random rand = new Random();
+            ticket = ticket != "" ? ticket : "NOTICKET";
+            _w.ticket = new Ticket(ticket);
 
             _w.credits = CONST.MAX_CREDIT;
             _w.HubIndex = rand.NextDouble() * CONST.MAX_HUBSPACE;
 
-            Lookup lookup = new Lookup();
             _w.register = new Dictionary<string, int>();
-            foreach (string occu in lookup.occupasions)
-                _w.register.Add(occu, 0);
+            occus = lookup.occupasions.ToList();
+            occus.ForEach(x => _w.register.Add(x, 0));
 
             return _w;
         }
@@ -203,7 +203,7 @@ namespace Awesome.AI.Core.Spaces
 
             HubIndex += HubIndex < index ? CONST.GAMMA : -CONST.GAMMA;
 
-            mind.hub.SetWeights(sub, CONST.GAMMA * 0.1d);
+            mind.hub.AdjustWeights(sub, CONST.GAMMA * 0.1d);
         }
 
         private void UpdateUS(double near, double map)
