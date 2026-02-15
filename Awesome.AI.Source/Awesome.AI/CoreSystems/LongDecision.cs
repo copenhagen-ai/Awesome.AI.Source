@@ -87,17 +87,17 @@ namespace Awesome.AI.CoreSystems
                 
                 //ask
                 if (unit.Data == CONST.LDAT_ASK_SHOULD && actionB == ACTION.ACTION)
-                    SetResult(type, GetSubject(), 0);
+                    SetResult(type, mind.hub.GetSubject(unit), 0);
             }
 
             if (subject == CONST.LSUB_WHAT && State[type] == 1)
             {
-                string _new = unit.Data.Replace("WHAT", "");
+                string _new = unit.Data.Replace(CONST.lng_what, "");
 
                 if (mind.down.Dir > 0.0)
                     SetResult(type, "", 0);
 
-                else if (unit.Data != "WHAT" + Result[type])
+                else if (unit.Data != CONST.lng_what + Result[type])
                     SetResult(type, _new, 0);
             }
         }
@@ -159,137 +159,5 @@ namespace Awesome.AI.CoreSystems
 
             return ACTION.DECLINE;
         }
-
-        private string GetSubject()
-        {
-            string _hub = null;
-            List<string> list = mind._internal.Occu.values;
-            int count = list.Count;
-            int i = 0;
-            int[] _r = mind.rand.MyRandomInt(100, count - 1);
-
-            do
-            {
-                _hub = list[_r[i]];
-                i++;
-            } while (CONST.DECI_SUBJECT_CONTAINS(_hub));
-
-            return _hub;
-        }
-
-        //public void _Decide(bool _pro, string type)
-        //{
-        //    /*
-        //     * OCCU = [ LivingroomHUB, KitchenHUB, BedroomHUB ]
-        //     * if OCCU == DecisionHUB
-        //     *     if USTAT == "NO"
-        //     *         OCCU = [ LivingroomHUB, KitchenHUB, BedroomHUB ]
-        //     *     if USTAT == "YES"
-        //     *         OCCU = [ PosibillitiesHUB ]
-        //     * else if OCCU == PosibillitiesHUB
-        //     *     move to USTAT.data
-        //     *     OCCU = [ LivingroomHUB, KitchenHUB, BedroomHUB ]
-        //     * else
-        //     *     if USTAT == "move location"
-        //     *         OCCU = [ DecisionHUB ]
-        //     *     else
-        //     *         OCCU = OCCU
-        //     */
-
-        //    if (mind.z_current != "z_noise")
-        //        return;
-
-        //    if (!_pro)
-        //        return;
-
-        //    if (mind.epochs < 5)
-        //        return;
-
-        //    if (!mind.unit_current.IsDECISION())
-        //        return;
-
-        //    if (mind.unit_current.long_deci_type.ToString() != type.ToUpper())
-        //        return;
-
-        //    if (type == "ask" && mind.chat_asked)
-        //        return;
-
-        //    if (type == "ask" && _State["answer"] > 0)
-        //        return;
-
-        //    UNIT current = mind.unit_current;
-        //    string subject = current.HUB?.subject ?? "";
-
-        //    List<UNIT> units = mind.mem.UNITS_ALL().Where(x => x.IsDECISION()).ToList();
-        //    HUB _1 = mind.mem.HUBS_SUB(mind.STATE, CONST.DECI_SUBJECTS[0]);
-        //    HUB _2 = mind.mem.HUBS_SUB(mind.STATE, CONST.DECI_SUBJECTS[1]);
-
-        //    if (CONST.SAMPLE50.RandomSample(mind))
-        //    {
-        //        mind.mem.Randomize(_1);
-        //        mind.mem.Randomize(_2);
-        //    }
-
-        //    if (subject == "long_decision_should" && _State[type] == 0)
-        //    {
-        //        if (current.data == "AYES")
-        //            _State[type]++;
-
-        //        if (current.data == "ANO")
-        //            _State[type] = 0;
-
-        //        if (current.data == "BYES")
-        //            _Result[type] = ":YES";
-
-        //        if (current.data == "BNO")
-        //            _Result[type] = "Im busy right now..";
-        //        //State[type]++;
-
-        //        if (current.data == "CYES")
-        //        {
-        //            HUB _hub = null;
-        //            List<HUB> list = mind.mem.HUBS_ALL(mind.STATE);
-        //            int count = list.Count;
-        //            int i = 0;
-        //            int[] _r = mind.rand.MyRandomInt(100, count - 1);
-
-        //            do
-        //            {
-        //                _hub = list[_r[i]];
-        //                i++;
-        //            } while (CONST.DECI_SUBJECTS.Contains(_hub.subject));
-
-        //            _Result[type] = "" + _hub.subject;
-        //            _State[type] = 0;
-        //        }
-        //    }
-
-        //    if (subject == "long_decision_what" && _State[type] == 1)
-        //    {
-        //        _Result[type] = mind.down.IsNo ?
-        //            current.data.Replace("WHAT", "") :
-        //            _Result[type];
-
-        //        _State[type] = 0;
-        //    }
-        //}
-
-        //private UNIT Random(string subject)
-        //{
-        //    HUB hub = mind.mem.HUBS_SUB(subject);
-
-        //    List<UNIT> units = hub.units.Where(x =>
-        //                        mind.filters.Credits(x)
-        //                        && !mind.filters.LowCut(x)
-        //                        ).OrderByDescending(x => x.Variable).ToList();
-
-        //    int rand = mind.calc.MyRandom(units.Count - 1);
-
-        //    if (!units.Any())
-        //        throw new Exception();
-
-        //    UNIT __u = units[rand];
-        //    return __u;
-        //}
     }
 }

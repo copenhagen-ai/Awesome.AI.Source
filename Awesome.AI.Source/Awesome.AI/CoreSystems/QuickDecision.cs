@@ -103,10 +103,10 @@ namespace Awesome.AI.CoreSystems
             List<string> should_decision = new List<string>();
 
             for (int i = 0; i < count; i++)
-                should_decision.Add(/*YES*/CONST.quick_deci_should_yes);
+                should_decision.Add(/*YES*/CONST.q_yes);
 
             for (int i = 0; i < count; i++)
-                should_decision.Add(/*NO*/CONST.quick_deci_should_no);
+                should_decision.Add(/*NO*/CONST.q_no);
 
             mind.access.QDRESETU();
             //mind.mem.QDRESETH();

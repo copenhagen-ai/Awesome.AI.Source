@@ -36,27 +36,27 @@ namespace Awesome.AI.Core.Spaces
         private List<string> location_what_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
-            CONST.location_what_u1,//KITCHEN
-            CONST.location_what_u1,//KITCHEN
-            CONST.location_what_u1,//KITCHEN
-            CONST.location_what_u1,//KITCHEN
-            CONST.location_what_u1,//KITCHEN
-            CONST.location_what_u1,//KITCHEN
-            CONST.location_what_u1,//KITCHEN
-            CONST.location_what_u2,//BEDROOM
-            CONST.location_what_u2,//BEDROOM
-            CONST.location_what_u2,//BEDROOM
-            CONST.location_what_u2,//BEDROOM
-            CONST.location_what_u2,//BEDROOM
-            CONST.location_what_u2,//BEDROOM
-            CONST.location_what_u2,//BEDROOM
-            CONST.location_what_u3,//LIVINGROOM
-            CONST.location_what_u3,//LIVINGROOM
-            CONST.location_what_u3,//LIVINGROOM
-            CONST.location_what_u3,//LIVINGROOM
-            CONST.location_what_u3,//LIVINGROOM
-            CONST.location_what_u3,//LIVINGROOM
-            CONST.location_what_u3,//LIVINGROOM
+            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
+            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
+            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
+            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
+            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
+            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
+            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
+            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
+            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
+            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
+            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
+            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
+            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
+            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
+            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
         };
 
         private List<string> answer_should_decision = new List<string>()
@@ -79,18 +79,18 @@ namespace Awesome.AI.Core.Spaces
         private List<string> answer_what_decision = new List<string>()
         {
             //Constants.decision_u1,//MAKEDECISION
-            CONST.answer_what_u1,//KITCHEN
-            CONST.answer_what_u1,//KITCHEN
-            CONST.answer_what_u1,//KITCHEN
-            CONST.answer_what_u1,//KITCHEN
-            CONST.answer_what_u2,//BEDROOM
-            CONST.answer_what_u2,//BEDROOM
-            CONST.answer_what_u2,//BEDROOM
-            CONST.answer_what_u2,//BEDROOM
-            CONST.answer_what_u3,//LIVINGROOM
-            CONST.answer_what_u3,//LIVINGROOM
-            CONST.answer_what_u3,//LIVINGROOM
-            CONST.answer_what_u3,//LIVINGROOM
+            CONST.LDAT_ANS_WHAT_u1,//KITCHEN
+            CONST.LDAT_ANS_WHAT_u1,//KITCHEN
+            CONST.LDAT_ANS_WHAT_u1,//KITCHEN
+            CONST.LDAT_ANS_WHAT_u1,//KITCHEN
+            CONST.LDAT_ANS_WHAT_u2,//BEDROOM
+            CONST.LDAT_ANS_WHAT_u2,//BEDROOM
+            CONST.LDAT_ANS_WHAT_u2,//BEDROOM
+            CONST.LDAT_ANS_WHAT_u2,//BEDROOM
+            CONST.LDAT_ANS_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_ANS_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_ANS_WHAT_u3,//LIVINGROOM
+            CONST.LDAT_ANS_WHAT_u3,//LIVINGROOM
         };
 
         private List<string> ask_should_decision = new List<string>()

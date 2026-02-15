@@ -1,4 +1,6 @@
 ﻿using Awesome.AI.CoreInternals;
+using Awesome.AI.Variables;
+using System.Security;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
@@ -108,10 +110,32 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
+        private bool LongDecision(UNIT unit, out string sub)
+        {
+            sub = "";
+            if (unit.IsDECISION())
+            {
+                string data = unit.Data;
+
+                // "SHOULD_A" "SHOULD_B" "SHOULD_C"
+                if (data.StartsWith(CONST.lng_should))
+                    sub = CONST.LSUB_SHOULD; 
+
+                // "WHAT_KITCHEN" "WHAT_BEDROOM" "WHAT_LIVINGROOM" "WHAT_im busy right now.." "WHAT_not right now.." "WHAT_talk later.."                
+                if (data.StartsWith(CONST.lng_what))
+                    sub = CONST.LSUB_WHAT; 
+            }
+
+            return sub != "";
+        }
+
         public string GetSubject(UNIT unit)
         {
             try
             {
+                if (LongDecision(unit, out string sub))
+                    return sub;
+
                 string occu = mind._internal.Occu.name;
                 MINDS mindtype = mind.mindtype;
 
@@ -125,7 +149,6 @@ namespace Awesome.AI.Core.Spaces
                 var weights = hubs_curr.ToList();
                 var sum = weights.Sum(x => x.Value);
 
-                string sub = "";
                 double count = 0.0d;
                 for (int i = 0; i < weights.Count(); i++)
                 {

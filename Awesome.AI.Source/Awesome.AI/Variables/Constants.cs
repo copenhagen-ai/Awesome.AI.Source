@@ -37,49 +37,32 @@ namespace Awesome.AI.Variables
          * decision values
          * */
 
-        public const string location_what_u1 = "WHATKITCHEN";
-        public const string location_what_u2 = "WHATBEDROOM";
-        public const string location_what_u3 = "WHATLIVINGROOM";
+        public const string lng_should = "SHOULD_";
+        public const string lng_what = "WHAT_";
 
-        public const string answer_what_u1 = "WHATim busy right now..";
-        public const string answer_what_u2 = "WHATnot right now..";
-        public const string answer_what_u3 = "WHATtalk later..";
+        public const string q_yes = "QYES";
+        public const string q_no = "QNO";
 
-        public const string quick_deci_should_yes = "QYES";
-        public const string quick_deci_should_no = "QNO";
+        public const string LDAT_LOC_SHOULD = "SHOULD_A";
+        public const string LDAT_ANS_SHOULD = "SHOULD_B";
+        public const string LDAT_ASK_SHOULD = "SHOULD_C";
 
-        public const string LDAT_LOC_SHOULD = "A";
-        public const string LDAT_ANS_SHOULD = "B";
-        public const string LDAT_ASK_SHOULD = "C";
+        public const string LDAT_LOC_WHAT_u1 = "WHAT_KITCHEN";
+        public const string LDAT_LOC_WHAT_u2 = "WHAT_BEDROOM";
+        public const string LDAT_LOC_WHAT_u3 = "WHAT_LIVINGROOM";
+
+        public const string LDAT_ANS_WHAT_u1 = "WHAT_im busy right now..";
+        public const string LDAT_ANS_WHAT_u2 = "WHAT_not right now..";
+        public const string LDAT_ANS_WHAT_u3 = "WHAT_talk later..";
 
         public const string LSUB_SHOULD = "long_decision_should";
         public const string LSUB_WHAT = "long_decision_what";
         public const string QSUB_SHOULD = "quick_decision_should";
-        public static bool DECI_SUBJECT_CONTAINS(string str) { return LSUB_SHOULD == str || LSUB_WHAT == str || QSUB_SHOULD == str; }
-
-        //public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
-        //{
-        //    { "WHISTLE", new int[]{ 5, 4 } },
-        //};
-
-        //public static readonly Dictionary<string, int[]> DECISIONS_R = new Dictionary<string, int[]>
-        //{
-        //    { "WHISTLE", new int[]{ 5, 4 } },
-        //};
-
-        //public static readonly Dictionary<string, string> lng_dec_roberta = new Dictionary<string, string>
-        //{
-        //    { "location", "KITCHEN" },
-        //    { "answer", "" },
-        //    { "ask", "" }
-        //};
-
-        //public static readonly Dictionary<string, string> lng_dec_andrew = new Dictionary<string, string>
-        //{
-        //    { "location", "LIVINGROOM" },
-        //    { "answer", "" },
-        //    { "ask", "" }
-        //};
+        
+        public static bool DECI_SUBJECT_CONTAINS(string str) 
+        { 
+            return LSUB_SHOULD == str || LSUB_WHAT == str || QSUB_SHOULD == str; 
+        }
 
         public static readonly Dictionary<LONGTYPE, string> lng_dec_roberta = new Dictionary<LONGTYPE, string>
         {
@@ -141,5 +124,17 @@ namespace Awesome.AI.Variables
         public const int MICRO_SEC = 10000;                 //call micro timer every 1000µs (1ms)
         public const int HIST_TOTAL = 100;                  //the number of UNITS???
         public const int REMEMBER = 50;                    //for stats
+
+
+
+        //public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
+        //{
+        //    { "WHISTLE", new int[]{ 5, 4 } },
+        //};
+
+        //public static readonly Dictionary<string, int[]> DECISIONS_R = new Dictionary<string, int[]>
+        //{
+        //    { "WHISTLE", new int[]{ 5, 4 } },
+        //};        
     }
 }

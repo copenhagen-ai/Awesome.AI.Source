@@ -168,6 +168,9 @@ namespace Awesome.AI.Core.Spaces
             if (_do > 0)
                 return;
 
+            if (IsDECISION())
+                return;
+
             string af_occo = mind._internal.Occu.name;
 
             register[af_occo]++;
@@ -185,6 +188,9 @@ namespace Awesome.AI.Core.Spaces
         private void UpdateHS()
         {
             if (_do > 0)
+                return;
+
+            if (IsDECISION())
                 return;
 
             Lookup lookup = new Lookup();
