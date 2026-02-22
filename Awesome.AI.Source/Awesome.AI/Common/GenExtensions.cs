@@ -5,7 +5,7 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
 {
-    public static class Extensions
+    public static class GenExtensions
     {
         public static void BusyWaitOut(this string txt, int count)
         {
@@ -20,10 +20,10 @@ namespace Awesome.AI.Common
             DateTime now = DateTime.Now;
 
             if (clear % 5 == 0)
-                MyHelper.ClearIp(now);
+                XmlHelper.ClearHello(now);
 
             for (int i = 0; i < count; i++)
-                MyHelper.WriteIp(txt, now);
+                XmlHelper.WriteHello(txt, now);
         }
 
         public static bool RandomSample(this int count, TheMind mind)

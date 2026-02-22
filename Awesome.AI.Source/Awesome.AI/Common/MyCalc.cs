@@ -3,11 +3,11 @@ using Awesome.AI.Variables;
 
 namespace Awesome.AI.Common
 {
-    public class Calc
+    public class MyCalc
     {
         private TheMind mind;
-        private Calc() { }
-        public Calc(TheMind mind)
+        private MyCalc() { }
+        public MyCalc(TheMind mind)
         {
             this.mind = mind;
         }

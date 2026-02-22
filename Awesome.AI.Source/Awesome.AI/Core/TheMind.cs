@@ -3,9 +3,9 @@ using Awesome.AI.Common;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
+using Awesome.AI.Factorys;
 using Awesome.AI.Generators;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Source.Awesome.AI.Factorys;
 using Awesome.AI.Variables;
 using System.Diagnostics;
 using static Awesome.AI.Variables.Enums;
@@ -32,22 +32,24 @@ namespace Awesome.AI.Core
         public WordGenerator word;
         public Monologue1 mono1;
         public Monologue2 mono2;
-        public Calc calc;
+        public MyCalc calc;
         public MyRandom rand;
         public Filters filters;
-        public Out _out;
+        public MyOutVars o_vars;
+        public MyOutJson o_json;
         public MyInternal _internal;
         public MyExternal _external;
         public QUsage quantum;
-        public MyProbability prob;
+        public GPTProbability prob;
+
+        public string json {  get; set; }
 
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
-        //public Dictionary<string, MechFactory> parms { get; set; }
         public Dictionary<string, IMechanics> mech { get; set; }
         private Dictionary<LONGTYPE, string> lng_dec {  get; set; }
                 
-        public Stats stats = new Stats();
+        public MyStats stats = new MyStats();
         public UNIT theanswer;
                 
         public MINDS mindtype;
@@ -100,12 +102,13 @@ namespace Awesome.AI.Core
                 mech_high = mech["z_mech"];
 
                 down = new Down(this);
-                calc = new Calc(this);
+                calc = new MyCalc(this);
                 rand = new MyRandom(this);
                 _internal = new MyInternal(this);
                 _external = new MyExternal(this);
                 filters = new Filters(this);
-                _out = new Out(this);
+                o_vars = new MyOutVars(this);
+                o_json = new MyOutJson(this);
                 _long = new LongDecision(this, this.lng_dec);
                 _quick = new QuickDecision(this);
                 mood = new MoodGenerator(this);
@@ -113,7 +116,7 @@ namespace Awesome.AI.Core
                 mono1 = new Monologue1(this);
                 mono2 = new Monologue2(this);
                 quantum = new QUsage(this);
-                prob = new MyProbability();
+                prob = new GPTProbability();
                 soup = new UnitSpaceSoup(this);
                 memory = new UnitSpaceSetup(this);
                 access = new UnitSpaceAccess(this);
@@ -182,7 +185,7 @@ namespace Awesome.AI.Core
         //    ;
         //}
         
-        public void Run(object sender, MicroLibrary.MicroTimerEventArgs timerEventArgs)
+        public void Run(object sender, MicroTimerEventArgs timerEventArgs)
         {
             try
             {
@@ -251,10 +254,13 @@ namespace Awesome.AI.Core
         private void PostRun(bool _pro)
         {
             if (z_current == "z_noise")
-                _out.SetNoise();
+                o_vars.SetNoise();
 
             if (z_current == "z_mech")
-                _out.SetMech();
+                o_vars.SetMech();
+
+            if (z_current == "z_mech")
+                json = o_json.GetJson(_pro);
 
             if (!_pro)
                 return;

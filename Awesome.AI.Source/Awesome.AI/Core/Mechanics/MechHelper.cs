@@ -181,7 +181,7 @@ namespace Awesome.AI.Core.Mechanics
              * should friction be calculated from position???
              * */
 
-            Calc calc = mind.calc;
+            MyCalc calc = mind.calc;
 
 
             double credits = CONST.MAX_CREDIT - mind.unit_current.credits;

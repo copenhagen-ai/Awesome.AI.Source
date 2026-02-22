@@ -8,7 +8,7 @@ namespace Awesome.AI.Core
 {
     public class Core
     {
-        private Stats stats { get; set; }
+        private MyStats stats { get; set; }
 
         private List<UNIT> history { get; set; }
         private List<int> remember { get; set; }
@@ -22,7 +22,7 @@ namespace Awesome.AI.Core
         {
             this.mind = mind;
 
-            stats = new Stats();
+            stats = new MyStats();
             history = new List<UNIT>();
             remember = new List<int>();
             hits = new Dictionary<int, int>();

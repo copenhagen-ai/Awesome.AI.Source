@@ -3,20 +3,11 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
 {
-    public class MyHelper
+    public class XmlHelper
     {
         private static readonly object fileLock = new object();
 
-        public static bool IsDebug()
-        {
-            bool debug = false;
-#if DEBUG
-            debug = true;
-#endif
-            return debug;
-        }
-
-        public static void WriteIp(string name, DateTime date)
+        public static void WriteHello(string name, DateTime date)
         {
             try
             {
@@ -46,7 +37,7 @@ namespace Awesome.AI.Common
             catch (Exception _e) { }
         }
 
-        public static void ClearIp(DateTime now)
+        public static void ClearHello(DateTime now)
         {
             try
             {

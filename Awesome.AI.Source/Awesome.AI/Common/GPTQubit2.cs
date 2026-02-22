@@ -151,12 +151,12 @@ namespace Awesome.AI.Common
             }
 
             double r = random.NextDouble();
-            int outcome = (r < p0) ? 0 : 1;
+            int outcome = r < p0 ? 0 : 1;
 
             // collapse: zero out amplitudes inconsistent with outcome
             for (int i = 0; i < state.Length; ++i)
             {
-                if (((i & mask) == 0 && outcome == 1) || ((i & mask) != 0 && outcome == 0))
+                if ((i & mask) == 0 && outcome == 1 || (i & mask) != 0 && outcome == 0)
                 {
                     state[i] = Complex.Zero;
                 }

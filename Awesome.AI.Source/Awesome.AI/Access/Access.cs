@@ -24,18 +24,13 @@ namespace Awesome.AI.Access
         public MINDS mindtype { get; set; }
     }
 
-    //public class ApiBot
-    //{
-    //    public MECHANICS mech { get; set; }
-    //    public MINDS mindtype { get; set; }
-
-    //    public Dictionary<string, string> long_deci { get; set; }
-    //}
-
     public class ApiInstance
     {
-        public Out _out { get; set; }
-        public Stats stats { get; set; }
+        public string o_json {  get; set; }
+        public string s_hits_json { get; set; }
+        public string s_units_json { get; set; }
+        public MyOutVars o_vars { get; set; }
+        public MyStats s_vars { get; set; }
         public MINDS mindtype { get; set; }
     }
 }

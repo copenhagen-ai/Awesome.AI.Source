@@ -1,4 +1,6 @@
-﻿namespace Awesome.AI.Common
+﻿using System.Text.Json;
+
+namespace Awesome.AI.Common
 {
     //public class Stat
     //{
@@ -7,9 +9,9 @@
     //    public int hits {  get; set; }       
     //}
 
-    public class Stats
+    public class MyStats
     {
-        public Stats() 
+        public MyStats() 
         {
             hits = new Dictionary<int, int>();
             units = new Dictionary<int, int>();
@@ -17,5 +19,19 @@
 
         public Dictionary<int, int> hits { get; set; }
         public Dictionary<int, int> units { get; set; }
+
+        public string HitsJson()
+        {
+            string json = JsonSerializer.Serialize(hits);
+
+            return json;
+        }
+
+        public string UnitsJson()
+        {
+            string json = JsonSerializer.Serialize(units);
+
+            return json;
+        }
     }
 }

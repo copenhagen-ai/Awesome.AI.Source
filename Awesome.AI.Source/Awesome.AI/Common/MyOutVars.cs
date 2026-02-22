@@ -4,11 +4,11 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
 {
-    public class Out
+    public class MyOutVars
     {
         private TheMind mind;
-        public Out() { }
-        public Out(TheMind mind)
+        public MyOutVars() { }
+        public MyOutVars(TheMind mind)
         {
             this.mind = mind;
         }

@@ -1,6 +1,6 @@
 ﻿using Awesome.AI.Core.Spaces;
+using Awesome.AI.Factorys;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Source.Awesome.AI.Factorys;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 

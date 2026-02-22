@@ -2,7 +2,7 @@
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Source.Awesome.AI.Factorys
+namespace Awesome.AI.Factorys
 {
     public interface IBot
     {

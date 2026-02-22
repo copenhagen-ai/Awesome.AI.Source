@@ -41,7 +41,7 @@ namespace Awesome.AI.Common
         {
             string root = Root;
             string setting = mindtype == MINDS.ROBERTA ? "r" : "a";
-            string data = MyHelper.IsDebug() ? "Data" : "DataFiles";
+            string data = GenHelper.IsDebug() ? "Data" : "DataFiles";
             string path = root + data + "\\settings_" + setting + ".xml";
 
             return path;

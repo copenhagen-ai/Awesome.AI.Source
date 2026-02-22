@@ -4,7 +4,7 @@ using Awesome.AI.Core.Mechanics;
 using Awesome.AI.Interfaces;
 using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Source.Awesome.AI.Factorys
+namespace Awesome.AI.Factorys
 {
     public class MechFactory
     {
