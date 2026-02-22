@@ -5,6 +5,7 @@
         public enum VALUE { TRUE, FALSE, EMPTY }
         public enum CASE { CHATASKED, CHATRESET, NONE }
         public enum MINDS { ROBERTA, ANDREW }
+        public enum ENV { LOCAL, SERVER }
         public enum PATTERNCOLOR { GREEN, RED }
         public enum PATTERN { NONE, MOODGENERAL, MOODGOOD, MOODBAD }
         public enum STATE { JUSTRUNNING, QUICKDECISION }

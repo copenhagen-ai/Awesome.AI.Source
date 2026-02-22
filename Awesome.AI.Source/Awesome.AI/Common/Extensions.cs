@@ -7,11 +7,23 @@ namespace Awesome.AI.Common
 {
     public static class Extensions
     {
-        public static void BusyWait(this string txt, int count)
+        public static void BusyWaitOut(this string txt, int count)
         {
             //because i dont want to implement async
-            for (int i = 0; i < count; i++) 
+            for (int i = 0; i < count; i++)
                 Console.WriteLine(txt);
+        }
+
+        public static void BusyWaitXml(this string txt, int count, int clear)
+        {
+            //because i dont want to implement async
+            DateTime now = DateTime.Now;
+
+            if (clear % 5 == 0)
+                MyHelper.ClearIp(now);
+
+            for (int i = 0; i < count; i++)
+                MyHelper.WriteIp(txt, now);
         }
 
         public static bool RandomSample(this int count, TheMind mind)

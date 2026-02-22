@@ -104,6 +104,9 @@ namespace Awesome.AI.CoreSystems
 
         private void SetResult(LONGTYPE type, string res, int state)
         {
+            if (state == 1)
+                mind.reward = true;
+
             if (res != "")
                 Result[type] = res;
 

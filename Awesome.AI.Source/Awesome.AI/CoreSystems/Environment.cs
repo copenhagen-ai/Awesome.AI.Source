@@ -111,7 +111,7 @@ namespace Awesome.AI.CoreSystems
 
                 if (run)
                 {
-                    switch (mind.parms_current.occupasion)
+                    switch (mind.bot.occupasion)
                     {
                         case OCCUPASION.FIXED:
                             Lookup lookup = new Lookup();
@@ -209,7 +209,7 @@ namespace Awesome.AI.CoreSystems
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
-            if (mind.parms_current.validation != VALIDATION.EXTERNAL)
+            if (mind.bot.validation != VALIDATION.EXTERNAL)
                 Setup();
         }
     }
@@ -289,12 +289,12 @@ namespace Awesome.AI.CoreSystems
             if (mind.z_current == "z_noise")
                 return;
 
-            if (mind.parms_current.validation != VALIDATION.INTERNAL)
+            if (mind.bot.validation != VALIDATION.INTERNAL)
             {
                 //mind.stats.Reset();
 
                 tags = new List<Tag>();
-                switch (mind.parms_current.tags)
+                switch (mind.bot.tags)
                 {
                     case TAGS.ALL: Setup(mind.mindtype, false); break;
                     case TAGS.EVEN: Setup(mind.mindtype, true); break;

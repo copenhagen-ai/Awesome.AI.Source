@@ -54,7 +54,7 @@ namespace Awesome.AI.Core
                 return true;
 
             bool ok;
-            switch (mind._mech)
+            switch (mind._mech_type)
             {
                 case MECHANICS.TUGOFWAR_HIGH: 
                     ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);

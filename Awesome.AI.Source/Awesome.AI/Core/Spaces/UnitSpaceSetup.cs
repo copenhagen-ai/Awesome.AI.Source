@@ -146,25 +146,25 @@ namespace Awesome.AI.Core.Spaces
             int count1 = 1;
 
             TONE tone;
-            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
-            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.HIGH;
+            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.HIGH;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
-            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
-            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.LOW;
+            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.LOW;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
-            tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.MID;
+            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.MID;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
 
             //Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             //foreach (var kv in dict)
             {
-                tone = mind._mech == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+                tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
                 Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "WHISTLE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
             }
         }

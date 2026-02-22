@@ -92,9 +92,11 @@ namespace Awesome.AI.Variables
         public const double UPD_CREDIT = 0.0001d;          //credit update
         public const double MAX_HUBSPACE = 100.0;
 
+        public const double DECAY = 0.99d;
+        public const double EPSILON = 0.01d;                //UNITTYPE removal
         public const double ETA = 0.05d;                    //learningrate
         public const double ALPHA = 0.001d;                 //distance
-        public const double GAMMA = 0.001d;
+        public const double GAMMA = 0.01d;                  //keep below 0.5
         public const int ACTIVATOR = 8000;                  //randomness, turn it way down
 
         public const double GRAVITY = 9.81d;

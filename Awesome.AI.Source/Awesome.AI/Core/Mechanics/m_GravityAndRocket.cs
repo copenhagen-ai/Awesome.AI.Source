@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Core.Spaces;
 using Awesome.AI.Interfaces;
+using Awesome.AI.Source.Awesome.AI.Factorys;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -32,7 +33,7 @@ namespace Awesome.AI.Core.Mechanics
 
         private TheMind mind;
         private m_GravityAndRocket() { }
-        public m_GravityAndRocket(TheMind mind, Params parms)
+        public m_GravityAndRocket(TheMind mind, MechFactory parms)
         {
             this.mind = mind;
 
@@ -157,7 +158,7 @@ namespace Awesome.AI.Core.Mechanics
 
         public void Calculate(PATTERN match, int cycles)
         {
-            PATTERN pattern = mind.parms_current.pattern;
+            PATTERN pattern = mind.bot.pattern;
 
             if (mind.z_current != "z_mech")
                 return;

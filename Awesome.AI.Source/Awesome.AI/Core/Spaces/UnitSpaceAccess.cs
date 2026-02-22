@@ -115,9 +115,14 @@ namespace Awesome.AI.Core.Spaces
             list = list.Where(x => x.created < unit.created).ToList();
 
             foreach (UNIT _u in list)
-                mind.memory.units_running.Remove(_u);            
+                mind.memory.units_running.Remove(_u);
         }
-        
+
+        public void UNITS_REM(UNIT unit)
+        {
+            mind.memory.units_running.Remove(unit);
+        }
+
         public void QDRESETU() => mind.memory.units_decision = new List<UNIT>();
         public void QDREMOVE(UNIT curr) => mind.memory.units_decision.Remove(curr);
         public int QDCOUNT() => mind.memory.units_decision.Count();        

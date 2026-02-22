@@ -20,6 +20,9 @@ namespace Awesome.AI.Core.Spaces
         public string guid { get; set; }//name
         public double credits { get; set; }
         public Dictionary<string, int> register { get; set; }
+        public double reward { get; set; }
+        public double reward_norm { get; set; }
+        public double trace { get; set; }
 
         private double ui { get; set; }
         public double UnitIndex
@@ -106,7 +109,7 @@ namespace Awesome.AI.Core.Spaces
         {
             get
             {
-                switch (mind.parms_current.validation)
+                switch (mind.bot.validation)
                 {
                     case VALIDATION.BOTH:
                         return mind._internal.Valid(this) && mind._external.Valid(this);
@@ -123,7 +126,11 @@ namespace Awesome.AI.Core.Spaces
         public static UNIT Create(TheMind mind, string h_guid, double index, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
         {
             //make sure some time has gone before creating a new unit
-            "hello world!".BusyWait(10);
+            if (mind.environment == ENV.SERVER)
+                "hello world!".BusyWaitOut(10);
+
+            if (mind.environment == ENV.LOCAL)
+                "hello world!".BusyWaitXml(2, mind.epochs);
 
             DateTime create = DateTime.Now;
             Random rand = new Random();
@@ -135,12 +142,15 @@ namespace Awesome.AI.Core.Spaces
             ticket = ticket != "" ? ticket : "NOTICKET";
             _w.ticket = new Ticket(ticket);
 
-            _w.credits = CONST.MAX_CREDIT;
-            _w.HubIndex = rand.NextDouble() * CONST.MAX_HUBSPACE;
+            double _r1 = rand.NextDouble();
+            long _r2 = rand.NextInt64(lookup.occupasions.Length);
 
-            _w.register = new Dictionary<string, int>();
+            _w.credits = CONST.MAX_CREDIT;
+            _w.HubIndex = _r1 * CONST.MAX_HUBSPACE;
+
             occus = lookup.occupasions.ToList();
-            occus.ForEach(x => _w.register.Add(x, 0));
+            _w.register = new Dictionary<string, int>();
+            occus.ForEach(x => _w.register.Add(x, (int)_r2));
 
             return _w;
         }
@@ -153,9 +163,11 @@ namespace Awesome.AI.Core.Spaces
         private int _do { get; set; }
         public void Update(double near, double map)
         {
-            UpdateAF();
-            UpdateHS();
-            UpdateUS(near, map);
+            UpdateTRA();
+            UpdateREW();
+            UpdateAFF();
+            UpdateHUB();
+            UpdateUNT(near, map);
 
             _do++;
             if (_do > 100)
@@ -163,7 +175,73 @@ namespace Awesome.AI.Core.Spaces
         }
 
         private string last_affinity { get; set; }
-        private void UpdateAF()
+        private void UpdateTRA()
+        {
+            //if (_do > 0)
+            //    return;
+
+            //if (IsDECISION())
+            //    return;
+
+            List<UNIT> units = mind.hub.GetUnits();
+
+            foreach (UNIT unit in units)
+            {
+                if (unit.IsDECISION())
+                    continue;
+
+                if (unit.guid == this.guid)
+                    trace = CONST.DECAY * trace + 1.0d;
+                else
+                    trace = CONST.DECAY * trace + 0.0d;
+            }
+        }
+
+        private void UpdateREW()
+        {
+            //if (_do > 0)
+            //    return;
+
+            //if (IsDECISION())
+            //    return;
+
+            if (!mind.reward)
+                return;
+
+            mind.reward = false;
+
+            List<UNIT> units = mind.hub.GetUnits();
+
+            double max = 0.0d;
+
+            foreach (UNIT unit in units)
+            {
+                if (unit.IsDECISION())
+                    continue;
+
+                reward += 1.0 * trace;
+
+                max = reward > max ? reward : max;
+            }
+            
+            List<UNIT> rem = new List<UNIT>();
+
+            foreach (UNIT unit in units)
+            {
+                if (unit.IsDECISION())
+                    continue;
+
+                reward_norm = mind.calc.Normalize(reward, 0.0d, max, 0.0d, 1.0d);
+
+                if (reward_norm < CONST.EPSILON)
+                    rem.Add(unit);
+            }
+
+            foreach (UNIT unit in rem)
+                mind.access.UNITS_REM(unit);
+        }
+
+        private void UpdateAFF()
         {
             if (_do > 0)
                 return;
@@ -175,7 +253,7 @@ namespace Awesome.AI.Core.Spaces
 
             register[af_occo]++;
 
-            int count = register.Sum(x=>x.Value);
+            int count = register.Sum(x => x.Value);
 
             if (count > 1000)//promil
                 register[last_affinity]--;
@@ -185,9 +263,9 @@ namespace Awesome.AI.Core.Spaces
             return;
         }
 
-        private void UpdateHS()
+        private void UpdateHUB()
         {
-            if (_do > 0)
+            if (_do > 0 && !mind.reward)
                 return;
 
             if (IsDECISION())
@@ -207,12 +285,14 @@ namespace Awesome.AI.Core.Spaces
 
             double index = mind.hub.GetIndex(sub);
 
-            HubIndex += HubIndex < index ? CONST.GAMMA : -CONST.GAMMA;
+            double effective_gamma = CONST.GAMMA * (1.0d + reward_norm);
 
-            mind.hub.AdjustWeights(sub, CONST.GAMMA * 0.1d);
+            HubIndex += HubIndex < index ? effective_gamma : -effective_gamma;
+
+            mind.hub.AdjustWeights(sub, effective_gamma * 0.1d);
         }
 
-        private void UpdateUS(double near, double map)
+        private void UpdateUNT(double near, double map)
         {
             /*
              * it is difficult determinating if the does as supposed, but the logic seems correct
@@ -232,7 +312,7 @@ namespace Awesome.AI.Core.Spaces
             if (Add(near, dist))
                 return;
 
-            Remove(near);
+            //Remove(near);
             Adjust(dir, dist);
         }
 
@@ -252,13 +332,6 @@ namespace Awesome.AI.Core.Spaces
             return true;
         }
 
-        private void Remove(double near)
-        {
-            double low = near - CONST.ALPHA;
-            double high = near + CONST.ALPHA;
-
-            mind.access.UNITS_REM(this, low, high);
-        }
 
         private void Adjust(double dir, double dist)
         {
@@ -272,6 +345,14 @@ namespace Awesome.AI.Core.Spaces
             if (UnitIndex <= CONST.MIN) UnitIndex = CONST.MIN;
             if (UnitIndex >= CONST.MAX) UnitIndex = CONST.MAX;
         }
+
+        //private void Remove(double near)
+        //{
+        //    double low = near - CONST.ALPHA;
+        //    double high = near + CONST.ALPHA;
+
+        //    mind.access.UNITS_REM(this, low, high);
+        //}
 
         public bool IsUNIT() => unit_type == UNITTYPE.JUSTAUNIT;
 

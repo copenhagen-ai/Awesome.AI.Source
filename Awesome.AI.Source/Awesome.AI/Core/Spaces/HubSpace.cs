@@ -216,21 +216,15 @@ namespace Awesome.AI.Core.Spaces
             try
             {
                 string occu = mind._internal.Occu.name;
-                MINDS mindtype = mind.mindtype;
-
-                Lookup lookup = new Lookup();
-                List<string> hubs = lookup.GetHUBS(mindtype, occu);
-
+                
                 var units = mind.access.UNITS_ALL();
-                var hubs_curr = new List<string>();
-                hubs.ForEach(x => hubs_curr.Add(x));
-
+                
                 List<UNIT> res = new List<UNIT>();
 
                 foreach (var unit in units)
                 {
                     var max = Max(unit.register);
-                    if (hubs_curr.Contains(max) && !res.Contains(unit))
+                    if (max == occu && !res.Contains(unit))
                         res.Add(unit);
                 }            
             

@@ -5,7 +5,7 @@ using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Generators;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Source.Awesome.AI.Common;
+using Awesome.AI.Source.Awesome.AI.Factorys;
 using Awesome.AI.Variables;
 using System.Diagnostics;
 using static Awesome.AI.Variables.Enums;
@@ -43,22 +43,24 @@ namespace Awesome.AI.Core
 
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
+        //public Dictionary<string, MechFactory> parms { get; set; }
         public Dictionary<string, IMechanics> mech { get; set; }
-        public Dictionary<string, Params> parms { get; set; }
         private Dictionary<LONGTYPE, string> lng_dec {  get; set; }
                 
         public Stats stats = new Stats();
         public UNIT theanswer;
                 
         public MINDS mindtype;
-        public MECHANICS _mech;
+        public MECHANICS _mech_type;
+        public ENV environment;
 
         public bool goodbye { get; set; }
         public bool ok { get; set; }
-        public bool do_process{ get; set; }
+        public bool do_process { get; set; }
         public bool chat_answer { get; set; }
         public bool chat_asked { get; set; }
-                
+        public bool reward { get; set; }
+
         public string z_current { get; set; }
         public int epochs = 1;
         public int cycles = 0; // Go TRON!
@@ -70,34 +72,32 @@ namespace Awesome.AI.Core
         public UNIT unit_current { get; set; }
         public UNIT unit_actual { get; set; }
 
+        public IBot bot { get; set; }
         public IMechanics mech_current { get { return mech[z_current]; } set { mech[z_current] = value; } }
         public IMechanics mech_high { get { return mech["z_mech"]; } set { mech["z_mech"] = value; } }
-        public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }
+        public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }        
 
-        public Params parms_current { get { return parms[z_current]; } set { parms[z_current] = value; } }
-        public Params parms_high { get { return parms["z_mech"]; } set { parms["z_mech"] = value; } }
-        public Params parms_noise { get { return parms["z_noise"]; } set { parms["z_noise"] = value; } }
-
-        public TheMind(MINDS mindtype)
+        public TheMind(MINDS mindtype, ENV env)
         {
             try
             {
-                Bots bot = new Bots();
-                IBot bot1 = bot.GetBot(mindtype);
+                this.mindtype = mindtype;
+                this.environment = env;
 
-                this.mindtype = bot1.mindtype;
-                this._mech = bot1.mech;
-                this.lng_dec = bot1.lng_dec;
+                bot = new BotFactory(this).GetBot();
+
+                this._mech_type = bot.mech;
+                this.lng_dec = bot.lng_dec;
 
                 z_current = "z_mech";
 
-                parms = new Dictionary<string, Params>();
-                foreach (string s in zzzz)
-                    parms[s] = new Params(this);
-
+                MechFactory _m = new MechFactory(this);
                 mech = new Dictionary<string, IMechanics>();
-                mech_high = parms_high.Mechanics(_mech);
-                mech_noise = parms_noise.Mechanics(CONST.MechType);
+                mech["z_noise"] = _m.GetMech(CONST.MechType);
+                mech["z_mech"] = _m.GetMech(_mech_type);
+
+                mech_noise = mech["z_noise"];
+                mech_high = mech["z_mech"];
 
                 down = new Down(this);
                 calc = new Calc(this);

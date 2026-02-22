@@ -29,13 +29,20 @@ namespace Awesome.AI.Common
         public static string Path(MINDS mindtype)
         {
             string root = Root;
-            
+
             string setting = mindtype == MINDS.ROBERTA ? "roberta" : "andrew";
 
             string path = root + "Awesome.AI\\Data\\setup_" + setting + ".xml";
 
-            //if (mindtype == MINDS.STANDARD)
-            //    path = Root + "Awesome.AI\\Data\\setup_2.xml";
+            return path;
+        }
+
+        public static string PathIP(MINDS mindtype)
+        {
+            string root = Root;
+            string setting = mindtype == MINDS.ROBERTA ? "r" : "a";
+            string data = MyHelper.IsDebug() ? "Data" : "DataFiles";
+            string path = root + data + "\\settings_" + setting + ".xml";
 
             return path;
         }

@@ -31,9 +31,9 @@ namespace Awesome.AI.Generators
                 switch (_rand)
                 {
                     case <= 0: throw new Exception("MoodGenerator, Generate");
-                    case <= 3: mind.parms_current.pattern = PATTERN.MOODGENERAL; break;
-                    case <= 6: mind.parms_current.pattern = PATTERN.MOODGOOD; break;
-                    case <= 9: mind.parms_current.pattern = PATTERN.MOODBAD; break;
+                    case <= 3: mind.bot.pattern = PATTERN.MOODGENERAL; break;
+                    case <= 6: mind.bot.pattern = PATTERN.MOODGOOD; break;
+                    case <= 9: mind.bot.pattern = PATTERN.MOODBAD; break;
                     default: throw new Exception("MoodGenerator, Generate");
                 }
             }
@@ -62,7 +62,7 @@ namespace Awesome.AI.Generators
             //if (currentmood != mind.parms_current.pattern)
             //    Reset();
 
-            currentmood = mind.parms_current.pattern;
+            currentmood = mind.bot.pattern;
 
             double res = mind.mech_current.ms.vv_sym_90;
             p_90 = res;
