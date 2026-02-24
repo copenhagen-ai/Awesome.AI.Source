@@ -11,6 +11,21 @@ namespace Awesome.AI.Core.Spaces
             this.mind = mind;
         }
 
+        //each axis should run its own mechanics - update function
+        public string[] axis = { "will" };
+
+        public string Axis
+        {
+            get 
+            {
+                int count = axis.Count();
+                int cycles = mind.cycles_all;
+                int ax = cycles % count;
+
+                return axis[ax];
+            }
+        }
+
         public void CurrentUnit()
         {
             if (mind.z_current != "z_noise")

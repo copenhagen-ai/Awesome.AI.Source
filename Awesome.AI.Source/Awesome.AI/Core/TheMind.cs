@@ -8,6 +8,7 @@ using Awesome.AI.Generators;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using System.Diagnostics;
+using static Awesome.AI.Common.MicroTimer;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core
@@ -77,7 +78,9 @@ namespace Awesome.AI.Core
         public IBot bot { get; set; }
         public IMechanics mech_current { get { return mech[z_current]; } set { mech[z_current] = value; } }
         public IMechanics mech_high { get { return mech["z_mech"]; } set { mech["z_mech"] = value; } }
-        public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }        
+        public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }
+
+        public MicroTimer microTimer = new MicroTimer();
 
         public TheMind(MINDS mindtype, ENV env)
         {
@@ -91,7 +94,7 @@ namespace Awesome.AI.Core
                 this._mech_type = bot.mech;
                 this.lng_dec = bot.lng_dec;
 
-                z_current = "z_mech";
+                z_current = "z_noise";
 
                 MechFactory _m = new MechFactory(this);
                 mech = new Dictionary<string, IMechanics>();
@@ -139,10 +142,10 @@ namespace Awesome.AI.Core
                         unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_macho machines1").First();
                 }
 
-                PreRun("z_noise", true);
-                PostRun(true);
+                Pre("z_noise", true);
+                Post(true);
 
-                theanswer = UNIT.Create(this, "GUID", -1.0d, "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
+                theanswer = UNIT.Create(this, "GUID", [-1d], "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
 
                 ok = true;
                 do_process = false;
@@ -184,8 +187,33 @@ namespace Awesome.AI.Core
 
         //    ;
         //}
-        
-        public void Run(object sender, MicroTimerEventArgs timerEventArgs)
+
+        public async void Run()
+        {
+            bool use_timer = CONST.AGENT_USE_TIMER;
+
+            if (use_timer)
+            {
+                // Instantiate new MicroTimer and add event handler
+                this.microTimer.MicroTimerElapsed += new MicroTimerElapsedEventHandler(this.Cycle);
+                this.microTimer.Interval = Variables.CONST.AGENT_MICRO_SEC; // Call micro timer every 1000µs (1ms)
+                this.microTimer.Enabled = true; // Start timer
+
+                // Can choose to ignore event if late by Xµs (by default will try to catch up)
+                //microTimer.IgnoreEventIfLateBy = 500; // 500µs (0.5ms)
+            }
+
+            while (ok)
+            {
+                if (!use_timer)
+                    Cycle();
+
+                await Task.Delay(CONST.AGENT_DELAY_MS);
+            }
+        }
+
+        public void Cycle(object sender, MicroTimerEventArgs timerEventArgs) => Cycle();
+        public void Cycle()
         {
             try
             {
@@ -194,8 +222,6 @@ namespace Awesome.AI.Core
 
                 if (!ok)
                     return;
-            
-                //Lists();
 
                 if (do_process)
                     epochs++;
@@ -213,15 +239,14 @@ namespace Awesome.AI.Core
                 {
                     z_current = s;
 
-                    //Randomize(_pro);
-                    PreRun(z_current, _pro);
+                    Pre(z_current, _pro);
 
                     if (!Core(_pro))//the basics
                         ok = false;
 
                     CorePost(_pro);
                     Systems(_pro);
-                    PostRun(_pro);                    
+                    Post(_pro);
                 }
                 
                 if (_pro) 
@@ -238,9 +263,12 @@ namespace Awesome.AI.Core
             }
         }
 
-        private void PreRun(string current, bool _pro)
+        private void Pre(string current, bool _pro)
         {
-            rand.SaveMomentum(current, mech_current.ms.dv_sym_curr);
+            if (z_current != "z_noise")
+                return;
+
+            rand.SaveMomentum(mech_current.ms.dv_sym_curr);
 
             _quick.Run(_pro, unit_current);
 
@@ -251,7 +279,7 @@ namespace Awesome.AI.Core
             _external.Reset();
         }
 
-        private void PostRun(bool _pro)
+        private void Post(bool _pro)
         {
             if (z_current == "z_noise")
                 o_vars.SetNoise();
@@ -311,6 +339,9 @@ namespace Awesome.AI.Core
 
         private void Systems(bool _pro)
         {
+            //if (cycles_all < CONST.FIRST_RUN)
+            //    return;
+
             if (STATE == STATE.QUICKDECISION)
                 return;
 

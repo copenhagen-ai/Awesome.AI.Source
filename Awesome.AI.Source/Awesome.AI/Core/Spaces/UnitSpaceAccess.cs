@@ -24,7 +24,7 @@ namespace Awesome.AI.Core.Spaces
             {
                 case STATE.JUSTRUNNING:
                     if (order == ORDER.BYINDEX)
-                        return mind.memory.units_running.OrderBy(x=>x.UnitIndex).ToList();
+                        return mind.memory.units_running.OrderBy(x=>x.UI).ToList();
                     if (order == ORDER.BYVARIABLE)
                         return mind.memory.units_running.OrderBy(x=>x.Variable).ToList();
                     return mind.memory.units_running;
@@ -104,7 +104,7 @@ namespace Awesome.AI.Core.Spaces
             string ticket = "" + mind.hub.GetSubject(unit) + rand;
             string guid = "" + unit.guid;
 
-            UNIT _u = UNIT.Create(mind, guid, idx, "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
+            UNIT _u = UNIT.Create(mind, guid, [idx], "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
 
             mind.memory.units_running.Add(_u);
         }

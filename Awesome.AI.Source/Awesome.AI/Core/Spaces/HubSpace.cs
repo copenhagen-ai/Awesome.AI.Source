@@ -137,6 +137,10 @@ namespace Awesome.AI.Core.Spaces
                     return sub;
 
                 string occu = mind._internal.Occu.name;
+
+                if (occu == "init")
+                    return "init";
+
                 MINDS mindtype = mind.mindtype;
 
                 Lookup lookup = new Lookup();
@@ -159,7 +163,7 @@ namespace Awesome.AI.Core.Spaces
 
                     sub = weights[i].Key;
 
-                    if (count >= unit.HubIndex)
+                    if (count >= unit.HI)
                         break;
                 }
 

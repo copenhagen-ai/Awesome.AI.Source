@@ -33,8 +33,8 @@ namespace Awesome.AI.CoreInternals
             //because low index -> high mass
             UNIT _u = mind.access.UNITS_ALL(ORDER.BYINDEX)[CONST.LOWCUT];
 
-            double low_cut = _u.UnitIndex;
-            double index = unit.UnitIndex;
+            double low_cut = _u.UI;
+            double index = unit.UI;
 
             if (index <= low_cut)
                 return true;

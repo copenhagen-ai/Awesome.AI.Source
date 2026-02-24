@@ -105,6 +105,9 @@ namespace Awesome.AI.CoreSystems
                 if (sub == "")
                     return;
 
+                if (sub == "init")
+                    return;
+
                 if (CONST.DECI_SUBJECT_CONTAINS(sub))
                     return;
 

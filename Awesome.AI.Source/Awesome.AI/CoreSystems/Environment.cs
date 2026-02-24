@@ -102,48 +102,59 @@ namespace Awesome.AI.CoreSystems
         {
             get
             {
-                /*
-                 * run is only true once per cycle
-                 * */
-
-                run = mind.epochs != epoch_old;
-                epoch_old = mind.epochs;
-
-                if (run)
+                try
                 {
-                    switch (mind.bot.occupasion)
+
+                    /*
+                     * run is only true once per cycle
+                     * */
+
+                    if (mind.cycles_all < CONST.FIRST_RUN)
+                        return occu;
+
+                    run = mind.epochs != epoch_old;
+                    epoch_old = mind.epochs;
+
+                    if (run)
                     {
-                        case OCCUPASION.FIXED:
-                            Lookup lookup = new Lookup();
-                            MINDS mindtype = mind.mindtype;
-                            List<string> list = lookup.GetHUBS(mindtype, 0, out string _o);
-                            occu = new Occupasion() { name = _o, max_epochs = 30, values = list };
-                            break;
-                        case OCCUPASION.DYNAMIC:
-
-                            /*
-                             * rand should be set according to hobbys, mood, location, interests etc..
-                             * ..maybe not
-                             * */
-
-                            if (epoch_count <= epoch_stop)
+                        switch (mind.bot.occupasion)
+                        {
+                            case OCCUPASION.FIXED:
+                                Lookup lookup = new Lookup();
+                                MINDS mindtype = mind.mindtype;
+                                List<string> list = lookup.GetHUBS(mindtype, 0, out string _o);
+                                occu = new Occupasion() { name = _o, max_epochs = 30, values = list };
                                 break;
+                            case OCCUPASION.DYNAMIC:
 
-                            epoch_count = 0;
-                            epoch_stop = mind.rand.MyRandomInt(1, occu.max_epochs)[0];
-                            int index = mind.rand.MyRandomInt(1, occus.Count - 1)[0];
+                                /*
+                                 * rand should be set according to hobbys, mood, location, interests etc..
+                                 * ..maybe not
+                                 * */
 
-                            occu = occus[index];
+                                if (epoch_count <= epoch_stop)
+                                    break;
 
-                            break;
-                        default:
-                            throw new Exception("Occu");
+                                epoch_count = 0;
+                                epoch_stop = mind.rand.MyRandomInt(1, occu.max_epochs)[0];
+                                int index = mind.rand.MyRandomInt(1, occus.Count - 1)[0];
+
+                                occu = occus[index];
+
+                                break;
+                            default:
+                                throw new Exception("Occu");
+                        }
+
+                        epoch_count++;
                     }
 
-                    epoch_count++;
+                    return occu;
                 }
-
-                return occu;
+                catch (Exception ex)
+                {
+                    throw;
+                }
             }
         }
 
@@ -203,8 +214,8 @@ namespace Awesome.AI.CoreSystems
 
         public void Reset()
         {
-            if (mind.z_current == "z_noise")
-                return;
+            //if (mind.z_current == "z_noise")
+            //    return;
 
             if (mind.STATE == STATE.QUICKDECISION)
                 return;

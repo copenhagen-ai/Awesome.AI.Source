@@ -88,6 +88,9 @@ namespace Awesome.AI.CoreSystems
                 if (sub == "")
                     return;
 
+                if (sub == "init")
+                    return;
+
                 Relevance = GetRelevance(prev, curr);
 
                 string res = prev + "||" + curr;

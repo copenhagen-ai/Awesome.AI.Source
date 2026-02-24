@@ -19,30 +19,41 @@ namespace Awesome.AI.Core.Spaces
         public DateTime created { get; set; }
         public string guid { get; set; }//name
         public double credits { get; set; }
-        public Dictionary<string, int> register { get; set; }
+        public Dictionary<string, int> register { get; set; }        
         public double reward { get; set; }
         public double reward_norm { get; set; }
         public double trace { get; set; }
-
-        private double ui { get; set; }
-        public double UnitIndex
-        {
-            get => IsIDLE() ? 50.0 : ui;
-            set { ui = value; }
-        }
-
-        private double hi { get; set; }
-        public double HubIndex
-        {
-            get => IsIDLE() ? 50.0 : hi;
-            set { hi = value; }
-        }
-
+                
         private TheMind mind;
         private UNIT() { }
         public UNIT(TheMind mind)
         {
             this.mind = mind;
+        }
+
+        private Dictionary<string, double> u_index { get; set; }
+        public double UI
+        {
+            get
+            {
+                if (IsIDLE())
+                    return 50.0d;
+
+                string ax = mind.soup.Axis;
+                return u_index[ax];
+            }
+            set
+            {
+                string ax = mind.soup.Axis;
+                u_index[ax] = value;
+            }
+        }
+
+        private double h_index { get; set; }
+        public double HI
+        {
+            get => IsIDLE() ? 50.0 : h_index;
+            set { h_index = value; }
         }
 
         private string data { get; set; }//data
@@ -54,6 +65,10 @@ namespace Awesome.AI.Core.Spaces
                     return data;
 
                 string sub = mind.hub.GetSubject(this);
+
+                if (sub == "init")
+                    return "";
+
                 double _i = mind.mech_high.mp.props.PropsOut["base"];
                 string idx = $"{_i.Index(mind)}";
 
@@ -90,6 +105,7 @@ namespace Awesome.AI.Core.Spaces
             get
             {
                 IMechanics mech = mind.mech["z_noise"];
+                string ax = mind.soup.Axis;
                 switch (mech.type)
                 {
                     case MECHANICS.CIRCUIT_1_LOW:
@@ -97,9 +113,9 @@ namespace Awesome.AI.Core.Spaces
                     case MECHANICS.CIRCUIT_2_LOW:
                         throw new Exception("UNIT, Variable");
                     case MECHANICS.TUGOFWAR_LOW:
-                        return UnitIndex.LowZero();
+                        return UI.LowZero();
                     case MECHANICS.BALLONHILL_LOW:
-                        return UnitIndex.LowZero();
+                        return UI.LowZero();
                     default: throw new Exception("UNIT, Variable");
                 }
             }
@@ -123,7 +139,7 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
-        public static UNIT Create(TheMind mind, string h_guid, double index, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
+        public static UNIT Create(TheMind mind, string h_guid, double[] index, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
         {
             //make sure some time has gone before creating a new unit
             if (mind.environment == ENV.SERVER)
@@ -137,7 +153,12 @@ namespace Awesome.AI.Core.Spaces
             Lookup lookup = new Lookup();
             List<string> occus = new List<string>();
 
-            UNIT _w = new UNIT() { mind = mind, created = create, guid = h_guid, UnitIndex = index, data = data, unit_type = ut, ld_type = lt };
+            UNIT _w = new UNIT() { mind = mind, created = create, guid = h_guid, data = data, unit_type = ut, ld_type = lt };
+
+            _w.u_index = new Dictionary<string, double>();
+            int i = 0;
+            foreach (string s in mind.soup.axis)
+                _w.u_index[s] = index[i++];
 
             ticket = ticket != "" ? ticket : "NOTICKET";
             _w.ticket = new Ticket(ticket);
@@ -146,7 +167,7 @@ namespace Awesome.AI.Core.Spaces
             long _r2 = rand.NextInt64(lookup.occupasions.Length);
 
             _w.credits = CONST.MAX_CREDIT;
-            _w.HubIndex = _r1 * CONST.MAX_HUBSPACE;
+            _w.h_index = _r1 * CONST.MAX_HUBSPACE;
 
             occus = lookup.occupasions.ToList();
             _w.register = new Dictionary<string, int>();
@@ -157,12 +178,15 @@ namespace Awesome.AI.Core.Spaces
 
         public static UNIT CreateIdle(TheMind mind)
         {
-            return Create(mind, "GUID", -1d, "IDLE", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
+            return Create(mind, "GUID", [-1d], "IDLE", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
         }
 
         private int _do { get; set; }
         public void Update(double near, double map)
         {
+            //if (mind.cycles_all < CONST.FIRST_RUN + 1)
+            //    return;
+
             UpdateTRA();
             UpdateREW();
             UpdateAFF();
@@ -251,6 +275,12 @@ namespace Awesome.AI.Core.Spaces
 
             string af_occo = mind._internal.Occu.name;
 
+            if (af_occo == "")
+                return;
+
+            if (af_occo == "init")
+                return;
+
             register[af_occo]++;
 
             int count = register.Sum(x => x.Value);
@@ -287,7 +317,7 @@ namespace Awesome.AI.Core.Spaces
 
             double effective_gamma = CONST.GAMMA * (1.0d + reward_norm);
 
-            HubIndex += HubIndex < index ? effective_gamma : -effective_gamma;
+            HI += HI < index ? effective_gamma : -effective_gamma;
 
             mind.hub.AdjustWeights(sub, effective_gamma * 0.1d);
         }
@@ -340,10 +370,10 @@ namespace Awesome.AI.Core.Spaces
 
             double rand = mind.rand.MyRandomDouble(10)[5];
 
-            UnitIndex += rand * CONST.ETA * dir;
+            UI += rand * CONST.ETA * dir;
 
-            if (UnitIndex <= CONST.MIN) UnitIndex = CONST.MIN;
-            if (UnitIndex >= CONST.MAX) UnitIndex = CONST.MAX;
+            if (UI <= CONST.MIN) UI = CONST.MIN;
+            if (UI >= CONST.MAX) UI = CONST.MAX;
         }
 
         //private void Remove(double near)

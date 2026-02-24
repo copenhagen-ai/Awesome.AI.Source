@@ -100,7 +100,7 @@ namespace Awesome.AI.Common
 
         public static int Index(this UNIT unit)
         {
-            int index = (int)unit.UnitIndex;
+            int index = (int)unit.UI;
 
             for (int i = 9; i >= 0; i--)
             {

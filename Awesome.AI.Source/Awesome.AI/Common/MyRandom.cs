@@ -11,15 +11,17 @@ namespace Awesome.AI.Common
         public MyRandom(TheMind mind)
         {
             this.mind = mind;
+            
+            saves ??= new List<double>();
+
+            for (int i = 0; i < 450; i++)
+                saves.Add(RandomDouble(0.0d, 1.0d));
         }
 
         private List<double> saves { get; set; }
 
-        public void SaveMomentum(string current, double momentum)
+        public void SaveMomentum(double momentum)
         {
-            if (current != "z_noise")
-                return;
-
             if (double.IsNaN(momentum))
                 throw new Exception("SaveMomentum");
 
@@ -31,13 +33,6 @@ namespace Awesome.AI.Common
 
             if (momentum == 0.0d)
                 return;
-
-            if (saves == null)
-            {
-                saves = new List<double>();
-                for (int i = 0; i < 495; i++)
-                    saves.Add(RandomDouble(0.0d, 1.0d));
-            }
 
             saves.Add(momentum);
             if (saves.Count > 500)
