@@ -119,6 +119,7 @@ namespace Awesome.AI.Variables
         public const int SAMPLE200 = 200;
         public const int SAMPLEHIGH = 80000;
 
+        public const TRANSFER transfer = TRANSFER.NONE;
         public const LOGICTYPE Logic = LOGICTYPE.PROBABILITY;
         public const MECHANICS MechType = MECHANICS.TUGOFWAR_LOW;
         public const HACKMODE hack = HACKMODE.HACK;

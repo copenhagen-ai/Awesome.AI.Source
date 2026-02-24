@@ -36,9 +36,7 @@ namespace Awesome.AI.CoreInternals
             double low_cut = _u.UI;
             double index = unit.UI;
 
-            if (index <= low_cut)
-                return true;
-            return false;
+            return index <= low_cut;
         }
 
         public bool Credits(UNIT unit)

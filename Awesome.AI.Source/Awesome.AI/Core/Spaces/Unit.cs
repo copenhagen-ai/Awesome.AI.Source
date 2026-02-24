@@ -105,7 +105,7 @@ namespace Awesome.AI.Core.Spaces
             get
             {
                 IMechanics mech = mind.mech["z_noise"];
-                string ax = mind.soup.Axis;
+                double res = 0.0d;
                 switch (mech.type)
                 {
                     case MECHANICS.CIRCUIT_1_LOW:
@@ -113,11 +113,20 @@ namespace Awesome.AI.Core.Spaces
                     case MECHANICS.CIRCUIT_2_LOW:
                         throw new Exception("UNIT, Variable");
                     case MECHANICS.TUGOFWAR_LOW:
-                        return UI.LowZero();
+                        res = UI.LowZero(); break;
                     case MECHANICS.BALLONHILL_LOW:
-                        return UI.LowZero();
+                        res = UI.LowZero(); break;
                     default: throw new Exception("UNIT, Variable");
                 }
+
+                switch (CONST.transfer)
+                {
+                    case TRANSFER.NONE: break;
+                    case TRANSFER.LOGISTIC: res = mind.calc.Logistic(res * 0.1d - 5.0d) * 100.0d; break;
+                    default : throw new Exception("Unit, Variable");
+                }
+
+                return res;
             }
         }
 
