@@ -1,4 +1,6 @@
-﻿using Awesome.AI.Interfaces;
+﻿using Awesome.AI.Common;
+using Awesome.AI.Interfaces;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
 {
@@ -9,10 +11,17 @@ namespace Awesome.AI.Core.Spaces
         public UnitSpaceSoup(TheMind mind)
         {
             this.mind = mind;
+
+            prev_dir ??= new Dictionary<string, double>();
+
+            foreach (string ax in axis)
+                prev_dir[ax] = 0.0d;
+
         }
 
         //each axis should run its own mechanics - update function
         public string[] axis = { "will" };
+        private Dictionary<string, double> prev_dir { get; set; }
 
         public string Axis
         {
@@ -26,10 +35,51 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
+        public string axis_tmp { get; set; }
+        private double Step
+        {
+            get
+            {
+                switch (axis_tmp)
+                {
+                    case "will": return mind.mech_current.ms.vv_sym_100;
+                    default: throw new Exception("UnitSpaceSoup, Step");
+                }
+            }
+        }
+
+        private double Direction
+        {
+            get
+            {
+                switch (axis_tmp)
+                {
+                    case "will": return mind.down.Dir;
+                    default: throw new Exception("UnitSpaceSoup, Direction");
+                }
+            }
+        }
+
+        private string Mech
+        {
+            get
+            {
+                switch (Axis)
+                {
+                    case "will": return "z_noise";
+                    default: throw new Exception("UnitSpaceSoup, Mech");
+                }
+            }
+        }        
+
         public void CurrentUnit()
         {
             if (mind.z_current != "z_noise")
                 return;
+
+            //dont do this
+            //if (Axis != mind.soup.axis[0])
+            //    return;
 
             UNIT _u = mind.unit_current;
 
@@ -56,8 +106,8 @@ namespace Awesome.AI.Core.Spaces
 
             units = units.Where(x =>
                    //   mind.filters.Direction(x) //comment to turn off
-                   mind.filters.LowCut(x)          //comment to turn off
-                && mind.filters.Credits(x)         //comment to turn off
+                   mind.filters.LowCut(x, Axis)          //comment to turn off
+                && mind.filters.Credits(x, Axis)         //comment to turn off
                                                    //   mind.filters.UnitIsValid(x)   //comment to turn off
                                                    //&& mind.filters.Theme(x)         //comment to turn off
                                                    //&& Filters.Elastic2(dir)         //comment to turn off
@@ -78,33 +128,49 @@ namespace Awesome.AI.Core.Spaces
             if (units is null)
                 throw new ArgumentNullException();
 
-            double near = Near();
+            int axis_max = 2;
+            int axis_now = 1;
 
-            units = units.OrderByDescending(x => Map(x)).ToList();
+            double[] axis_near = new double[axis_max];
 
-            UNIT above = units.Where(x => Map(x) < near).FirstOrDefault();
-            UNIT below = units.Where(x => Map(x) >= near).LastOrDefault();
-            UNIT res = null;
+            for (int i = 0; i < axis_max; i++)
+            {
+                if (i >= axis_now) {
+                    axis_near[i] = -1d;
+                    continue;
+                }
+                
+                axis_tmp = axis[i];
+                axis_near[i] = Near(Step, Direction);
+            }
 
-            if (above is null && below is null)
-                return null;
+            double near_x = axis_near[0];
+            double near_y = 0.0d;
+            double min_distance = 10E10d;
+            UNIT nearest_unit = null;
 
-            if (above is null)
-                res = below;
+            foreach (UNIT unit in units)
+            {
+                if (unit == mind.unit_current)
+                    continue;
 
-            if (below is null)
-                res = above;
+                double nearest_x = Map(unit);
+                double nearest_y = 10E-10d;
 
-            if (res is null)
-                res = near - Map(below) < Map(above) - near ? below : above;//switcharoonie
+                double distance = mind.calc.Pyth(near_x, nearest_x, near_y, nearest_y);
 
-            //if (res is null)
-            //    res = mind.cycles % 2 == 0 ? below : above;//switcharoonie
+                if (distance < min_distance)
+                {
+                    min_distance = distance;
+                    nearest_unit = unit;
+                }
+            }
 
-            double map = Map(res);
-            res.Update(near, map);
+            GPTVector2D v_near = new GPTVector2D(axis_near[0], axis_near[1], null, null);
+            double dist = Math.Abs(min_distance);
+            nearest_unit.Update(v_near, dist);
 
-            return res;
+            return nearest_unit;
         }
 
         public double Map(UNIT x)
@@ -115,7 +181,9 @@ namespace Awesome.AI.Core.Spaces
             //if (mind.z_current == "z_mech")
             //    return x.Variable;
 
-            IMechanics mech = mind.mech["z_noise"];
+            string _m = Mech;
+
+            IMechanics mech = mind.mech[_m];
 
             mech.Peek(x);
 
@@ -124,8 +192,7 @@ namespace Awesome.AI.Core.Spaces
             return norm;
         }
 
-        private double prev_dir { get; set; }
-        private double Near()
+        private double Near(double step, double dir)
         {
             //double norm = 100.0d - mind.mech_current.mp.p_100;
 
@@ -133,18 +200,16 @@ namespace Awesome.AI.Core.Spaces
 
             //double norm = 100.0d - mind.down.WillNorm;
 
-            double dir = mind.down.Dir;
-            double vel = mind.mech_current.ms.vv_sym_100;
             double res = 0.0d;
-            bool same = dir == prev_dir;
+            bool same = dir == prev_dir[Axis];
 
             if (same)
-                res = vel;
+                res = step;
 
             if (!same)
-                res = 100.0d - vel;
+                res = 100.0d - step;
 
-            prev_dir = dir;
+            prev_dir[Axis] = dir;
 
             return res;
         }
@@ -161,8 +226,8 @@ namespace Awesome.AI.Core.Spaces
 
             List<UNIT> units = mind.access.UNITS_VAL().Where(x =>
                                    //mind.filters.UnitIsValid(x) 
-                                   mind.filters.Credits(x)
-                                && mind.filters.LowCut(x)
+                                   mind.filters.Credits(x, Axis)
+                                && mind.filters.LowCut(x, Axis)
                                 ).OrderByDescending(x => x.Variable).ToList();
 
             int rand = mind.rand.MyRandomInt(1, units.Count - 1)[0];

@@ -15,19 +15,22 @@ namespace Awesome.AI.CoreInternals
             this.mind = mind;
         }
 
-        public bool LowCut(UNIT unit)//aka SayNo
+        public bool LowCut(UNIT unit, string axis)//aka SayNo
         {
             /*
              * Lowcut filter?
              * */
 
-            if(mind.z_current == "z_noise")
-                return true;
+            //if(mind.z_current != "z_noise")
+            //    return true;
 
             if (unit == null)
                 throw new ArgumentNullException();
 
             if (mind.STATE == STATE.QUICKDECISION)
+                return true;
+
+            if (axis != mind.soup.axis[0])
                 return true;
 
             //because low index -> high mass
@@ -36,15 +39,18 @@ namespace Awesome.AI.CoreInternals
             double low_cut = _u.UI;
             double index = unit.UI;
 
-            return index <= low_cut;
+            return index > low_cut;
         }
 
-        public bool Credits(UNIT unit)
+        public bool Credits(UNIT unit, string axis)
         {
             if (unit == null)
                 throw new ArgumentNullException();
 
             if (mind.STATE == STATE.QUICKDECISION)
+                return true;
+
+            if (axis != mind.soup.axis[0])
                 return true;
 
             return unit.credits > CONST.LOW_CREDIT;

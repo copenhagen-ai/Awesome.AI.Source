@@ -3,6 +3,7 @@ using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
+using System.Numerics;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
@@ -29,6 +30,11 @@ namespace Awesome.AI.Core.Spaces
         public UNIT(TheMind mind)
         {
             this.mind = mind;
+        }
+
+        public double GetUI(string ax)
+        {
+            return u_index[ax];            
         }
 
         private Dictionary<string, double> u_index { get; set; }
@@ -191,7 +197,7 @@ namespace Awesome.AI.Core.Spaces
         }
 
         private int _do { get; set; }
-        public void Update(double near, double map)
+        public void Update(GPTVector2D v_near, double dist)
         {
             //if (mind.cycles_all < CONST.FIRST_RUN + 1)
             //    return;
@@ -200,7 +206,7 @@ namespace Awesome.AI.Core.Spaces
             UpdateREW();
             UpdateAFF();
             UpdateHUB();
-            UpdateUNT(near, map);
+            UpdateUNT(v_near, dist);
 
             _do++;
             if (_do > 100)
@@ -270,8 +276,8 @@ namespace Awesome.AI.Core.Spaces
                     rem.Add(unit);
             }
 
-            foreach (UNIT unit in rem)
-                mind.access.UNITS_REM(unit);
+            //foreach (UNIT unit in rem)
+            //    mind.access.UNITS_REM(unit);
         }
 
         private void UpdateAFF()
@@ -331,7 +337,7 @@ namespace Awesome.AI.Core.Spaces
             mind.hub.AdjustWeights(sub, effective_gamma * 0.1d);
         }
 
-        private void UpdateUNT(double near, double map)
+        private void UpdateUNT(GPTVector2D v_near, double dist)
         {
             /*
              * it is difficult determinating if the does as supposed, but the logic seems correct
@@ -344,40 +350,84 @@ namespace Awesome.AI.Core.Spaces
                 return;
 
             //return;
-
-            double dir = mind.down.Dir;
-            double dist = Math.Abs(map - near);
-
-            if (Add(near, dist))
+            
+            if (Add2D(v_near, dist))
                 return;
 
             //Remove(near);
-            Adjust(dir, dist);
+            Adjust(dist);
         }
 
-        private bool Add(double near, double dist)
+        //private bool Add1D(double[] near, double dist)
+        //{
+        //    int count = mind.hub.GetUnits().Count;
+        //    double avg = 100.0d / count;
+
+        //    if (dist < avg)
+        //        return false;
+
+        //    double low = Math.Clamp(near[0] - CONST.ALPHA, CONST.MIN, CONST.MAX);
+        //    double high = Math.Clamp(near[0] + CONST.ALPHA, CONST.MIN, CONST.MAX);
+
+        //    mind.access.UNITS_ADD(this, low, high);
+
+        //    return true;
+        //}
+
+        private bool Add2D(GPTVector2D v_near, double dist)
         {
             int count = mind.hub.GetUnits().Count;
-            double avg = 100.0d / count;
 
-            if (dist < avg)
+            double total_area = 100.0 * 100.0;
+            double avg_area = total_area / count;
+
+            double avg_radius = Math.Sqrt(avg_area / Math.PI);
+
+            if (dist < avg_radius)
                 return false;
 
-            double low = near - CONST.ALPHA <= CONST.MIN ? CONST.MIN : near - CONST.ALPHA;
-            double high = near + CONST.ALPHA >= CONST.MAX ? CONST.MAX : near + CONST.ALPHA;
+            double[] xx = [-1d, -1d];
+            double[] yy = [-1d, -1d];
+            int axis_count = mind.soup.axis.Length;
+            for (int i = 0; i < axis_count; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        xx[0] = Math.Clamp(v_near.xx - CONST.ALPHA, CONST.MIN, CONST.MAX);
+                        xx[1] = Math.Clamp(v_near.xx + CONST.ALPHA, CONST.MIN, CONST.MAX);
+                        break;
+                    case 1: 
+                        yy[0] = Math.Clamp(v_near.yy - CONST.ALPHA, CONST.MIN, CONST.MAX);
+                        yy[1] = Math.Clamp(v_near.yy + CONST.ALPHA, CONST.MIN, CONST.MAX);
+                        break;
+                    default: throw new Exception("Unit, Add2D");
+                }
+            }
 
-            mind.access.UNITS_ADD(this, low, high);
+            double[][] axis = new double[axis_count][];
+            
+            if (axis_count == 1) {
+                axis[0] = xx;
+            }
 
+            if (axis_count == 2) {
+                axis[0] = xx;
+                axis[1] = yy;
+            }
+
+            mind.access.UNITS_ADD(this, axis, axis_count);
+            
             return true;
         }
 
-
-        private void Adjust(double dir, double dist)
+        private void Adjust(double dist)
         {
             if (dist < CONST.ALPHA)
                 return;
 
             double rand = mind.rand.MyRandomDouble(10)[5];
+            double dir = mind.down.Dir;
 
             UI += rand * CONST.ETA * dir;
 

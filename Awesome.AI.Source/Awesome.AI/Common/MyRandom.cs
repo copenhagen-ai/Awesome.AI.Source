@@ -29,7 +29,7 @@ namespace Awesome.AI.Common
                 throw new Exception("SaveMomentum");
 
             if (mind.cycles_all < CONST.FIRST_RUN)
-                momentum = RandomDouble(0.0d, 1.0d);
+                momentum = saves[mind.cycles_all];
 
             if (momentum == 0.0d)
                 return;

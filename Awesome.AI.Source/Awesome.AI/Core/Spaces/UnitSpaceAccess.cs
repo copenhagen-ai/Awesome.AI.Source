@@ -93,10 +93,31 @@ namespace Awesome.AI.Core.Spaces
             return _u;
         }
 
-        public void UNITS_ADD(UNIT unit, double low, double high)
+        //public void UNITS_ADD(UNIT unit, double[] xx)
+        //{
+        //    double idx1 = mind.rand.MyRandomDouble(1)[0];
+        //    idx1 = mind.calc.Normalize(idx1, 0.0d, 1.0d, xx[0], xx[1]);
+            
+        //    List<string> list = mind.memory.Tags(mind.mindtype);
+        //    int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
+
+        //    string ticket = "" + mind.hub.GetSubject(unit) + rand;
+        //    string guid = "" + unit.guid;
+
+        //    UNIT _u = UNIT.Create(mind, guid, [idx1], "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
+
+        //    mind.memory.units_running.Add(_u);
+        //}
+
+        public void UNITS_ADD(UNIT unit, double[][] axis, int count)
         {
-            double idx = mind.rand.MyRandomDouble(1)[0];
-            idx = mind.calc.Normalize(idx, 0.0d, 1.0d, low, high);
+            double[] idx = [count];
+
+            for (int i = 0; i < count; i++)
+            {
+                idx[i] = mind.rand.MyRandomDouble(1)[0];
+                idx[i] = mind.calc.Normalize(idx[i], 0.0d, 1.0d, axis[i][0], axis[i][1]);            
+            }
 
             List<string> list = mind.memory.Tags(mind.mindtype);
             int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
@@ -104,7 +125,7 @@ namespace Awesome.AI.Core.Spaces
             string ticket = "" + mind.hub.GetSubject(unit) + rand;
             string guid = "" + unit.guid;
 
-            UNIT _u = UNIT.Create(mind, guid, [idx], "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
+            UNIT _u = UNIT.Create(mind, guid, idx, "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
 
             mind.memory.units_running.Add(_u);
         }

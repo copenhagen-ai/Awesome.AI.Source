@@ -167,17 +167,36 @@ namespace Awesome.AI.Common
             double y = 1d / (1d + Math.Exp(-x));
 
             return y;
-        }        
+        }
 
         public double Pyth(double _a, double _b)
         {
             if (_a <= 0.0d)
                 throw new Exception("Pyth");
-            
+
             if (_b <= 0.0d)
                 throw new Exception("Pyth");
 
             double _dist = Math.Sqrt(_a * _a + _b * _b);
+
+            return _dist;
+        }
+
+        public double Pyth(double x1, double x2, double y1, double y2)
+        {
+            //if (x1 < 0.0d)
+            //    throw new Exception("Pyth1");
+
+            //if (x2 < 0.0d)
+            //    throw new Exception("Pyth2");
+
+            //if (y1 < 0.0d)
+            //    throw new Exception("Pyth3");
+
+            //if (y2 < 0.0d)
+            //    throw new Exception("Pyth4");
+
+            double _dist = Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 
             return _dist;
         }
