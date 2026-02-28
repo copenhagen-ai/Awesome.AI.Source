@@ -111,7 +111,7 @@ namespace Awesome.AI.Core.Spaces
 
         public void UNITS_ADD(UNIT unit, double[][] axis, int count)
         {
-            double[] idx = [count];
+            double[] idx = new double[count];
 
             for (int i = 0; i < count; i++)
             {

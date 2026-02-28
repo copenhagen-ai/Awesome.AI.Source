@@ -145,7 +145,7 @@ namespace Awesome.AI.Core
                 Pre("z_noise", true);
                 Post(true);
 
-                theanswer = UNIT.Create(this, "GUID", [-1d], "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
+                theanswer = UNIT.Create(this, "GUID", [-1d, -1d], "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
 
                 ok = true;
                 do_process = false;
@@ -314,15 +314,15 @@ namespace Awesome.AI.Core
 
             down.Update();
 
+            soup.Counter++;
+
             mech_high.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
             mech_high.Calculate(PATTERN.MOODGOOD, cycles);//mood good
             mech_high.Calculate(PATTERN.MOODBAD, cycles);//mood bad
 
             mech_high.mp.props.Update();
-            //pos.Update();
 
-            //if (curr_hub.IsIDLE())
-            //    core.SetTheme(_pro);
+            soup.Counter++;
 
             if (!core.OK(out user_var))
                 return false;

@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Awesome.AI.Core
@@ -52,6 +53,26 @@ namespace Awesome.AI.Awesome.AI.Core
                     res *= this[v.Key.Item1, key2];
 
                 return res * val;
+            }
+        }
+
+        private double dv_prev { get; set; }
+        public double Dir
+        {
+            get
+            {
+                string ax = mind.soup.Axis == "will" ? "base" : mind.soup.Axis;
+                try
+                {
+                    double dv = mind.mech_high.mp.props.PropsOut[ax];
+                    double dir = dv > dv_prev ? 1.0d : -1.0d;
+
+                    return dir;
+                }
+                catch (Exception ex) 
+                {
+                    return -100d;                
+                }
             }
         }
 
@@ -111,22 +132,24 @@ namespace Awesome.AI.Awesome.AI.Core
                 case PROPS.BRAINWAVE:
                     _base = 1.0d;
 
-                    attr = new Dictionary<string, double> { { "base", double.NaN }, { "attention", 2.0 }, { "readiness", 1.2 } };
+                    //attention, readyness
+                    attr = new Dictionary<string, double> { { "base", double.NaN }, { CONST.axis_2_brain, 2.0 }, { CONST.axis_3_brain, 1.2 } };
 
                     m = new Dictionary<(string, string), double>();
-                    m.Add(("base", "readiness"), 1.0d);
-                    m.Add(("attention", "readiness"), 1.0d);
+                    m.Add(("base", CONST.axis_3_brain), 1.0d);
+                    m.Add((CONST.axis_2_brain, CONST.axis_3_brain), 1.0d);
                     break;
 
                 case PROPS.COMMUNICATION:
                     _base = 1.0d;
 
-                    attr = new Dictionary<string, double> { { "base", double.NaN }, { "opinion", 2.0 }, { "temporality", 0.5 }, { "abstraction", 1.2 } };
+                    //opinion, temporality, abstraction
+                    attr = new Dictionary<string, double> { { "base", double.NaN }, { CONST.axis_2_comm, 2.0 }, { CONST.axis_3_comm, 0.5 }, { CONST.axis_4_comm, 1.2 } };
 
                     m = new Dictionary<(string, string), double>();
-                    m.Add(("mood", "temporality"), 0.65d);
-                    m.Add(("opinion", "temporality"), 0.45d);
-                    m.Add(("abstraction", "opinion"), 0.35d);
+                    m.Add(("base", CONST.axis_3_comm), 0.65d);
+                    m.Add((CONST.axis_2_comm, CONST.axis_3_comm), 0.45d);
+                    m.Add((CONST.axis_4_comm, CONST.axis_2_comm), 0.35d);
 
                     break;
 

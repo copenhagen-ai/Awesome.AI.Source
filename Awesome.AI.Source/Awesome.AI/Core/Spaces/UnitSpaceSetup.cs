@@ -266,7 +266,7 @@ namespace Awesome.AI.Core.Spaces
                     random.NextDouble() :
                     mind.rand.MyRandomDouble(list.Count())[_count];
 
-                    _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand)], "DATA", "" + s + ticket[i - 1], utype, ltype));
+                    _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], "DATA", "" + s + ticket[i - 1], utype, ltype));
 
                     _count++;
                 }
@@ -303,8 +303,8 @@ namespace Awesome.AI.Core.Spaces
 
                 switch (state)
                 {
-                    case STATE.JUSTRUNNING: _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
-                    case STATE.QUICKDECISION: _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
+                    case STATE.JUSTRUNNING: _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
+                    case STATE.QUICKDECISION: _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
                     default: throw new NotImplementedException();
                 }
 
@@ -342,7 +342,7 @@ namespace Awesome.AI.Core.Spaces
                 random.NextDouble() :
                 mind.rand.MyRandomDouble(num_units)[i];
 
-                _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand)], name, "NONE", utype, ltype));
+                _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], name, "NONE", utype, ltype));
             }
 
             units_running = units_running.Concat(_u).ToList();

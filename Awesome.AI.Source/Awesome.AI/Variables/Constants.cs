@@ -33,6 +33,15 @@ namespace Awesome.AI.Variables
         public static string[] sub_roberta = { CONST.roberta_s1, CONST.roberta_s2, CONST.roberta_s3, CONST.roberta_s4, CONST.roberta_s5, CONST.roberta_s6, CONST.roberta_s7, CONST.roberta_s8, CONST.roberta_s9, CONST.roberta_s10 };
         public static string[] sub_andrew = { CONST.andrew_s1, CONST.andrew_s2, CONST.andrew_s3, CONST.andrew_s4, CONST.andrew_s5, CONST.andrew_s6, CONST.andrew_s7, CONST.andrew_s8, CONST.andrew_s9, CONST.andrew_s10 };
 
+        public const string axis_1_brain = "will";
+        public const string axis_2_brain = "attention";
+        public const string axis_3_brain = "readiness";
+
+        public const string axis_1_comm = "will";
+        public const string axis_2_comm = "opinion";
+        public const string axis_3_comm = "temporality";
+        public const string axis_4_comm = "abstraction";
+
         /*
          * decision values
          * */

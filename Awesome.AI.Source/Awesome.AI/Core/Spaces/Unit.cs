@@ -175,6 +175,8 @@ namespace Awesome.AI.Core.Spaces
             foreach (string s in mind.soup.axis)
                 _w.u_index[s] = index[i++];
 
+            //_w.u_index["will"] = index[i];
+
             ticket = ticket != "" ? ticket : "NOTICKET";
             _w.ticket = new Ticket(ticket);
 
@@ -193,7 +195,7 @@ namespace Awesome.AI.Core.Spaces
 
         public static UNIT CreateIdle(TheMind mind)
         {
-            return Create(mind, "GUID", [-1d], "IDLE", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
+            return Create(mind, "GUID", [-1d, -1d], "IDLE", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
         }
 
         private int _do { get; set; }
@@ -350,31 +352,19 @@ namespace Awesome.AI.Core.Spaces
                 return;
 
             //return;
-            
-            if (Add2D(v_near, dist))
+
+            int axis_count = mind.soup.axis.Length;
+            string ax = mind.soup.Axis;
+
+            if (Add2D(v_near, dist, axis_count))
                 return;
 
             //Remove(near);
-            Adjust(dist);
+
+            Adjust(ax, dist);
         }
 
-        //private bool Add1D(double[] near, double dist)
-        //{
-        //    int count = mind.hub.GetUnits().Count;
-        //    double avg = 100.0d / count;
-
-        //    if (dist < avg)
-        //        return false;
-
-        //    double low = Math.Clamp(near[0] - CONST.ALPHA, CONST.MIN, CONST.MAX);
-        //    double high = Math.Clamp(near[0] + CONST.ALPHA, CONST.MIN, CONST.MAX);
-
-        //    mind.access.UNITS_ADD(this, low, high);
-
-        //    return true;
-        //}
-
-        private bool Add2D(GPTVector2D v_near, double dist)
+        private bool Add2D(GPTVector2D v_near, double dist, int axis_count)
         {
             int count = mind.hub.GetUnits().Count;
 
@@ -388,7 +378,7 @@ namespace Awesome.AI.Core.Spaces
 
             double[] xx = [-1d, -1d];
             double[] yy = [-1d, -1d];
-            int axis_count = mind.soup.axis.Length;
+            
             for (int i = 0; i < axis_count; i++)
             {
                 switch (i)
@@ -421,15 +411,22 @@ namespace Awesome.AI.Core.Spaces
             return true;
         }
 
-        private void Adjust(double dist)
+        private double dv_prev {  get; set; }
+        private void Adjust(string ax, double dist)
         {
-            if (dist < CONST.ALPHA)
+            if (ax == "will" && dist < CONST.ALPHA)
                 return;
 
-            double rand = mind.rand.MyRandomDouble(10)[5];
-            double dir = mind.down.Dir;
+            double dir = 0.0d;
+            double rnd = mind.rand.MyRandomDouble(10)[5];
+            double dv = ax == "will" ? -1.0d : mind.mech_high.mp.props.PropsOut[ax];
+            
+            if (ax == "will")
+                dir = mind.down.Dir;
+            else
+                dir = mind.mech_high.mp.props.Dir;
 
-            UI += rand * CONST.ETA * dir;
+            UI += rnd * CONST.ETA * dir;
 
             if (UI <= CONST.MIN) UI = CONST.MIN;
             if (UI >= CONST.MAX) UI = CONST.MAX;
