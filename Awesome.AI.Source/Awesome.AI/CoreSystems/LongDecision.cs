@@ -124,7 +124,7 @@ namespace Awesome.AI.CoreSystems
             if (type != LONGTYPE.LOCATION) //only want the first
                 return;
 
-            index.Add(mind.unit_current.UI);
+            index.Add(mind.unit_current.UIget("will"));
 
             if (index.Count > 10)
                 index.RemoveAt(0);            
@@ -155,7 +155,7 @@ namespace Awesome.AI.CoreSystems
                 ;
 
             double avg = index.Average();
-            double curr = mind.unit_current.UI;
+            double curr = mind.unit_current.UIget("will");
 
             if (curr >= avg)
                 return ACTION.ACTION;

@@ -36,9 +36,9 @@ namespace Awesome.AI.Factorys
                 case MECHANICS.CIRCUIT_2_LOW:
                     return new e_CircuitSimulator(mind, run);
                 case MECHANICS.TUGOFWAR_HIGH:
-                    return new m_TugOfWar(mind, PROPS.COMMUNICATION);
+                    return new m_TugOfWar(mind, run, PROPS.COMMUNICATION);
                 case MECHANICS.BALLONHILL_HIGH:
-                    return new m_BallOnHill(mind, PROPS.BRAINWAVE);
+                    return new m_BallOnHill(mind, run, PROPS.BRAINWAVE);
                 //case MECHANICS.GRAVITY:
                 //    _mech = new GravityAndRocket(mind, this);
                 //    validation = VALIDATION.BOTH;                                       //BOTH or OCCU

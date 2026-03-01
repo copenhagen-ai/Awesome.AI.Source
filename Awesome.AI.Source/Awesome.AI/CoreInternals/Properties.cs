@@ -57,23 +57,15 @@ namespace Awesome.AI.Awesome.AI.Core
         }
 
         private double dv_prev { get; set; }
-        public double Dir
+        public double Dir(string ax)
         {
-            get
-            {
-                string ax = mind.soup.Axis == "will" ? "base" : mind.soup.Axis;
-                try
-                {
-                    double dv = mind.mech_high.mp.props.PropsOut[ax];
-                    double dir = dv > dv_prev ? 1.0d : -1.0d;
+            if (ax == "will")
+                ax = "base";
 
-                    return dir;
-                }
-                catch (Exception ex) 
-                {
-                    return -100d;                
-                }
-            }
+            double dv = mind.mech_high.mp.props.PropsOut[ax];
+            double dir = dv > dv_prev ? 1.0d : -1.0d;
+
+            return dir;            
         }
 
         //private List<string> Attributes { get; set; }

@@ -24,7 +24,7 @@ namespace Awesome.AI.Core.Spaces
             {
                 case STATE.JUSTRUNNING:
                     if (order == ORDER.BYINDEX)
-                        return mind.memory.units_running.OrderBy(x=>x.UI).ToList();
+                        return mind.memory.units_running.OrderBy(x=>x.UIget("will")).ToList();
                     if (order == ORDER.BYVARIABLE)
                         return mind.memory.units_running.OrderBy(x=>x.Variable).ToList();
                     return mind.memory.units_running;

@@ -15,9 +15,11 @@ namespace Awesome.AI.Core.Mechanics
 
         private TheMind mind;
         private m_BallOnHill() { }
-        public m_BallOnHill(TheMind mind, PROPS props)
+        public m_BallOnHill(TheMind mind, MECHANICS type, PROPS props)
         {
             this.mind = mind;
+
+            this.type = type;
 
             this.ms = new MechSymbolicOut() { };
 

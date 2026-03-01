@@ -15,9 +15,11 @@ namespace Awesome.AI.Core.Mechanics
 
         private TheMind mind;
         private m_TugOfWar() { }
-        public m_TugOfWar(TheMind mind, PROPS props)
+        public m_TugOfWar(TheMind mind, MECHANICS type, PROPS props)
         {
             this.mind = mind;
+
+            this.type = type;
 
             this.ms = new MechSymbolicOut() { };
 

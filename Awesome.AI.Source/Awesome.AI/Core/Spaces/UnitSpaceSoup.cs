@@ -1,7 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
-using System.Diagnostics.CodeAnalysis;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
@@ -62,8 +61,8 @@ namespace Awesome.AI.Core.Spaces
             switch (axis_tmp)
             {
                 case "will": return mind.down.Dir;
-                case CONST.axis_2_brain: return mind.mech_high.mp.props.Dir;
-                case CONST.axis_2_comm: return mind.mech_high.mp.props.Dir;
+                case CONST.axis_2_brain: return mind.mech_high.mp.props.Dir(CONST.axis_2_brain);
+                case CONST.axis_2_comm: return mind.mech_high.mp.props.Dir(CONST.axis_2_comm);
                 default: throw new Exception("UnitSpaceSoup, Direction");
             }            
         }
@@ -161,8 +160,12 @@ namespace Awesome.AI.Core.Spaces
                 }
             }
 
+            if (nearest_unit == null)
+                throw new Exception("UnitSpaceSoup, Jump");
+
             GPTVector2D v_near = new GPTVector2D(near[0], near[1], null, null);
             double dist = Math.Abs(min_distance);
+
             nearest_unit.Update(v_near, dist);
 
             return nearest_unit;
