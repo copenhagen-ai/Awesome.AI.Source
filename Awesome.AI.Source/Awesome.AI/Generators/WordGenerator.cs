@@ -27,6 +27,10 @@ namespace Awesome.AI.Generators
 
             string root = MyPath.Root;
             string data = GenHelper.IsDebug() ? "Data" : "DataFiles";
+            
+            if (mind.environment == Variables.Enums.ENV.LOCAL)
+                data = "Awesome.AI\\Data";
+
             string path = root + data + "\\latin.txt";
 
             lines = File.ReadAllLines(path).ToList();

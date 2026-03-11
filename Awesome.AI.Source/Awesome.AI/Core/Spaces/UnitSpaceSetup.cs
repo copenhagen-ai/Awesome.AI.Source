@@ -234,6 +234,25 @@ namespace Awesome.AI.Core.Spaces
                 return roberta.ToList();
             }
 
+            if (type == MINDS.BASIC)
+            {
+                List<string> basic = new List<string>()
+                {
+                    CONST.basic_s1,//"love",
+                    CONST.basic_s2,//"macho machines",
+                    CONST.basic_s3,//"music",
+                    CONST.basic_s4,//"friends",
+                    CONST.basic_s5,//"socializing",
+                    CONST.basic_s6,//"dancing",
+                    CONST.basic_s7,//"movies",
+                    CONST.basic_s8,//"existence",
+                    CONST.basic_s9,//"termination",
+                    CONST.basic_s10,//"programming"
+                };
+
+                return basic.ToList();
+            }
+
             throw new Exception("Memory, Tags");
         }
 
@@ -303,8 +322,10 @@ namespace Awesome.AI.Core.Spaces
 
                 switch (state)
                 {
-                    case STATE.JUSTRUNNING: _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
-                    case STATE.QUICKDECISION: _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
+                    case STATE.JUSTRUNNING: 
+                        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
+                    case STATE.QUICKDECISION: 
+                        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
                     default: throw new NotImplementedException();
                 }
 

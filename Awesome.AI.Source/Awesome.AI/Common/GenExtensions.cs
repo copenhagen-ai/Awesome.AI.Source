@@ -187,6 +187,11 @@ namespace Awesome.AI.Common
             return mind.mindtype == MINDS.ANDREW;
         }
 
+        public static bool Basic(this TheMind mind)
+        {
+            return mind.mindtype == MINDS.BASIC;
+        }
+
         [Obsolete("Legacy Method", false)]
         public static bool TheHack(this bool _b, TheMind mind)
         {

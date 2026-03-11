@@ -13,7 +13,7 @@ namespace Awesome.AI.Common
             {
                 lock (fileLock)
                 {
-                    var xdoc = XElement.Load(MyPath.PathIP(MINDS.ROBERTA));
+                    var xdoc = XElement.Load(MyPath.PathSetting(MINDS.BASIC));
                     var group = xdoc.Elements("out");
 
                     foreach (XElement elem in group.Descendants())
@@ -31,7 +31,7 @@ namespace Awesome.AI.Common
                         }
                     }
 
-                    xdoc.Save(MyPath.PathIP(MINDS.ROBERTA));
+                    xdoc.Save(MyPath.PathSetting(MINDS.BASIC));
                 }
             }
             catch (Exception _e) { }
@@ -43,7 +43,7 @@ namespace Awesome.AI.Common
             {
                 lock (fileLock)
                 {
-                    string path = MyPath.PathIP(MINDS.ROBERTA);
+                    string path = MyPath.PathSetting(MINDS.BASIC);
                     var xdoc = XElement.Load(path);
                     var group = xdoc.Elements("out");
 

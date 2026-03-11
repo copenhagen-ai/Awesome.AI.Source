@@ -199,7 +199,10 @@ namespace Awesome.AI.CoreSystems
             occus = new List<Occupasion>();
 
             Lookup lookup = new Lookup();
-            MINDS[] minds = { MINDS.ROBERTA, MINDS.ANDREW };
+            MINDS[] minds = mind.mindtype == MINDS.BASIC ? 
+                new MINDS[] { MINDS.BASIC } : 
+                new MINDS[]{ MINDS.ROBERTA, MINDS.ANDREW };
+
             int occu_count = lookup.occupasions.Length;
             
             foreach (MINDS mind in minds)

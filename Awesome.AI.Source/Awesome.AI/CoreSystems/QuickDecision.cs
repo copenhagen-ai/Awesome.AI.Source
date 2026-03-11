@@ -64,7 +64,9 @@ namespace Awesome.AI.CoreSystems
                 if (mind.access.QDCOUNT() == 1)
                 {
                     res = curr.Data == "QYES";
+
                     new_res = true;
+
                     mind.STATE = STATE.JUSTRUNNING;
 
                     mind.access.QDRESETU();

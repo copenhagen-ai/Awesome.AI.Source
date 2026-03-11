@@ -182,7 +182,7 @@ namespace Awesome.AI.Core.Electrical
                 {
                     case MECHANICS.CIRCUIT_1_LOW:
                         // Calculate voltages
-                        double vBattery = -(CONST.MAX * CONST.BASE_REDUCTION * 0.05d) * mp.damp;
+                        double vBattery = -(CONST.MAX * CONST.BASE_SCALE * 0.05d) * mp.damp;
                         double vResistor = (curr.Variable * 0.1d) * mp.damp;
                         double vLoss = mp.cc_elec_curr * mh.Friction(mind) * mp.damp;
                         double netVoltage = vBattery + vResistor + vLoss;

@@ -61,6 +61,29 @@ namespace Awesome.AI.Factorys
         }
     }
 
+    public class Basic : IBot
+    {
+        public MINDS mindtype { get; set; }
+        public MECHANICS mech { get; set; }
+        public Dictionary<LONGTYPE, string> lng_dec { get; set; }
+        public VALIDATION validation { get; set; }
+        public TAGS tags { get; set; }                                               //used with WORLD and BOTH
+        public OCCUPASION occupasion { get; set; }                                   //used with SELF and BOTH
+        public PATTERN pattern { get; set; }
+
+        public Basic()
+        {
+            mindtype = MINDS.BASIC;
+            mech = MECHANICS.BALLONHILL_HIGH;
+            lng_dec = CONST.lng_dec_basic;
+
+            validation = VALIDATION.BOTH;                                       //BOTH or TAGS
+            tags = TAGS.ALL;                                                    //used with TAGS and BOTH
+            occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
+            pattern = PATTERN.MOODGENERAL;
+        }
+    }
+
     public class BotFactory
     {
         private MINDS mindtype { get; set; }
@@ -81,6 +104,7 @@ namespace Awesome.AI.Factorys
             {
                 case MINDS.ROBERTA: bot = new Roberta(); break;
                 case MINDS.ANDREW: bot = new Andrew(); break;
+                case MINDS.BASIC: bot = new Basic(); break;
                 default: throw new Exception("Bots, GetBot");
             }            
 

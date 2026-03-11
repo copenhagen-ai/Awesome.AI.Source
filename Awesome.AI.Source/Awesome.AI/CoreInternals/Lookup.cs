@@ -252,12 +252,139 @@ namespace Awesome.AI.CoreInternals
             {"[0]Chasing fun neglects important life responsibilities.", CONST.sub_roberta[9] },
         };
 
+        public Dictionary<string, string> map_basic = new Dictionary<string, string>()
+        {
+            //love
+            {"[9]Love heals wounds and sparks joy.", CONST.sub_basic[0] },
+            {"[8]It connects souls beyond words spoken.", CONST.sub_basic[0] },
+            {"[7]Love grows stronger through trust shared.", CONST.sub_basic[0] },
+            {"[6]Kindness blooms in love’s gentle care.", CONST.sub_basic[0] },
+            {"[5]Love inspires courage and deep hope.", CONST.sub_basic[0] },
+            {"[4]Heartbreak follows when love fades away.", CONST.sub_basic[0] },
+            {"[3]Jealousy poisons love’s fragile trust.", CONST.sub_basic[0] },
+            {"[2]Unspoken feelings breed silent suffering.", CONST.sub_basic[0] },
+            {"[1]Love lost leaves empty, aching void.", CONST.sub_basic[0] },
+            {"[0]Sometimes love hurts more than heals.", CONST.sub_basic[0] },
+
+            //macho machines
+            {"[9]Macho machines power through toughest tasks.", CONST.sub_basic[1] },
+            {"[8]Built strong, they inspire awe instantly.", CONST.sub_basic[1] },
+            {"[7]Heavy-duty work made efficient and fast.", CONST.sub_basic[1] },
+            {"[6]Machines roar with unstoppable energy inside.", CONST.sub_basic[1] },
+            {"[5]Strength meets precision in every move.", CONST.sub_basic[1] },
+            {"[4]Loud noise disrupts peaceful workspaces often.", CONST.sub_basic[1] },
+            {"[3]Bulky size limits maneuverability sometimes.", CONST.sub_basic[1] },
+            {"[2]Expensive repairs drain valuable company funds.", CONST.sub_basic[1] },
+            {"[1]Overuse causes breakdowns and wasted resources.", CONST.sub_basic[1] },
+            {"[0]Macho machines replace human skill unfairly.", CONST.sub_basic[1] },
+
+            //music
+            {"[9]Music uplifts souls and sparks joy.", CONST.sub_basic[2] },
+            {"[8]It connects hearts across all distances.", CONST.sub_basic[2] },
+            {"[7]Melodies bring comfort on hard days.", CONST.sub_basic[2] },
+            {"[6]Rhythms inspire movement and celebration everywhere.", CONST.sub_basic[2] },
+            {"[5]Songs tell stories that touch deeply.", CONST.sub_basic[2] },
+            {"[4]Overplayed tunes quickly lose their charm.", CONST.sub_basic[2] },
+            {"[3]Noise pollution drowns out peaceful moments.", CONST.sub_basic[2] },
+            {"[2]Bad music ruins the perfect vibe.", CONST.sub_basic[2] },
+            {"[1]Repeating tracks cause listener fatigue fast.", CONST.sub_basic[2] },
+            {"[0]Music sometimes triggers painful memories unexpectedly.", CONST.sub_basic[2] },
+
+            //friends
+            {"[9]Friends brighten life with shared laughter.", CONST.sub_basic[3] },
+            {"[8]They stand by you through everything.", CONST.sub_basic[3] },
+            {"[7]True friends understand without many words.", CONST.sub_basic[3] },
+            {"[6]Friendship grows stronger over time together.", CONST.sub_basic[3] },
+            {"[5]Friends celebrate your successes with joy.", CONST.sub_basic[3] },
+            {"[4]Sometimes friends disappoint or misunderstand deeply.", CONST.sub_basic[3] },
+            {"[3]Distance makes some friendships slowly fade.", CONST.sub_basic[3] },
+            {"[2]Fake friends bring drama and betrayal.", CONST.sub_basic[3] },
+            {"[1]Broken trust shatters even closest bonds.", CONST.sub_basic[3] },
+            {"[0]Loneliness follows when friends disappear suddenly.", CONST.sub_basic[3] },
+
+            //socializing
+            {"[9]Socializing sparks joy and new connections.", CONST.sub_basic[4] },
+            {"[8]Meeting people broadens your world view.", CONST.sub_basic[4] },
+            {"[7]Laughter flows easily in good company.", CONST.sub_basic[4] },
+            {"[6]Conversations deepen understanding and empathy shared.", CONST.sub_basic[4] },
+            {"[5]Networking opens doors to new opportunities.", CONST.sub_basic[4] },
+            {"[4]Sometimes small talk feels awkward and forced.", CONST.sub_basic[4] },
+            {"[3]Crowds can overwhelm and drain energy quickly.", CONST.sub_basic[4] },
+            {"[2]Social anxiety blocks natural communication flow.", CONST.sub_basic[4] },
+            {"[1]False friends complicate genuine social bonds.", CONST.sub_basic[4] },
+            {"[0]Isolation grows when social efforts fail.", CONST.sub_basic[4] },
+
+            //dancing
+            {"[9]Dancing frees the soul and body.", CONST.sub_basic[5] },
+            {"[8]Rhythm connects hearts across all cultures.", CONST.sub_basic[5] },
+            {"[7]Movement expresses what words cannot say.", CONST.sub_basic[5] },
+            {"[6]Dancing brings joy and endless energy.", CONST.sub_basic[5] },
+            {"[5]It builds confidence and physical strength.", CONST.sub_basic[5] },
+            {"[4]Awkward steps sometimes kill the mood.", CONST.sub_basic[5] },
+            {"[3]Fear of judgment stops many trying.", CONST.sub_basic[5] },
+            {"[2]Tired feet end nights too early.", CONST.sub_basic[5] },
+            {"[1]Injuries happen when pushing limits too hard.", CONST.sub_basic[5] },
+            {"[0]Sometimes dancing feels lonely in crowds.", CONST.sub_basic[5] },
+
+            //movies
+            {"[9]Movies inspire dreams and spark imagination.", CONST.sub_basic[6] },
+            {"[8]Stories unfold, touching hearts deeply.", CONST.sub_basic[6] },
+            {"[7]Great films bring people together joyfully.", CONST.sub_basic[6] },
+            {"[6]Cinematography creates stunning visual experiences.", CONST.sub_basic[6] },
+            {"[5]Soundtracks enhance emotions perfectly every time.", CONST.sub_basic[6] },
+            {"[4]Sequels often lack original magic.", CONST.sub_basic[6] },
+            {"[3]Poor scripts ruin otherwise good films.", CONST.sub_basic[6] },
+            {"[2]Overhyped movies disappoint many viewers badly.", CONST.sub_basic[6] },
+            {"[1]Excessive ads spoil movie enjoyment.", CONST.sub_basic[6] },
+            {"[0]Bad acting breaks immersion completely fast.", CONST.sub_basic[6] },
+
+            //hobbys
+            {"[9]Hobbies bring joy and personal growth.", CONST.sub_basic[7] },
+            {"[8]They spark creativity and new skills.", CONST.sub_basic[7] },
+            {"[7]Relaxation flows through favorite pastime moments.", CONST.sub_basic[7] },
+            {"[6]Hobbies connect us with like-minded people.", CONST.sub_basic[7] },
+            {"[5]Passion fuels hours spent doing hobbies.", CONST.sub_basic[7] },
+            {"[4]Sometimes hobbies turn into time traps.", CONST.sub_basic[7] },
+            {"[3]Neglecting responsibilities for hobbies causes stress.", CONST.sub_basic[7] },
+            {"[2]Expensive hobbies drain wallets too quickly.", CONST.sub_basic[7] },
+            {"[1]Frustration builds when progress feels stagnant.", CONST.sub_basic[7] },
+            {"[0]Hobbies become lonely when interest fades.", CONST.sub_basic[7] },
+
+            //the weather
+            {"[9]Sunny skies brighten everyone’s day instantly.", CONST.sub_basic[8] },
+            {"[8]Gentle rain soothes the thirsty earth.", CONST.sub_basic[8] },
+            {"[7]Cool breeze refreshes hot summer afternoons.", CONST.sub_basic[8] },
+            {"[6]Snow blankets the world in silence.", CONST.sub_basic[8] },
+            {"[5]Fog adds mystery to morning walks.", CONST.sub_basic[8] },
+            {"[4]Thunderstorms disrupt plans and power outages.", CONST.sub_basic[8] },
+            {"[3]Heavy rain causes flooding and damage.", CONST.sub_basic[8] },
+            {"[2]Heatwaves drain energy and patience quickly.", CONST.sub_basic[8] },
+            {"[1]Strong winds knock down trees and signs.", CONST.sub_basic[8] },
+            {"[0]Extreme weather devastates homes and lives.", CONST.sub_basic[8] },
+
+            //having fun
+            {"[9]Having fun brightens every dull moment.", CONST.sub_basic[9] },
+            {"[8]Laughter connects hearts and lifts spirits.", CONST.sub_basic[9] },
+            {"[7]Joy comes from simple shared experiences.", CONST.sub_basic[9] },
+            {"[6]Fun fuels creativity and fresh ideas.", CONST.sub_basic[9] },
+            {"[5]Playfulness breaks routine and sparks energy.", CONST.sub_basic[9] },
+            {"[4]Too much fun can cause distraction.", CONST.sub_basic[9] },
+            {"[3]Ignoring duties for fun brings trouble.", CONST.sub_basic[9] },
+            {"[2]Forced fun feels awkward and tiring.", CONST.sub_basic[9] },
+            {"[1]Sometimes fun hides underlying problems deeply.", CONST.sub_basic[9] },
+            {"[0]Chasing fun neglects important life responsibilities.", CONST.sub_basic[9] },
+        };
+
         public string GetDATA(TheMind mind, string idx, string sub)
         {
             /*
              * call LLM here
              * */
-            Dictionary<string, string> arr = mind.mindtype == MINDS.ROBERTA ? map_roberta : map_andrew;
+            Dictionary<string, string> arr = 
+                mind.mindtype == MINDS.ROBERTA ? map_roberta :
+                mind.mindtype == MINDS.ANDREW ? map_andrew :
+                map_basic;
+
             string curr = arr.Where(x => x.Key[..3] == $"[{idx}]" && x.Value == sub).First().Key;
             curr = curr.Trim().ToLower()
                 .Replace(".", "").Replace("?", "")
@@ -313,6 +440,26 @@ namespace Awesome.AI.CoreInternals
             CONST.roberta_s10,//"having fun"
         };
 
+        public List<string> basic1 = new List<string>()
+        {
+            CONST.basic_s1,//"love",
+            CONST.basic_s2,//"macho machines",
+            CONST.basic_s3,//"music",
+            CONST.basic_s4,//"friends",
+            CONST.basic_s5,//"socializing",
+            CONST.basic_s6,//"dancing"
+        };
+
+        //hobbys
+        public List<string> basic2 = new List<string>()
+        {
+            CONST.basic_s6,//"dancing",
+            CONST.basic_s7,//"movies",
+            CONST.basic_s8,//"hobbys",
+            CONST.basic_s9,//"the weather",
+            CONST.basic_s10,//"having fun"
+        };
+
         public List<string> GetHUBS(MINDS mind, string axis)
         {
             /*
@@ -328,6 +475,10 @@ namespace Awesome.AI.CoreInternals
                 case MINDS.ANDREW:
                     if (axis == "socializing") ax = andrew1;
                     if (axis == "hobbys") ax = andrew2;
+                    break;
+                case MINDS.BASIC:
+                    if (axis == "socializing") ax = basic1;
+                    if (axis == "hobbys") ax = basic2;
                     break;
                 default: throw new Exception("Lookup, GetHUB");
             }
@@ -348,10 +499,16 @@ namespace Awesome.AI.CoreInternals
             switch (occu)
             {
                 case "socializing":
-                    res = mindtype == MINDS.ROBERTA ? roberta1 : andrew1;
+                    res = 
+                        mindtype == MINDS.ROBERTA ? roberta1 :
+                        mindtype == MINDS.ANDREW ? andrew1 :
+                        basic1;
                     break;
                 case "hobbys":
-                    res = mindtype == MINDS.ROBERTA ? roberta2 : andrew2;
+                    res = 
+                        mindtype == MINDS.ROBERTA ? roberta2 :
+                        mindtype == MINDS.ANDREW ? andrew2 :
+                        basic2;
                     break;
                 default: throw new Exception("Lookup, GetOCCU 2");
             }

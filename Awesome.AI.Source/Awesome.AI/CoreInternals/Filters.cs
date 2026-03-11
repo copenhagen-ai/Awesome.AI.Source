@@ -15,14 +15,28 @@ namespace Awesome.AI.CoreInternals
             this.mind = mind;
         }
 
+        public bool Quick(UNIT unit)
+        {
+            //return true;
+
+            STATE state = mind.STATE;
+
+            bool res = false;
+
+            if(state == STATE.QUICKDECISION && unit.IsQUICKDECISION())
+                res = true;
+
+            if(state == STATE.JUSTRUNNING)
+                res = true;
+
+            return res;
+        }
+
         public bool LowCut(UNIT unit, string axis)//aka SayNo
         {
             /*
              * Lowcut filter?
              * */
-
-            //if(mind.z_current != "z_noise")
-            //    return true;
 
             if (unit == null)
                 throw new ArgumentNullException();

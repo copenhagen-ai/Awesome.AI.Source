@@ -102,7 +102,7 @@ namespace Awesome.AI.Core.Mechanics
          * */
         public double ApplyStatic(MechParams mp)
         {
-            double Fapplied = mp.Fmax * CONST.BASE_REDUCTION;
+            double Fapplied = mp.Fmax * CONST.BASE_SCALE;
 
             return Fapplied;           
         }

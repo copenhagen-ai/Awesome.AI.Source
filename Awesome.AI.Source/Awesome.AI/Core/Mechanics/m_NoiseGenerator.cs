@@ -73,7 +73,7 @@ namespace Awesome.AI.Core.Mechanics
                     mp.damp = 0.2d;
                     mp.inertia_lim = 0.15d;
                     //mp.acc_max = 5.0d;
-                    mp.m1 = CONST.MAX * CONST.BASE_REDUCTION * 5.0d; //0 - 500
+                    mp.m1 = 500.0d; //0 - 500
                     mp.m2 = 500.0d;// (curr.Variable) * 5.0d; //0 - 500
                     total_mass = mp.m1 + mp.m2;
                     break;
@@ -130,9 +130,10 @@ namespace Awesome.AI.Core.Mechanics
         {
             double delta = mind.mech_high.ms.dv_sym_100;
 
+            double sec = 0.1d;
             double mod = delta > 0.0d ? delta / 100.0d : 1.0d;
 
-            mp.dt = 0.05d * mod;
+            mp.dt = sec * mod;
         }
 
         public double Logic(UNIT curr)
@@ -188,9 +189,10 @@ namespace Awesome.AI.Core.Mechanics
             {
                 case MECHANICS.TUGOFWAR_LOW:
                     // force left
+                    double pedal = CONST.BASE_SCALE;
                     double acc = mp.dv_curr == 0.0d ? 0.1d : mp.dv_curr / mp.dt;
                     double Fapplied = mp.m1 * acc;
-                    return -(mp.damp * Fapplied);
+                    return -(pedal * mp.damp * Fapplied);
                 case MECHANICS.BALLONHILL_LOW:
                     //slope force
                     double slope = 2 * mp.a * mp.pos_x; // Slope dy/dx
@@ -206,8 +208,8 @@ namespace Awesome.AI.Core.Mechanics
             switch (type)
             {
                 case MECHANICS.TUGOFWAR_LOW:
-                    double pedal = Logic(curr);
                     //force right
+                    double pedal = Logic(curr);
                     double acc = mp.dv_curr == 0.0d ? 0.1d : mp.dv_curr / mp.dt;
                     double Fapplied = mp.m2 * acc;            
                     return pedal * mp.damp * Fapplied;

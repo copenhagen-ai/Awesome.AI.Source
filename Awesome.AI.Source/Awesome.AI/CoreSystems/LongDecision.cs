@@ -117,7 +117,7 @@ namespace Awesome.AI.CoreSystems
                 State[type] = 1;
         }
 
-        double thres { get { switch (mind.mindtype) { case MINDS.ROBERTA: return 23.0d; case MINDS.ANDREW: return 40; default: throw new Exception(); } } }
+        double thres { get { switch (mind.mindtype) { case MINDS.ROBERTA: return 23.0d; case MINDS.ANDREW: return 40; case MINDS.BASIC: return 40; default: throw new Exception(); } } }
         
         private void SetAction(TheMind mind, LONGTYPE type)
         {

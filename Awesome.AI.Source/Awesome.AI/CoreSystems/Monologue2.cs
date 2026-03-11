@@ -95,7 +95,11 @@ namespace Awesome.AI.CoreSystems
                 //if (!CONST.SAMPLE20.RandomSample(mind))
                 //    return;
 
-                string _base = mind.mindtype == MINDS.ROBERTA ? "base" : "base";
+                string _base = 
+                    mind.mindtype == MINDS.ROBERTA ? "base" :
+                    mind.mindtype == MINDS.ANDREW ? "base" :
+                    "base";
+
                 mt = mind.mindtype;
                 sub = mind.hub.GetSubject(mind.unit_actual) ?? "";
                 idx = $"{Index(mind.mech_high.mp.props.PropsOut[_base])}";
@@ -111,7 +115,7 @@ namespace Awesome.AI.CoreSystems
                 if (CONST.DECI_SUBJECT_CONTAINS(sub))
                     return;
 
-                curr = mind.mindtype == MINDS.ROBERTA ? mind.word.Generate(idx, sub) : mind.word.Generate(idx, sub);
+                curr = mind.word.Generate(idx, sub);
                 curr = curr.Trim().ToLower()
                     .Replace(".", "").Replace("?", "")
                     .Replace("[9]", "").Replace("[8]", "")

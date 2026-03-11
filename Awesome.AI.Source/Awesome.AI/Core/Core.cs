@@ -74,7 +74,11 @@ namespace Awesome.AI.Core
         {
             try
             {
-                double _e = pos;
+                double adder = 0;
+                if (!mind.goodbye)
+                    adder = 0.9d;
+
+                double _e = pos + adder;
 
                 pain = mind.calc.Reciprocal(_e);
 

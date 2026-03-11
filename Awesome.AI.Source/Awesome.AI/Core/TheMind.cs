@@ -1,5 +1,6 @@
 ﻿using Awesome.AI.Awesome.AI.Core;
 using Awesome.AI.Common;
+using Awesome.AI.Core.Electrical;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
@@ -70,7 +71,22 @@ namespace Awesome.AI.Core
         public int cycles_all = 0;
         public double user_var = 0.0d;
 
-        public STATE STATE { get; set; } = STATE.JUSTRUNNING;
+        public STATE _s { get; set; } = STATE.JUSTRUNNING;
+        public STATE _s_tmp { get; set; }
+        public STATE STATE 
+        {
+            get 
+            {
+                if (_pro)
+                    _s = _s_tmp;
+
+                return _s;
+            }
+            set 
+            {
+                _s_tmp = value;
+            } 
+        }
         
         public UNIT unit_current { get; set; }
         public UNIT unit_actual { get; set; }
@@ -140,6 +156,8 @@ namespace Awesome.AI.Core
                         unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_fembots1").First();
                     if (mindtype == MINDS.ROBERTA)
                         unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_macho machines1").First();
+                    if (mindtype == MINDS.BASIC)
+                        unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_macho machines1").First();
                 }
 
                 Pre("z_noise", true);
@@ -150,7 +168,6 @@ namespace Awesome.AI.Core
                 ok = true;
                 do_process = false;
             
-                ProcessPass();
                         
                 //Lists();
             }
@@ -188,30 +205,40 @@ namespace Awesome.AI.Core
         //    ;
         //}
 
-        public async void Run()
+        public async Task Run()
         {
-            bool use_timer = CONST.AGENT_USE_TIMER;
-
-            if (use_timer)
+            try
             {
-                // Instantiate new MicroTimer and add event handler
-                this.microTimer.MicroTimerElapsed += new MicroTimerElapsedEventHandler(this.Cycle);
-                this.microTimer.Interval = Variables.CONST.AGENT_MICRO_SEC; // Call micro timer every 1000µs (1ms)
-                this.microTimer.Enabled = true; // Start timer
+                ProcessPass();
 
-                // Can choose to ignore event if late by Xµs (by default will try to catch up)
-                //microTimer.IgnoreEventIfLateBy = 500; // 500µs (0.5ms)
+                bool use_timer = CONST.AGENT_USE_TIMER;
+
+                if (use_timer)
+                {
+                    // Instantiate new MicroTimer and add event handler
+                    this.microTimer.MicroTimerElapsed += new MicroTimerElapsedEventHandler(this.Cycle);
+                    this.microTimer.Interval = Variables.CONST.AGENT_MICRO_SEC; // Call micro timer every 1000µs (1ms)
+                    this.microTimer.Enabled = true; // Start timer
+
+                    // Can choose to ignore event if late by Xµs (by default will try to catch up)
+                    //microTimer.IgnoreEventIfLateBy = 500; // 500µs (0.5ms)
+                }
+
+                while (ok)
+                {
+                    if (!use_timer)
+                        Cycle();
+
+                    await Task.Delay(CONST.AGENT_DELAY_MS);
+                }
             }
-
-            while (ok)
+            catch (Exception ex)
             {
-                if (!use_timer)
-                    Cycle();
-
-                await Task.Delay(CONST.AGENT_DELAY_MS);
+                throw;
             }
         }
 
+        private bool _pro { get; set; }
         public void Cycle(object sender, MicroTimerEventArgs timerEventArgs) => Cycle();
         public void Cycle()
         {
@@ -226,7 +253,7 @@ namespace Awesome.AI.Core
                 if (do_process)
                     epochs++;
 
-                bool _pro = do_process;
+                _pro = do_process;
                 do_process = false;
 
                 if (this.Roberta())

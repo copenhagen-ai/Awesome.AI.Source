@@ -11,7 +11,7 @@ namespace Awesome.AI.Core.Spaces
         private UnitSpaceSoup() { }
         public UnitSpaceSoup(TheMind mind)
         {
-            this.mind = mind;            
+            this.mind = mind;
 
             PROPS props = mind.mech_high.type == MECHANICS.TUGOFWAR_HIGH ?
                 PROPS.COMMUNICATION : PROPS.BRAINWAVE;
@@ -29,7 +29,7 @@ namespace Awesome.AI.Core.Spaces
         //each axis should run its own mechanics - update function
         // comm, andrew { "will", "opinion", "temporality", "abstraction" };
         // brain, roberta { "will", "attention", "readiness" };
-        public string[] axis { get; set; }        
+        public string[] axis { get; set; }
         public int Counter {  get; set; }
         private Dictionary<string, double> prev_dir { get; set; }
 
@@ -64,7 +64,7 @@ namespace Awesome.AI.Core.Spaces
                 case CONST.axis_2_brain: return mind.mech_high.mp.props.Dir(CONST.axis_2_brain);
                 case CONST.axis_2_comm: return mind.mech_high.mp.props.Dir(CONST.axis_2_comm);
                 default: throw new Exception("UnitSpaceSoup, Direction");
-            }            
+            }
         }
         
         public void CurrentUnit()
@@ -77,11 +77,6 @@ namespace Awesome.AI.Core.Spaces
             //    return;
 
             UNIT _u = mind.unit_current;
-
-            /*
-             * with more HUBS and UNITS added, this buffer wil be used less often
-             * */
-
             UNIT res;
 
             if (_u.IsIDLE())
@@ -100,14 +95,9 @@ namespace Awesome.AI.Core.Spaces
             List<UNIT> units = mind.access.UNITS_VAL();
 
             units = units.Where(x =>
-                   //   mind.filters.Direction(x) //comment to turn off
-                   mind.filters.LowCut(x, "will")          //comment to turn off
-                && mind.filters.Credits(x, "will")         //comment to turn off
-                                                   //   mind.filters.UnitIsValid(x)   //comment to turn off
-                                                   //&& mind.filters.Theme(x)         //comment to turn off
-                                                   //&& Filters.Elastic2(dir)         //comment to turn off
-                                                   //&& Filters.Ideal(x)              //comment to turn off
-                                                   //&& Filters.Neighbor(x)
+                   mind.filters.Quick(x)                    //comment to turn off
+                && mind.filters.LowCut(x, "will")           //comment to turn off
+                && mind.filters.Credits(x, "will")          //comment to turn off
                 ).ToList();
 
             if (units is null)
@@ -161,12 +151,12 @@ namespace Awesome.AI.Core.Spaces
             }
 
             if (nearest_unit == null)
-                throw new Exception("UnitSpaceSoup, Jump");
+                return UNIT.CreateIdle(mind);
 
             GPTVector2D v_near = new GPTVector2D(near[0], near[1], null, null);
             double dist = Math.Abs(min_distance);
 
-            nearest_unit.Update(v_near, dist);
+            nearest_unit.Update(v_near/*, dist*/);
 
             return nearest_unit;
         }
@@ -216,15 +206,16 @@ namespace Awesome.AI.Core.Spaces
         private UNIT Buffer()
         {
             /*
-             * not sure if the buffer should be here(because of the random in topic an here)
-             * but maybe it wont have such a big part later on, when more HUBS and UNITS are added
+             * with more HUBS and UNITS added, this buffer wil be used less often
              * */
 
-            List<UNIT> units = mind.access.UNITS_VAL().Where(x =>
-                                   //mind.filters.UnitIsValid(x) 
-                                   mind.filters.Credits(x, "will")
-                                && mind.filters.LowCut(x, "will")
-                                ).OrderByDescending(x => x.Variable).ToList();
+            List<UNIT> units = mind.access.UNITS_ALL();
+            units = units.Where(x =>
+                    //mind.filters.UnitIsValid(x) 
+                       mind.filters.Quick(x)
+                    && mind.filters.Credits(x, "will")
+                    && mind.filters.LowCut(x, "will")
+                    ).OrderByDescending(x => x.Variable).ToList();
 
             int rand = mind.rand.MyRandomInt(1, units.Count - 1)[0];
             UNIT _u = units.Any() ? units[rand] : UNIT.CreateIdle(mind);

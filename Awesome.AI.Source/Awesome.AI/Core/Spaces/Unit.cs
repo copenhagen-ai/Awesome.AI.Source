@@ -195,7 +195,7 @@ namespace Awesome.AI.Core.Spaces
         }
 
         private int _do { get; set; }
-        public void Update(GPTVector2D v_near, double dist)
+        public void Update(GPTVector2D v_near/*, double dist*/)
         {
             //if (mind.cycles_all < CONST.FIRST_RUN + 1)
             //    return;
@@ -204,7 +204,7 @@ namespace Awesome.AI.Core.Spaces
             UpdateREW();
             UpdateAFF();
             UpdateHUB();
-            UpdateUNT(v_near, dist);
+            UpdateUNT(v_near/*, dist*/);
 
             _do++;
             if (_do > 100)
@@ -274,8 +274,8 @@ namespace Awesome.AI.Core.Spaces
                     rem.Add(unit);
             }
 
-            //foreach (UNIT unit in rem)
-            //    mind.access.UNITS_REM(unit);
+            foreach (UNIT unit in rem)
+                mind.access.UNITS_REM(unit);
         }
 
         private void UpdateAFF()
@@ -335,7 +335,7 @@ namespace Awesome.AI.Core.Spaces
             mind.hub.AdjustWeights(sub, effective_gamma * 0.1d);
         }
 
-        private void UpdateUNT(GPTVector2D v_near, double dist)
+        private void UpdateUNT(GPTVector2D v_near/*, double dist*/)
         {
             /*
              * it is difficult determinating if the does as supposed, but the logic seems correct
@@ -344,32 +344,33 @@ namespace Awesome.AI.Core.Spaces
             if (mind.z_current != "z_noise")
                 return;
 
-            if (!CONST.ACTIVATOR.RandomSample(mind))
-                return;
+            //if (!CONST.ACTIVATOR.RandomSample(mind))
+            //    return;
 
             //return;
 
-            int axis_count = mind.soup.axis.Length;
             
-            if (Add2D(v_near, dist, axis_count))
+            if (Add2D(v_near/*, dist, axis_count*/))
                 return;
 
             //Remove(near);
 
             foreach (var ax in mind.soup.axis)
-                Adjust(ax, dist);
+                Adjust(ax/*, dist*/);
         }
 
-        private bool Add2D(GPTVector2D v_near, double dist, int axis_count)
+        private bool Add2D(GPTVector2D v_near/*, double dist, int axis_count*/)
         {
+            int axis_count = mind.soup.axis.Length;
             int count = mind.hub.GetUnits().Count;
 
-            double total_area = 100.0 * 100.0;
-            double avg_area = total_area / count;
+            //double avg_area = (100.0 * 100.0) / count;
+            //double avg_radius = Math.Sqrt(avg_area / Math.PI);
 
-            double avg_radius = Math.Sqrt(avg_area / Math.PI);
+            //if (dist < avg_radius)
+            //    return false;
 
-            if (dist < avg_radius)
+            if (count > CONST.MAX_UNITS)
                 return false;
 
             double[] xx = [-1d, -1d];
@@ -407,10 +408,10 @@ namespace Awesome.AI.Core.Spaces
             return true;
         }
                 
-        private void Adjust(string ax, double dist)
+        private void Adjust(string ax/*, double dist*/)
         {
-            if (ax == "will" && dist < CONST.ALPHA)
-                return;
+            //if (ax == "will" && dist < CONST.ALPHA)
+            //    return;
 
             double dir = 0.0d;
             double rnd = mind.rand.MyRandomDouble(10)[5];
