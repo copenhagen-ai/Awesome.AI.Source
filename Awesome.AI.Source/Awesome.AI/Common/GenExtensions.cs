@@ -7,25 +7,6 @@ namespace Awesome.AI.Common
 {
     public static class GenExtensions
     {
-        public static void BusyWaitOut(this string txt, int count)
-        {
-            //because i dont want to implement async
-            for (int i = 0; i < count; i++)
-                Console.WriteLine(txt);
-        }
-
-        public static void BusyWaitXml(this string txt, int count, int clear)
-        {
-            //because i dont want to implement async
-            DateTime now = DateTime.Now;
-
-            if (clear % 5 == 0)
-                XmlHelper.ClearHello(now);
-
-            for (int i = 0; i < count; i++)
-                XmlHelper.WriteHello(txt, now);
-        }
-
         public static bool RandomSample(this int count, TheMind mind)
         {
             //this is a replacement, for just performing task when (mind)do_process

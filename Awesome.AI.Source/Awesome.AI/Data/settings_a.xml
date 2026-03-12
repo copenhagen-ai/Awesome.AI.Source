@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <out>
-    <hello name="HELLO">
-      <world name="hello world!" date="21/02/2026 22.53.35" />
-      <world name="hello world!" date="21/02/2026 22.53.35" />
-    </hello>
-  </out>
-</root>

@@ -1,6 +1,4 @@
-﻿using Awesome.AI.Access;
-using System.Reflection;
-using static Awesome.AI.Variables.Enums;
+﻿using System.Reflection;
 
 namespace Awesome.AI.Common
 {
@@ -24,33 +22,6 @@ namespace Awesome.AI.Common
 
                 return rootPath;
             }
-        }
-
-        public static string Path(MINDS mindtype)
-        {
-            string root = Root;
-
-            string setting = 
-                mindtype == MINDS.ROBERTA ? "roberta" :
-                mindtype == MINDS.ANDREW ? "andrew" :
-                "basic";
-
-            string path = root + "Awesome.AI\\Data\\setup_" + setting + ".xml";
-
-            return path;
-        }
-
-        public static string PathSetting(MINDS mindtype)
-        {
-            string root = Root;
-            string setting = 
-                mindtype == MINDS.ROBERTA ? "_r" :
-                mindtype == MINDS.ANDREW ? "_a" :
-                "";
-            string data = GenHelper.IsDebug() ? "Data" : "DataFiles";
-            string path = root + data + "\\settings" + setting + ".xml";
-
-            return path;
         }
     }
 }

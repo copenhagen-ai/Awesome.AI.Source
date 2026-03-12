@@ -12,5 +12,19 @@
 #endif
             return debug;
         }
+
+        public static void BusyWait1(string txt, int count)
+        {
+            //because i dont want to implement async
+            for (int i = 0; i < count; i++)
+                Console.WriteLine(txt);
+        }
+
+        public static void BusyWait2(string txt, int count)
+        {
+            //because i dont want to implement async
+            for (int i = 0; i < count; i++)
+                Thread.Sleep(10);
+        }
     }
 }

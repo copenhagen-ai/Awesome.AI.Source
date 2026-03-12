@@ -154,10 +154,10 @@ namespace Awesome.AI.Core.Spaces
         {
             //make sure some time has gone before creating a new unit
             if (mind.environment == ENV.SERVER)
-                "hello world!".BusyWaitOut(10);
+                GenHelper.BusyWait1("hello world!", 10);
 
             if (mind.environment == ENV.LOCAL)
-                "hello world!".BusyWaitXml(2, mind.epochs);
+                GenHelper.BusyWait2("hello world!", 1);
 
             DateTime create = DateTime.Now;
             Random rand = new Random();
