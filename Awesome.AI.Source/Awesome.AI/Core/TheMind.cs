@@ -308,11 +308,8 @@ namespace Awesome.AI.Core
 
         private void Post(bool _pro)
         {
-            if (z_current == "z_noise")
-                o_vars.SetNoise();
-
             if (z_current == "z_mech")
-                o_vars.SetMech();
+                o_vars.SetOut();
 
             if (z_current == "z_mech")
                 json = o_json.GetJson(_pro);

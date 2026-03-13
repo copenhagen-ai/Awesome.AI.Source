@@ -56,7 +56,7 @@ namespace Awesome.AI.Common
         private string[] gimmick = { "[.??]", "[??.]" };
         private int count = 0;
 
-        public void SetNoise()
+        public void SetOut()
         {
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
@@ -64,14 +64,19 @@ namespace Awesome.AI.Common
             if (count > 1)
                 count = 0;
 
+            /*
+             * LOW
+             * */
+
+            error = mind.down.Error;
+            norm_noise = mind.mech_noise.ms.vv_sym_90;
+
             go_down = $"{(mind.down.Dir > 0.0d ? "NO" : "YES")}";
             ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
-            error = mind.down.Error;
             vv_curr = $"{mind.mech_noise.ms.dv_sym_curr.ToString("E3")}";
-            norm_noise = mind.mech_noise.ms.vv_sym_90;
-            actual_us_x = ("" + mind.unit_actual.GetUI("will"));
-            actual_us_y = ("" + mind.unit_actual.GetUI("attention"));
+            actual_us_x = $"{mind.unit_actual.GetUI("will")}";
+            actual_us_y = $"{mind.unit_actual.GetUI("attention")}";
 
             int n_units = mind.access.UNITS_ALL().Count;
             double a_area = (100.0 * 100.0) / n_units;
@@ -80,49 +85,38 @@ namespace Awesome.AI.Common
             num_units = "" + n_units;
             avg_area = "" + a_area;
             avg_radius = "" + a_radius;
-        }
 
-        public void SetMech()
-        {
-            if (count > 1)
-                count = 0;
-
+            /*
+             * HIGH
+             * */
+        
             ok = mind.ok;
+            norm_mood = mind.mood.p_90;
             
-            cycles = $"{mind.cycles}";
-            
-            cycles_total = $"{mind.cycles_all}";
-            
+            cycles = $"{mind.cycles}";            
+            cycles_total = $"{mind.cycles_all}";            
             dv_curr = $"{mind.mech_high.ms.dv_sym_curr.ToString("E3")}";
-
-            user_var = $"{mind.user_var}";
-            
-            position = $"{mind.mech_high.POS_XY}";
-            
-            epochs = $"{mind.epochs}";
-            
+            user_var = $"{mind.user_var}";            
+            position = $"{mind.mech_high.POS_XY}";            
+            epochs = $"{mind.epochs}";            
             runtime = $"{CONST.RUNTIME}";
 
-            whistle = mind._quick.Result ? "[Whistling to my self..]" : gimmick[count];
-
-            norm_mood = mind.mood.p_90;
-
-            common_hub_subject = mind.hub.GetSubject(mind.unit_actual) ?? "";
+            whistle = $"{(mind._quick.Result ? "[Whistling to my self..]" : "{gimmick[count]")}";
+            common_hub_subject = $"{(mind.hub.GetSubject(mind.unit_actual) ?? "")}";
 
             occu = $"{mind._internal.Occu.name}";
             location = $"{mind._long.Result[LONGTYPE.LOCATION]}";
-            loc_state = mind._long.State[LONGTYPE.LOCATION] > 0 ? "making a decision" : "just thinking";
+            loc_state = $"{(mind._long.State[LONGTYPE.LOCATION] > 0 ? "making a decision" : "just thinking")}";
 
-            mood = mind.bot.pattern.ToString();
+            mood = $"{mind.bot.pattern.ToString()}";
             mood_ok = mind.mood.ResColor == PATTERNCOLOR.GREEN;
 
-            monologue_det_result = mind.mono1.Result;
-            monologue_det_subject = mind.mono1.Subject;
-            monologue_det_relevance = mind.mono1.Relevance;
-
-            monologue_lat_result = mind.mono2.Result;
-            monologue_lat_subject = mind.mono2.Subject;
-            monologue_lat_relevance = mind.mono2.Relevance;
+            monologue_det_result = $"{mind.mono1.Result}";
+            monologue_det_subject = $"{mind.mono1.Subject}";
+            monologue_det_relevance = $"{mind.mono1.Relevance}";
+            monologue_lat_result = $"{mind.mono2.Result}";
+            monologue_lat_subject = $"{mind.mono2.Subject}";
+            monologue_lat_relevance = $"{mind.mono2.Relevance}";
 
             string _base = 
                 mind.mindtype == MINDS.ROBERTA ? "base" :
