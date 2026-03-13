@@ -63,52 +63,50 @@ namespace Awesome.AI.Core.Mechanics
 
         public void Calc(UNIT curr, bool peek, int cycles)
         {
+            //F=m*a
+            //a=dv/dt
+            //F=(m*dv)/dt
+            //F*dt=m*dv
+            //dv=(F*dt)/m
+                       
+            //momentum: p = m * v
+
             DeltaTime();
-                        
-            double total_mass = 0.0d;
 
             switch (type)
             {
                 case MECHANICS.TUGOFWAR_LOW:
                     mp.damp = 0.2d;
                     mp.inertia_lim = 0.15d;
-                    //mp.acc_max = 5.0d;
-                    mp.m1 = 500.0d; //0 - 500
-                    mp.m2 = 500.0d;// (curr.Variable) * 5.0d; //0 - 500
-                    total_mass = mp.m1 + mp.m2;
+                    mp.m1 = 500.0d;
+                    mp.m2 = 500.0d;
                     break;
                 case MECHANICS.BALLONHILL_LOW:
                     mp.damp = 1.0d;
                     mp.inertia_lim = 0.15d;
-                    mp.a = 0.1d;// Parabola coefficient (hill steepness)
-                    mp.g = CONST.GRAVITY;// Gravity (m/s^2)
-                    mp.m1 = 0.35d;// Ball mass (kg)
-                    total_mass = mp.m1;
+                    mp.a = 0.1d;            // Parabola coefficient (hill steepness)
+                    mp.g = CONST.GRAVITY;   // Gravity (m/s^2)
+                    mp.m1 = 0.35d;          // Ball mass (kg)
                     break;
                 default: throw new Exception("m_NoiseGenerator, Calc");
             }
 
-            mp.f_sta = ApplyStatic(mp, this.type);
-            mp.f_dyn = ApplyDynamic(mp, this.type, curr);
+            double fnet_prev = mp.fnet_curr;
+            double acc = fnet_prev / (mp.m1 + mp.m2);
+
+            mp.f_sta = ApplyStatic(acc, mp, this.type);
+            mp.f_dyn = ApplyDynamic(acc, mp, this.type, curr);
             mp.f_friction = Friction(mp, type);
 
-            double f_net = mp.f_sta + mp.f_dyn + mp.f_friction;
-
-            //F=m*a
-            //a=dv/dt
-            //F=(m*dv)/dt
-            //F*dt=m*dv
-            //dv=(F*dt)/m
-                        
-            double a_system = f_net / total_mass;
-            double dv = a_system * mp.dt;
+            mp.fnet_curr = mp.f_sta + mp.f_dyn + mp.f_friction;
             
-            //momentum: p = m * v
+            double dv_curr = acc * mp.dt;
+
             if (peek) {
-                mp.peek_velocity = mp.vv_prev + /*total_mass + */dv;            
+                mp.peek_velocity = mp.vv_prev + dv_curr;
             } else {
                 mp.dv_prev = mp.dv_curr;
-                mp.dv_curr = /*total_mass */dv;
+                mp.dv_curr = dv_curr;
                 mp.vv_prev = mp.vv_curr;
                 mp.vv_curr += mp.dv_curr;
 
@@ -116,14 +114,10 @@ namespace Awesome.AI.Core.Mechanics
                 mp.pos_x += mp.vv_curr * mp.dt;
             }
 
-            if (double.IsNaN(mp.dv_prev))
-                throw new Exception("NAN");
-            if (double.IsNaN(mp.dv_curr))
-                throw new Exception("NAN");
-            if (double.IsNaN(mp.vv_prev))
-                throw new Exception("NAN");
-            if (double.IsNaN(mp.vv_curr))
-                throw new Exception("NAN");
+            if (double.IsNaN(mp.dv_prev)) throw new Exception("NAN");
+            if (double.IsNaN(mp.dv_curr)) throw new Exception("NAN");
+            if (double.IsNaN(mp.vv_prev)) throw new Exception("NAN");
+            if (double.IsNaN(mp.vv_curr)) throw new Exception("NAN");
         }
 
         public void DeltaTime()
@@ -147,17 +141,15 @@ namespace Awesome.AI.Core.Mechanics
             {
                 case MECHANICS.TUGOFWAR_LOW:
                     double _v = curr.Variable;
-                    double pedal_push = mp.dv_curr < 0.0 ? (_v) : (_v * 0.5d);
-                    res = pedal_push / 100.0d;
+                    double motor = mp.vv_curr < 0.0 ? (_v) / 100.0d : (_v * 0.5d) / 100.0d;
+                    res = motor;
                     break;
                 case MECHANICS.BALLONHILL_LOW:
                     double windAccel = mind.unit_current.Variable * 0.2d; // constant wind acceleration
                     res = windAccel;
                     break;
                 default: throw new Exception("m_NoiseGenerator, Friction");
-            }
-
-            //res = 1.0d;
+            }           
 
             return res;
         }
@@ -183,16 +175,18 @@ namespace Awesome.AI.Core.Mechanics
             return f_friction;
         }
 
-        public double ApplyStatic(MechParams mp, MECHANICS type)
+        public double ApplyStatic(double acc, MechParams mp, MECHANICS type)
         {
+            if (acc == 0.0d)
+                acc = 0.1d;
+
             switch (type)
             {
                 case MECHANICS.TUGOFWAR_LOW:
                     // force left
-                    double pedal = CONST.BASE_SCALE;
-                    double acc = mp.dv_curr == 0.0d ? 0.1d : mp.dv_curr / mp.dt;
+                    double motor = CONST.BASE_SCALE;
                     double Fapplied = mp.m1 * acc;
-                    return -(pedal * mp.damp * Fapplied);
+                    return -(motor * mp.damp * Fapplied);
                 case MECHANICS.BALLONHILL_LOW:
                     //slope force
                     double slope = 2 * mp.a * mp.pos_x; // Slope dy/dx
@@ -203,19 +197,21 @@ namespace Awesome.AI.Core.Mechanics
             }
         }
 
-        public double ApplyDynamic(MechParams mp, MECHANICS type, UNIT curr)
+        public double ApplyDynamic(double acc, MechParams mp, MECHANICS type, UNIT curr)
         {
+            if (acc == 0.0d)
+                acc = 0.1d;
+
             switch (type)
             {
                 case MECHANICS.TUGOFWAR_LOW:
                     //force right
-                    double pedal = Logic(curr);
-                    double acc = mp.dv_curr == 0.0d ? 0.1d : mp.dv_curr / mp.dt;
+                    double motor = Logic(curr);                    
                     double Fapplied = mp.m2 * acc;            
-                    return pedal * mp.damp * Fapplied;
+                    return motor * mp.damp * Fapplied;
                 case MECHANICS.BALLONHILL_LOW:
                     //wind force
-                    double windAccel = Logic(curr);// mind.unit_current.Variable * 0.2d; // constant wind acceleration
+                    double windAccel = Logic(curr);
                     double windforce = mp.m1 * windAccel;
                     return mp.damp * windforce;
                 default: throw new Exception("m_NoiseGenerator, ApplyDynamic");

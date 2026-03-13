@@ -34,6 +34,7 @@ namespace Awesome.AI.Core.Mechanics
         public double vv_prev { get; set; }
         public double dv_curr { get; set; }
         public double dv_prev { get; set; }
+        public double fnet_curr { get; set; }
         //public double mo_curr { get; set; }
         //public double mo_prev { get; set; }
         public double vv_out_high_peek { get; set; }
