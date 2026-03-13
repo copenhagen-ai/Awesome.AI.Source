@@ -153,11 +153,7 @@ namespace Awesome.AI.Core.Spaces
         public static UNIT Create(TheMind mind, string h_guid, double[] index, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
         {
             //make sure some time has gone before creating a new unit
-            if (mind.environment == ENV.SERVER)
-                GenHelper.BusyWait1("hello world!", 10);
-
-            if (mind.environment == ENV.LOCAL)
-                GenHelper.BusyWait2("hello world!", 1);
+            "hello world!".BusyWait(1, mind);
 
             DateTime create = DateTime.Now;
             Random rand = new Random();

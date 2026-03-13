@@ -7,6 +7,16 @@ namespace Awesome.AI.Common
 {
     public static class GenExtensions
     {
+        public static void BusyWait(this string txt, int count, TheMind mind)
+        {
+            if (mind.epochs > CONST.FIRST_RUN * 3)
+                Console.WriteLine(txt);
+
+            //because i dont want to implement async
+            for (int i = 0; i < count; i++)
+                Thread.Sleep(10);
+        }
+
         public static bool RandomSample(this int count, TheMind mind)
         {
             //this is a replacement, for just performing task when (mind)do_process
