@@ -5,11 +5,11 @@ namespace Awesome.AI.Common
 {
     public class JsonObject
     {
-        public bool ok { get; set; }
+        public string ok { get; set; }
         public string cycles { get; set; }
         public string cycles_total { get; set; }
-        public string vv_curr { get; set; }
-        public string dv_curr { get; set; }
+        public string vv_low_curr { get; set; }
+        public string dv_high_curr { get; set; }
 
         public string user_var { get; set; }
         public string position { get; set; }
@@ -30,13 +30,13 @@ namespace Awesome.AI.Common
         public string monologue_lat_result { get; set; }
         public string monologue_lat_subject { get; set; }
         public string monologue_lat_relevance { get; set; }
-        public string mood { get; set; }
-        public bool mood_ok { get; set; }
-        public double norm_mood { get; set; }
-        public double norm_noise { get; set; }
-        public double prop_mood { get; set; }
+        public string mood_pattern { get; set; }
+        public string mood_green { get; set; }
+        public string mood_norm { get; set; }
+        public string noise_norm { get; set; }
+        public string prop_mood { get; set; }
 
-        public int error { get; set; }
+        public string error { get; set; }
 
         public string common_hub_subject { get; set; }        
     }
@@ -62,8 +62,8 @@ namespace Awesome.AI.Common
             obj.ok = mind.o_vars.ok;
             obj.cycles = mind.o_vars.cycles;
             obj.cycles_total = mind.o_vars.cycles_total;
-            obj.vv_curr = mind.o_vars.vv_curr;
-            obj.dv_curr = mind.o_vars.dv_curr;
+            obj.vv_low_curr = mind.o_vars.vv_low_curr;
+            obj.dv_high_curr = mind.o_vars.dv_high_curr;
             obj.user_var = mind.o_vars.user_var;
             obj.position = mind.o_vars.position;
             obj.ratio_yes_n = mind.o_vars.ratio_yes_n;
@@ -83,10 +83,10 @@ namespace Awesome.AI.Common
             obj.monologue_lat_result = mind.o_vars.monologue_lat_result;
             obj.monologue_lat_subject = mind.o_vars.monologue_lat_subject;
             obj.monologue_lat_relevance = mind.o_vars.monologue_lat_relevance;
-            obj.mood = mind.o_vars.mood;
-            obj.mood_ok = mind.o_vars.mood_ok;
-            obj.norm_mood = mind.o_vars.norm_mood;
-            obj.norm_noise = mind.o_vars.norm_noise;
+            obj.mood_pattern = mind.o_vars.mood_pattern;
+            obj.mood_green = mind.o_vars.mood_green;
+            obj.mood_norm = mind.o_vars.mood_norm;
+            obj.noise_norm = mind.o_vars.noise_norm;
             obj.prop_mood = mind.o_vars.prop_mood;
             obj.error = mind.o_vars.error;
             obj.common_hub_subject = mind.o_vars.common_hub_subject;            

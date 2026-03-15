@@ -66,7 +66,16 @@ namespace Awesome.AI.Core.Mechanics
         {
             throw new NotImplementedException();
         }
-                
+
+        public double Dir(bool _pro)
+        {
+            double dv = ms.dv_sym_100;
+
+            double dir = dv > 50.0d ? 1.0d : -1.0d;
+
+            return dir;
+        }
+
         private void Calc(PATTERN pattern, int cycles)
         {
             double t = cycles * mp.dt;

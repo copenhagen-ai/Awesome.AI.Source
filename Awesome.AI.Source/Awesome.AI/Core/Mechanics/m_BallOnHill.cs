@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Awesome.AI.Core;
+using Awesome.AI.Common;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
@@ -61,7 +62,16 @@ namespace Awesome.AI.Core.Mechanics
         {
             throw new NotImplementedException();
         }
-        
+
+        public double Dir(bool _pro)
+        {
+            double vv = ms.vv_sym_100;
+
+            double dir = vv > 50.0d ? 1.0d : -1.0d;
+
+            return dir;
+        }
+
         private void Calc(int cycles)
         {
             double t = cycles * mp.dt;

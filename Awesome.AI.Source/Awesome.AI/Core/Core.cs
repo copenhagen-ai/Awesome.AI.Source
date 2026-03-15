@@ -54,7 +54,7 @@ namespace Awesome.AI.Core
                 return true;
 
             bool ok;
-            switch (mind._mech_type)
+            switch (mind.bot.mech_high)
             {
                 case MECHANICS.TUGOFWAR_HIGH: 
                     ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);
@@ -127,7 +127,7 @@ namespace Awesome.AI.Core
 
             for (int i = 0; i <= 20; i++)
             {
-                if ((mind.epochs - i) == (60 * CONST.RUNTIME))
+                if ((mind.epochs - i) == (60 * mind.bot.RUNTIME))
                     mind.theanswer.Data = "It does not";
             }
             

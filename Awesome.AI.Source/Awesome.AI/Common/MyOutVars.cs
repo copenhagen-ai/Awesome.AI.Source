@@ -13,17 +13,16 @@ namespace Awesome.AI.Common
             this.mind = mind;
         }
 
-        public bool ok {  get; set; }
+        public string ok {  get; set; }
         public string cycles { get; set; }
         public string cycles_total { get; set; }
-        public string vv_curr { get; set; }
-        public string dv_curr { get; set; }
+        public string vv_low_curr { get; set; }
+        public string dv_high_curr { get; set; }
         public string actual_us_x { get; set; }
         public string actual_us_y { get; set; }
         public string num_units { get; set; }
         public string avg_area { get; set; }
         public string avg_radius { get; set; }
-
         public string user_var { get; set; }
         public string position { get; set; }
         public string ratio_yes_n { get; set; }
@@ -43,13 +42,13 @@ namespace Awesome.AI.Common
         public string monologue_lat_result { get; set; }
         public string monologue_lat_subject { get; set; }
         public string monologue_lat_relevance { get; set; }
-        public string mood {  get; set; }
-        public bool mood_ok { get; set; }
-        public double norm_mood { get; set; }
-        public double norm_noise { get; set; }
-        public double prop_mood { get; set; }
+        public string mood_pattern {  get; set; }
+        public string mood_green { get; set; }
+        public string mood_norm { get; set; }
+        public string noise_norm { get; set; }
+        public string prop_mood { get; set; }
 
-        public int error { get; set; }
+        public string error { get; set; }
                 
         public string common_hub_subject { get; set; }
 
@@ -68,48 +67,46 @@ namespace Awesome.AI.Common
              * LOW
              * */
 
-            error = mind.down.Error;
-            norm_noise = mind.mech_noise.ms.vv_sym_90;
-
+            ok = $"{mind.ok}"; 
+            cycles = $"{mind.cycles}";
+            cycles_total = $"{mind.cycles_all}";
+            error = $"{mind.down.Error}";
             go_down = $"{(mind.down.Dir > 0.0d ? "NO" : "YES")}";
             ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
-            vv_curr = $"{mind.mech_noise.ms.dv_sym_curr.ToString("E3")}";
-            actual_us_x = $"{mind.unit_actual.GetUI("will")}";
-            actual_us_y = $"{mind.unit_actual.GetUI("attention")}";
+            vv_low_curr = $"{mind.mech_noise.ms.dv_sym_curr.ToString("E3")}";
+            noise_norm = $"{mind.mech_noise.ms.vv_sym_90}";
+            actual_us_x = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.GetUI("will") : "-1")}";
+            actual_us_y = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.GetUI("attention") : "-1")}";
 
             int n_units = mind.access.UNITS_ALL().Count;
             double a_area = (100.0 * 100.0) / n_units;
             double a_radius = Math.Sqrt(a_area / Math.PI);
 
-            num_units = "" + n_units;
-            avg_area = "" + a_area;
-            avg_radius = "" + a_radius;
+            num_units = $"{n_units}";
+            avg_area = $"{a_area}";
+            avg_radius = $"{a_radius}";
 
             /*
              * HIGH
              * */
         
-            ok = mind.ok;
-            norm_mood = mind.mood.p_90;
-            
-            cycles = $"{mind.cycles}";            
-            cycles_total = $"{mind.cycles_all}";            
-            dv_curr = $"{mind.mech_high.ms.dv_sym_curr.ToString("E3")}";
-            user_var = $"{mind.user_var}";            
-            position = $"{mind.mech_high.POS_XY}";            
-            epochs = $"{mind.epochs}";            
-            runtime = $"{CONST.RUNTIME}";
+            dv_high_curr = $"{mind.mech_high.ms.dv_sym_curr.ToString("E3")}";
+            user_var = $"{mind.user_var}";
+            position = $"{mind.mech_high.POS_XY}";
+            epochs = $"{mind.epochs}";
+            runtime = $"{mind.bot.RUNTIME}";
 
-            whistle = $"{(mind._quick.Result ? "[Whistling to my self..]" : "{gimmick[count]")}";
+            whistle = $"{(mind._quick.Result ? "[Whistling to my self..]" : gimmick[count])}";
             common_hub_subject = $"{(mind.hub.GetSubject(mind.unit_actual) ?? "")}";
 
             occu = $"{mind._internal.Occu.name}";
             location = $"{mind._long.Result[LONGTYPE.LOCATION]}";
             loc_state = $"{(mind._long.State[LONGTYPE.LOCATION] > 0 ? "making a decision" : "just thinking")}";
 
-            mood = $"{mind.bot.pattern.ToString()}";
-            mood_ok = mind.mood.ResColor == PATTERNCOLOR.GREEN;
+            mood_pattern = $"{mind.bot.pattern.ToString()}";
+            mood_green = $"{mind.mood.ResColor == PATTERNCOLOR.GREEN}";
+            mood_norm = $"{mind.mood.p_90}";
 
             monologue_det_result = $"{mind.mono1.Result}";
             monologue_det_subject = $"{mind.mono1.Subject}";
@@ -118,25 +115,15 @@ namespace Awesome.AI.Common
             monologue_lat_subject = $"{mind.mono2.Subject}";
             monologue_lat_relevance = $"{mind.mono2.Relevance}";
 
-            string _base = 
-                mind.mindtype == MINDS.ROBERTA ? "base" :
-                mind.mindtype == MINDS.ANDREW ? "base" :
-                "base";
+            double d_tmp1 = mind.calc.Normalize(mind.mech_high.mp.props.PropsOut["base"], -1.0d, 1.0d, 0.0d, 100.0d);
+            prop_mood = $"{d_tmp1}";
 
-            prop_mood = mind.calc.Normalize(mind.mech_high.mp.props.PropsOut[_base], -1.0d, 1.0d, 0.0d, 100.0d);
+            string s_tmp1 = mind._long.GetResult(LONGTYPE.ANSWER);
+            if (s_tmp1 != "") chat_answer = $"{s_tmp1}";
 
-            if (mind._long.Result[LONGTYPE.ANSWER] != "")
-            {
-                chat_answer = $"{mind._long.Result[LONGTYPE.ANSWER]}";
-                mind._long.Result[LONGTYPE.ANSWER] = "";
-            }
-
-            if (mind._long.Result[LONGTYPE.ASK] != "")
-            {
-                chat_subject = $"{mind._long.Result[LONGTYPE.ASK]}";
-                mind._long.Result[LONGTYPE.ASK] = "";
-            }
-
+            string s_tmp2 = mind._long.GetResult(LONGTYPE.ASK);
+            if (s_tmp2 != "") chat_subject = $"{s_tmp2}";
+            
             count++;
         }
     }

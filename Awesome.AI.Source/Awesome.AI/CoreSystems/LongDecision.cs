@@ -27,6 +27,13 @@ namespace Awesome.AI.CoreSystems
             }
         }
 
+        public string GetResult(LONGTYPE type)
+        {
+            string res = Result[type];
+            mind._long.Result[type] = "";
+            return res;
+        }
+
         public void Decide(bool _pro, LONGTYPE type)
         {
             /*

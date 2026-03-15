@@ -91,10 +91,10 @@ namespace Awesome.AI.Awesome.AI.Core
             bool down = d_curr <= 0.0d;
             bool save = down;
 
-            if (CONST.Logic == LOGICTYPE.PROBABILITY)
+            if (mind.bot.logic == LOGICTYPE.PROBABILITY)
                 down = Probability(down, mind);
 
-            if (CONST.Logic == LOGICTYPE.QUBIT)
+            if (mind.bot.logic == LOGICTYPE.QUBIT)
                 down = Qubit(mind);
 
             SetError(save != down);
@@ -118,10 +118,10 @@ namespace Awesome.AI.Awesome.AI.Core
 
             bool down = IsDown(d_curr);
             
-            if (CONST.Logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && NoInertia() && NoMomentum())
+            if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && NoInertia() && NoMomentum())
                 d_zero *= -1.0d;
 
-            if (CONST.Logic == LOGICTYPE.QUBIT && Qubit(mind) && NoInertia() && NoMomentum())
+            if (mind.bot.logic == LOGICTYPE.QUBIT && Qubit(mind) && NoInertia() && NoMomentum())
                 d_zero *= -1.0d;
 
             bool flip = d_save != d_zero;
@@ -136,7 +136,7 @@ namespace Awesome.AI.Awesome.AI.Core
 
         private bool IsDown(double d_curr)
         {
-            switch (CONST.MechType)
+            switch (mind.bot.mech_low)
             {
                 case MECHANICS.TUGOFWAR_LOW:
                 case MECHANICS.BALLONHILL_LOW:

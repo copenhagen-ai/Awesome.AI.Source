@@ -90,7 +90,7 @@ namespace Awesome.AI.Core.Spaces
         {
             get
             {
-                List<UNIT> list = mind.hub.GetUnits().OrderBy(x => x.created).ToList();
+                List<UNIT> list = mind.hub.UnitsPerOccupasionc().OrderBy(x => x.created).ToList();
 
                 if (!list.Any())
                     return "";
@@ -191,7 +191,7 @@ namespace Awesome.AI.Core.Spaces
         }
 
         private int _do { get; set; }
-        public void Update(GPTVector2D v_near/*, double dist*/)
+        public void Update(GPTVector2D v_near, bool _pro)
         {
             //if (mind.cycles_all < CONST.FIRST_RUN + 1)
             //    return;
@@ -200,7 +200,7 @@ namespace Awesome.AI.Core.Spaces
             UpdateREW();
             UpdateAFF();
             UpdateHUB();
-            UpdateUNT(v_near/*, dist*/);
+            UpdateUNT(v_near, _pro);
 
             _do++;
             if (_do > 100)
@@ -216,7 +216,7 @@ namespace Awesome.AI.Core.Spaces
             //if (IsDECISION())
             //    return;
 
-            List<UNIT> units = mind.hub.GetUnits();
+            List<UNIT> units = mind.hub.UnitsPerOccupasionc();
 
             foreach (UNIT unit in units)
             {
@@ -243,7 +243,7 @@ namespace Awesome.AI.Core.Spaces
 
             mind.reward = false;
 
-            List<UNIT> units = mind.hub.GetUnits();
+            List<UNIT> units = mind.hub.UnitsPerOccupasionc();
 
             double max = 0.0d;
 
@@ -331,7 +331,7 @@ namespace Awesome.AI.Core.Spaces
             mind.hub.AdjustWeights(sub, effective_gamma * 0.1d);
         }
 
-        private void UpdateUNT(GPTVector2D v_near/*, double dist*/)
+        private void UpdateUNT(GPTVector2D v_near, bool _pro)
         {
             /*
              * it is difficult determinating if the does as supposed, but the logic seems correct
@@ -352,13 +352,15 @@ namespace Awesome.AI.Core.Spaces
             //Remove(near);
 
             foreach (var ax in mind.soup.axis)
-                Adjust(ax/*, dist*/);
+                Adjust(ax, _pro);
         }
 
         private bool Add2D(GPTVector2D v_near/*, double dist, int axis_count*/)
         {
             int axis_count = mind.soup.axis.Length;
-            int count = mind.hub.GetUnits().Count;
+            var sub = mind.hub.GetSubject(this.HI);
+            UNIT[] list = mind.hub.UnitsPerHub(sub).ToArray();
+            int count = list.Count();
 
             //double avg_area = (100.0 * 100.0) / count;
             //double avg_radius = Math.Sqrt(avg_area / Math.PI);
@@ -400,11 +402,11 @@ namespace Awesome.AI.Core.Spaces
             }
 
             mind.access.UNITS_ADD(this, axis, axis_count);
-            
+
             return true;
         }
                 
-        private void Adjust(string ax/*, double dist*/)
+        private void Adjust(string ax, bool _pro)
         {
             //if (ax == "will" && dist < CONST.ALPHA)
             //    return;
@@ -415,14 +417,19 @@ namespace Awesome.AI.Core.Spaces
             if (ax == "will")
                 dir = mind.down.Dir;
             else
-                dir = mind.mech_high.mp.props.Dir(ax);
+                dir = mind.mech_high.Dir(_pro);
 
             double _new = UIget(ax) + (rnd * CONST.ETA * dir);
 
             if (_new <= CONST.MIN) _new = CONST.MIN;
             if (_new >= CONST.MAX) _new = CONST.MAX;
 
-            UIset(ax, _new);
+            switch (_new)
+            {
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                default: UIset(ax, _new); break;
+            }
         }
 
         //private void Remove(double near)

@@ -1,6 +1,5 @@
 ﻿using Awesome.AI.Awesome.AI.Core;
 using Awesome.AI.Common;
-using Awesome.AI.Core.Electrical;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
@@ -50,12 +49,12 @@ namespace Awesome.AI.Core
 
         public Dictionary<string, IMechanics> mech { get; set; }
         private Dictionary<LONGTYPE, string> lng_dec {  get; set; }
-                
+
         public MyStats stats = new MyStats();
+        public MyMeters meters = new MyMeters();
         public UNIT theanswer;
                 
         public MINDS mindtype;
-        public MECHANICS _mech_type;
         public ENV environment;
 
         public bool goodbye { get; set; }
@@ -107,15 +106,14 @@ namespace Awesome.AI.Core
 
                 bot = new BotFactory(this).GetBot();
 
-                this._mech_type = bot.mech;
                 this.lng_dec = bot.lng_dec;
 
                 z_current = "z_noise";
 
                 MechFactory _m = new MechFactory(this);
                 mech = new Dictionary<string, IMechanics>();
-                mech["z_noise"] = _m.GetMech(CONST.MechType);
-                mech["z_mech"] = _m.GetMech(_mech_type);
+                mech["z_noise"] = _m.GetMech(bot.mech_low);
+                mech["z_mech"] = _m.GetMech(bot.mech_high);
 
                 mech_noise = mech["z_noise"];
                 mech_high = mech["z_mech"];
@@ -355,7 +353,7 @@ namespace Awesome.AI.Core
 
         private void CorePost(bool _pro)
         {
-            soup.CurrentUnit();
+            soup.CurrentUnit(_pro);
             core.History();
             core.ActualUnit(_pro);
             core.Stats(_pro);

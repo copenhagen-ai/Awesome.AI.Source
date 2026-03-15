@@ -21,19 +21,21 @@ namespace Awesome.AI.Generators
             if (!_pro)
                 return;
 
-            if (Count >= 10)
+            int div = mind.bot.pattern == PATTERN.MOODBAD || mind.bot.pattern == PATTERN.MOODGENERAL? 5 : 10;
+
+            if (Count >= div)
                 Count = 0;
 
-            if (Count == 5)
+            if (Count == 2)
             {
                 int _rand = mind.rand.MyRandomInt(1, 9)[0];
 
                 switch (_rand)
                 {
                     case <= 0: throw new Exception("MoodGenerator, Generate");
-                    case <= 3: mind.bot.pattern = PATTERN.MOODGENERAL; break;
-                    case <= 6: mind.bot.pattern = PATTERN.MOODGOOD; break;
-                    case <= 9: mind.bot.pattern = PATTERN.MOODBAD; break;
+                    case <= 2: mind.bot.pattern = PATTERN.MOODBAD; break;
+                    case <= 4: mind.bot.pattern = PATTERN.MOODGENERAL; break;
+                    case <= 9: mind.bot.pattern = PATTERN.MOODGOOD; break;
                     default: throw new Exception("MoodGenerator, Generate");
                 }
             }

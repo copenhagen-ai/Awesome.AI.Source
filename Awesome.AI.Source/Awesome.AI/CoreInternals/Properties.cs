@@ -54,19 +54,7 @@ namespace Awesome.AI.Awesome.AI.Core
 
                 return res * val;
             }
-        }
-
-        private double dv_prev { get; set; }
-        public double Dir(string ax)
-        {
-            if (ax == "will")
-                ax = "base";
-
-            double dv = mind.mech_high.mp.props.PropsOut[ax];
-            double dir = dv > dv_prev ? 1.0d : -1.0d;
-
-            return dir;            
-        }
+        }        
 
         //private List<string> Attributes { get; set; }
         private MyModifiers Mods{ get; set; }

@@ -108,6 +108,15 @@ namespace Awesome.AI.Core.Mechanics
             throw new NotImplementedException();
         }
 
+        public double Dir(bool _pro)
+        {
+            double dv = ms.dv_sym_100;
+
+            double dir = dv > 50.0d ? 1.0d : -1.0d;
+
+            return dir;
+        }
+
         private double velocity = 0.0; // Initial velocity in m/s
         private double position_x = 5.0; // Initial position in meters
         private void Calc(PATTERN pattern, int cycles)

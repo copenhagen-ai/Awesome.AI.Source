@@ -136,7 +136,6 @@ namespace Awesome.AI.Variables
         public const double LAPSES = 99d;                   //yesno ratio : reaction time in cycles
         public const double RATIO = 50d;
         public const int FIRST_RUN = 5;
-        public const int RUNTIME = 120;                       //minutes / 2
         public const int LOWCUT = 3;        
         public const int NUMBER_OF_UNITS = 10;
         public const int MAX_UNITS = 10;
@@ -148,8 +147,6 @@ namespace Awesome.AI.Variables
         public const int SAMPLEHIGH = 80000;
 
         public const TRANSFER transfer = TRANSFER.NONE;
-        public const LOGICTYPE Logic = LOGICTYPE.PROBABILITY;
-        public const MECHANICS MechType = MECHANICS.TUGOFWAR_LOW;
         public const HACKMODE hack = HACKMODE.HACK;
 
         public const bool AGENT_USE_TIMER = false;

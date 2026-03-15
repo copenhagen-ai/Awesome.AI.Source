@@ -11,7 +11,7 @@ namespace Awesome.AI.Common
 
     public class MyStats
     {
-        public MyStats() 
+        public MyStats()
         {
             hits = new Dictionary<int, int>();
             units = new Dictionary<int, int>();
@@ -33,5 +33,11 @@ namespace Awesome.AI.Common
 
             return json;
         }
+    }
+
+    public class MyMeters
+    {
+        public int units_added {  get; set; }
+        public int units_removed { get; set; }
     }
 }

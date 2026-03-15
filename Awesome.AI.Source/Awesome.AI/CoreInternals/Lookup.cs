@@ -462,6 +462,9 @@ namespace Awesome.AI.CoreInternals
 
         public List<string> GetHUBS(MINDS mind, string axis)
         {
+            if (axis == "init")
+                return new List<string>();
+
             /*
              * call LLM here
              * */
@@ -480,8 +483,10 @@ namespace Awesome.AI.CoreInternals
                     if (axis == "socializing") ax = basic1;
                     if (axis == "hobbys") ax = basic2;
                     break;
-                default: throw new Exception("Lookup, GetHUB");
             }
+            
+            if (ax == null)
+                throw new Exception("Lookup, GetHUB");
 
             return ax;
         }        

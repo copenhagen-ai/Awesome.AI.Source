@@ -1,4 +1,5 @@
-﻿using static Awesome.AI.Variables.Enums;
+﻿using Awesome.AI.Variables;
+using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
 {
@@ -128,6 +129,9 @@ namespace Awesome.AI.Core.Spaces
             UNIT _u = UNIT.Create(mind, guid, idx, "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
 
             mind.memory.units_running.Add(_u);
+
+            if (mind.epochs > CONST.FIRST_RUN * 3)
+                mind.meters.units_added++;
         }
 
         public void UNITS_REM(UNIT unit, double low, double high)
@@ -136,11 +140,15 @@ namespace Awesome.AI.Core.Spaces
             list = list.Where(x => x.created < unit.created).ToList();
 
             foreach (UNIT _u in list)
+            {
                 mind.memory.units_running.Remove(_u);
+                mind.meters.units_removed++;
+            }
         }
 
         public void UNITS_REM(UNIT unit)
         {
+            mind.meters.units_removed++;
             mind.memory.units_running.Remove(unit);
         }
 

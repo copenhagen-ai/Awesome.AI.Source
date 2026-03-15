@@ -214,7 +214,30 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
-        public List<UNIT> GetUnits()
+        public List<UNIT> UnitsPerHub(string hub)
+        {
+            try
+            {
+                var units = mind.access.UNITS_ALL();
+
+                List<UNIT> res = new List<UNIT>();
+
+                foreach (var unit in units)
+                {
+                    var sub = GetSubject(unit.HI);
+                    if (sub == hub && !res.Contains(unit))
+                        res.Add(unit);
+                }
+
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public List<UNIT> UnitsPerOccupasionc()
         {
             try
             {
@@ -244,12 +267,12 @@ namespace Awesome.AI.Core.Spaces
             string res = "";
             int max = -1;
 
-            foreach (var kvp in dict)
+            foreach (var kv in dict)
             {
-                if (kvp.Value > max)
+                if (kv.Value > max && kv.Value > 0)
                 {
-                    max = kvp.Value;
-                    res = kvp.Key;
+                    max = kv.Value;
+                    res = kv.Key;
                 }
             }
 

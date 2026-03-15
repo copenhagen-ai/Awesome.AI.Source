@@ -143,6 +143,11 @@ namespace Awesome.AI.Core.Electrical
             mp.peek_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_min - adj, mp.peek_max, 0.0d, 100.0d);
         }
 
+        public double Dir(bool _pro)
+        {
+            throw new NotImplementedException("e_CircuitSimulator, Dir");
+        }
+
         public void Calc(UNIT curr, bool peek, int cycles)
         {
             DeltaTime();

@@ -146,25 +146,25 @@ namespace Awesome.AI.Core.Spaces
             int count1 = 1;
 
             TONE tone;
-            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
-            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.HIGH;
+            tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.HIGH;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
-            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+            tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
-            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.LOW;
+            tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.LOW;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
-            tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.MID;
+            tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.MID;
             count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
 
             //Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             //foreach (var kv in dict)
             {
-                tone = mind._mech_type == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+                tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
                 Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "WHISTLE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
             }
         }
@@ -278,16 +278,20 @@ namespace Awesome.AI.Core.Spaces
 
                 string guid = Guid.NewGuid().ToString();
 
-                int _count = 0;
+                //int _count = 0;
                 for (int i = 1; i <= num_units; i++)
                 {
-                    double rand = mind.cycles < CONST.FIRST_RUN ?
+                    double rand1 = mind.cycles < CONST.FIRST_RUN ?
                     random.NextDouble() :
-                    mind.rand.MyRandomDouble(list.Count())[_count];
+                    mind.rand.MyRandomDouble(list.Count())[100];
 
-                    _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], "DATA", "" + s + ticket[i - 1], utype, ltype));
+                    double rand2 = mind.cycles < CONST.FIRST_RUN ?
+                    random.NextDouble() :
+                    mind.rand.MyRandomDouble(list.Count())[200];
 
-                    _count++;
+                    _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], "DATA", "" + s + ticket[i - 1], utype, ltype));
+
+                    //_count++;
                 }
 
                 switch (mind.STATE)
@@ -312,24 +316,29 @@ namespace Awesome.AI.Core.Spaces
             Random random = new Random();
 
 
-            int _count = 0;
+            //int _count = 0;
             foreach (string s in units)
             {
                 string guid = Guid.NewGuid().ToString();
-                double rand = mind.cycles < CONST.FIRST_RUN ?
+
+                double rand1 = mind.cycles < CONST.FIRST_RUN ?
                 random.NextDouble() :
-                mind.rand.MyRandomDouble(units.Count())[_count];
+                mind.rand.MyRandomDouble(units.Count())[100];
+
+                double rand2 = mind.cycles < CONST.FIRST_RUN ?
+                random.NextDouble() :
+                mind.rand.MyRandomDouble(units.Count())[200];
 
                 switch (state)
                 {
                     case STATE.JUSTRUNNING: 
-                        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
+                        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], s, "NONE", utype, ltype)); break;
                     case STATE.QUICKDECISION: 
-                        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], s, "NONE", utype, ltype)); break;
+                        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], s, "NONE", utype, ltype)); break;
                     default: throw new NotImplementedException();
                 }
 
-                _count++;
+                //_count++;
                 count++;
             }
 
@@ -359,11 +368,15 @@ namespace Awesome.AI.Core.Spaces
 
             for (int i = 0; i < num_units; i++)
             {
-                double rand = mind.cycles < CONST.FIRST_RUN ?
+                double rand1 = mind.cycles < CONST.FIRST_RUN ?
                 random.NextDouble() :
-                mind.rand.MyRandomDouble(num_units)[i];
+                mind.rand.MyRandomDouble(num_units)[100];
 
-                _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand), GetIndex(tone, rand)], name, "NONE", utype, ltype));
+                double rand2 = mind.cycles < CONST.FIRST_RUN ?
+                random.NextDouble() :
+                mind.rand.MyRandomDouble(num_units)[200];
+
+                _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], name, "NONE", utype, ltype));
             }
 
             units_running = units_running.Concat(_u).ToList();
