@@ -209,13 +209,22 @@ namespace Awesome.AI.Core
             //if (mind.STATE == STATE.QUICKDECISION)
             //    return;
 
-            UNIT unit = history
-                .GroupBy(x => x)
-                .OrderByDescending(x => x.Count())
-                .Select(x => x.Key)
-                .First();
+            switch (CONST.select_a) 
+            {
+                case SELECTACTUAL.DOMINANT:
+                    UNIT unit = history
+                        .GroupBy(x => x)
+                        .OrderByDescending(x => x.Count())
+                        .Select(x => x.Key)
+                        .First();
 
-            mind.unit_actual = unit;
+                    mind.unit_actual = unit;
+                    break;
+                case SELECTACTUAL.OTHER:
+                    throw new NotImplementedException("Core, ActualUnit 1");
+                default: 
+                    throw new NotImplementedException("Core, ActualUnit 2");
+            }
         }
 
         public void Stats(bool _pro)
