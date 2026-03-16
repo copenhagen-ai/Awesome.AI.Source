@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Awesome.AI.Core;
-using Awesome.AI.Common;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
@@ -63,7 +62,7 @@ namespace Awesome.AI.Core.Mechanics
             throw new NotImplementedException();
         }
 
-        public double Dir(bool _pro)
+        public double Dir()
         {
             double vv = ms.vv_sym_100;
 

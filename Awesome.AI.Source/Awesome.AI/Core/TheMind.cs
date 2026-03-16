@@ -353,7 +353,7 @@ namespace Awesome.AI.Core
 
         private void CorePost(bool _pro)
         {
-            soup.CurrentUnit(_pro);
+            soup.CurrentUnit();
             core.History();
             core.ActualUnit(_pro);
             core.Stats(_pro);

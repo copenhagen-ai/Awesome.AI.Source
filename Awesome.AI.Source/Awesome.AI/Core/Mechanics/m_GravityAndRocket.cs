@@ -108,7 +108,7 @@ namespace Awesome.AI.Core.Mechanics
             throw new NotImplementedException();
         }
 
-        public double Dir(bool _pro)
+        public double Dir()
         {
             double dv = ms.dv_sym_100;
 

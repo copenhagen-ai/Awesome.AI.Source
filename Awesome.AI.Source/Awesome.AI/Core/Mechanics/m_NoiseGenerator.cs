@@ -61,7 +61,7 @@ namespace Awesome.AI.Core.Mechanics
             mp.peek_norm = mind.calc.Normalize(mp.peek_velocity, mp.vv_out_low_peek - adj, mp.vv_out_high_peek, 0.0d, 100.0d);
         }
 
-        public double Dir(bool _pro)
+        public double Dir()
         {
             throw new NotImplementedException("m_NoiseGenerator, Dir");
         }

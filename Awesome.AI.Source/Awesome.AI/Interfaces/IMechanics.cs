@@ -13,7 +13,7 @@ namespace Awesome.AI.Interfaces
         double POS_XY { get; }
 
         void Peek(UNIT c);
-        double Dir(bool _pro);
+        double Dir();
 
         //these are thought patterns: general, good, bad
         void Calculate(PATTERN match, int cycles);

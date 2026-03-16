@@ -191,7 +191,7 @@ namespace Awesome.AI.Core.Spaces
         }
 
         private int _do { get; set; }
-        public void Update(GPTVector2D v_near, bool _pro)
+        public void Update(GPTVector2D v_near)
         {
             //if (mind.cycles_all < CONST.FIRST_RUN + 1)
             //    return;
@@ -200,7 +200,7 @@ namespace Awesome.AI.Core.Spaces
             UpdateREW();
             UpdateAFF();
             UpdateHUB();
-            UpdateUNT(v_near, _pro);
+            UpdateUNT(v_near);
 
             _do++;
             if (_do > 100)
@@ -331,7 +331,7 @@ namespace Awesome.AI.Core.Spaces
             mind.hub.AdjustWeights(sub, effective_gamma * 0.1d);
         }
 
-        private void UpdateUNT(GPTVector2D v_near, bool _pro)
+        private void UpdateUNT(GPTVector2D v_near)
         {
             /*
              * it is difficult determinating if the does as supposed, but the logic seems correct
@@ -345,17 +345,16 @@ namespace Awesome.AI.Core.Spaces
 
             //return;
 
-            
-            if (Add2D(v_near/*, dist, axis_count*/))
+            if (Add2D(v_near))
                 return;
 
             //Remove(near);
 
             foreach (var ax in mind.soup.axis)
-                Adjust(ax, _pro);
+                Adjust(ax);
         }
 
-        private bool Add2D(GPTVector2D v_near/*, double dist, int axis_count*/)
+        private bool Add2D(GPTVector2D v_near)
         {
             int axis_count = mind.soup.axis.Length;
             var sub = mind.hub.GetSubject(this.HI);
@@ -406,7 +405,7 @@ namespace Awesome.AI.Core.Spaces
             return true;
         }
                 
-        private void Adjust(string ax, bool _pro)
+        private void Adjust(string ax)
         {
             //if (ax == "will" && dist < CONST.ALPHA)
             //    return;
@@ -417,7 +416,7 @@ namespace Awesome.AI.Core.Spaces
             if (ax == "will")
                 dir = mind.down.Dir;
             else
-                dir = mind.mech_high.Dir(_pro);
+                dir = mind.mech_high.Dir();
 
             double _new = UIget(ax) + (rnd * CONST.ETA * dir);
 

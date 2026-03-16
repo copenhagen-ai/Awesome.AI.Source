@@ -56,18 +56,18 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
-        private double Direction(string axis_tmp, bool _pro)
+        private double Direction(string axis_tmp)
         {
             switch (axis_tmp)
             {
                 case "will": return mind.down.Dir;
-                case CONST.axis_2_brain: return mind.mech_high.Dir(_pro);
-                case CONST.axis_2_comm: return mind.mech_high.Dir(_pro);
+                case CONST.axis_2_brain: return mind.mech_high.Dir();
+                case CONST.axis_2_comm: return mind.mech_high.Dir();
                 default: throw new Exception("UnitSpaceSoup, Direction");
             }
         }
         
-        public void CurrentUnit(bool _pro)
+        public void CurrentUnit()
         {
             if (mind.z_current != "z_noise")
                 return;
@@ -82,7 +82,7 @@ namespace Awesome.AI.Core.Spaces
             if (_u.IsIDLE())
                 res = Buffer();
             else
-                res = Unit(_pro);
+                res = Unit();
 
             mind.unit_current = res;
         }
@@ -90,7 +90,7 @@ namespace Awesome.AI.Core.Spaces
         /*
          * priority 1
          * */
-        private UNIT Unit(bool _pro)
+        private UNIT Unit()
         {
             List<UNIT> units = mind.access.UNITS_VAL();
 
@@ -103,16 +103,28 @@ namespace Awesome.AI.Core.Spaces
             if (units is null)
                 throw new Exception("TheSoup, Unit");
 
-            UNIT _u = Jump(units, _pro);
+            var near = Near();
+            UNIT res = null;
 
-            return _u;
+            switch (CONST.select_c)
+            {
+                case SELECTCURRENT.PYTH: res = SelectPyth(units, near); break;
+                case SELECTCURRENT.OTHER: res = SelectOther(units, near); break;
+                default: throw new Exception("UnitSpaceSoup, Unit");
+            }
+
+            if (res.IsIDLE())
+                return res;
+
+            GPTVector2D v_near = new GPTVector2D(near[0], near[1], null, null);
+            
+            res.Update(v_near);
+
+            return res;
         }
 
-        private UNIT Jump(List<UNIT> units, bool _pro)
+        private double[] Near()
         {
-            if (units is null)
-                throw new ArgumentNullException();
-
             int axis_max = 2;
             int axis_now = 2;
 
@@ -120,72 +132,55 @@ namespace Awesome.AI.Core.Spaces
 
             for (int i = 0; i < axis_max; i++)
             {
-                if (i >= axis_now) {
+                if (i >= axis_now)
+                {
                     near[i] = -1d;
                     continue;
                 }
-                
-                near[i] = Near(axis[i], Step(axis[i]), Direction(axis[i], _pro));
+
+                near[i] = JumpTo(axis[i], Step(axis[i]), Direction(axis[i]));
             }
 
+            return near;
+        }
+
+        private UNIT SelectPyth(List<UNIT> units, double[] near)
+        {
             double near_x = near[0];
             double near_y = near[1];
             double min_distance = 10E20d;
-            UNIT nearest_unit = null;
+            UNIT nearest = null;
 
             foreach (UNIT unit in units)
             {
                 if (unit == mind.unit_current)
                     continue;
 
-                double nearest_x = Near("will", Map(unit), Direction("will", _pro));
-                double nearest_y = Near(axis[1], Map(unit), Direction(axis[1], _pro));
+                double nearest_x = JumpTo("will", Map(unit), Direction("will"));
+                double nearest_y = JumpTo(axis[1], Map(unit), Direction(axis[1]));
 
                 double distance = mind.calc.Pyth(near_x, nearest_x, near_y, nearest_y);
 
                 if (distance < min_distance)
                 {
                     min_distance = distance;
-                    nearest_unit = unit;
+                    nearest = unit;
                 }
             }
 
-            if (nearest_unit == null)
+            if (nearest == null)
                 return UNIT.CreateIdle(mind);
 
-            GPTVector2D v_near = new GPTVector2D(near[0], near[1], null, null);
-            double dist = Math.Abs(min_distance);
-
-            nearest_unit.Update(v_near, _pro);
-
-            return nearest_unit;
+            return nearest;
         }
 
-        public double Map(UNIT x)
+        private UNIT SelectOther(List<UNIT> units, double[] near)
         {
-            //is this ok?
-            //return x.Variable;
-
-            //if (mind.z_current == "z_mech")
-            //    return x.Variable;
-
-            IMechanics mech = mind.mech["z_noise"];
-
-            mech.Peek(x);
-
-            double norm = mech.ms.peek_sym_norm;
-
-            return norm;
+            throw new NotImplementedException("UnitSpaceSoup, SelectOther");
         }
 
-        private double Near(string ax, double step, double dir)
+        private double JumpTo(string ax, double step, double dir)
         {
-            //double norm = 100.0d - mind.mech_current.mp.p_100;
-
-            //mind.down.Current = "noise";
-
-            //double norm = 100.0d - mind.down.WillNorm;
-
             double res = 0.0d;
             bool same = dir == prev_dir[ax];
 
@@ -198,6 +193,17 @@ namespace Awesome.AI.Core.Spaces
             prev_dir[ax] = dir;
 
             return res;
+        }
+
+        public double Map(UNIT x)
+        {
+            IMechanics mech = mind.mech["z_noise"];
+
+            mech.Peek(x);
+
+            double norm = mech.ms.peek_sym_norm;
+
+            return norm;
         }
 
         /*
