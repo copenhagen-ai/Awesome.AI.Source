@@ -70,7 +70,7 @@ namespace Awesome.AI.Core
         public int epochs = 1;
         public int cycles = 0; // Go TRON!
         public int cycles_all = 0;
-        public double user_var = 0.0d;
+        public double pain_truth_something = 0.0d;
 
         public STATE _s { get; set; } = STATE.JUSTRUNNING;
         public STATE _s_tmp { get; set; }
@@ -314,7 +314,7 @@ namespace Awesome.AI.Core
 
             soup.Counter++;
 
-            bool ok = core.OK(out user_var);
+            bool ok = core.OK(out pain_truth_something);
 
             return ok;
         }

@@ -41,14 +41,14 @@ namespace Awesome.AI.Core
                 units.Add(i * 10, 0);
         }
 
-        public bool OK(out double user_var)
+        public bool OK(out double pain_truth_something)
         {
             /*
              * this is the Go/NoGo class
              * actually not part of the algorithm
              * */
 
-            user_var = 0.0d;
+            pain_truth_something = 0.0d;
 
             if (mind.z_current != "z_noise")
                 return true;
@@ -57,36 +57,39 @@ namespace Awesome.AI.Core
             switch (mind.bot.mech_low)
             {
                 case MECHANICS.TUGOFWAR_LOW: 
-                    ok = ReciprocalOK(mind.mech_current.PosXY(), out user_var);
+                    ok = ReciprocalOK(mind.mech_current.PosXY(), out pain_truth_something);
                     return ok;
-                case MECHANICS.BALLONHILL_LOW: 
-                    ok = ReciprocalOK(mind.mech_current.PosXY(), out user_var);
+                case MECHANICS.BALLONHILL_LOW:
+                    ok = ReciprocalOK(mind.mech_current.PosXY(), out pain_truth_something);
+                    return ok;
+                case MECHANICS.MECH_OTHER_LOW:
+                    ok = EventHorizonOK(mind.mech_current.PosXY(), out pain_truth_something);
                     return ok;
                 default: 
                     throw new Exception("OK");
             }
         }
 
-        public bool ReciprocalOK(double pos, out double pain)
+        public bool ReciprocalOK(double pos, out double pain_truth_something)
         {
             try
             {
                 double epsilon = 0;
                 if (!mind.goodbye)
-                    epsilon = CONST.EPSILON;
+                    epsilon = CONST.EPSILON2;
 
                 double _e = pos + epsilon;
 
-                pain = mind.calc.Reciprocal(_e);
+                pain_truth_something = mind.calc.Reciprocal(_e);
 
-                if (pain > CONST.MAX_PAIN)
+                if (pain_truth_something > CONST.MAX_PAIN_TRUTH_SOMETHING)
                     throw new Exception("ReciprocalOK");
 
                 return true;
             }
             catch (Exception e)//thats it
             {
-                pain = CONST.MAX_PAIN;
+                pain_truth_something = CONST.MAX_PAIN_TRUTH_SOMETHING;
                 return false;
             }
         }

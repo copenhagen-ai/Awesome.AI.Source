@@ -11,7 +11,7 @@ namespace Awesome.AI.Common
         public string vv_low_curr { get; set; }
         public string dv_high_curr { get; set; }
 
-        public string user_var { get; set; }
+        public string pain_truth_something { get; set; }
         public string position { get; set; }
         public string ratio_yes_n { get; set; }
         public string ratio_no_n { get; set; }
@@ -64,7 +64,7 @@ namespace Awesome.AI.Common
             obj.cycles_total = mind.o_vars.cycles_total;
             obj.vv_low_curr = mind.o_vars.vv_low_curr;
             obj.dv_high_curr = mind.o_vars.dv_high_curr;
-            obj.user_var = mind.o_vars.user_var;
+            obj.pain_truth_something = mind.o_vars.pain_truth_something;
             obj.position = mind.o_vars.position;
             obj.ratio_yes_n = mind.o_vars.ratio_yes_n;
             obj.ratio_no_n = mind.o_vars.ratio_no_n;

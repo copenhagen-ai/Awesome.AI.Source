@@ -267,7 +267,7 @@ namespace Awesome.AI.Core.Spaces
 
                 reward_norm = mind.calc.Normalize(reward, 0.0d, max, 0.0d, 1.0d);
 
-                if (reward_norm < CONST.EPSILON)
+                if (reward_norm < CONST.EPSILON1)
                     rem.Add(unit);
             }
 

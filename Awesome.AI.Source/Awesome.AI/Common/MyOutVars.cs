@@ -23,7 +23,7 @@ namespace Awesome.AI.Common
         public string num_units { get; set; }
         public string avg_area { get; set; }
         public string avg_radius { get; set; }
-        public string user_var { get; set; }
+        public string pain_truth_something { get; set; }
         public string position { get; set; }
         public string ratio_yes_n { get; set; }
         public string ratio_no_n { get; set; }
@@ -92,7 +92,7 @@ namespace Awesome.AI.Common
              * */
         
             dv_high_curr = $"{mind.mech_high.ms.dv_sym_curr.ToString("E3")}";
-            user_var = $"{mind.user_var}";
+            pain_truth_something = $"{mind.pain_truth_something}";
             position = $"{mind.mech_noise.PosXY()}";
             epochs = $"{mind.epochs}";
             runtime = $"{mind.bot.RUNTIME}";

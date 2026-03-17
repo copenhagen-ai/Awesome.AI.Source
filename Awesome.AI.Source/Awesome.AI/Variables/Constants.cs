@@ -121,7 +121,8 @@ namespace Awesome.AI.Variables
         public const double MAX_HUBSPACE = 100.0;
 
         public const double DECAY = 0.99d;
-        public const double EPSILON = 0.01d;                //UNITTYPE removal
+        public const double EPSILON1 = 0.01d;
+        public const double EPSILON2 = 0.1d;
         public const double ETA = 0.9d;                    //learningrate
         public const double ALPHA = 0.5d;                 //distance
         public const double GAMMA = 0.01d;                  //keep below 0.5
@@ -130,7 +131,7 @@ namespace Awesome.AI.Variables
         public const double GRAV_CONST = 6.674E-11d;        //6.67430E-11;
 
         public const double BASE_SCALE = 2d / 3d;
-        public const double MAX_PAIN = 100.0d;              //connected x
+        public const double MAX_PAIN_TRUTH_SOMETHING = 100.0d;              //connected x
         public const double VERY_LOW = 1.0E-2;              //connected x
         public const double RS = 2.0;                       //Schwarzschild radius
         public const double LAPSES = 99d;                   //yesno ratio : reaction time in cycles
