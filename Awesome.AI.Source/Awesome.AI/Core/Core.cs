@@ -50,20 +50,17 @@ namespace Awesome.AI.Core
 
             user_var = 0.0d;
 
-            if (mind.z_current == "z_noise")
+            if (mind.z_current != "z_noise")
                 return true;
 
             bool ok;
-            switch (mind.bot.mech_high)
+            switch (mind.bot.mech_low)
             {
-                case MECHANICS.TUGOFWAR_HIGH: 
-                    ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);
+                case MECHANICS.TUGOFWAR_LOW: 
+                    ok = ReciprocalOK(mind.mech_current.PosXY(), out user_var);
                     return ok;
-                case MECHANICS.BALLONHILL_HIGH: 
-                    ok = ReciprocalOK(mind.mech_current.POS_XY, out user_var);
-                    return ok;
-                case MECHANICS.GRAVITY_HIGH:
-                    ok = EventHorizonOK(mind.mech_current.POS_XY, out user_var);
+                case MECHANICS.BALLONHILL_LOW: 
+                    ok = ReciprocalOK(mind.mech_current.PosXY(), out user_var);
                     return ok;
                 default: 
                     throw new Exception("OK");
@@ -74,11 +71,11 @@ namespace Awesome.AI.Core
         {
             try
             {
-                double adder = 0;
+                double epsilon = 0;
                 if (!mind.goodbye)
-                    adder = 0.9d;
+                    epsilon = CONST.EPSILON;
 
-                double _e = pos + adder;
+                double _e = pos + epsilon;
 
                 pain = mind.calc.Reciprocal(_e);
 
@@ -114,31 +111,23 @@ namespace Awesome.AI.Core
             }
         }
 
-        public void AnswerQuestion()
+        public void StopCondition()
         {
             /*
              * ..or if all goals are fulfilled?
              * ..or if can make consious choise
-             * should there be some procedure for this(unlocking)?
+             * should there be some procedure for this (unlocking)?
              * */
 
             if (mind.z_current != "z_noise")
                 return;
 
-            for (int i = 0; i <= 20; i++)
-            {
-                if ((mind.epochs - i) == (60 * mind.bot.RUNTIME))
-                    mind.theanswer.Data = "It does not";
-            }
-            
+            if ((mind.epochs) >= (60 * mind.bot.RUNTIME))
+                mind.theanswer.Data = "It does not";
+                        
             string answer = mind.theanswer.Data;
             
-            if (answer == null)
-                throw new ArgumentNullException();
-
-            mind.goodbye = false;
-            if (answer == "It does not")
-                mind.goodbye = true;
+            mind.goodbye = answer == "It does not" ? true : false;
         }
 
         public void UpdateCredit()

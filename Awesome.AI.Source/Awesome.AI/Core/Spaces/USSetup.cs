@@ -4,7 +4,7 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
 {
-    public class UnitSpaceSetup
+    public class USSetup
     {
         private List<string> location_should_decision = new List<string>()
         {
@@ -125,9 +125,9 @@ namespace Awesome.AI.Core.Spaces
         public List<UNIT> learning = new List<UNIT>();
 
         private TheMind mind;
-        private UnitSpaceSetup() { }
+        private USSetup() { }
 
-        public UnitSpaceSetup(TheMind mind)
+        public USSetup(TheMind mind)
         {
             this.mind = mind;
 

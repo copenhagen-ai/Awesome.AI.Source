@@ -5,18 +5,15 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
 {
-    public class UnitSpaceSoup
+    public class USSoup
     {
         private TheMind mind;
-        private UnitSpaceSoup() { }
-        public UnitSpaceSoup(TheMind mind)
+        private USSoup() { }
+        public USSoup(TheMind mind)
         {
             this.mind = mind;
 
-            PROPS props = mind.mech_high.type == MECHANICS.TUGOFWAR_HIGH ?
-                PROPS.COMMUNICATION : PROPS.BRAINWAVE;
-
-            axis = props == PROPS.COMMUNICATION ?
+            axis = mind.mech_high.type == MECHANICS.TUGOFWAR_HIGH ?
                 [ "will", CONST.axis_2_comm] :
                 [ "will", CONST.axis_2_brain];
 
@@ -106,13 +103,15 @@ namespace Awesome.AI.Core.Spaces
             var near = Near();
             UNIT res = null;
 
-            switch (CONST.select_c)
-            {
-                case SELECTCURRENT.PYTH: res = SelectPyth(units, near); break;
-                case SELECTCURRENT.OTHER: res = SelectOther(units, near); break;
-                default: throw new Exception("UnitSpaceSoup, Unit");
-            }
+            if (CONST.select_c == SELECTCURRENT.PYTH)
+                res = SelectByPyth(units, near);
 
+            if (CONST.select_c == SELECTCURRENT.OTHER)
+                res = SelectByOther(units, near);
+
+            if (res == null)
+                throw new Exception("UnitSpaceSoup, Unit");
+            
             if (res.IsIDLE())
                 return res;
 
@@ -144,7 +143,7 @@ namespace Awesome.AI.Core.Spaces
             return near;
         }
 
-        private UNIT SelectPyth(List<UNIT> units, double[] near)
+        private UNIT SelectByPyth(List<UNIT> units, double[] near)
         {
             double near_x = near[0];
             double near_y = near[1];
@@ -174,7 +173,7 @@ namespace Awesome.AI.Core.Spaces
             return nearest;
         }
 
-        private UNIT SelectOther(List<UNIT> units, double[] near)
+        private UNIT SelectByOther(List<UNIT> units, double[] near)
         {
             throw new NotImplementedException("UnitSpaceSoup, SelectOther");
         }

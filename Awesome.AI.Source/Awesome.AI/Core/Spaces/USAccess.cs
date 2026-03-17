@@ -3,12 +3,12 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
 {
-    public class UnitSpaceAccess
+    public class USAccess
     {
         private TheMind mind;
-        private UnitSpaceAccess() { }
+        private USAccess() { }
 
-        public UnitSpaceAccess(TheMind mind)
+        public USAccess(TheMind mind)
         {
             this.mind = mind;            
         }

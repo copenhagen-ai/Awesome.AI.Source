@@ -125,7 +125,8 @@ namespace Awesome.AI.Core.Spaces
                 {
                     case TRANSFER.NONE: break;
                     case TRANSFER.LOGISTIC: res = mind.calc.Logistic(res * 0.1d - 5.0d) * 100.0d; break;
-                    default : throw new Exception("Unit, Variable");
+                    case TRANSFER.OTHER: throw new NotImplementedException("Unit, Variable 1");
+                    default : throw new Exception("Unit, Variable 2");
                 }
 
                 return res;
@@ -333,22 +334,11 @@ namespace Awesome.AI.Core.Spaces
 
         private void UpdateUNT(GPTVector2D v_near)
         {
-            /*
-             * it is difficult determinating if the does as supposed, but the logic seems correct
-             * i think it makes sense only noise can update unit
-             * */
             if (mind.z_current != "z_noise")
                 return;
 
-            //if (!CONST.ACTIVATOR.RandomSample(mind))
-            //    return;
-
-            //return;
-
             if (Add2D(v_near))
                 return;
-
-            //Remove(near);
 
             foreach (var ax in mind.soup.axis)
                 Adjust(ax);

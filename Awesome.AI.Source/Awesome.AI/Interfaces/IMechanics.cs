@@ -10,8 +10,7 @@ namespace Awesome.AI.Interfaces
         MechSymbolicOut ms { get; set; }
         MechParams mp { get; set; }
 
-        double POS_XY { get; }
-
+        double PosXY();
         void Peek(UNIT c);
         double Dir();
 

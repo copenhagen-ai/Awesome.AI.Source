@@ -146,8 +146,10 @@ namespace Awesome.AI.Variables
         public const int SAMPLE200 = 200;
         public const int SAMPLEHIGH = 80000;
 
-        public const TRANSFER transfer = TRANSFER.NONE;
+        [Obsolete]
         public const HACKMODE hack = HACKMODE.HACK;
+
+        public const TRANSFER transfer = TRANSFER.NONE;
         public const SELECTCURRENT select_c = SELECTCURRENT.PYTH;
         public const SELECTACTUAL select_a = SELECTACTUAL.DOMINANT;
 
@@ -156,19 +158,6 @@ namespace Awesome.AI.Variables
         public const int AGENT_MICRO_SEC = 10000;           //call micro timer every 1000µs (1ms)
 
         public const int HIST_TOTAL = 100;                  //the number of UNITS???
-        public const int REMEMBER = 50;                     //for stats
-
-        //public const int ACTIVATOR = 10;                  //randomness, turn it way down
-
-
-        //public static readonly Dictionary<string, int[]> DECISIONS_A = new Dictionary<string, int[]>
-        //{
-        //    { "WHISTLE", new int[]{ 5, 4 } },
-        //};
-
-        //public static readonly Dictionary<string, int[]> DECISIONS_R = new Dictionary<string, int[]>
-        //{
-        //    { "WHISTLE", new int[]{ 5, 4 } },
-        //};        
+        public const int REMEMBER = 50;                     //for stats                
     }
 }

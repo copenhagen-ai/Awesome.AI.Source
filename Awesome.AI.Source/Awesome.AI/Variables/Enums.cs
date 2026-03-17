@@ -16,7 +16,6 @@
         public enum TAGS { ALL, EVEN }
         public enum OCCUPASION { FIXED, DYNAMIC }
         public enum MECHANICS { TUGOFWAR_LOW, BALLONHILL_LOW, CIRCUIT_1_LOW, CIRCUIT_2_LOW, GRAVITY_HIGH, TUGOFWAR_HIGH, BALLONHILL_HIGH }
-        public enum LIMITTYPE { SIMPLE, SIGMOID, CHANCE }
         public enum MOOD { GOOD, BAD }
         public enum LOGICTYPE { CLASSICAL, PROBABILITY, QUBIT }
         public enum SELECTCURRENT { PYTH, OTHER }
@@ -30,6 +29,6 @@
         public enum FILTERUNIT { NONE, CURRENT, ACTUAL }
         public enum FILTERTYPE { ONE, TWO, THREE }
         public enum ACTION { ACTION, DECLINE }
-        public enum TRANSFER { NONE, LOGISTIC }
+        public enum TRANSFER { NONE, LOGISTIC, OTHER }
     }
 }

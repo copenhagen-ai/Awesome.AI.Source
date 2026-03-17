@@ -120,12 +120,9 @@ namespace Awesome.AI.Core.Electrical
                 register.Push((i % 2 == 0 ? 1 : -1) * 0.0001);
         }
 
-        public double POS_XY
+        public double PosXY()
         {
-            get
-            {
-                throw new NotImplementedException("CircuitSimulator, POS_XY");
-            }
+            throw new NotImplementedException("CircuitSimulator, POS_XY");            
         }
 
         public void Peek(UNIT curr)

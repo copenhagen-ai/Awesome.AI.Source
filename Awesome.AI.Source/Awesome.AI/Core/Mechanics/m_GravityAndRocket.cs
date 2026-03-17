@@ -48,23 +48,9 @@ namespace Awesome.AI.Core.Mechanics
         }
 
         private double posxy { get; set; }
-        public double POS_XY
+        public double PosXY()
         {
-            get 
-            {
-                if (position_x <= posx_low) posx_low = position_x;
-                if (position_x > posx_high) posx_high = position_x;
-
-                double x_meter = mind.calc.Normalize(position_x, posx_low, posx_high, 0.0d, 10.0d);
-
-                if (x_meter <= CONST.RS && !mind.goodbye)
-                    x_meter = CONST.RS + CONST.VERY_LOW;
-
-                if (x_meter < CONST.LOWXY) x_meter = CONST.LOWXY;
-                if (x_meter > CONST.HIGHXY) x_meter = CONST.HIGHXY;
-
-                return x_meter;
-            }
+            throw new NotImplementedException("m_GravityAndRocket, POS_XY");
         }
 
         List<double> p_avg = new List<double>();
@@ -141,7 +127,7 @@ namespace Awesome.AI.Core.Mechanics
 
             double acceleration = netForce / rocketMass;
             velocity += acceleration * dt;                                      // Integrate acceleration to get velocity
-            position_x += velocity * dt;                                        // Integrate velocity to get position
+            //position_x += velocity * dt;                                        // Integrate velocity to get position
             r += velocity * dt;
             t += dt;
 
@@ -252,88 +238,6 @@ namespace Awesome.AI.Core.Mechanics
                 default: throw new Exception("TugOfWar, Sine");
             }
         }
-
-        //public double VariableOld(UNIT curr)
-        //{
-        //    /*
-        //     * I guess this is a changeable function, for now it is just the one I know to calculate force
-        //     * 
-        //     * earth mass:               5.972×10^24 kg
-        //     * sun mass:                 1.989×10^30 kg
-        //     * earth gravity:                  9.807 m/s²
-        //     * distance sun:             148.010.000 km
-        //     * distance moon:             3.844×10^5 km 3.844e5;
-        //     * distance mercury(avg):    ~58 million km (~0.39 AU)
-        //     * earth radius:                   6,371 km
-        //     * millinium falken:            40000.0d kg
-        //     * */
-
-        //    if (curr.IsNull())
-        //        throw new Exception("Variable");
-
-        //    if (curr.IsIDLE())
-        //        throw new Exception("Variable");
-
-        //    double dist = mind.calc.NormalizeRange(curr.LowAtZero, 0.0d, 100.0d, 0.0d, 50000000000.0d);
-        //    double mass_M = 5.972E24d;
-        //    double mass_m = 40000.0d;
-
-        //    //Gravitational Constant (G)
-        //    double G = Constants.GRAV_CONST;
-
-        //    // FORMEL: ~F = (G * (m * M) / r^2) * ~r
-        //    double grav = G * ((mass_m * mass_M) / (dist * dist));
-
-        //    return grav;
-        //}
-
-        //public void CalcPatternOld(MECHVERSION version)
-        //{
-        //    if (version != MECHVERSION.OLD)
-        //        return;
-        //    /*
-        //     * still experimental..
-        //     * I know its not using a black hole, but it should be the same principle outside the event horizon???
-        //     * */
-
-        //    double mod = ModifierOld(mind.curr_unit.credits, mind.parms.shift);
-        //    double m = 40000.0d;
-        //    double dt = 100.0d;    //delta time
-        //    double Fnet = mind.curr_unit.Variable * mod;
-
-        //    //F=m*a
-        //    //a=dv/dt
-        //    //F=(m*dv)/dt
-        //    //F*dt=m*dv
-        //    //dv=(F*dt)/m
-
-        //    double deltaVel = (Fnet * dt) / m;            //delta velocity
-
-        //    //momentum: p = m * v
-        //    p_delta_prev = p_delta;
-        //    p_delta = (m) * deltaVel;
-        //    p_curr += p_delta;
-
-        //    if (p_curr <= m_out_low) m_out_low = p_curr;
-        //    if (p_curr > m_out_high) m_out_high = p_curr;
-
-        //    if (p_delta <= d_out_low) d_out_low = p_delta;
-        //    if (p_delta > d_out_high) d_out_high = p_delta;
-
-        //    if (double.IsNaN(deltaVel))
-        //        throw new Exception("Calculate");
-        //}
-
-        //public double ModifierOld(double credits, double shift)
-        //{
-        //    Calc calc = mind.calc;
-
-        //    double _c = 10.0d - credits;
-        //    double x = 5.0d - _c + shift;
-        //    double mod = calc.Logistic(x);
-
-        //    return mod < 0.5 ? -1d : 1d;
-        //}        
     }
 }
 

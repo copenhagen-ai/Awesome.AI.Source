@@ -93,7 +93,7 @@ namespace Awesome.AI.Common
         
             dv_high_curr = $"{mind.mech_high.ms.dv_sym_curr.ToString("E3")}";
             user_var = $"{mind.user_var}";
-            position = $"{mind.mech_high.POS_XY}";
+            position = $"{mind.mech_noise.PosXY()}";
             epochs = $"{mind.epochs}";
             runtime = $"{mind.bot.RUNTIME}";
 

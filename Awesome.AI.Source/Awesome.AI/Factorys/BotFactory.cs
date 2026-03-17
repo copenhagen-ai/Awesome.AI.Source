@@ -102,7 +102,7 @@ namespace Awesome.AI.Factorys
             tags = TAGS.ALL;                                                    //used with TAGS and BOTH
             occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
             pattern = PATTERN.MOODGENERAL;
-            RUNTIME = (60 * 5) / 2;                                                  //minutes / 2
+            RUNTIME = (2) / 2;                                                  //minutes / 2
         }
     }
 

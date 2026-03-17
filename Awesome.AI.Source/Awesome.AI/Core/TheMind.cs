@@ -14,8 +14,10 @@ using static Awesome.AI.Variables.Enums;
 namespace Awesome.AI.Core
 {
     /*
+     * Maybe rename this class: TheAlgorithm
+     * 
      * Notes:
-     * Maybe its not about creating a replica of the brain, but building upon the basics ie. TheMatrix, Mechanics etc
+     * Maybe its not about creating a replica of the brain, but rather exploring the framework ie. UnitSpace, HubSpace, Mechanics etc
      * Maybe the question should be: "What can be done with this setup"
      * */
 
@@ -23,9 +25,9 @@ namespace Awesome.AI.Core
     {
         public Down down;
         public HubSpace hub;
-        public UnitSpaceSoup soup;
-        public UnitSpaceSetup memory;
-        public UnitSpaceAccess access;
+        public USSoup soup;
+        public USSetup memory;
+        public USAccess access;
         public Core core;
         public QuickDecision _quick;
         public LongDecision _long;
@@ -134,9 +136,9 @@ namespace Awesome.AI.Core
                 mono2 = new Monologue2(this);
                 quantum = new QUsage(this);
                 prob = new GPTProbability();
-                soup = new UnitSpaceSoup(this);
-                memory = new UnitSpaceSetup(this);
-                access = new UnitSpaceAccess(this);
+                soup = new USSoup(this);
+                memory = new USSetup(this);
+                access = new USAccess(this);
                 hub = new HubSpace(this);
 
                 Random random = new Random();
@@ -151,11 +153,11 @@ namespace Awesome.AI.Core
                 {
                     int half = access.UNITS_ALL().Count / 2;
                     if (mindtype == MINDS.ANDREW)
-                        unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_fembots1").First();
+                        unit_current = access.UNITS_ALL()[half];
                     if (mindtype == MINDS.ROBERTA)
-                        unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_macho machines1").First();
+                        unit_current = access.UNITS_ALL()[half];
                     if (mindtype == MINDS.BASIC)
-                        unit_current = access.UNITS_ALL()[half];//.Where(x => x.Root == "_macho machines1").First();
+                        unit_current = access.UNITS_ALL()[half];
                 }
 
                 Pre("z_noise", true);
@@ -165,9 +167,6 @@ namespace Awesome.AI.Core
 
                 ok = true;
                 do_process = false;
-            
-                        
-                //Lists();
             }
             catch (Exception _e)
             {
@@ -178,30 +177,6 @@ namespace Awesome.AI.Core
                 Debug.WriteLine(msg);                
             }
         }
-        
-        //private void Lists()
-        //{
-        //    if (z_current == "z_noise")
-        //        return;
-
-        //    List<UNIT> list = mem.UNITS_VAL();
-
-        //    List<Tuple<string, bool, double>> units_force = new List<Tuple<string, bool, double>>();
-        //    foreach (UNIT u in list.OrderBy(x => x.Variable).ToList())
-        //        units_force.Add(new Tuple<string, bool, double>(u.Root, u.IsValid, u.Variable));
-
-        //    //List<Tuple<string, bool, double>> units_mass = new List<Tuple<string, bool, double>>();
-        //    //foreach (UNIT u in list.OrderBy(x => x.HighAtZero).ToList())
-        //    //    units_mass.Add(new Tuple<string, bool, double>(u.root, u.IsValid, u.HighAtZero));
-
-        //    List<UNIT> list1 = list.OrderBy(x => x.UnitIndex).ToList();
-        //    List<UNIT> list2 = list.OrderBy(x => x.Variable).ToList();
-        //    List<UNIT> list3 = list.Where(x => filters.LowCut(x)).OrderBy(x => x.Variable).ToList();
-
-        //    int valid_units = units_force.Count;
-
-        //    ;
-        //}
 
         public async Task Run()
         {
@@ -253,12 +228,6 @@ namespace Awesome.AI.Core
 
                 _pro = do_process;
                 do_process = false;
-
-                if (this.Roberta())
-                    ;
-
-                if (this.Andrew())
-                    ;
 
                 foreach (string s in zzzz)
                 {
@@ -323,11 +292,10 @@ namespace Awesome.AI.Core
         {
             /*
              * This is the algorithm for producing thought/making the choise
-             * - maybe Core() + TheSoup() could be made into at neural net all by it self, since "almost all" it does is choosing up or down 
              * */
 
             core.UpdateCredit();
-            core.AnswerQuestion();
+            core.StopCondition();
             
             if (unit_current.IsIDLE())
                 return true;
@@ -346,9 +314,9 @@ namespace Awesome.AI.Core
 
             soup.Counter++;
 
-            if (!core.OK(out user_var))
-                return false;
-            return true;
+            bool ok = core.OK(out user_var);
+
+            return ok;
         }
 
         private void CorePost(bool _pro)
@@ -383,9 +351,6 @@ namespace Awesome.AI.Core
         {
             while (ok)
             {
-                //if (current == "noise")
-                //    continue;
-
                 do_process = true;
                 await Task.Delay(2023);
             }
