@@ -11,7 +11,6 @@ namespace Awesome.AI.Core.Electrical
     {
         public double Capacitance;
         public double rFixed;
-
         public double CapacitorVoltage;
         public double Current;
         public double DeltaCurrent;
@@ -26,13 +25,16 @@ namespace Awesome.AI.Core.Electrical
             previousCurrent = 0;
         }
 
-        public double Step(double inputVoltage, double weight1, double weight2, double dt)
+        public double Step(double inputVoltage, double gain1, double gain2, double dt)
         {
-            double rEffetive = rFixed * weight1 * weight2;
+            double rEffetive = rFixed * (0.1 + gain1 * gain2);
             Current = (inputVoltage - CapacitorVoltage) / rEffetive;
             DeltaCurrent = Current - previousCurrent;
             CapacitorVoltage += (Current / Capacitance) * dt;
             previousCurrent = Current;
+
+            // Add slight nonlinearity (smooth saturation)
+            CapacitorVoltage = Math.Tanh(CapacitorVoltage);
 
             //Clamp or saturate voltage
             //CapacitorVoltage = Math.Max(-1.0, Math.Min(1.0, CapacitorVoltage));
@@ -97,6 +99,7 @@ namespace Awesome.AI.Core.Electrical
             this.mind = mind;
             this.type = type;
 
+            this.ms = new MechSymbolicOut() { };
             this.mh = new MechHelper() { };
             this.mp = new MechParams() { };
 
@@ -122,7 +125,9 @@ namespace Awesome.AI.Core.Electrical
 
         public double PosXY()
         {
-            throw new NotImplementedException("CircuitSimulator, POS_XY");            
+            double meter = mh.PosXY(mind, mp);
+
+            return meter;
         }
 
         public void Peek(UNIT curr)
@@ -166,7 +171,7 @@ namespace Awesome.AI.Core.Electrical
                      * Pink Noise
                      * */
 
-                    mp.damp = 80.0d;             // Scaling for resistor/damping
+                    mp.damp = 1.0d;             // Scaling for resistor/damping
                     mp.inertia_lim = 0.0015d;
                     mp.dt = 0.01;
 
@@ -186,7 +191,7 @@ namespace Awesome.AI.Core.Electrical
                         // Calculate voltages
                         double vBattery = -(CONST.MAX * CONST.BASE_SCALE * 0.05d) * mp.damp;
                         double vResistor = (curr.Variable * 0.1d) * mp.damp;
-                        double vLoss = mp.cc_elec_curr * mh.Friction(mind) * mp.damp;
+                        double vLoss = mp.cc_elec_curr * Damping(mind) * mp.damp;
                         double netVoltage = vBattery + vResistor + vLoss;
 
                         // Inductor: L * di/dt = V_net => di = V_net / L * dt
@@ -199,19 +204,19 @@ namespace Awesome.AI.Core.Electrical
 
                         break;
                     case MECHANICS.CIRCUIT_2_LOW:
-                        double voltage = register.Average();
+                        double voltage = register.Average() + (mind.rand.MyRandomDouble(1)[0] - 0.5) * 0.01; ;
                         double dCurrent = 0.0d;
                         
-                        double w1 = curr.Variable.Norm1(mind, 0.0d, 100.0d);
-                        double w2 = mh.Friction(mind);
+                        double g1 = curr.Variable.Norm1(mind, 0.0d, 100.0d);
+                        double g2 = Damping(mind);
 
-                        double weight1 = w1 * mp.damp;
-                        double weight2 = w2 * mp.damp;
+                        double gain1 = g1 * mp.damp;
+                        double gain2 = g2 * mp.damp;
 
                         foreach (var stage in circuit)
                         {
                             //stage.Resistance = 1000 + 500 * Math.Sin(2 * Math.PI * time * 0.1);
-                            voltage = stage.Step(voltage, weight1, weight2, mp.dt);
+                            voltage = stage.Step(voltage, g1, g2, mp.dt);
                             dCurrent += stage.DeltaCurrent;
 
                             if (double.IsNaN(dCurrent) || double.IsInfinity(dCurrent))
@@ -239,7 +244,22 @@ namespace Awesome.AI.Core.Electrical
         {
             double delta = mind.mech_high.ms.dv_sym_100;
             double mod = delta > 0.0d ? delta / 100.0d : 1.0d;
-            mp.dt = 0.0005d * mod;
+            mp.dt = 0.001d * mod;
+        }
+
+        public double Damping(TheMind mind)
+        {
+            /*
+             * friction coeficient
+             * should friction be calculated from position???
+             * */
+
+            MyCalc calc = mind.calc;
+
+            double credits = CONST.MAX_CREDIT - mind.unit_current.credits;
+            double friction = calc.Logistic(credits - ((double)CONST.MAX_CREDIT / 2.0d));
+
+            return friction;
         }
 
         public void Calculate(PATTERN match, int cycles)

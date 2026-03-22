@@ -62,11 +62,14 @@ namespace Awesome.AI.Core
                 case MECHANICS.BALLONHILL_LOW:
                     ok = ReciprocalOK(mind.mech_current.PosXY(), out pain_truth_something);
                     return ok;
+                case MECHANICS.CIRCUIT_2_LOW:
+                    ok = ReciprocalOK(mind.mech_current.PosXY(), out pain_truth_something);
+                    return ok;
                 case MECHANICS.MECH_OTHER_LOW:
                     ok = EventHorizonOK(mind.mech_current.PosXY(), out pain_truth_something);
                     return ok;
                 default: 
-                    throw new Exception("OK");
+                    throw new Exception("Core, OK");
             }
         }
 

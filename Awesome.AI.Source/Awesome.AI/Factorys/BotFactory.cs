@@ -94,7 +94,7 @@ namespace Awesome.AI.Factorys
         {
             mindtype = MINDS.BASIC;
             logic = LOGICTYPE.PROBABILITY;
-            mech_low = MECHANICS.TUGOFWAR_LOW;
+            mech_low = MECHANICS.CIRCUIT_2_LOW;
             mech_high = MECHANICS.BALLONHILL_HIGH;
             lng_dec = CONST.lng_dec_basic;
 

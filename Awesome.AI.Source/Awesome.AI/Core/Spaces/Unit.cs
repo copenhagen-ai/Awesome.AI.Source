@@ -119,7 +119,7 @@ namespace Awesome.AI.Core.Spaces
                     case MECHANICS.CIRCUIT_1_LOW:
                         throw new Exception("UNIT, Variable");
                     case MECHANICS.CIRCUIT_2_LOW:
-                        throw new Exception("UNIT, Variable");
+                        res = UIget("will").LowZero(); break;
                     case MECHANICS.TUGOFWAR_LOW:
                         res = UIget("will").LowZero(); break;
                     case MECHANICS.BALLONHILL_LOW:
