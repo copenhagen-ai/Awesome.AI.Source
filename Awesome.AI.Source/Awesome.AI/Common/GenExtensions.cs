@@ -10,7 +10,7 @@ namespace Awesome.AI.Common
         public static void BusyWait(this string txt, int count, TheMind mind)
         {
             if (mind.epochs > CONST.FIRST_RUN * 3)
-                Console.WriteLine(txt);
+                Console.Write(" : " + txt);
 
             //because i dont want to implement async
             for (int i = 0; i < count; i++)

@@ -19,7 +19,6 @@ namespace Awesome.AI.Common
         }
 
         private List<double> saves { get; set; }
-
         public void SaveMomentum(double momentum)
         {
             if (double.IsNaN(momentum))
@@ -34,11 +33,15 @@ namespace Awesome.AI.Common
             if (momentum == 0.0d)
                 return;
 
+            if (saves.Contains(momentum))
+                return;
+            
             saves.Add(momentum);
             if (saves.Count > 500)
                 saves.RemoveAt(0);
         }
 
+        private int shift_b {  get; set; }
         public double[] MyRandomDouble(int count)
         {
             try
@@ -46,12 +49,16 @@ namespace Awesome.AI.Common
                 double[] res = new double[count];
                 for (int i = 0; i < count; i++)
                 {
-                    string rand = Rand(i);
+                    string rand = Rand(i + shift_b);
 
                     int index = rand.Length < 10 ? rand.Length : 10;
 
                     res[i] = double.Parse($"0.{rand[..index]}", CultureInfo.InvariantCulture);
                 }
+
+                shift_b++;
+                if (shift_b >= 100)
+                    shift_b = 0;
 
                 return res;
             }
@@ -61,6 +68,7 @@ namespace Awesome.AI.Common
             }
         }
 
+        private int shift_a {  get; set; }
         public int[] MyRandomInt(int count, int i_max)
         {
             try
@@ -77,11 +85,15 @@ namespace Awesome.AI.Common
 
                 for (int i = 0; i < count; i++)
                 {
-                    string rand = Rand(i);
+                    string rand = Rand(i + shift_a);
 
                     double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}{rand[3]}{rand[4]}") / 100000;
-                    res[i] = mind.calc.RoundInt((double)i_max * dec);
+                    res[i] = (int)((double)(i_max + 1) * dec);
                 }
+
+                shift_a++;
+                if (shift_a >= 100)
+                    shift_a = 0;
 
                 return res;
             }
@@ -99,7 +111,7 @@ namespace Awesome.AI.Common
                     throw new Exception("Rand");
 
                 //get momentum
-                string rand = "" + saves[index];
+                string rand = "" + (saves[index]);
 
                 //remove exponent
                 int index_e = rand.ToUpper().IndexOf('E');
@@ -110,6 +122,10 @@ namespace Awesome.AI.Common
                 string res = "";
                 for (int i = rand.Length; i > 0; i--)
                     res += char.IsDigit(rand[i - 1]) ? rand[i - 1] : "";
+
+                //string res = "";
+                //for (int i = 3; i < rand.Length; i++)
+                //    res += char.IsDigit(rand[i]) ? rand[i] : "";
 
                 return res;
             }

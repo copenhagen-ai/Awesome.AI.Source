@@ -61,8 +61,9 @@ namespace Awesome.AI.Variables
         public const string lng_should = "SHOULD_";
         public const string lng_what = "WHAT_";
 
-        public const string q_yes = "QYES";
-        public const string q_no = "QNO";
+        public const string Q_YES = "QYES";
+        public const string Q_NO = "QNO";
+        public const string QUICK = "QUICK";
 
         public const string LDAT_LOC_SHOULD = "SHOULD_A";
         public const string LDAT_ANS_SHOULD = "SHOULD_B";

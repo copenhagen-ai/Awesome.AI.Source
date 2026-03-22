@@ -14,64 +14,66 @@ namespace Awesome.AI.CoreSystems
         public QuickDecision(TheMind mind)
         {
             this.mind = mind;
-        }
 
-        private bool Go { get; set; }
+            res.Add("WHISTLE", false);
+            res.Add("MATHLEARN", false);
+            res.Add("MATHSOLVE", false);
+
+            new_res.Add("WHISTLE", false);
+            new_res.Add("MATHLEARN", false);
+            new_res.Add("MATHSOLVE", false);
+
+        }
+        
         private int Period { get; set; }
         private int Count { get; set; }
 
-        private int epochold = -1;
-        private bool res = false;
-        private bool new_res = false;
+        private Dictionary<string, bool> res = new Dictionary<string, bool>();
+        private Dictionary<string, bool> new_res = new Dictionary<string, bool>();
 
-        public bool Result
+        private void Stats()
         {
-            get
-            {
-                if (new_res && mind.epochs > epochold)
-                {
-                    if (Count > Period)
-                    {
-                        new_res = false;
-                        res = false;
-                    }
+            List<UNIT> list = mind.access.UNITS_ALL();
+            list = list.Where(x=>x.IsQDECISION()).ToList();
 
-                    Count++;
-                }
+            int count = list.Count();
 
-                epochold = mind.epochs;
-
-                return res;
-            }
+            Console.WriteLine("count" + count);
         }
 
-        public void Run(bool pro, UNIT curr)
+        public bool Result(string type)
         {
-            if (new_res)
+            if (!new_res[type])
+                return false;
+            
+            if (Count > Period)
+            {
+                new_res[type] = false;
+                res[type] = false;
+            }
+
+            Count++;           
+            
+            return res[type];            
+        }
+
+        public void Run(bool pro, UNIT curr, string type)
+        {
+            if (new_res[type])
                 return;
 
-            if (!curr.IsQUICKDECISION())
+            if (!curr.IsQDECISION())
                 return;
-
-            if (mind.Roberta())
-                ;
-
-            if (mind.Andrew())
-                ;
 
             if (mind.STATE == STATE.QUICKDECISION && mind.access.QDCOUNT() > 0)
             {
                 if (mind.access.QDCOUNT() == 1)
                 {
-                    res = curr.Data == "QYES";
+                    res[type] = curr.Data == "QYES";
 
-                    new_res = true;
+                    new_res[type] = true;
 
-                    mind.STATE = STATE.JUSTRUNNING;
-
-                    mind.access.QDRESETU();
-                    
-                    return;
+                    mind.STATE = STATE.JUSTRUNNING;                    
                 }
 
                 mind.access.QDREMOVE(curr);
@@ -79,22 +81,13 @@ namespace Awesome.AI.CoreSystems
                 return;
             }
 
-            if (!pro)
-                return;
 
-            if (curr.Data == "WHISTLE")
+            if (curr.Data == type)
                 Setup(5, 5);
         }
 
-        int sample_count = 0;
         private void Setup(int count, int period)
         {
-            sample_count++;
-
-            if (sample_count < 20) return;
-
-            sample_count = 0;
-            
             Period = period;
             
             Count = 0;
@@ -102,15 +95,17 @@ namespace Awesome.AI.CoreSystems
             List<string> should_decision = new List<string>();
 
             for (int i = 0; i < count; i++)
-                should_decision.Add(/*YES*/CONST.q_yes);
+                should_decision.Add(CONST.QUICK);// YES
 
             for (int i = 0; i < count; i++)
-                should_decision.Add(/*NO*/CONST.q_no);
+                should_decision.Add(CONST.QUICK);// NO
+
+            should_decision.Shuffle();
 
             mind.access.QDRESETU();
-            //mind.mem.QDRESETH();
 
             TONE tone = TONE.RANDOM;
+
             mind.memory.Decide(STATE.QUICKDECISION, CONST.QSUB_SHOULD, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
             
             mind.STATE = STATE.QUICKDECISION;

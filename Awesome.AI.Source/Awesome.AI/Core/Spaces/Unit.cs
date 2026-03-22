@@ -3,7 +3,6 @@ using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
-using System.Numerics;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
@@ -63,25 +62,32 @@ namespace Awesome.AI.Core.Spaces
         {
             get
             {
-                if (data != "DATA")
+                if (data != "DATA" && data != CONST.QUICK)
                     return data;
 
-                string sub = mind.hub.GetSubject(this);
+                switch (data)
+                {
+                    case "DATA":
+                        string sub = mind.hub.GetSubject(this);
 
-                if (sub == "init")
-                    return "";
+                        if (sub == "init")
+                            return "";
 
-                double _i = mind.mech_high.mp.props.PropsOut["base"];
-                string idx = $"{_i.Index(mind)}";
+                        double _i = mind.mech_high.mp.props.PropsOut["base"];
+                        string idx = $"{_i.Index(mind)}";
 
-                if (CONST.DECI_SUBJECT_CONTAINS(sub))
-                    return "";
+                        Lookup lookup = new Lookup();
 
-                Lookup lookup = new Lookup();
+                        string _data = lookup.GetDATA(mind, idx, sub);
 
-                string _data = lookup.GetDATA(mind, idx, sub);
+                        return _data;
+                    case "QUICK":
+                        double index = UIget("will");
 
-                return _data;
+                        return index < 50.0d ? CONST.Q_YES : CONST.Q_NO;
+                    default:
+                        throw new Exception("Unit, Data");
+                }
             }
             set { data = value; }
         }
@@ -189,6 +195,11 @@ namespace Awesome.AI.Core.Spaces
         public static UNIT CreateIdle(TheMind mind)
         {
             return Create(mind, "GUID", [-1d, -1d], "IDLE", "NONE", UNITTYPE.IDLE, LONGTYPE.NONE);
+        }
+
+        public static UNIT CreateQuick(TheMind mind, string name, double[] dex)
+        {
+            return Create(mind, "GUID", dex, name, "NONE", UNITTYPE.QDECISION, LONGTYPE.NONE);
         }
 
         private int _do { get; set; }
@@ -435,6 +446,6 @@ namespace Awesome.AI.Core.Spaces
 
         public bool IsDECISION() => unit_type == UNITTYPE.LDECISION;
 
-        public bool IsQUICKDECISION() => unit_type == UNITTYPE.QDECISION;
+        public bool IsQDECISION() => unit_type == UNITTYPE.QDECISION;
     }
 }

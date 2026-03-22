@@ -175,7 +175,7 @@ namespace Awesome.AI.Core
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
-            if (mind.unit_current.IsQUICKDECISION())
+            if (mind.unit_current.IsQDECISION())
                 return;
 
             //if (mind.curr_unit.IsDECISION())

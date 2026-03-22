@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Core;
-using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
@@ -12,6 +11,8 @@ namespace Awesome.AI.Common
         {
             this.mind = mind;
         }
+
+        public bool out_ready {  get; set; }
 
         public string ok {  get; set; }
         public string cycles { get; set; }
@@ -36,6 +37,7 @@ namespace Awesome.AI.Common
         public string chat_answer { get; set; }
         public string chat_subject { get; set; }
         public string whistle { get; set; }
+        public string math { get; set; }
         public string monologue_det_result { get; set; }
         public string monologue_det_subject { get; set; }
         public string monologue_det_relevance { get; set; }
@@ -52,16 +54,10 @@ namespace Awesome.AI.Common
                 
         public string common_hub_subject { get; set; }
 
-        private string[] gimmick = { "[.??]", "[??.]" };
-        private int count = 0;
-
         public void SetOut()
         {
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
-
-            if (count > 1)
-                count = 0;
 
             /*
              * LOW
@@ -97,7 +93,8 @@ namespace Awesome.AI.Common
             epochs = $"{mind.epochs}";
             runtime = $"{mind.bot.RUNTIME}";
 
-            whistle = $"{(mind._quick.Result ? "[Whistling to my self..]" : gimmick[count])}";
+            whistle = $"{mind.result_whistle}";
+            math = $"{mind.result_math}";
             common_hub_subject = $"{(mind.hub.GetSubject(mind.unit_actual) ?? "")}";
 
             occu = $"{mind._internal.Occu.name}";
@@ -123,8 +120,8 @@ namespace Awesome.AI.Common
 
             string s_tmp2 = mind._long.GetResult(LONGTYPE.ASK);
             if (s_tmp2 != "") chat_subject = $"{s_tmp2}";
-            
-            count++;
+
+            out_ready = true;
         }
     }
 }

@@ -7,6 +7,7 @@ using Awesome.AI.Factorys;
 using Awesome.AI.Generators;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
+using System.Data;
 using System.Diagnostics;
 using static Awesome.AI.Common.MicroTimer;
 using static Awesome.AI.Variables.Enums;
@@ -44,8 +45,12 @@ namespace Awesome.AI.Core
         public MyExternal _external;
         public QUsage quantum;
         public GPTProbability prob;
+        public Whistle whistle;
+        public GoalMath g_math;
 
         public string json {  get; set; }
+        public string result_whistle {  get; set; }
+        public string result_math {  get; set; }
 
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
@@ -55,7 +60,10 @@ namespace Awesome.AI.Core
         public MyStats stats = new MyStats();
         public MyMeters meters = new MyMeters();
         public UNIT theanswer;
-                
+        public UNIT q_u_whistle { get; set; }
+        public UNIT q_u_mathsolve { get; set; }
+        public UNIT q_u_mathlearn { get; set; }
+
         public MINDS mindtype;
         public ENV environment;
 
@@ -74,21 +82,8 @@ namespace Awesome.AI.Core
 
         public STATE _s { get; set; } = STATE.JUSTRUNNING;
         public STATE _s_tmp { get; set; }
-        public STATE STATE 
-        {
-            get 
-            {
-                if (_pro)
-                    _s = _s_tmp;
-
-                return _s;
-            }
-            set 
-            {
-                _s_tmp = value;
-            } 
-        }
-        
+        public STATE STATE { get; set; }
+                
         public UNIT unit_current { get; set; }
         public UNIT unit_actual { get; set; }
 
@@ -140,6 +135,13 @@ namespace Awesome.AI.Core
                 memory = new USSetup(this);
                 access = new USAccess(this);
                 hub = new HubSpace(this);
+                whistle = new Whistle(this);
+                g_math = new GoalMath(this);
+
+                string[] list = { "WHISTLE", "MATHLEARN", "MATHSOLVE" };
+                q_u_whistle = UNIT.CreateQuick(this, list[0], [50d, 50d]);
+                q_u_mathlearn = UNIT.CreateQuick(this, list[1], [51d, 50d]);
+                q_u_mathsolve = UNIT.CreateQuick(this, list[2], [52d, 50d]);
 
                 Random random = new Random();
                 int u_count = access.UNITS_ALL().Count;
@@ -264,7 +266,13 @@ namespace Awesome.AI.Core
 
             rand.SaveMomentum(mech_current.ms.dv_sym_curr);
 
-            _quick.Run(_pro, unit_current);
+            _quick.Run(_pro, unit_current, "WHISTLE");
+            _quick.Run(_pro, unit_current, "MATHLEARN");
+            _quick.Run(_pro, unit_current, "MATHSOLVE");
+
+            whistle.Do(_pro);
+            g_math.Learn(g_math.GetProblem(-1), _pro);
+            g_math.Solve(g_math.GetProblem(-1), _pro);
 
             if (!_pro)
                 return;
@@ -321,7 +329,7 @@ namespace Awesome.AI.Core
 
         private void CorePost(bool _pro)
         {
-            soup.CurrentUnit();
+            soup.CurrentUnit(_pro);
             core.History();
             core.ActualUnit(_pro);
             core.Stats(_pro);

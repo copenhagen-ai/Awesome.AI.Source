@@ -97,7 +97,6 @@ namespace Awesome.AI.CoreSystems
         public int epoch_count = 0;
         public int epoch_stop = -1;
 
-
         public Occupasion Occu
         {
             get
@@ -261,7 +260,7 @@ namespace Awesome.AI.CoreSystems
             if (_u.IsDECISION())
                 return true;
 
-            if (_u.IsQUICKDECISION())
+            if (_u.IsQDECISION())
                 return true;
 
             tags = tags.Where(x => x != null).ToList();

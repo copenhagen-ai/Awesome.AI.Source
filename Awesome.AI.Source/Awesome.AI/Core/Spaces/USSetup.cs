@@ -163,11 +163,19 @@ namespace Awesome.AI.Core.Spaces
 
             //Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             //foreach (var kv in dict)
-            {
-                tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-                Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "WHISTLE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
-            }
+            //{
+            //tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+            //Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "WHISTLE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
+
+            //tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+            //Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "MATHLEARN"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
+
+            //tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
+            //Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "MATHSOLVE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
+            //}
         }
+
+        
 
         private double GetIndex(TONE tone, double _rand)
         {
@@ -352,34 +360,35 @@ namespace Awesome.AI.Core.Spaces
             return count;
         }
 
-        public void Quick(/*int max_units, */int num_units, string subject, string name, UNITTYPE utype, LONGTYPE ltype, TONE tone)
-        {
-            //XElement xdoc;
-            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
-            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
-            //else
-            //    throw new Exception();
-
-            List<UNIT> _u = new List<UNIT>();
-
-            Random random = new Random();
-
-            string guid = Guid.NewGuid().ToString();
-
-            for (int i = 0; i < num_units; i++)
-            {
-                double rand1 = mind.cycles < CONST.FIRST_RUN ?
-                random.NextDouble() :
-                mind.rand.MyRandomDouble(num_units)[100];
-
-                double rand2 = mind.cycles < CONST.FIRST_RUN ?
-                random.NextDouble() :
-                mind.rand.MyRandomDouble(num_units)[200];
-
-                _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], name, "NONE", utype, ltype));
-            }
-
-            units_running = units_running.Concat(_u).ToList();
-        }
     }
 }
+
+//public void Quick(/*int max_units, */int num_units, string subject, string name, UNITTYPE utype, LONGTYPE ltype, TONE tone)
+//{
+//    //XElement xdoc;
+//    //if (mind.parms.setup_tags == TAGSETUP.PRIME)
+//    //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
+//    //else
+//    //    throw new Exception();
+
+//    List<UNIT> _u = new List<UNIT>();
+
+//    Random random = new Random();
+
+//    string guid = Guid.NewGuid().ToString();
+
+//    for (int i = 0; i < num_units; i++)
+//    {
+//        double rand1 = mind.cycles < CONST.FIRST_RUN ?
+//        random.NextDouble() :
+//        mind.rand.MyRandomDouble(num_units)[100];
+
+//        double rand2 = mind.cycles < CONST.FIRST_RUN ?
+//        random.NextDouble() :
+//        mind.rand.MyRandomDouble(num_units)[200];
+
+//        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], name, "NONE", utype, ltype));
+//    }
+
+//    units_running = units_running.Concat(_u).ToList();
+//}

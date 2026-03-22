@@ -63,10 +63,37 @@ namespace Awesome.AI.Core.Spaces
                 default: throw new Exception("UnitSpaceSoup, Direction");
             }
         }
+
+        private bool Quick(bool _pro)
+        {
+            /*
+             * make logic for initiating quick decision here
+             * */
+
+            if (!_pro)
+                return false;
+
+            if (mind.STATE == STATE.QUICKDECISION)
+                return false;
+
+            if (!CONST.SAMPLE20.RandomSample(mind))
+                return false;
+
+            UNIT[] list = { mind.q_u_whistle, mind.q_u_mathlearn, mind.q_u_mathsolve };
+
+            int rand = mind.rand.MyRandomInt(1, 29)[0];
+            
+            mind.unit_current = list[rand / 10];
+
+            return true;
+        }
         
-        public void CurrentUnit()
+        public void CurrentUnit(bool _pro)
         {
             if (mind.z_current != "z_noise")
+                return;
+
+            if (Quick(_pro))
                 return;
 
             //dont do this
@@ -89,10 +116,10 @@ namespace Awesome.AI.Core.Spaces
          * */
         private UNIT Unit()
         {
-            List<UNIT> units = mind.access.UNITS_VAL();
+            List<UNIT> units = mind.access.UNITS_ALL();
 
             units = units.Where(x =>
-                   mind.filters.Quick(x)                    //comment to turn off
+                   mind.filters.Valid(x)                    //comment to turn off
                 && mind.filters.LowCut(x, "will")           //comment to turn off
                 && mind.filters.Credits(x, "will")          //comment to turn off
                 ).ToList();
@@ -216,8 +243,7 @@ namespace Awesome.AI.Core.Spaces
 
             List<UNIT> units = mind.access.UNITS_ALL();
             units = units.Where(x =>
-                    //mind.filters.UnitIsValid(x) 
-                       mind.filters.Quick(x)
+                       mind.filters.Valid(x)
                     && mind.filters.Credits(x, "will")
                     && mind.filters.LowCut(x, "will")
                     ).OrderByDescending(x => x.Variable).ToList();

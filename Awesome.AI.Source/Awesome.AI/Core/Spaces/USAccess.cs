@@ -16,10 +16,10 @@ namespace Awesome.AI.Core.Spaces
         public List<UNIT> UNITS_ALL(ORDER order = ORDER.NONE)
         {
             if (mind.STATE == STATE.JUSTRUNNING && !mind.memory.units_running.Any())
-                throw new Exception("Memory, UNITS_VAL 1");
+                throw new Exception("Memory, UNITS_ALL 1");
 
             if (mind.STATE == STATE.QUICKDECISION && !mind.memory.units_decision.Any())
-                throw new Exception("Memory, UNITS_VAL 2");
+                throw new Exception("Memory, UNITS_ALL 2");
 
             switch (mind.STATE)
             {
@@ -29,86 +29,11 @@ namespace Awesome.AI.Core.Spaces
                     if (order == ORDER.BYVARIABLE)
                         return mind.memory.units_running.OrderBy(x=>x.Variable).ToList();
                     return mind.memory.units_running;
-                case STATE.QUICKDECISION: return mind.memory.units_decision;
+                case STATE.QUICKDECISION: 
+                    return mind.memory.units_decision.ToList();
                 default: throw new NotImplementedException();
             }
         }
-
-        public UNIT UNIT_GUID(string guid)
-        {
-            UNIT res;
-
-            if (mind.STATE == STATE.JUSTRUNNING && !mind.memory.units_running.Any())
-                throw new Exception("Memory, UNITS_VAL 1");
-
-            if (mind.STATE == STATE.QUICKDECISION && !mind.memory.units_decision.Any())
-                throw new Exception("Memory, UNITS_VAL 2");
-
-            switch (mind.STATE)
-            {
-                case STATE.JUSTRUNNING: res = mind.memory.units_running.Where(x => x.guid == guid).First(); break;
-                default: throw new NotImplementedException();
-            }
-
-            return res;
-        }
-
-        public List<UNIT> UNITS_VAL()
-        {
-            List<UNIT> res;
-
-            if (mind.STATE == STATE.JUSTRUNNING && !mind.memory.units_running.Any())
-                throw new Exception("Memory, UNITS_VAL 1");
-
-            if (mind.STATE == STATE.QUICKDECISION && !mind.memory.units_decision.Any())
-                throw new Exception("Memory, UNITS_VAL 2");
-
-            switch (mind.STATE)
-            {
-                case STATE.JUSTRUNNING: res = mind.memory.units_running.Where(x => x.IsValid).ToList(); break;
-                case STATE.QUICKDECISION: res = mind.memory.units_decision.ToList(); break;//all are valid
-                default: throw new NotImplementedException();
-            }
-
-            return res;
-        }
-
-        public UNIT UNITS_RND(int index)
-        {
-            int[] rand;
-            UNIT _u;
-
-            switch (mind.STATE)
-            {
-                case STATE.JUSTRUNNING:
-                    rand = mind.rand.MyRandomInt(index, mind.memory.units_running.Count() - 1);
-                    _u = mind.memory.units_running[rand[index - 1]];
-                    break;
-                case STATE.QUICKDECISION:
-                    rand = mind.rand.MyRandomInt(index, mind.memory.units_decision.Count() - 1);
-                    _u = mind.memory.units_decision[rand[index - 1]];
-                    break;
-                default: throw new NotImplementedException();
-            }
-
-            return _u;
-        }
-
-        //public void UNITS_ADD(UNIT unit, double[] xx)
-        //{
-        //    double idx1 = mind.rand.MyRandomDouble(1)[0];
-        //    idx1 = mind.calc.Normalize(idx1, 0.0d, 1.0d, xx[0], xx[1]);
-            
-        //    List<string> list = mind.memory.Tags(mind.mindtype);
-        //    int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
-
-        //    string ticket = "" + mind.hub.GetSubject(unit) + rand;
-        //    string guid = "" + unit.guid;
-
-        //    UNIT _u = UNIT.Create(mind, guid, [idx1], "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
-
-        //    mind.memory.units_running.Add(_u);
-        //}
 
         public void UNITS_ADD(UNIT unit, double[][] axis, int count)
         {
@@ -134,17 +59,6 @@ namespace Awesome.AI.Core.Spaces
                 mind.meters.units_added++;
         }
 
-        public void UNITS_REM(UNIT unit, double low, double high)
-        {
-            List<UNIT> list = UNITS_ALL().Where(x => x.Variable > low && x.Variable < high).ToList();
-            list = list.Where(x => x.created < unit.created).ToList();
-
-            foreach (UNIT _u in list)
-            {
-                mind.memory.units_running.Remove(_u);
-                mind.meters.units_removed++;
-            }
-        }
 
         public void UNITS_REM(UNIT unit)
         {
@@ -157,3 +71,91 @@ namespace Awesome.AI.Core.Spaces
         public int QDCOUNT() => mind.memory.units_decision.Count();        
     }
 }
+
+//public void UNITS_REM(UNIT unit, double low, double high)
+//{
+//    List<UNIT> list = UNITS_ALL().Where(x => x.Variable > low && x.Variable < high).ToList();
+//    list = list.Where(x => x.created < unit.created).ToList();
+
+//    foreach (UNIT _u in list)
+//    {
+//        mind.memory.units_running.Remove(_u);
+//        mind.meters.units_removed++;
+//    }
+//}
+
+//public UNIT UNIT_GUID(string guid)
+//{
+//    UNIT res;
+
+//    if (mind.STATE == STATE.JUSTRUNNING && !mind.memory.units_running.Any())
+//        throw new Exception("Memory, UNITS_GUID 1");
+
+//    if (mind.STATE == STATE.QUICKDECISION && !mind.memory.units_decision.Any())
+//        throw new Exception("Memory, UNITS_GUID 2");
+
+//    switch (mind.STATE)
+//    {
+//        case STATE.JUSTRUNNING: res = mind.memory.units_running.Where(x => x.guid == guid).First(); break;
+//        default: throw new NotImplementedException();
+//    }
+
+//    return res;
+//}
+
+//public List<UNIT> UNITS_VAL()
+//{
+//    List<UNIT> res;
+
+//    if (mind.STATE == STATE.JUSTRUNNING && !mind.memory.units_running.Any())
+//        throw new Exception("Memory, UNITS_VAL 1");
+
+//    if (mind.STATE == STATE.QUICKDECISION && !mind.memory.units_decision.Any())
+//        throw new Exception("Memory, UNITS_VAL 2");
+
+//    switch (mind.STATE)
+//    {
+//        case STATE.JUSTRUNNING: res = mind.memory.units_running.Where(x => x.IsValid).ToList(); break;
+//        case STATE.QUICKDECISION: res = mind.memory.units_decision.ToList(); break;//all are valid
+//        default: throw new NotImplementedException();
+//    }
+
+//    return res;
+//}
+
+//public UNIT UNITS_RND(int index)
+//{
+//    int[] rand;
+//    UNIT _u;
+
+//    switch (mind.STATE)
+//    {
+//        case STATE.JUSTRUNNING:
+//            rand = mind.rand.MyRandomInt(index, mind.memory.units_running.Count() - 1);
+//            _u = mind.memory.units_running[rand[index - 1]];
+//            break;
+//        case STATE.QUICKDECISION:
+//            rand = mind.rand.MyRandomInt(index, mind.memory.units_decision.Count() - 1);
+//            _u = mind.memory.units_decision[rand[index - 1]];
+//            break;
+//        default: throw new NotImplementedException();
+//    }
+
+//    return _u;
+//}
+
+//public void UNITS_ADD(UNIT unit, double[] xx)
+//{
+//    double idx1 = mind.rand.MyRandomDouble(1)[0];
+//    idx1 = mind.calc.Normalize(idx1, 0.0d, 1.0d, xx[0], xx[1]);
+
+//    List<string> list = mind.memory.Tags(mind.mindtype);
+//    int rand = mind.rand.MyRandomInt(1, list.Count)[0] + 1;
+
+//    string ticket = "" + mind.hub.GetSubject(unit) + rand;
+//    string guid = "" + unit.guid;
+
+//    UNIT _u = UNIT.Create(mind, guid, [idx1], "DATA", ticket, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);
+
+//    mind.memory.units_running.Add(_u);
+//}

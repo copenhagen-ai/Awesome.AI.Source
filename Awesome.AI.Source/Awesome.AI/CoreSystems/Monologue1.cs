@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Core;
-using Awesome.AI.Core.Spaces;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreSystems
@@ -73,7 +72,7 @@ namespace Awesome.AI.CoreSystems
                 if (mind.STATE == STATE.QUICKDECISION)
                     return;
 
-                if (mind.unit_actual.IsQUICKDECISION())
+                if (mind.unit_actual.IsQDECISION())
                     return;
 
                 if (mind.unit_actual.IsDECISION())

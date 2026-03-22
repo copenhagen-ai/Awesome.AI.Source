@@ -29,7 +29,7 @@ namespace Awesome.AI.Generators
             string data = GenHelper.IsDebug() ? "Data" : "DataFiles";
             
             if (mind.environment == Variables.Enums.ENV.LOCAL)
-                data = "Awesome.AI\\Data";
+                data = "Data";
 
             string path = root + data + "\\latin.txt";
 
