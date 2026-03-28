@@ -57,6 +57,9 @@ namespace Awesome.AI.CoreSystems
             if (!_pro)
                 return;
 
+            if (mind.z_current != "z_noise")
+                return;
+
             if (!mind._quick.Result("MATHSOLVE"))
                 return;
 
@@ -69,12 +72,15 @@ namespace Awesome.AI.CoreSystems
                 }
             }
 
-            mind.result_math = "I don't know how to solve this yet.";
+            mind.result_math = "i don't know how to solve this yet.";
         }
 
         public void Learn(string problem, bool _pro)
         {
             if (!_pro)
+                return;
+
+            if (mind.z_current != "z_noise")
                 return;
 
             if (!mind._quick.Result("MATHLEARN"))
@@ -141,7 +147,7 @@ namespace Awesome.AI.CoreSystems
                 var match = Regex.Match(input, @"(\d*)x\s*([\+\-]\s*\d+)?\s*=\s*(\d+)");
 
                 if (!match.Success)
-                    return "Format not supported.";
+                    return "format not supported.";
 
                 int a = string.IsNullOrEmpty(match.Groups[1].Value) ? 1 : int.Parse(match.Groups[1].Value);
                 int b = match.Groups[2].Success ? int.Parse(match.Groups[2].Value.Replace(" ", "")) : 0;
@@ -153,7 +159,7 @@ namespace Awesome.AI.CoreSystems
             }
             catch
             {
-                return "Failed to evaluate expression.";
+                return "failed to evaluate expression.";
             }
         }
     }
@@ -176,7 +182,7 @@ namespace Awesome.AI.CoreSystems
             }
             catch (Exception ex)
             {
-                return "Failed to evaluate expression.";
+                return "failed to evaluate expression.";
             }
         }
     }

@@ -41,14 +41,14 @@ namespace Awesome.AI.Core
                 units.Add(i * 10, 0);
         }
 
-        public bool OK(out double pain_truth_something)
+        public bool OK(double old, out double pain_truth_something)
         {
             /*
              * this is the Go/NoGo class
              * actually not part of the algorithm
              * */
 
-            pain_truth_something = 0.0d;
+            pain_truth_something = old;
 
             if (mind.z_current != "z_noise")
                 return true;

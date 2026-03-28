@@ -160,7 +160,8 @@ namespace Awesome.AI.Core.Spaces
         public static UNIT Create(TheMind mind, string h_guid, double[] index, string data, string ticket, UNITTYPE ut, LONGTYPE lt)
         {
             //make sure some time has gone before creating a new unit
-            "hello world!".BusyWait(1, mind);
+            if (ut != UNITTYPE.QDECISION)
+                "hello world!".BusyWait(1, mind);
 
             DateTime create = DateTime.Now;
             Random rand = new Random();
@@ -173,8 +174,6 @@ namespace Awesome.AI.Core.Spaces
             int i = 0;
             foreach (string s in mind.soup.axis)
                 _w.u_index[s] = index[i++];
-
-            //_w.u_index["will"] = index[i];
 
             ticket = ticket != "" ? ticket : "NOTICKET";
             _w.ticket = new Ticket(ticket);
@@ -348,6 +347,9 @@ namespace Awesome.AI.Core.Spaces
             if (mind.z_current != "z_noise")
                 return;
 
+            if (mind.STATE == STATE.QUICKDECISION)
+                return;
+
             if (Add2D(v_near))
                 return;
 
@@ -358,9 +360,9 @@ namespace Awesome.AI.Core.Spaces
         private bool Add2D(GPTVector2D v_near)
         {
             int axis_count = mind.soup.axis.Length;
-            var sub = mind.hub.GetSubject(this.HI);
-            UNIT[] list = mind.hub.UnitsPerHub(sub).ToArray();
-            int count = list.Count();
+            Lookup lookup = new Lookup();
+            int count_units = mind.access.UNITS_ALL().Count;
+            int count_hubs = lookup.CountHUBS(mind.mindtype);
 
             //double avg_area = (100.0 * 100.0) / count;
             //double avg_radius = Math.Sqrt(avg_area / Math.PI);
@@ -368,7 +370,7 @@ namespace Awesome.AI.Core.Spaces
             //if (dist < avg_radius)
             //    return false;
 
-            if (count > CONST.MAX_UNITS)
+            if (count_units > (CONST.MAX_UNITS * count_hubs))
                 return false;
 
             double[] xx = [-1d, -1d];

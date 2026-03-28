@@ -122,7 +122,7 @@ namespace Awesome.AI.Variables
         public const double MAX_HUBSPACE = 100.0;
 
         public const double DECAY = 0.99d;
-        public const double EPSILON1 = 0.01d;
+        public const double EPSILON1 = 0.001d;
         public const double EPSILON2 = 0.1d;
         public const double ETA = 0.9d;                    //learningrate
         public const double ALPHA = 0.5d;                 //distance

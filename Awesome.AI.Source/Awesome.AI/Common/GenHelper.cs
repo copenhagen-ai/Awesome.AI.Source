@@ -11,6 +11,6 @@
             debug = true;
 #endif
             return debug;
-        }        
+        }
     }
 }

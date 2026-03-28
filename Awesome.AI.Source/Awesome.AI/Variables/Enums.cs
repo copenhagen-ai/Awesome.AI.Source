@@ -30,5 +30,6 @@
         public enum FILTERTYPE { ONE, TWO, THREE }
         public enum ACTION { ACTION, DECLINE }
         public enum TRANSFER { NONE, LOGISTIC, OTHER }
+        public enum ARC { USE, DONTUSE }
     }
 }

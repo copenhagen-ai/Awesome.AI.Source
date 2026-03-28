@@ -396,3 +396,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/Awesome.AI.Source/Awesome.AI/Data/arc/evaluation
+/Awesome.AI.Source/Awesome.AI/Data/arc/training

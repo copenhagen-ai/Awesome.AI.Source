@@ -147,19 +147,19 @@ namespace Awesome.AI.Core.Spaces
 
             TONE tone;
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_SHOULD, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.HIGH;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_WHAT, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_SHOULD, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.LOW;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_WHAT, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.MID;
-            count1 = Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_SHOULD, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
 
             //Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             //foreach (var kv in dict)
@@ -311,7 +311,7 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
-        public int Decide(STATE state/*, int max_units*/, string subject, List<string> units, UNITTYPE utype, LONGTYPE ltype, int count, TONE tone)
+        public int Decide(STATE state, int index, string subject, List<string> units, UNITTYPE utype, LONGTYPE ltype, int count, TONE tone)
         {
             //XElement xdoc;
             //if (mind.parms.setup_tags == TAGSETUP.PRIME)
@@ -331,11 +331,11 @@ namespace Awesome.AI.Core.Spaces
 
                 double rand1 = mind.cycles < CONST.FIRST_RUN ?
                 random.NextDouble() :
-                mind.rand.MyRandomDouble(units.Count())[100];
+                mind.rand.MyRandomDouble(index)[(int)(index / 4)];//->100
 
                 double rand2 = mind.cycles < CONST.FIRST_RUN ?
                 random.NextDouble() :
-                mind.rand.MyRandomDouble(units.Count())[200];
+                mind.rand.MyRandomDouble(index)[(int)(index / 2)];//->200
 
                 switch (state)
                 {

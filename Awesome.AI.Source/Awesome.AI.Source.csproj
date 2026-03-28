@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Awesome.AI\CoreSystems\Arc\ArcDatasets.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Awesome.AI\Data\latin.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

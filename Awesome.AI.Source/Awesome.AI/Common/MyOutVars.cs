@@ -38,6 +38,7 @@ namespace Awesome.AI.Common
         public string chat_subject { get; set; }
         public string whistle { get; set; }
         public string math { get; set; }
+        public string arc { get; set; }
         public string monologue_det_result { get; set; }
         public string monologue_det_subject { get; set; }
         public string monologue_det_relevance { get; set; }
@@ -95,6 +96,7 @@ namespace Awesome.AI.Common
 
             whistle = $"{mind.result_whistle}";
             math = $"{mind.result_math}";
+            arc = $"{mind.result_arc}";
             common_hub_subject = $"{(mind.hub.GetSubject(mind.unit_actual) ?? "")}";
 
             occu = $"{mind._internal.Occu.name}";

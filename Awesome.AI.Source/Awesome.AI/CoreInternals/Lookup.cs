@@ -489,7 +489,7 @@ namespace Awesome.AI.CoreInternals
                 throw new Exception("Lookup, GetHUB");
 
             return ax;
-        }        
+        }
 
         public string[] occupasions = { "socializing", "hobbys" };
         public List<string> GetHUBS(MINDS mindtype, int count, out string occu)
@@ -519,6 +519,31 @@ namespace Awesome.AI.CoreInternals
             }
 
             return res;
+        }
+
+        public int CountHUBS(MINDS mind)
+        {
+            List<string> ax = new List<string>();
+            switch (mind)
+            {
+                case MINDS.ROBERTA:
+                    ax.AddRange(roberta1);
+                    ax.AddRange(roberta2);
+                    break;
+                case MINDS.ANDREW:
+                    ax.AddRange(andrew1);
+                    ax.AddRange(andrew2);
+                    break;
+                case MINDS.BASIC:
+                    ax.AddRange(basic1);
+                    ax.AddRange(basic2);
+                    break;
+            }
+
+            if (ax == null)
+                throw new Exception("Lookup, GetHUB");
+
+            return ax.Count();
         }
     }
 }

@@ -18,6 +18,9 @@ namespace Awesome.AI.CoreSystems
             if (!_pro)
                 return;
 
+            if (mind.z_current != "z_noise")
+                return;
+
             if (count > 1)
                 count = 0;
 

@@ -18,16 +18,24 @@ namespace Awesome.AI.CoreSystems
             res.Add("WHISTLE", false);
             res.Add("MATHLEARN", false);
             res.Add("MATHSOLVE", false);
+            res.Add("ARCLEARN", false);
+            res.Add("ARCSOLVE", false);
 
             new_res.Add("WHISTLE", false);
             new_res.Add("MATHLEARN", false);
             new_res.Add("MATHSOLVE", false);
+            new_res.Add("ARCLEARN", false);
+            new_res.Add("ARCSOLVE", false);
 
+            Count.Add("WHISTLE", 0);
+            Count.Add("MATHLEARN", 0);
+            Count.Add("MATHSOLVE", 0);
+            Count.Add("ARCLEARN", 0);
+            Count.Add("ARCSOLVE", 0);
         }
         
         private int Period { get; set; }
-        private int Count { get; set; }
-
+        private Dictionary<string, int> Count = new Dictionary<string, int>();
         private Dictionary<string, bool> res = new Dictionary<string, bool>();
         private Dictionary<string, bool> new_res = new Dictionary<string, bool>();
 
@@ -46,19 +54,22 @@ namespace Awesome.AI.CoreSystems
             if (!new_res[type])
                 return false;
             
-            if (Count > Period)
+            if (Count[type] > Period)
             {
                 new_res[type] = false;
                 res[type] = false;
             }
 
-            Count++;           
+            Count[type]++;
             
             return res[type];            
         }
 
         public void Run(bool pro, UNIT curr, string type)
         {
+            if (mind.z_current != "z_noise")
+                return;
+
             if (new_res[type])
                 return;
 
@@ -83,14 +94,14 @@ namespace Awesome.AI.CoreSystems
 
 
             if (curr.Data == type)
-                Setup(5, 5);
+                Setup(type, 5, 5);
         }
 
-        private void Setup(int count, int period)
+        private void Setup(string type, int count, int period)
         {
             Period = period;
             
-            Count = 0;
+            Count[type] = 0;
 
             List<string> should_decision = new List<string>();
 
@@ -106,7 +117,7 @@ namespace Awesome.AI.CoreSystems
 
             TONE tone = TONE.RANDOM;
 
-            mind.memory.Decide(STATE.QUICKDECISION, CONST.QSUB_SHOULD, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
+            mind.memory.Decide(STATE.QUICKDECISION, 8, CONST.QSUB_SHOULD, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
             
             mind.STATE = STATE.QUICKDECISION;
         }

@@ -3,11 +3,11 @@ using Awesome.AI.Common;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
+using Awesome.AI.CoreSystems.Arc;
 using Awesome.AI.Factorys;
 using Awesome.AI.Generators;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
-using System.Data;
 using System.Diagnostics;
 using static Awesome.AI.Common.MicroTimer;
 using static Awesome.AI.Variables.Enums;
@@ -47,10 +47,12 @@ namespace Awesome.AI.Core
         public GPTProbability prob;
         public Whistle whistle;
         public GoalMath g_math;
+        public ArcGoal g_arc;
 
         public string json {  get; set; }
-        public string result_whistle {  get; set; }
-        public string result_math {  get; set; }
+        public string result_whistle { get; set; }
+        public string result_math { get; set; }
+        public string result_arc { get; set; }
 
         private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
 
@@ -63,6 +65,8 @@ namespace Awesome.AI.Core
         public UNIT q_u_whistle { get; set; }
         public UNIT q_u_mathsolve { get; set; }
         public UNIT q_u_mathlearn { get; set; }
+        public UNIT q_u_arcsolve { get; set; }
+        public UNIT q_u_arclearn { get; set; }
 
         public MINDS mindtype;
         public ENV environment;
@@ -78,7 +82,7 @@ namespace Awesome.AI.Core
         public int epochs = 1;
         public int cycles = 0; // Go TRON!
         public int cycles_all = 0;
-        public double pain_truth_something = 0.0d;
+        public double pain_truth_something = 0;
 
         public STATE _s { get; set; } = STATE.JUSTRUNNING;
         public STATE _s_tmp { get; set; }
@@ -93,6 +97,17 @@ namespace Awesome.AI.Core
         public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }
 
         public MicroTimer microTimer = new MicroTimer();
+
+        private int count { get; set; }
+        public void SetAccess(bool _pro)
+        {
+            count = _pro ? 0 : count + 1;
+        }
+
+        public bool HasAccess(int access)
+        {
+            return count == access;
+        }
 
         public TheMind(MINDS mindtype, ENV env)
         {
@@ -137,11 +152,14 @@ namespace Awesome.AI.Core
                 hub = new HubSpace(this);
                 whistle = new Whistle(this);
                 g_math = new GoalMath(this);
+                g_arc = new ArcGoal(this);
 
-                string[] list = { "WHISTLE", "MATHLEARN", "MATHSOLVE" };
+                string[] list = { "WHISTLE", "MATHLEARN", "MATHSOLVE", "ARCLEARN", "ARCSOLVE" };
                 q_u_whistle = UNIT.CreateQuick(this, list[0], [50d, 50d]);
                 q_u_mathlearn = UNIT.CreateQuick(this, list[1], [51d, 50d]);
                 q_u_mathsolve = UNIT.CreateQuick(this, list[2], [52d, 50d]);
+                q_u_arclearn = UNIT.CreateQuick(this, list[3], [53d, 50d]);
+                q_u_arcsolve = UNIT.CreateQuick(this, list[4], [54d, 50d]);
 
                 Random random = new Random();
                 int u_count = access.UNITS_ALL().Count;
@@ -231,6 +249,8 @@ namespace Awesome.AI.Core
                 _pro = do_process;
                 do_process = false;
 
+                SetAccess(_pro);
+
                 foreach (string s in zzzz)
                 {
                     z_current = s;
@@ -265,15 +285,7 @@ namespace Awesome.AI.Core
                 return;
 
             rand.SaveMomentum(mech_current.ms.dv_sym_curr);
-
-            _quick.Run(_pro, unit_current, "WHISTLE");
-            _quick.Run(_pro, unit_current, "MATHLEARN");
-            _quick.Run(_pro, unit_current, "MATHSOLVE");
-
-            whistle.Do(_pro);
-            g_math.Learn(g_math.GetProblem(-1), _pro);
-            g_math.Solve(g_math.GetProblem(-1), _pro);
-
+            
             if (!_pro)
                 return;
 
@@ -322,7 +334,7 @@ namespace Awesome.AI.Core
 
             soup.Counter++;
 
-            bool ok = core.OK(out pain_truth_something);
+            bool ok = core.OK(pain_truth_something, out pain_truth_something);
 
             return ok;
         }
@@ -337,8 +349,17 @@ namespace Awesome.AI.Core
 
         private void Systems(bool _pro)
         {
-            //if (cycles_all < CONST.FIRST_RUN)
-            //    return;
+            _quick.Run(_pro, unit_current, "WHISTLE");
+            _quick.Run(_pro, unit_current, "MATHLEARN");
+            _quick.Run(_pro, unit_current, "MATHSOLVE");
+            _quick.Run(_pro, unit_current, "ARCLEARN");
+            _quick.Run(_pro, unit_current, "ARCSOLVE");
+
+            whistle.Do(_pro);
+            g_math.Learn(g_math.GetProblem(-1), _pro);
+            g_math.Solve(g_math.GetProblem(-1), _pro);
+            g_arc.Learn(g_arc.GetProblem(-1), _pro);
+            g_arc.Solve(g_arc.GetProblem(-1), _pro);
 
             if (STATE == STATE.QUICKDECISION)
                 return;

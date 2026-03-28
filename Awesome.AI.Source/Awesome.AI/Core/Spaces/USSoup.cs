@@ -79,11 +79,11 @@ namespace Awesome.AI.Core.Spaces
             if (!CONST.SAMPLE20.RandomSample(mind))
                 return false;
 
-            UNIT[] list = { mind.q_u_whistle, mind.q_u_mathlearn, mind.q_u_mathsolve };
+            UNIT[] list = { mind.q_u_whistle, mind.q_u_mathlearn, mind.q_u_mathsolve, mind.q_u_arclearn/*, mind.q_u_arclearn*/, mind.q_u_arcsolve/*, mind.q_u_arcsolve*/ };
 
-            int rand = mind.rand.MyRandomInt(1, 29)[0];
+            int rand = mind.rand.MyRandomInt(1, 49)[0];
             
-            mind.unit_current = list[rand / 10];
+            mind.unit_current = list[rand % 5];
 
             return true;
         }

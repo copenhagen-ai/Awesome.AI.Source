@@ -25,6 +25,7 @@ namespace Awesome.AI.Common
         public string chat_subject { get; set; }
         public string whistle { get; set; }
         public string math { get; set; }
+        public string arc { get; set; }
         public string monologue_det_result { get; set; }
         public string monologue_det_subject { get; set; }
         public string monologue_det_relevance { get; set; }
@@ -79,6 +80,7 @@ namespace Awesome.AI.Common
             obj.chat_subject = mind.o_vars.chat_subject;
             obj.whistle = mind.o_vars.whistle;
             obj.math = mind.o_vars.math;
+            obj.arc = mind.o_vars.arc;
             obj.monologue_det_result = mind.o_vars.monologue_det_result;
             obj.monologue_det_subject = mind.o_vars.monologue_det_subject;
             obj.monologue_det_relevance = mind.o_vars.monologue_det_relevance;
