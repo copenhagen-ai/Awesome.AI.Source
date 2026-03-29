@@ -147,19 +147,19 @@ namespace Awesome.AI.Core.Spaces
 
             TONE tone;
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_SHOULD, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.HIGH;
-            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_WHAT, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_WHAT, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
 
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_SHOULD, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.LOW;
-            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_WHAT, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_WHAT, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
 
             tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.MID;
-            count1 = Decide(STATE.JUSTRUNNING, 400, CONST.LSUB_SHOULD, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
+            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
 
             //Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
             //foreach (var kv in dict)
@@ -323,19 +323,16 @@ namespace Awesome.AI.Core.Spaces
 
             Random random = new Random();
 
-
-            //int _count = 0;
+            int _count = 10;
+            
             foreach (string s in units)
             {
+
                 string guid = Guid.NewGuid().ToString();
 
-                double rand1 = mind.cycles < CONST.FIRST_RUN ?
-                random.NextDouble() :
-                mind.rand.MyRandomDouble(index)[(int)(index / 4)];//->100
+                double rand1 = mind.rand.MyRandomDouble(_count)[(int)((_count) - 1)];//->100
 
-                double rand2 = mind.cycles < CONST.FIRST_RUN ?
-                random.NextDouble() :
-                mind.rand.MyRandomDouble(index)[(int)(index / 2)];//->200
+                double rand2 = mind.rand.MyRandomDouble(index + _count)[(int)((index + _count) - 1)];//->200
 
                 switch (state)
                 {
@@ -346,7 +343,7 @@ namespace Awesome.AI.Core.Spaces
                     default: throw new NotImplementedException();
                 }
 
-                //_count++;
+                _count += 10;
                 count++;
             }
 

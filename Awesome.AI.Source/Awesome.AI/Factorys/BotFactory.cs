@@ -108,7 +108,7 @@ namespace Awesome.AI.Factorys
             tags = TAGS.ALL;                                                    //used with TAGS and BOTH
             occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
             pattern = PATTERN.MOODGENERAL;
-            arc = ARC.DONTUSE;
+            arc = ARC.USE;
             RUNTIME = (120) / 2;                                                  //minutes / 2
         }
     }

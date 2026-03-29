@@ -5,8 +5,10 @@
      * https://arcprize.org/arc-agi
      * */
 
-    public class ArcFlatten
+    public class ArcHelper
     {
+        private static Random _rnd = new Random();
+
         private static int[,] CropBoundingBox(int[,] grid)
         {
             int rows = grid.GetLength(0);
@@ -90,6 +92,68 @@
 
             // crop bounding box of non-zero content
             return CropBoundingBox(grid);
+        }
+
+        public static string GridToString(int[,] grid)
+        {
+            int rows = grid.GetLength(0);
+            int cols = grid.GetLength(1);
+
+            char[] chars = new char[rows * cols];
+            int idx = 0;
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    chars[idx++] = (char)(grid[i, j] + '0');
+            return new string(chars);
+        }
+
+        public static int[,] ToGridDynamic(List<List<int>> data)
+        {
+            int rows = data.Count;
+            int cols = data[0].Count;
+
+            int[,] grid = new int[rows, cols];
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    grid[i, j] = data[i][j];
+
+            return grid;
+        }
+
+        public static int[,] GenerateSimpleGrid()
+        {
+            int size = 3; // keep it tiny and clear
+            int[,] grid = new int[size, size];
+
+            for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
+                    grid[i, j] = _rnd.Next(1, 3); // avoid too many zeros
+
+            return grid;
+        }
+
+        public static float[,] RandomMatrix(int rows, int cols)
+        {
+            float[,] m = new float[rows, cols];
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    m[i, j] = (float)(_rnd.NextDouble() * 0.2 - 0.1); // [-0.1,0.1]
+            return m;
+        }
+
+        public static Primitive GetSimplePrimitive()
+        {
+            var simple = ArcDataSets.SimpleDataset.simple;
+
+            return simple[_rnd.Next(simple.Length)];
+        }
+
+        public static Primitive GetRandomPrimitive()
+        {
+            var values = Enum.GetValues(typeof(Primitive));
+
+            return (Primitive)values.GetValue(_rnd.Next(values.Length));
         }
     }
 }

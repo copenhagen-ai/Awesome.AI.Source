@@ -24,21 +24,6 @@ namespace Awesome.AI.CoreSystems.Arc
 
         public class ArcLoader
         {
-
-            public static int[,] ToGridDynamic(List<List<int>> data)
-            {
-                int rows = data.Count;
-                int cols = data[0].Count;
-
-                int[,] grid = new int[rows, cols];
-
-                for (int i = 0; i < rows; i++)
-                    for (int j = 0; j < cols; j++)
-                        grid[i, j] = data[i][j];
-
-                return grid;
-            }
-
             public static ArcTask LoadTask(string filePath)
             {
                 string json = File.ReadAllText(filePath);
@@ -81,18 +66,18 @@ namespace Awesome.AI.CoreSystems.Arc
                 var pair = task.train[_rnd.Next(task.train.Count)];
 
                 return (
-                    ToGridDynamic(pair.input),
-                    ToGridDynamic(pair.output)
+                    ArcHelper.ToGridDynamic(pair.input),
+                    ArcHelper.ToGridDynamic(pair.output)
                 );
             }
 
-            public static (int[,] input, int[,] output) GetSimpleTrainingPair(ArcSolver solver)
+            public static (int[,] input, int[,] output) GetSimpleTrainingPair(ArcPrimitives primitives)
             {
-                int[,] input = SimpleDataset.GenerateSimpleGrid();
+                int[,] input = ArcHelper.GenerateSimpleGrid();
 
-                Primitive primitive = SimpleDataset.GetSimplePrimitive();
+                Primitive primitive = ArcHelper.GetSimplePrimitive();
 
-                int[,] output = solver.ApplyPrimitive(input, primitive);
+                int[,] output = primitives.ApplyPrimitive(input, primitive);
 
                 return (
                     input,
@@ -103,15 +88,7 @@ namespace Awesome.AI.CoreSystems.Arc
 
         public class SyntheticDataset
         {
-            private static Random _rnd = new Random();
-
-            public static Primitive GetRandomPrimitive()
-            {
-                var values = Enum.GetValues(typeof(Primitive));
-                return (Primitive)values.GetValue(_rnd.Next(values.Length));
-            }
-
-            public static ArcSample GenerateSampleFromArcPair(ArcSolver solver, (int[,] input, int[,] output) pair, int maxSteps = 1)
+            public static ArcSample GenerateSampleFromArcPair(ArcPrimitives solver, (int[,] input, int[,] output) pair, int maxSteps = 1)
             {
                 int[,] inputGrid = pair.input;
                 int[,] current = (int[,])inputGrid.Clone();
@@ -121,19 +98,19 @@ namespace Awesome.AI.CoreSystems.Arc
 
                 for (int i = 0; i < maxSteps; i++)
                 {
-                    Primitive prim = GetRandomPrimitive();
+                    Primitive prim = ArcHelper.GetRandomPrimitive();
                     current = solver.ApplyPrimitive(current, prim);
                     labels[(int)prim] = true;
                 }
 
                 return new ArcSample
                 {
-                    Features = ArcFlatten.FlattenSmart(inputGrid, current),
+                    Features = ArcHelper.FlattenSmart(inputGrid, current),
                     Labels = labels
                 };
             }
 
-            public static ArcSample[] GenerateDatasetFromArcFolder(ArcSolver solver, int datasetSize, int maxSteps)
+            public static ArcSample[] GenerateDatasetFromArcFolder(ArcPrimitives solver, int datasetSize, int maxSteps)
             {
                 ArcSample[] dataset = new ArcSample[datasetSize];
 
@@ -149,9 +126,7 @@ namespace Awesome.AI.CoreSystems.Arc
 
         public static class SimpleDataset
         {
-            private static Random _rnd = new Random();
-
-            static Primitive[] simple =
+            public static Primitive[] simple =
                 {
                     Primitive.Rotate90,
                     Primitive.Rotate180,
@@ -159,17 +134,17 @@ namespace Awesome.AI.CoreSystems.Arc
                     Primitive.MirrorVertical
                 };
 
-            public static ArcSample[] Generate(int count, ArcSolver solver)
+            public static ArcSample[] Generate(int count, ArcPrimitives primitives)
             {
                 var data = new List<(int[,], int[,], Primitive)>();
 
                 for (int i = 0; i < count; i++)
                 {
-                    int[,] input = GenerateSimpleGrid();
+                    int[,] input = ArcHelper.GenerateSimpleGrid();
 
-                    Primitive primitive = GetSimplePrimitive();
+                    Primitive primitive = ArcHelper.GetSimplePrimitive();
 
-                    int[,] output = solver.ApplyPrimitive(input, primitive);
+                    int[,] output = primitives.ApplyPrimitive(input, primitive);
 
                     data.Add((input, output, primitive));
                 }
@@ -184,29 +159,12 @@ namespace Awesome.AI.CoreSystems.Arc
                     labels[Array.IndexOf(simple, data[i].Item3)] = true;
                     res[i] = new ArcSample
                     {
-                        Features = ArcFlatten.FlattenSmart(data[i].Item1, data[i].Item2),
+                        Features = ArcHelper.FlattenSmart(data[i].Item1, data[i].Item2),
                         Labels = labels,
                     };
                 }
 
                 return res;
-            }
-
-            public static int[,] GenerateSimpleGrid()
-            {
-                int size = 3; // keep it tiny and clear
-                int[,] grid = new int[size, size];
-
-                for (int i = 0; i < size; i++)
-                    for (int j = 0; j < size; j++)
-                        grid[i, j] = _rnd.Next(1, 3); // avoid too many zeros
-
-                return grid;
-            }
-
-            public static Primitive GetSimplePrimitive()
-            {
-                return simple[_rnd.Next(simple.Length)];
             }
         }
     }

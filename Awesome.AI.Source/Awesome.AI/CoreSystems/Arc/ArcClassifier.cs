@@ -5,22 +5,6 @@
      * https://arcprize.org/arc-agi
      * */
 
-    public enum Primitive
-    {
-        Rotate90,
-        Rotate180,
-        Rotate270,
-        MirrorHorizontal,
-        MirrorVertical,
-        TranslateDown,
-        TranslateRight,
-        ColorMap,
-        ColorFill,
-        CropBoundingBox,
-        ExpandCanvas,
-        ObjectCopy
-    }
-
     public class ArcSample
     {
         public float[] Features;
@@ -46,19 +30,10 @@
             this.outputSize = outputSize;
             rnd = new Random();
 
-            W1 = RandomMatrix(inputSize, hiddenSize);
+            W1 = ArcHelper.RandomMatrix(inputSize, hiddenSize);
             B1 = new float[hiddenSize];
-            W2 = RandomMatrix(hiddenSize, outputSize);
+            W2 = ArcHelper.RandomMatrix(hiddenSize, outputSize);
             B2 = new float[outputSize];
-        }
-
-        private float[,] RandomMatrix(int rows, int cols)
-        {
-            float[,] m = new float[rows, cols];
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    m[i, j] = (float)(rnd.NextDouble() * 0.2 - 0.1); // [-0.1,0.1]
-            return m;
         }
 
         private void Forward(float[] input, out float[] hiddenOut, out float[] outputOut)

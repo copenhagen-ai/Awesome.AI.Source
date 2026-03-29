@@ -181,11 +181,11 @@ namespace Awesome.AI.CoreSystems.Arc
         {
             try
             {
-                var solver = new ArcSolver();
+                var primitives = new ArcPrimitives();
 
                 Console.WriteLine("LOADING DATA..");
 
-                var dataset = ArcDataSets.SimpleDataset.Generate(500, solver);
+                var dataset = ArcDataSets.SimpleDataset.Generate(500, primitives);
                 
                 int inputSize = 10 * 10 * 2; // input+output flattened
                 int hiddenSize = 64;
@@ -230,28 +230,28 @@ namespace Awesome.AI.CoreSystems.Arc
         {
             try
             {
-                var guide = new ArcGuide();
                 var solver = new ArcSolver();
+                var primitives = new ArcPrimitives();
 
-                var _in = ArcDataSets.ArcLoader.GetSimpleTrainingPair(solver);
+                var _in = ArcDataSets.ArcLoader.GetSimpleTrainingPair(primitives);
 
                 int[,] inputGrid = _in.input;
                 int[,] outputGrid = _in.output;
 
 
                 var probs = new Dictionary<Primitive, float>();
-                float[] _outs = mlp.Predict(ArcFlatten.FlattenSmart(inputGrid, outputGrid));
+                float[] _outs = mlp.Predict(ArcHelper.FlattenSmart(inputGrid, outputGrid));
                 for (int i = 0; i < _outs.Length; i++)
                     probs.Add((Primitive)i, _outs[i]);
                 
-                List<Primitive> result = guide.Solve(inputGrid, outputGrid, probs);
+                List<Primitive> result = solver.Solve(inputGrid, outputGrid, probs);
 
                 if (result == null)
                     no_match++;
                 else
                     match++;
                     
-                return $", result: no match[" + no_match + "], match[" + match + "]";                
+                return $", result: no match[" + no_match + "], match[" + match + "]";
             }
             catch (Exception ex)
             {

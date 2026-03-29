@@ -349,11 +349,9 @@ namespace Awesome.AI.Core
 
         private void Systems(bool _pro)
         {
-            _quick.Run(_pro, unit_current, "WHISTLE");
-            _quick.Run(_pro, unit_current, "MATHLEARN");
-            _quick.Run(_pro, unit_current, "MATHSOLVE");
-            _quick.Run(_pro, unit_current, "ARCLEARN");
-            _quick.Run(_pro, unit_current, "ARCSOLVE");
+            List<string> list = new List<string>{ "QYES", "QNO", "WHISTLE", "MATHLEARN", "MATHSOLVE", "ARCLEARN", "ARCSOLVE" };
+            int _i = list.IndexOf(unit_current.Data);
+            if (_i != -1) _quick.Decide(unit_current, list[_i]);
 
             whistle.Do(_pro);
             g_math.Learn(g_math.GetProblem(-1), _pro);

@@ -7,239 +7,105 @@
 
     public class ArcSolver
     {
-        public bool Matches(int[,] a, int[,] b)
+        private ArcPrimitives _primitives;
+
+        public ArcSolver()
         {
-            int rows = a.GetLength(0);
-            int cols = a.GetLength(1);
-
-            if (rows != b.GetLength(0) || cols != b.GetLength(1))
-                return false;
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    if (a[i, j] != b[i, j])
-                        return false;
-
-            return true;
+            _primitives = new ArcPrimitives();
         }
 
-        public int[,] ApplyPrimitive(int[,] grid, Primitive primitive)
+        public List<Primitive> Solve(int[,] inputGrid, int[,] targetGrid, Dictionary<Primitive, float> primitiveProbs, int maxSequenceLength = 3, float threshold = 0.5f, float decay = 0.8f)
         {
-            switch (primitive)
+            var primitives = primitiveProbs
+                .Where(kvp => kvp.Value >= threshold)
+                .OrderByDescending(kvp => kvp.Value)
+                .Select(kvp => kvp.Key)
+                .ToList();
+
+            var triedCandidates = new HashSet<string>();
+
+            for (int length = 1; length <= maxSequenceLength; length++)
             {
-                case Primitive.Rotate90: return Rotate90(grid);
-                case Primitive.Rotate180: return Rotate180(grid);
-                case Primitive.Rotate270: return Rotate270(grid);
-                case Primitive.MirrorHorizontal: return MirrorHorizontal(grid);
-                case Primitive.MirrorVertical: return MirrorVertical(grid);
-                case Primitive.TranslateDown: return Translate(grid);
-                case Primitive.TranslateRight: return TranslateRight(grid);
-                case Primitive.ColorMap: return ColorMap(grid);
-                case Primitive.ColorFill: return ColorFill(grid);
-                case Primitive.CropBoundingBox: return CropBoundingBox(grid);
-                case Primitive.ExpandCanvas: return ExpandCanvas(grid);
-                case Primitive.ObjectCopy: return ObjectCopy(grid);
-                default: return (int[,])grid.Clone();
-            }
-        }
+                var sequences = GenerateSequences(primitives, length);
 
-        private int[,] Rotate90(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int[,] result = new int[cols, rows];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    result[j, rows - 1 - i] = grid[i, j];
-
-            return result;
-        }
-
-        private int[,] Rotate180(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int[,] result = new int[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    result[rows - 1 - i, cols - 1 - j] = grid[i, j];
-
-            return result;
-        }
-
-        private int[,] Rotate270(int[,] grid)
-        {
-            return Rotate90(Rotate180(grid));
-        }
-
-        private int[,] MirrorHorizontal(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int[,] result = new int[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    result[i, cols - 1 - j] = grid[i, j];
-
-            return result;
-        }
-
-        private int[,] MirrorVertical(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int[,] result = new int[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    result[rows - 1 - i, j] = grid[i, j];
-
-            return result;
-        }
-
-        private int[,] Translate(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int[,] result = new int[rows, cols];
-
-            for (int i = 0; i < rows - 1; i++)
-                for (int j = 0; j < cols; j++)
-                    result[i + 1, j] = grid[i, j];
-
-            return result;
-        }
-
-        private int[,] TranslateRight(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int[,] result = new int[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols - 1; j++)
-                    result[i, j + 1] = grid[i, j];
-
-            return result;
-        }
-
-        private int[,] ColorMap(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int[,] result = (int[,])grid.Clone();
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
+                foreach (var seq in sequences)
                 {
-                    if (result[i, j] == 1) result[i, j] = 2;
-                    else if (result[i, j] == 2) result[i, j] = 1;
+                    int[,] candidate = (int[,])inputGrid.Clone();
+                    foreach (var prim in seq)
+                        candidate = _primitives.ApplyPrimitive(candidate, prim);
+
+                    string candidateKey = ArcHelper.GridToString(candidate);
+                    if (triedCandidates.Contains(candidateKey))
+                        continue;
+
+                    triedCandidates.Add(candidateKey);
+
+                    if (_primitives.Matches(candidate, targetGrid))
+                        return seq;
+
+                    foreach (var prim in seq)
+                        primitiveProbs[prim] *= decay;
                 }
-
-            return result;
-        }
-
-        private int[,] ColorFill(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int[,] result = new int[rows, cols];
-
-            Dictionary<int, int> freq = new Dictionary<int, int>();
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                {
-                    int c = grid[i, j];
-                    if (!freq.ContainsKey(c)) freq[c] = 0;
-                    freq[c]++;
-                }
-
-            int maxColor = freq.OrderByDescending(x => x.Value).First().Key;
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    result[i, j] = maxColor;
-
-            return result;
-        }
-
-        private int[,] CropBoundingBox(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
-
-            int minI = rows, maxI = 0, minJ = cols, maxJ = 0;
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                {
-                    if (grid[i, j] != 0)
-                    {
-                        minI = Math.Min(minI, i);
-                        maxI = Math.Max(maxI, i);
-                        minJ = Math.Min(minJ, j);
-                        maxJ = Math.Max(maxJ, j);
-                    }
-                }
-
-            if (maxI == 0)
-            {
-                return (int[,])grid.Clone();
             }
 
-            int newRows = maxI - minI + 1;
-            int newCols = maxJ - minJ + 1;
-
-            int[,] result = new int[newRows, newCols];
-
-            for (int i = 0; i < newRows; i++)
-                for (int j = 0; j < newCols; j++)
-                    result[i, j] = grid[minI + i, minJ + j];
-
-            return result;
+            return null;
         }
 
-        private int[,] ExpandCanvas(int[,] grid)
+        private List<List<Primitive>> GenerateSequences(List<Primitive> primitives, int length)
         {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
+            int n = primitives.Count;
+            var result = new List<List<Primitive>>();
 
-            int[,] result = new int[rows + 2, cols + 2];
+            if (n == 0 || length <= 0)
+                return result;
 
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    result[i + 1, j + 1] = grid[i, j];
+            int[] indices = new int[length];
 
-            return result;
-        }
+            while (true)
+            {
+                var sequence = new List<Primitive>(length);
+                for (int i = 0; i < length; i++)
+                    sequence.Add(primitives[indices[i]]);
 
-        private int[,] ObjectCopy(int[,] grid)
-        {
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
+                result.Add(sequence);
 
-            int[,] result = (int[,])grid.Clone();
+                int position = length - 1;
+                while (position >= 0)
+                {
+                    indices[position]++;
+                    if (indices[position] < n)
+                        break;
 
-            int halfRows = rows / 2;
-            int halfCols = cols / 2;
+                    indices[position] = 0;
+                    position--;
+                }
 
-            for (int i = 0; i < halfRows; i++)
-                for (int j = 0; j < halfCols; j++)
-                    result[i + halfRows, j + halfCols] = grid[i, j];
+                if (position < 0)
+                    break;
+            }
 
             return result;
         }
     }
 }
+
+//private IEnumerable<List<Primitive>> GenerateSequences(List<Primitive> primitives, int length)
+//{
+//    if (length == 1)
+//    {
+//        foreach (var p in primitives)
+//            yield return new List<Primitive> { p };
+//    }
+//    else
+//    {
+//        foreach (var p in primitives)
+//        {
+//            foreach (var subseq in GenerateSequences(primitives, length - 1))
+//            {
+//                var newSeq = new List<Primitive> { p };
+//                newSeq.AddRange(subseq);
+//                yield return newSeq;
+//            }
+//        }
+//    }
+//}

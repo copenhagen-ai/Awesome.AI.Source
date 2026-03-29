@@ -13,6 +13,7 @@ namespace Awesome.AI.CoreSystems
 
         private string[] gimmick = { "[.??]", "[??.]" };
         private int count = 0;
+        private int num = 0;
         public void Do(bool _pro)
         {
             if (!_pro)
@@ -27,10 +28,13 @@ namespace Awesome.AI.CoreSystems
             bool res = mind._quick.Result("WHISTLE");
 
             if (res)
-                mind.result_whistle = "[Whistling to my self..]";
+                num++;
+
+            if (res)
+                mind.result_whistle = $"[{num}][Whistling to my self..]";
             
             if (!res)
-                mind.result_whistle = gimmick[count];
+                mind.result_whistle = $"[{num}]" + gimmick[count];
 
             count++;
         }
