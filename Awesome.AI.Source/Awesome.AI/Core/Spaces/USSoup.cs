@@ -1,10 +1,79 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
+using System.Numerics;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
 {
+    public class GPT
+    {
+        /// <summary>
+        /// Returns all UNITs within a rectangular corridor connecting unitA and unitB, ordered along the corridor.
+        /// </summary>
+        /// <param name="mind">Reference to TheMind for accessing all UNITs.</param>
+        /// <param name="unitA">Start UNIT of the corridor.</param>
+        /// <param name="unitB">End UNIT of the corridor.</param>
+        /// <param name="axisX">Primary axis name (like axis[0]).</param>
+        /// <param name="axisY">Secondary axis name (like axis[1]).</param>
+        /// <param name="width">Width of the corridor rectangle.</param>
+        /// <returns>List of UNITs inside the corridor, ordered along the corridor line.</returns>
+        public List<UNIT> Corridor(List<UNIT> allUnits, UNIT unitA, UNIT unitB, string axisX, string axisY, double width = 10.0)
+        {
+            //List<UNIT> allUnits = mind.access.UNITS_ALL();
+
+            // 1. Convert UNITs to 2D points using provided axes
+            Vector2 p1 = new Vector2((float)unitA.UIget(axisX), (float)unitA.UIget(axisY));
+            Vector2 p2 = new Vector2((float)unitB.UIget(axisX), (float)unitB.UIget(axisY));
+
+            Vector2 dir = p2 - p1;
+            float length = dir.Length();
+            if (length == 0) return new List<UNIT>();
+
+            dir /= length; // normalize
+            Vector2 perp = new Vector2(-dir.Y, dir.X); // perpendicular
+
+            // 2. Filter UNITs inside corridor
+            var corridorUnits = allUnits
+                .Where(u =>
+                {
+                    Vector2 pu = new Vector2((float)u.UIget(axisX), (float)u.UIget(axisY));
+                    Vector2 rel = pu - p1;
+
+                    float along = Vector2.Dot(rel, dir);
+                    float across = Vector2.Dot(rel, perp);
+
+                    return along >= 0 && along <= length && Math.Abs(across) <= width / 2;
+                })
+                .Select(u => new
+                {
+                    Unit = u,
+                    DistanceAlong = Vector2.Dot(new Vector2((float)u.UIget(axisX), (float)u.UIget(axisY)) - p1, dir)
+                })
+                .OrderByDescending(x => x.DistanceAlong) // closest to unitB first
+                .Select(x => x.Unit)
+                .ToList();
+
+            Fix(corridorUnits, unitA, unitB);
+
+            return corridorUnits;
+        }
+
+        public void Fix(List<UNIT> corridorUnits, UNIT unitA, UNIT unitB)
+        {
+            corridorUnits.Remove(unitA);
+            corridorUnits.Remove(unitB);
+
+            corridorUnits.Insert(0, unitB);
+            corridorUnits.Add(unitA);
+        }
+
+        public static GPT Create() 
+        { 
+            return new GPT(); 
+        }
+    }
+
     public class USSoup
     {
         private TheMind mind;
@@ -27,20 +96,7 @@ namespace Awesome.AI.Core.Spaces
         // comm, andrew { "will", "opinion", "temporality", "abstraction" };
         // brain, roberta { "will", "attention", "readiness" };
         public string[] axis { get; set; }
-        public int Counter {  get; set; }
         private Dictionary<string, double> prev_dir { get; set; }
-
-        public string Axis
-        {
-            get 
-            {
-                int count = axis.Count();
-                int cycles = Counter;
-                int ax = cycles % count;
-
-                return axis[ax];
-            }
-        }
 
         private double Step(string axis_tmp)
         {
@@ -96,25 +152,22 @@ namespace Awesome.AI.Core.Spaces
             if (Quick(_pro))
                 return;
 
-            //dont do this
-            //if (Axis != mind.soup.axis[0])
-            //    return;
-
             UNIT _u = mind.unit_current;
-            UNIT res;
+            UNIT[] res = null;
 
             if (_u.IsIDLE())
                 res = Buffer();
             else
                 res = Unit();
 
-            mind.unit_current = res;
+            mind.unit_current = res[0];
+            mind.unit_corridor = res;
         }
 
         /*
          * priority 1
          * */
-        private UNIT Unit()
+        private UNIT[] Unit()
         {
             List<UNIT> units = mind.access.UNITS_ALL();
 
@@ -128,7 +181,7 @@ namespace Awesome.AI.Core.Spaces
                 throw new Exception("TheSoup, Unit");
 
             var near = Near();
-            UNIT res = null;
+            UNIT[] res = null;
 
             if (CONST.select_c == SELECTCURRENT.PYTH)
                 res = SelectByPyth(units, near);
@@ -139,12 +192,12 @@ namespace Awesome.AI.Core.Spaces
             if (res == null)
                 throw new Exception("UnitSpaceSoup, Unit");
             
-            if (res.IsIDLE())
+            if (res[0].IsIDLE())
                 return res;
 
             GPTVector2D v_near = new GPTVector2D(near[0], near[1], null, null);
             
-            res.Update(v_near);
+            res[0].Update(v_near);
 
             return res;
         }
@@ -170,7 +223,7 @@ namespace Awesome.AI.Core.Spaces
             return near;
         }
 
-        private UNIT SelectByPyth(List<UNIT> units, double[] near)
+        private UNIT[] SelectByPyth(List<UNIT> units, double[] near)
         {
             double near_x = near[0];
             double near_y = near[1];
@@ -194,13 +247,18 @@ namespace Awesome.AI.Core.Spaces
                 }
             }
 
-            if (nearest == null)
-                return UNIT.CreateIdle(mind);
 
-            return nearest;
+            List<UNIT> res = new List<UNIT>() { mind.unit_current };
+
+            if (nearest == null)
+                res.Insert(0, UNIT.CreateIdle(mind));
+            else
+                res = GPT.Create().Corridor(units, mind.unit_current, nearest, axis[0], axis[1], 5.0d);
+
+            return res.ToArray();
         }
 
-        private UNIT SelectByOther(List<UNIT> units, double[] near)
+        private UNIT[] SelectByOther(List<UNIT> units, double[] near)
         {
             throw new NotImplementedException("UnitSpaceSoup, SelectOther");
         }
@@ -235,7 +293,7 @@ namespace Awesome.AI.Core.Spaces
         /*
          * priority 2
          * */
-        private UNIT Buffer()
+        private UNIT[] Buffer()
         {
             /*
              * with more HUBS and UNITS added, this buffer wil be used less often
@@ -249,8 +307,12 @@ namespace Awesome.AI.Core.Spaces
                     ).OrderByDescending(x => x.Variable).ToList();
 
             int rand = mind.rand.MyRandomInt(1, units.Count - 1)[0];
-            UNIT _u = units.Any() ? units[rand] : UNIT.CreateIdle(mind);
-            return _u;
+
+            List<UNIT> _u = units.Any() ? 
+                new List<UNIT>{ units[rand], mind.unit_current } : 
+                new List<UNIT>{ UNIT.CreateIdle(mind), mind.unit_current };
+
+            return _u.ToArray();
         }
     }
 }

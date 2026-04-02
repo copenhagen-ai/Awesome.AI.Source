@@ -87,7 +87,8 @@ namespace Awesome.AI.Core
         public STATE _s { get; set; } = STATE.JUSTRUNNING;
         public STATE _s_tmp { get; set; }
         public STATE STATE { get; set; }
-                
+
+        public UNIT[] unit_corridor { get; set; }
         public UNIT unit_current { get; set; }
         public UNIT unit_actual { get; set; }
 
@@ -324,7 +325,7 @@ namespace Awesome.AI.Core
 
             down.Update();
 
-            soup.Counter++;
+            //soup.Counter++;
 
             mech_high.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
             mech_high.Calculate(PATTERN.MOODGOOD, cycles);//mood good
@@ -332,7 +333,7 @@ namespace Awesome.AI.Core
 
             mech_high.mp.props.Update();
 
-            soup.Counter++;
+            //soup.Counter++;
 
             bool ok = core.OK(pain_truth_something, out pain_truth_something);
 

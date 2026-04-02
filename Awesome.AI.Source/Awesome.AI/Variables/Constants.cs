@@ -151,7 +151,7 @@ namespace Awesome.AI.Variables
         [Obsolete]
         public const HACKMODE hack = HACKMODE.HACK;
 
-        public const TRANSFER transfer = TRANSFER.NONE;
+        public const TRANSFER transfer = TRANSFER.NONE;        
         public const SELECTCURRENT select_c = SELECTCURRENT.PYTH;
         public const SELECTACTUAL select_a = SELECTACTUAL.DOMINANT;
 
