@@ -17,11 +17,9 @@ namespace Awesome.AI.Core.Spaces
         private UNITTYPE unit_type { get; set; }
         public LONGTYPE ld_type { get; set; }
         public DateTime created { get; set; }
-        public string guid { get; set; }//name
+        public string guid { get; set; }
         public double credits { get; set; }
-        public Dictionary<string, int> register { get; set; }        
-        public double reward { get; set; }
-        public double reward_norm { get; set; }
+        public double reward { get; set; }        
         public double trace { get; set; }
                 
         private TheMind mind;
@@ -166,8 +164,7 @@ namespace Awesome.AI.Core.Spaces
             DateTime create = DateTime.Now;
             Random rand = new Random();
             Lookup lookup = new Lookup();
-            List<string> occus = new List<string>();
-
+            
             UNIT _w = new UNIT() { mind = mind, created = create, guid = h_guid, data = data, unit_type = ut, ld_type = lt };
 
             _w.u_index = new Dictionary<string, double>();
@@ -179,14 +176,10 @@ namespace Awesome.AI.Core.Spaces
             _w.ticket = new Ticket(ticket);
 
             double _r1 = rand.NextDouble();
-            long _r2 = rand.NextInt64(lookup.occupasions.Length);
 
+            _w.trace = 1.0d;
             _w.credits = CONST.MAX_CREDIT;
             _w.h_index = _r1 * CONST.MAX_HUBSPACE;
-
-            occus = lookup.occupasions.ToList();
-            _w.register = new Dictionary<string, int>();
-            occus.ForEach(x => _w.register.Add(x, (int)_r2));
 
             return _w;
         }
@@ -201,139 +194,72 @@ namespace Awesome.AI.Core.Spaces
             return Create(mind, "GUID", dex, name, "NONE", UNITTYPE.QDECISION, LONGTYPE.NONE);
         }
 
-        private int _do { get; set; }
         public void Update(GPTVector2D v_near)
         {
-            //if (mind.cycles_all < CONST.FIRST_RUN + 1)
-            //    return;
-
             UpdateTRA();
             UpdateREW();
-            UpdateAFF();
             UpdateHUB();
             UpdateUNT(v_near);
-
-            _do++;
-            if (_do > 100)
-                _do = 0;
         }
 
-        private string last_affinity { get; set; }
         private void UpdateTRA()
         {
-            //if (_do > 0)
-            //    return;
-
-            //if (IsDECISION())
-            //    return;
+            if (IsDECISION())
+                return;
 
             List<UNIT> units = mind.hub.UnitsPerOccupasionc();
 
             foreach (UNIT unit in units)
             {
-                if (unit.IsDECISION())
-                    continue;
-
                 if (unit.guid == this.guid)
-                    trace = CONST.DECAY * trace + 1.0d;
+                    unit.trace = CONST.DECAY * unit.trace + 1.0d;
                 else
-                    trace = CONST.DECAY * trace + 0.0d;
+                    unit.trace = CONST.DECAY * unit.trace + 0.0d;                    
             }
         }
 
         private void UpdateREW()
         {
-            //if (_do > 0)
-            //    return;
-
-            //if (IsDECISION())
-            //    return;
-
             if (!mind.reward)
+                return;
+
+            if (IsDECISION())
+                return;
+
+            reward += 1.0 * trace;
+
+            List<UNIT> units = mind.hub.UnitsPerOccupasionc();
+
+            double max = units.Max(x => x.reward);
+            
+            foreach (UNIT unit in units)
+            {
+                if (unit.guid == this.guid)
+                    continue;
+
+                double reward_norm = mind.calc.Normalize(reward, 0.0d, max, 0.0d, 1.0d);
+
+                if (reward_norm < CONST.EPSILON1)
+                    mind.access.UNITS_REM(unit);                
+            }
+        }
+
+        private void UpdateHUB()
+        {
+            if (IsDECISION())
                 return;
 
             mind.reward = false;
 
             List<UNIT> units = mind.hub.UnitsPerOccupasionc();
 
-            double max = 0.0d;
-
-            foreach (UNIT unit in units)
-            {
-                if (unit.IsDECISION())
-                    continue;
-
-                reward += 1.0 * trace;
-
-                max = reward > max ? reward : max;
-            }
-            
-            List<UNIT> rem = new List<UNIT>();
-
-            foreach (UNIT unit in units)
-            {
-                if (unit.IsDECISION())
-                    continue;
-
-                reward_norm = mind.calc.Normalize(reward, 0.0d, max, 0.0d, 1.0d);
-
-                if (reward_norm < CONST.EPSILON1)
-                    rem.Add(unit);
-            }
-
-            foreach (UNIT unit in rem)
-                mind.access.UNITS_REM(unit);
-        }
-
-        private void UpdateAFF()
-        {
-            if (_do > 0)
-                return;
-
-            if (IsDECISION())
-                return;
-
-            string af_occo = mind._internal.Occu.name;
-
-            if (af_occo == "")
-                return;
-
-            if (af_occo == "init")
-                return;
-
-            register[af_occo]++;
-
-            int count = register.Sum(x => x.Value);
-
-            if (count > 1000)//promil
-                register[last_affinity]--;
-
-            last_affinity = af_occo;
-
-            return;
-        }
-
-        private void UpdateHUB()
-        {
-            if (_do > 0 && !mind.reward)
-                return;
-
-            if (IsDECISION())
-                return;
-
-            Lookup lookup = new Lookup();
-
-            MINDS mindtype = mind.mindtype;
-
-            int max = register.Values.Max();
-            string af_occu = register.First(x => x.Value == max).Key;
-            string occu = mind._internal.Occu.name;
             string sub = mind.hub.GetSubject(this);
 
-            if (af_occu != occu)
-                return;
-
             double index = mind.hub.GetIndex(sub);
+
+            double max = units.Max(x => x.reward);
+
+            double reward_norm = mind.calc.Normalize(reward, 0.0d, max, 0.0d, 1.0d);
 
             double effective_gamma = CONST.GAMMA * (1.0d + reward_norm);
 

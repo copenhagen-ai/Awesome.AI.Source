@@ -10,13 +10,13 @@ namespace Awesome.AI.Core.Spaces
          * these are groups of UNITs
          * */
 
-        public Dictionary<string, double> hubs_all { get; set; }
+        public Dictionary<string, double> weights { get; set; }
 
         private TheMind mind;
         public HubSpace(TheMind mind)
         {
             this.mind = mind;
-            this.hubs_all = new Dictionary<string, double>();
+            this.weights = new Dictionary<string, double>();
 
             MINDS mindtype = mind.mindtype;
             Lookup lookup = new Lookup();
@@ -28,11 +28,11 @@ namespace Awesome.AI.Core.Spaces
                 List<string> hubs = lookup.GetHUBS(mindtype, occ);
                 foreach (string hub in hubs)
                 {
-                    if (hubs_all.ContainsKey(hub))
+                    if (weights.ContainsKey(hub))
                         continue;
 
                     double _r = rand.NextDouble();
-                    hubs_all.Add(hub, _r);
+                    weights.Add(hub, _r);
                 }
             }
         }
@@ -50,13 +50,13 @@ namespace Awesome.AI.Core.Spaces
                 double _val1 = _val;
                 double _val2 = _val * 0.1d;
 
-                foreach (string hub in hubs) 
-                    hubs_all[hub] -= _val2;
+                foreach (string hub in hubs)
+                    weights[hub] -= _val2;
 
                 foreach (string hub in hubs)
-                    hubs_all[hub] = hubs_all[hub] < 0.0d ? 0.0d : hubs_all[hub]; 
+                    weights[hub] = weights[hub] < 0.0d ? 0.0d : weights[hub]; 
                 
-                hubs_all[sub] += _val1;                
+                weights[sub] += _val1;
             }
             catch (Exception ex)
             {
@@ -74,19 +74,19 @@ namespace Awesome.AI.Core.Spaces
                 Lookup lookup = new Lookup();
                 List<string> hubs = lookup.GetHUBS(mindtype, occu);
 
-                var hubs_curr = new Dictionary<string, double>();
-                hubs.ForEach(x => hubs_curr.Add(x, hubs_all[x]));
+                var weights_occ = new List<KeyValuePair<string, double>>();
+                hubs.ForEach(x => weights_occ.Add(KeyValuePair.Create(x, weights[x])));
 
                 // no ordering, should be based on semantics
-                var weights = hubs_curr.ToList();
-                var sum = hubs_curr.Sum(x => x.Value);
+                var sum = weights_occ.Sum(x => x.Value);
 
                 double res = 0.0d;
                 double count = 0.0d;
-                for (int i = 0; i < weights.Count(); i++)
+                int i = 0;
+                foreach (var weight in weights_occ)
                 {
-                    var weight = weights[i].Value;
-                    var area = (weight / sum) * 100.0d;
+                    var _w = weight.Value;
+                    var area = (_w / sum) * 100.0d;
 
                     count += area;
 
@@ -95,10 +95,11 @@ namespace Awesome.AI.Core.Spaces
                     if (sub_get == sub)
                         break;
 
-                    var weight_next = weights[i + 1].Value;
+                    var weight_next = weights_occ[i + 1].Value;
                     var area_next = (weight_next / sum) * 100.0d;
 
                     res = count + area_next / 2;
+                    i++;
                 }
 
                 return res;
@@ -145,22 +146,21 @@ namespace Awesome.AI.Core.Spaces
                 Lookup lookup = new Lookup();
                 List<string> hubs = lookup.GetHUBS(mindtype, occu);
 
-                var hubs_curr = new Dictionary<string, double>();
-                hubs.ForEach(x => hubs_curr.Add(x, hubs_all[x]));
+                var weights_occ = new List<KeyValuePair<string, double>>();
+                hubs.ForEach(x => weights_occ.Add(KeyValuePair.Create(x, weights[x])));
 
                 // no ordering, should be based on semantics
-                var weights = hubs_curr.ToList();
                 var sum = weights.Sum(x => x.Value);
 
                 double count = 0.0d;
-                for (int i = 0; i < weights.Count(); i++)
+                foreach (var weight in weights_occ)
                 {
-                    var weight = weights[i].Value;
-                    var area = (weight / sum) * 100.0d;
+                    var _w = weight.Value;
+                    var area = (_w / sum) * 100.0d;
 
                     count += area;
 
-                    sub = weights[i].Key;
+                    sub = weight.Key;
 
                     if (count >= unit.HI)
                         break;
@@ -184,23 +184,22 @@ namespace Awesome.AI.Core.Spaces
                 Lookup lookup = new Lookup();
                 List<string> hubs = lookup.GetHUBS(mindtype, occu);
 
-                var hubs_curr = new Dictionary<string, double>();
-                hubs.ForEach(x => hubs_curr.Add(x, hubs_all[x]));
+                var weights_occ = new List<KeyValuePair<string, double>>();
+                hubs.ForEach(x => weights_occ.Add(KeyValuePair.Create(x, weights[x])));
 
                 // no ordering, should be based on semantics
-                var weights = hubs_curr.ToList();
                 var sum = weights.Sum(x => x.Value);
 
                 string sub = "";
                 double count = 0.0d;
-                for (int i = 0; i < weights.Count(); i++)
+                foreach (var weight in weights_occ)
                 {
-                    var weight = weights[i].Value;
-                    var area = (weight / sum) * 100.0d;
+                    var _w = weight.Value;
+                    var area = (_w / sum) * 100.0d;
 
                     count += area;
 
-                    sub = weights[i].Key;
+                    sub = weight.Key;
                  
                     if (count >= hub_index)
                         break;
@@ -241,7 +240,7 @@ namespace Awesome.AI.Core.Spaces
         {
             try
             {
-                string occu = mind._internal.Occu.name;
+                //string occu = mind._internal.Occu.name;
                 
                 var units = mind.access.UNITS_ALL();
                 
@@ -249,8 +248,11 @@ namespace Awesome.AI.Core.Spaces
 
                 foreach (var unit in units)
                 {
-                    var max = Max(unit.register);
-                    if (max == occu && !res.Contains(unit))
+                    //var max = Max(unit.register);
+                    //if (max == occu && !res.Contains(unit))
+                    //    res.Add(unit);
+
+                    if (unit.IsValid && !res.Contains(unit))
                         res.Add(unit);
                 }            
             
@@ -262,14 +264,14 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
-        private string Max(Dictionary<string, int> dict)
+        private string Max(Dictionary<string, double> dict)
         {
             string res = "";
-            int max = -1;
+            double max = -1d;
 
             foreach (var kv in dict)
             {
-                if (kv.Value > max && kv.Value > 0)
+                if (kv.Value > max && kv.Value > 0.0d)
                 {
                     max = kv.Value;
                     res = kv.Key;
