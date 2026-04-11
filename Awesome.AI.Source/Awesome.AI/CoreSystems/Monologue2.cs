@@ -95,13 +95,14 @@ namespace Awesome.AI.CoreSystems
                 //    return;
 
                 string _base = 
-                    mind.mindtype == MINDS.ROBERTA ? "base" :
-                    mind.mindtype == MINDS.ANDREW ? "base" :
-                    "base";
+                    mind.mindtype == MINDS.ROBERTA ? CONST.prop2_temperament :
+                    mind.mindtype == MINDS.ANDREW ? CONST.prop2_temperament :
+                    CONST.prop2_temperament;
 
                 mt = mind.mindtype;
                 sub = mind.hub.GetSubject(mind.unit_actual) ?? "";
-                idx = $"{Index(mind.mech_high.mp.props.PropsOut[_base])}";
+                idx = $"{Index(mind.mech.mp.mprops.PropsOut[_base])}";
+                //idx = $"{Index(mind.mech.ms.dv_sym_100)}";
                 //idx = $"{Index(mind.down.Props["noise"])}";
                 //idx = $"{mind.mech_current.mp.p_100}"[..1];
 

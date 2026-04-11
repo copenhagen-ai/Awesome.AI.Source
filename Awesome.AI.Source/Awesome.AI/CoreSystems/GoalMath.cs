@@ -57,9 +57,6 @@ namespace Awesome.AI.CoreSystems
             if (!_pro)
                 return;
 
-            if (mind.z_current != "z_noise")
-                return;
-
             if (!mind._quick.Result("MATHSOLVE"))
                 return;
 
@@ -78,9 +75,6 @@ namespace Awesome.AI.CoreSystems
         public void Learn(string problem, bool _pro)
         {
             if (!_pro)
-                return;
-
-            if (mind.z_current != "z_noise")
                 return;
 
             if (!mind._quick.Result("MATHLEARN"))

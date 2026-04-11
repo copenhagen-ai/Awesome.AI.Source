@@ -1,5 +1,4 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Core;
+﻿using Awesome.AI.Core;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -21,7 +20,7 @@ namespace Awesome.AI.Generators
             if (!_pro)
                 return;
 
-            int div = mind.bot.pattern == PATTERN.MOODBAD || mind.bot.pattern == PATTERN.MOODGENERAL? 5 : 10;
+            int div = mind.bot.pattern == PATTERN.MOODBAD || mind.bot.pattern == PATTERN.MOODGENERAL ? 5 : 10;
 
             if (Count >= div)
                 Count = 0;
@@ -42,43 +41,26 @@ namespace Awesome.AI.Generators
             Count++;
         }
 
-        private void Reset()
-        {
-            a_low = 1000d;
-            a_high = -1000d;
-        }
-
-        public PATTERNCOLOR ResColor { get; set; } = PATTERNCOLOR.RED;
+        public PATTERNCOLOR res_color { get; set; } = PATTERNCOLOR.RED;
         public double p_90 { get; set; } = -1d;
-        private List<double> Avg { get; set; }
-        private double a_low { get; set; } = 1000d;
-        private double a_high { get; set; } = -1000d;
         PATTERN currentmood { get; set; } = PATTERN.NONE;
         public void MoodOK(bool _pro)
         {
-
-            if (!CONST.SAMPLE200.RandomSample(mind))
-                return;
-
-            //if (currentmood != mind.parms_current.pattern)
-            //    Reset();
-
             currentmood = mind.bot.pattern;
 
-            double res = mind.mech_current.ms.vv_sym_90;
+            double res = mind.mech.mp.mprops.PropsOut[CONST.prop2_temperament];
             p_90 = res;
-
 
             switch (currentmood)
             {
                 case PATTERN.MOODGENERAL:
-                    ResColor = PATTERNCOLOR.GREEN;
+                    res_color = PATTERNCOLOR.GREEN;
                     break;
                 case PATTERN.MOODGOOD:
-                    ResColor = res >= 45.0d ? PATTERNCOLOR.GREEN : PATTERNCOLOR.RED;
+                    res_color = res >= 45.0d ? PATTERNCOLOR.GREEN : PATTERNCOLOR.RED;
                     break;
                 case PATTERN.MOODBAD:
-                    ResColor = res <= 55.0d ? PATTERNCOLOR.GREEN : PATTERNCOLOR.RED;
+                    res_color = res <= 55.0d ? PATTERNCOLOR.GREEN : PATTERNCOLOR.RED;
                     break;
             }
         }

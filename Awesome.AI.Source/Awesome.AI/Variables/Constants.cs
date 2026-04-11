@@ -45,14 +45,20 @@ namespace Awesome.AI.Variables
         public static string[] sub_andrew = { CONST.andrew_s1, CONST.andrew_s2, CONST.andrew_s3, CONST.andrew_s4, CONST.andrew_s5, CONST.andrew_s6, CONST.andrew_s7, CONST.andrew_s8, CONST.andrew_s9, CONST.andrew_s10 };
         public static string[] sub_basic = { CONST.basic_s1, CONST.basic_s2, CONST.basic_s3, CONST.basic_s4, CONST.basic_s5, CONST.basic_s6, CONST.basic_s7, CONST.basic_s8, CONST.basic_s9, CONST.basic_s10 };
 
-        public const string axis_1_brain = "will";
-        public const string axis_2_brain = "attention";
-        public const string axis_3_brain = "readiness";
+        public static string[] AXES = { "will", "attention", "commitment", "adaptation", "activation", "influence" };
+        public const int AXIS_MAX = 2;
 
-        public const string axis_1_comm = "will";
-        public const string axis_2_comm = "opinion";
-        public const string axis_3_comm = "temporality";
-        public const string axis_4_comm = "abstraction";
+        public const string prop1_temperament = "will";
+        public const string prop2_temperament = "mood";
+
+        public const string prop1_brain = "will";
+        public const string prop2_brain = "attention";
+        public const string prop3_brain = "readiness";
+
+        public const string prop1_comm = "will";
+        public const string prop2_comm = "opinion";
+        public const string prop3_comm = "temporality";
+        public const string prop4_comm = "abstraction";
 
         /*
          * decision values

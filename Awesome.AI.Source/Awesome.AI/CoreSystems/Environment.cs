@@ -1,7 +1,7 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Core.Internals;
 using Awesome.AI.Core.Spaces;
-using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -108,9 +108,6 @@ namespace Awesome.AI.CoreSystems
                      * run is only true once per cycle
                      * */
 
-                    if (mind.cycles_all < CONST.FIRST_RUN)
-                        return occu;
-
                     run = mind.epochs != epoch_old;
                     epoch_old = mind.epochs;
 
@@ -159,11 +156,7 @@ namespace Awesome.AI.CoreSystems
 
         public bool Valid(UNIT _u)
         {
-            if (mind.z_current == "z_noise")
-                return true;
-
-            if (!Filters.FilterUnit(mind, FILTERUNIT.NONE, FILTERTYPE.THREE, _u))
-                return true;
+            if (_u.IsDECISION()) return true;
 
             try
             {
@@ -216,9 +209,6 @@ namespace Awesome.AI.CoreSystems
 
         public void Reset()
         {
-            //if (mind.z_current == "z_noise")
-            //    return;
-
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
@@ -251,9 +241,6 @@ namespace Awesome.AI.CoreSystems
 
         public bool Valid(UNIT _u)
         {
-            if (mind.z_current == "z_noise")
-                return true;
-
             if (_u.ticket.IsNull())
                 throw new Exception("Valid");
 
@@ -299,9 +286,6 @@ namespace Awesome.AI.CoreSystems
 
         public void Reset()
         {
-            if (mind.z_current == "z_noise")
-                return;
-
             if (mind.bot.validation != VALIDATION.INTERNAL)
             {
                 //mind.stats.Reset();

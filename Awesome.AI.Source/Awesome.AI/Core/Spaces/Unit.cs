@@ -1,5 +1,5 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.CoreInternals;
+using Awesome.AI.Core.Internals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
@@ -71,7 +71,7 @@ namespace Awesome.AI.Core.Spaces
                         if (sub == "init")
                             return "";
 
-                        double _i = mind.mech_high.mp.props.PropsOut["base"];
+                        double _i = mind.mech.ms.dv_sym_100.Norm0(mind, 0.0d, 100.0d);
                         string idx = $"{_i.Index(mind)}";
 
                         Lookup lookup = new Lookup();
@@ -110,7 +110,7 @@ namespace Awesome.AI.Core.Spaces
         {
             get
             {
-                IMechanics mech = mind.mech["z_noise"];
+                IMechanics mech = mind.mech;
                 double res = 0.0d;
                 switch (mech.type)
                 {
@@ -119,7 +119,7 @@ namespace Awesome.AI.Core.Spaces
                     case MECHANICS.CIRCUIT_2_LOW:
                         res = UIget("will").LowZero(); break;
                     case MECHANICS.TUGOFWAR_LOW:
-                        res = UIget("will").LowZero(); break;
+                        res = UIget("will").HighZero(); break;
                     case MECHANICS.BALLONHILL_LOW:
                         res = UIget("will").LowZero(); break;
                     default: throw new Exception("UNIT, Variable");
@@ -168,9 +168,9 @@ namespace Awesome.AI.Core.Spaces
             UNIT _w = new UNIT() { mind = mind, created = create, guid = h_guid, data = data, unit_type = ut, ld_type = lt };
 
             _w.u_index = new Dictionary<string, double>();
-            int i = 0;
-            foreach (string s in mind.soup.axis)
-                _w.u_index[s] = index[i++];
+            
+            for (int i = 0; i < CONST.AXIS_MAX; i++)
+                _w.u_index[CONST.AXES[i]] = index[i];
 
             ticket = ticket != "" ? ticket : "NOTICKET";
             _w.ticket = new Ticket(ticket);
@@ -257,6 +257,9 @@ namespace Awesome.AI.Core.Spaces
 
             double index = mind.hub.GetIndex(sub);
 
+            if (index == -1)
+                return;
+
             double max = units.Max(x => x.reward);
 
             double reward_norm = mind.calc.Normalize(reward, 0.0d, max, 0.0d, 1.0d);
@@ -270,22 +273,19 @@ namespace Awesome.AI.Core.Spaces
 
         private void UpdateUNT(GPTVector2D v_near)
         {
-            if (mind.z_current != "z_noise")
-                return;
-
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
 
             if (Add2D(v_near))
                 return;
 
-            foreach (var ax in mind.soup.axis)
-                Adjust(ax);
+            for (int i = 0; i < CONST.AXIS_MAX; i++)
+                Adjust(CONST.AXES[i]);
         }
 
         private bool Add2D(GPTVector2D v_near)
         {
-            int axis_count = mind.soup.axis.Length;
+            int axis_count = CONST.AXES.Length;
             Lookup lookup = new Lookup();
             int count_units = mind.access.UNITS_ALL().Count;
             int count_hubs = lookup.CountHUBS(mind.mindtype);
@@ -345,7 +345,7 @@ namespace Awesome.AI.Core.Spaces
             if (ax == "will")
                 dir = mind.down.Dir;
             else
-                dir = mind.mech_high.Dir();
+                dir = mind.mech.Dir();
 
             double _new = UIget(ax) + (rnd * CONST.ETA * dir);
 

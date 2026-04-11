@@ -8,9 +8,9 @@ namespace Awesome.AI.Common
         // Constants
         private const double SQRT2PI = 2.5066282746310002;
 
-        public bool Use(bool val, TheMind mind)
+        public bool Use(double _val, bool _b, TheMind mind)
         {
-            double norm = mind.mech["z_noise"].ms.dv_sym_100;
+            double norm = _val;
             norm = mind.calc.Normalize(norm, 0.0d, 100.0d, 0.0d, 10.0d);
             double per = mind.prob.NormalPDF(norm, 5.0d, 4.0d) * 100.0d;
 
@@ -19,7 +19,7 @@ namespace Awesome.AI.Common
 
             bool flip = mind.calc.Chance(100, 100 - (int)per);
 
-            return flip ? !val : val;
+            return flip ? !_b : _b;
         }
 
         /// <summary>

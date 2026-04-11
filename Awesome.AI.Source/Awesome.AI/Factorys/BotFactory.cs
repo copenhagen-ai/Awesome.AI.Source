@@ -9,7 +9,7 @@ namespace Awesome.AI.Factorys
         public MINDS mindtype { get; set; }
         public LOGICTYPE logic { get; set; }
         public MECHANICS mech_low { get; set; }
-        public MECHANICS mech_high { get; set; }
+        public PROPS props { get; set; }
         public Dictionary<LONGTYPE, string> lng_dec { get; set; }
         public VALIDATION validation { get; set; }
         public TAGS tags { get; set; }                                               //used with WORLD and BOTH
@@ -17,6 +17,7 @@ namespace Awesome.AI.Factorys
         public PATTERN pattern { get; set; }
         public ARC arc { get; set; }
         public int RUNTIME { get; set; }                                               //minutes / 2
+        
 
     }
 
@@ -25,7 +26,7 @@ namespace Awesome.AI.Factorys
         public MINDS mindtype { get; set; }
         public LOGICTYPE logic { get; set; }
         public MECHANICS mech_low { get; set; }
-        public MECHANICS mech_high { get; set; }
+        public PROPS props { get; set; }
         public Dictionary<LONGTYPE, string> lng_dec { get; set; }
         public VALIDATION validation { get; set; }
         public TAGS tags { get; set; }                                               //used with WORLD and BOTH
@@ -39,7 +40,7 @@ namespace Awesome.AI.Factorys
             mindtype = MINDS.ROBERTA;
             logic = LOGICTYPE.PROBABILITY;
             mech_low = MECHANICS.TUGOFWAR_LOW;
-            mech_high = MECHANICS.BALLONHILL_HIGH;
+            props = PROPS.TEMPERAMENT;
             lng_dec = CONST.lng_dec_roberta;
 
             validation = VALIDATION.BOTH;                                       //BOTH or TAGS
@@ -56,7 +57,7 @@ namespace Awesome.AI.Factorys
         public MINDS mindtype { get; set; }
         public LOGICTYPE logic { get; set; }
         public MECHANICS mech_low { get; set; }
-        public MECHANICS mech_high { get; set; }
+        public PROPS props { get; set; }
         public Dictionary<LONGTYPE, string> lng_dec { get; set; }
         public VALIDATION validation { get; set; }
         public TAGS tags { get; set; }                                               //used with WORLD and BOTH
@@ -70,7 +71,7 @@ namespace Awesome.AI.Factorys
             mindtype = MINDS.ANDREW;
             logic = LOGICTYPE.PROBABILITY;
             mech_low = MECHANICS.TUGOFWAR_LOW;
-            mech_high = MECHANICS.TUGOFWAR_HIGH;
+            props = PROPS.TEMPERAMENT;
             lng_dec = CONST.lng_dec_andrew;
 
             validation = VALIDATION.BOTH;                                       //BOTH or TAGS
@@ -87,7 +88,7 @@ namespace Awesome.AI.Factorys
         public MINDS mindtype { get; set; }
         public LOGICTYPE logic { get; set; }
         public MECHANICS mech_low { get; set; }
-        public MECHANICS mech_high { get; set; }
+        public PROPS props { get; set; }
         public Dictionary<LONGTYPE, string> lng_dec { get; set; }
         public VALIDATION validation { get; set; }
         public TAGS tags { get; set; }                                               //used with WORLD and BOTH
@@ -101,7 +102,7 @@ namespace Awesome.AI.Factorys
             mindtype = MINDS.BASIC;
             logic = LOGICTYPE.PROBABILITY;
             mech_low = MECHANICS.TUGOFWAR_LOW;
-            mech_high = MECHANICS.BALLONHILL_HIGH;
+            props = PROPS.TEMPERAMENT;
             lng_dec = CONST.lng_dec_basic;
 
             validation = VALIDATION.BOTH;                                       //BOTH or TAGS

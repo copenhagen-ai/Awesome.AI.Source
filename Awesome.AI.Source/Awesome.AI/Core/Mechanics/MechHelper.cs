@@ -13,15 +13,13 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.posxy = CONST.STARTXY;
 
-            mp.peek_max = -1000.0d;
-            mp.peek_min = 1000.0d;
             mp.cc_elec_max = -1000.0d;
             mp.cc_elec_min = 1000.0d;
             mp.dc_elec_max = -1000.0d;
             mp.dc_elec_min = 1000.0d;
 
-            mp.vv_out_high_peek = -1000.0d;
-            mp.vv_out_low_peek = 1000.0d;
+            mp.peek_vv_out_high = -1000.0d;
+            mp.peek_vv_out_low = 1000.0d;
             mp.vv_out_high = -1000.0d;
             mp.vv_out_low = 1000.0d;
             mp.dv_out_high = -1000.0d;
@@ -38,8 +36,8 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.posxy = CONST.STARTXY;
 
-            mp.vv_out_high_peek = -1000.0d;
-            mp.vv_out_low_peek = 1000.0d;
+            mp.peek_vv_out_high = -1000.0d;
+            mp.peek_vv_out_low = 1000.0d;
             mp.vv_out_high = -1000.0d;
             mp.vv_out_low = 1000.0d;
             mp.dv_out_high = -1000.0d;
@@ -95,8 +93,8 @@ namespace Awesome.AI.Core.Mechanics
         public void ExtremesCircuit(MechParams mp)
         {
             // Update flux linkage extremes
-            if (mp.peek_cc_elec <= mp.peek_min) mp.peek_min = mp.peek_cc_elec;
-            if (mp.peek_cc_elec > mp.peek_max) mp.peek_max = mp.peek_cc_elec;
+            if (mp.peek_cc_elec <= mp.peek_vv_out_low) mp.peek_vv_out_low = mp.peek_cc_elec;
+            if (mp.peek_cc_elec > mp.peek_vv_out_high) mp.peek_vv_out_high = mp.peek_cc_elec;
 
             // Update current extremes
             if (mp.cc_elec_curr <= mp.cc_elec_min) mp.cc_elec_min = mp.cc_elec_curr;
@@ -124,8 +122,8 @@ namespace Awesome.AI.Core.Mechanics
 
         public void ExtremesNoise(MechParams mp)
         {
-            if (mp.peek_velocity <= mp.vv_out_low_peek) mp.vv_out_low_peek = mp.peek_velocity;
-            if (mp.peek_velocity > mp.vv_out_high_peek) mp.vv_out_high_peek = mp.peek_velocity;
+            if (mp.peek_vv_curr <= mp.peek_vv_out_low) mp.peek_vv_out_low = mp.peek_vv_curr;
+            if (mp.peek_vv_curr > mp.peek_vv_out_high) mp.peek_vv_out_high = mp.peek_vv_curr;
 
             if (mp.vv_curr <= mp.vv_out_low) mp.vv_out_low = mp.vv_curr;
             if (mp.vv_curr > mp.vv_out_high) mp.vv_out_high = mp.vv_curr;
@@ -181,10 +179,9 @@ namespace Awesome.AI.Core.Mechanics
              * should friction be calculated from position???
              * */
 
-            MyCalc calc = mind.calc;
-
-            double credits = CONST.MAX_CREDIT - mind.unit_current.credits;
-            double friction = calc.Logistic(credits - ((double)CONST.MAX_CREDIT / 2.0d));
+            double credits = mind.unit_current.credits;
+            double shift = mind.calc.Normalize(credits, 0.0d, 10.0d, -5.0d, 5.0d);
+            double friction = mind.calc.Logistic(shift);
 
             return friction;
         }

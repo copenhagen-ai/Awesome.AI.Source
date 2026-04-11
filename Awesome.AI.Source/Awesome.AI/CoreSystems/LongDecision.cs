@@ -40,9 +40,6 @@ namespace Awesome.AI.CoreSystems
              * should this really run on unit_actual
              * */
 
-            if (mind.z_current != "z_noise")
-                return;
-
             if (!_pro)
                 return;
 
@@ -50,9 +47,6 @@ namespace Awesome.AI.CoreSystems
                 return;
 
             SetAction(mind, type);
-
-            //if (mind.unit_current.IsQUICKDECISION())
-            //    return;
 
             if (!mind.unit_current.IsDECISION())
                 return;

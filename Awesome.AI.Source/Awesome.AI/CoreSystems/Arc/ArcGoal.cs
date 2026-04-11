@@ -72,9 +72,6 @@ namespace Awesome.AI.CoreSystems.Arc
             if (!_pro)
                 return;
 
-            if (mind.z_current != "z_noise")
-                return;
-
             if (!mind._quick.Result("ARCSOLVE"))
                 return;
 
@@ -109,9 +106,6 @@ namespace Awesome.AI.CoreSystems.Arc
                 return;
 
             if (!_pro)
-                return;
-
-            if (mind.z_current != "z_noise")
                 return;
 
             if (!mind._quick.Result("ARCLEARN"))

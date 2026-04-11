@@ -1,4 +1,4 @@
-﻿using Awesome.AI.CoreInternals;
+﻿using Awesome.AI.Core.Internals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -95,6 +95,9 @@ namespace Awesome.AI.Core.Spaces
                     if (sub_get == sub)
                         break;
 
+                    if (i + 1 > weights_occ.Count - 1)
+                        return -1;
+
                     var weight_next = weights_occ[i + 1].Value;
                     var area_next = (weight_next / sum) * 100.0d;
 
@@ -151,7 +154,7 @@ namespace Awesome.AI.Core.Spaces
 
                 // no ordering, should be based on semantics
                 var sum = weights.Sum(x => x.Value);
-
+                
                 double count = 0.0d;
                 foreach (var weight in weights_occ)
                 {

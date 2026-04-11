@@ -15,7 +15,7 @@ namespace Awesome.AI.Factorys
             this.mind = mind;
         }
 
-        public IMechanics GetMech(MECHANICS run)
+        public IMechanics GetMech(MECHANICS run, PROPS props)
         {
             /*
              * INFO (not used)
@@ -31,21 +31,10 @@ namespace Awesome.AI.Factorys
             {
                 case MECHANICS.TUGOFWAR_LOW:
                 case MECHANICS.BALLONHILL_LOW:
-                    return new m_NoiseGenerator(mind, run);
+                    return new m_NoiseGenerator(mind, run, props);
                 case MECHANICS.CIRCUIT_1_LOW:
                 case MECHANICS.CIRCUIT_2_LOW:
-                    return new e_CircuitSimulator(mind, run);
-                case MECHANICS.TUGOFWAR_HIGH:
-                    return new m_TugOfWar(mind, run, PROPS.COMMUNICATION);
-                case MECHANICS.BALLONHILL_HIGH:
-                    return new m_BallOnHill(mind, run, PROPS.BRAINWAVE);
-                //case MECHANICS.GRAVITY:
-                //    _mech = new GravityAndRocket(mind, this);
-                //    validation = VALIDATION.BOTH;                                       //BOTH or OCCU
-                //    tags = TAGS.ALL;                                                    //used with TAGS and BOTH
-                //    occupasion = OCCUPASION.DYNAMIC;                                    //used with OCCU and BOTH
-                //    pattern = PATTERN.MOODGENERAL;
-                //    break;
+                    return new e_CircuitSimulator(mind, run, props);
                 default: throw new Exception("GetMechanics");
             }
         }

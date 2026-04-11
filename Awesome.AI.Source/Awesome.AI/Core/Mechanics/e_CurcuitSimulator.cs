@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Common;
+using Awesome.AI.Core.Internals;
 using Awesome.AI.Core.Mechanics;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.Interfaces;
@@ -81,6 +82,8 @@ namespace Awesome.AI.Core.Electrical
         public MechParams mp { get; set; }
         public MechHelper mh { get; set; }
 
+
+
         // Feedback register (memory)
         FeedbackRegister register = new FeedbackRegister(64);
         // RC circuit
@@ -94,7 +97,7 @@ namespace Awesome.AI.Core.Electrical
         private TheMind mind;
         private e_CircuitSimulator() { }
 
-        public e_CircuitSimulator(TheMind mind, MECHANICS type)
+        public e_CircuitSimulator(TheMind mind, MECHANICS type, PROPS mprops)
         {
             this.mind = mind;
             this.type = type;
@@ -103,10 +106,13 @@ namespace Awesome.AI.Core.Electrical
             this.mh = new MechHelper() { };
             this.mp = new MechParams() { };
 
+            //this.mp.mprops = new ModProperties(mind, mprops);
+            this.mp.eprops = new BaseProperties(ms);
+
             mp.posxy = CONST.STARTXY;
 
-            mp.vv_out_high_peek = -1000.0d;
-            mp.vv_out_low_peek = 1000.0d;
+            mp.peek_vv_out_high = -1000.0d;
+            mp.peek_vv_out_low = 1000.0d;
             mp.vv_out_high = -1000.0d;
             mp.vv_out_low = 1000.0d;
             mp.dv_out_high = -1000.0d;
@@ -140,9 +146,9 @@ namespace Awesome.AI.Core.Electrical
 
             Calc(curr, true, -1);
 
-            double adj = mp.peek_min == mp.peek_max ? 0.1d : 0.0d;
+            double adj = mp.peek_vv_out_low == mp.peek_vv_out_high ? 0.1d : 0.0d;
 
-            mp.peek_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_min - adj, mp.peek_max, 0.0d, 100.0d);
+            mp.peek_vv_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_vv_out_low - adj, mp.peek_vv_out_high, 0.0d, 100.0d);
         }
 
         public double Dir()
@@ -242,9 +248,7 @@ namespace Awesome.AI.Core.Electrical
 
         public void DeltaTime()
         {
-            double delta = mind.mech_high.ms.dv_sym_100;
-            double mod = delta > 0.0d ? delta / 100.0d : 1.0d;
-            mp.dt = 0.001d * mod;
+            mp.dt = 0.001d;
         }
 
         public double Damping(TheMind mind)
@@ -265,9 +269,6 @@ namespace Awesome.AI.Core.Electrical
         public void Calculate(PATTERN match, int cycles)
         {
             PATTERN pattern = PATTERN.NONE;
-
-            if (mind.z_current != "z_noise")
-                return;
 
             if (pattern != match)
                 return;

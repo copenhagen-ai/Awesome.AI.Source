@@ -10,14 +10,10 @@ namespace Awesome.AI.Awesome.AI.Core
     {
         public double Dir
         {
-            get => IsDown(WillProp) ? -1.0d : 1.0d;
+            get => WillProp <= 0 ? -1.0d : 1.0d;
         }
 
         public double WillProp { get; set; }
-        //public double WillPropNorm0 { get => Orig.Norm0(mind); }//zero
-        //public double WillPropNorm1 { get => Orig.Norm1(mind); }
-        //public double WillPropNorm100 { get => Orig.Norm100(mind); }
-
         public int Error { get; set; }
         public List<double> Ratio { get; set; }
         private List<bool> Errors { get; set; }
@@ -30,16 +26,10 @@ namespace Awesome.AI.Awesome.AI.Core
 
             Ratio = new List<double>();
             Errors = new List<bool>();
-
-            //WillPropNorm0 = 1.0d;
         }
 
         public void Update()
         {
-            if (mind.z_current != "z_noise")
-                return;
-
-            //Discrete();
             Continous();
 
             //code: before or after?
@@ -68,43 +58,7 @@ namespace Awesome.AI.Awesome.AI.Core
 
             Error = Errors.Count(x => x == true);
         }
-
-        public void SetYES()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetNO()
-        {
-            throw new NotImplementedException();    
-        }
-
-        [Obsolete]
-        public void Discrete()
-        {
-            /*
-             * NO is to say no to going downwards
-             * */
-
-            double d_curr = mind.mech_current.ms.dv_sym_curr;
-
-            bool down = d_curr <= 0.0d;
-            bool save = down;
-
-            if (mind.bot.logic == LOGICTYPE.PROBABILITY)
-                down = Probability(down, mind);
-
-            if (mind.bot.logic == LOGICTYPE.QUBIT)
-                down = Qubit(mind);
-
-            SetError(save != down);
-
-            if (down)
-                SetYES();
-            else
-                SetNO();
-        }
-
+        
         public void Continous()
         {
             /*
@@ -112,13 +66,11 @@ namespace Awesome.AI.Awesome.AI.Core
              * thereby expressing levels of social entanglement
              * */
 
-            double d_curr = mind.mech_current.ms.dv_sym_curr;
+            double d_curr = mind.mech.ms.dv_sym_curr;
             double d_zero = d_curr.Norm0(mind);
             double d_save = d_curr.Norm0(mind);
 
-            bool down = IsDown(d_curr);
-            
-            if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(down, mind) && NoInertia() && NoMomentum())
+            if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind) && NoInertia() && NoMomentum())
                 d_zero *= -1.0d;
 
             if (mind.bot.logic == LOGICTYPE.QUBIT && Qubit(mind) && NoInertia() && NoMomentum())
@@ -134,20 +86,6 @@ namespace Awesome.AI.Awesome.AI.Core
                 throw new Exception("NAN");
         }
 
-        private bool IsDown(double d_curr)
-        {
-            switch (mind.bot.mech_low)
-            {
-                case MECHANICS.TUGOFWAR_LOW:
-                case MECHANICS.BALLONHILL_LOW:
-                case MECHANICS.CIRCUIT_1_LOW:
-                case MECHANICS.CIRCUIT_2_LOW:
-                    return d_curr <= 0;                                        
-                default:
-                    throw new Exception("Down, Down");
-            }
-        }
-
         private int i_decay { get; set; }
         private bool NoInertia()
         {
@@ -160,9 +98,9 @@ namespace Awesome.AI.Awesome.AI.Core
 
             i_decay++;
 
-            double vv_curr = mind.mech_current.ms.vv_sym_curr;
-            double dv_curr = mind.mech_current.ms.dv_sym_curr;
-            double lim = mind.mech_current.mp.inertia_lim;
+            double vv_curr = mind.mech.ms.vv_sym_curr;
+            double dv_curr = mind.mech.ms.dv_sym_curr;
+            double lim = mind.mech.mp.inertia_lim;
 
             bool inertia = Math.Abs(vv_curr + dv_curr) < lim;
 
@@ -182,8 +120,8 @@ namespace Awesome.AI.Awesome.AI.Core
             //return true;
             //double sign = Math.Sign(mind.mech_current.ms.fsta_sym + mind.mech_current.ms.fdyn_sym);
 
-            double vel = mind.mech_current.ms.vv_sym_curr;
-            double mass = mind.mech_current.ms.m1_sym + mind.mech_current.ms.m2_sym;
+            double vel = mind.mech.ms.vv_sym_curr;
+            double mass = mind.mech.ms.m1_sym + mind.mech.ms.m2_sym;
             double mom = mass * vel;
 
             if (mom >= 0.0)
@@ -204,9 +142,11 @@ namespace Awesome.AI.Awesome.AI.Core
                 d_curr;
         }
 
-        public static bool Probability(bool _b, TheMind mind)
+        public static bool Probability(double will, TheMind mind)
         {
-            return mind.prob.Use(_b, mind);
+            bool down = will <= 0;
+
+            return mind.prob.Use(will, down, mind);
         }
 
         public static bool Qubit(TheMind mind)

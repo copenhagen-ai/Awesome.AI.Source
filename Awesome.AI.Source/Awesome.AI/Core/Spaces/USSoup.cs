@@ -80,42 +80,39 @@ namespace Awesome.AI.Core.Spaces
         private USSoup() { }
         public USSoup(TheMind mind)
         {
-            this.mind = mind;
-
-            axis = mind.mech_high.type == MECHANICS.TUGOFWAR_HIGH ?
-                [ "will", CONST.axis_2_comm] :
-                [ "will", CONST.axis_2_brain];
-
-            prev_dir ??= new Dictionary<string, double>();
-
-            foreach (string ax in axis)
-                prev_dir[ax] = 0.0d;
+            this.mind = mind;            
         }
 
         //each axis should run its own mechanics - update function
         // comm, andrew { "will", "opinion", "temporality", "abstraction" };
         // brain, roberta { "will", "attention", "readiness" };
-        public string[] axis { get; set; }
-        private Dictionary<string, double> prev_dir { get; set; }
-
+        //public string[] axis { get; set; }
+        
         private double Step(string axis_tmp)
         {
             switch(axis_tmp)
             {
-                case "will": return mind.mech_noise.ms.vv_sym_100;
-                case CONST.axis_2_brain: return mind.mech_high.ms.vv_sym_100;
-                case CONST.axis_2_comm: return mind.mech_high.ms.vv_sym_100;
+                case "will": return mind.mech.mp.eprops.Will().Norm100(mind);
+                case "attention": return mind.mech.mp.eprops.Attention().Norm100(mind);
+                case "commitment": return mind.mech.mp.eprops.Commitment().Norm100(mind);
+                case "adaptation": return mind.mech.mp.eprops.Adaptation().Norm100(mind);
+                case "activation": return mind.mech.mp.eprops.Activation().Norm100(mind);
+                case "influence": return mind.mech.mp.eprops.Influence().Norm100(mind);
                 default: throw new Exception("UnitSpaceSoup, Step");
             }
         }
 
-        private double Direction(string axis_tmp)
+        private double Direction(string axis_tmp, bool set_prev)
         {
             switch (axis_tmp)
             {
                 case "will": return mind.down.Dir;
-                case CONST.axis_2_brain: return mind.mech_high.Dir();
-                case CONST.axis_2_comm: return mind.mech_high.Dir();
+                case "attention":
+                case "commitment":
+                case "adaptation":
+                case "activation":
+                case "influence":
+                    return mind.mech.mp.eprops.Dir(axis_tmp, set_prev);
                 default: throw new Exception("UnitSpaceSoup, Direction");
             }
         }
@@ -146,9 +143,6 @@ namespace Awesome.AI.Core.Spaces
         
         public void CurrentUnit(bool _pro)
         {
-            if (mind.z_current != "z_noise")
-                return;
-
             if (Quick(_pro))
                 return;
 
@@ -204,22 +198,11 @@ namespace Awesome.AI.Core.Spaces
 
         private double[] Near()
         {
-            int axis_max = 2;
-            int axis_now = 2;
+            double[] near = new double[CONST.AXIS_MAX];
 
-            double[] near = new double[axis_max];
-
-            for (int i = 0; i < axis_max; i++)
-            {
-                if (i >= axis_now)
-                {
-                    near[i] = -1d;
-                    continue;
-                }
-
-                near[i] = JumpTo(axis[i], Step(axis[i]), Direction(axis[i]));
-            }
-
+            for (int i = 0; i < CONST.AXIS_MAX; i++)
+               near[i] = JumpTo(CONST.AXES[i], Step(CONST.AXES[i]), Direction(CONST.AXES[i], true));
+            
             return near;
         }
 
@@ -235,8 +218,8 @@ namespace Awesome.AI.Core.Spaces
                 if (unit == mind.unit_current)
                     continue;
 
-                double nearest_x = JumpTo("will", Map(unit), Direction("will"));
-                double nearest_y = JumpTo(axis[1], Map(unit), Direction(axis[1]));
+                double nearest_x = JumpTo("will", Map(unit), Direction("will", false));
+                double nearest_y = JumpTo(CONST.AXES[1], Map(unit), Direction(CONST.AXES[1], false));
 
                 double distance = mind.calc.Pyth(near_x, nearest_x, near_y, nearest_y);
 
@@ -253,7 +236,7 @@ namespace Awesome.AI.Core.Spaces
             if (nearest == null)
                 res.Insert(0, UNIT.CreateIdle(mind));
             else
-                res = GPT.Create().Corridor(units, mind.unit_current, nearest, axis[0], axis[1], 5.0d);
+                res = GPT.Create().Corridor(units, mind.unit_current, nearest, CONST.AXES[0], CONST.AXES[1], 5.0d);
 
             return res.ToArray();
         }
@@ -265,8 +248,9 @@ namespace Awesome.AI.Core.Spaces
 
         private double JumpTo(string ax, double step, double dir)
         {
+            double prev_dir = mind.mech.mp.eprops.DirPrev(ax);
             double res = 0.0d;
-            bool same = dir == prev_dir[ax];
+            bool same = dir == prev_dir;
 
             if (same)
                 res = step;
@@ -274,14 +258,12 @@ namespace Awesome.AI.Core.Spaces
             if (!same)
                 res = 100.0d - step;
 
-            prev_dir[ax] = dir;
-
             return res;
         }
 
         public double Map(UNIT x)
         {
-            IMechanics mech = mind.mech["z_noise"];
+            IMechanics mech = mind.mech;
 
             mech.Peek(x);
 

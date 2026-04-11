@@ -15,8 +15,7 @@
         public enum VALIDATION { BOTH, EXTERNAL, INTERNAL }
         public enum TAGS { ALL, EVEN }
         public enum OCCUPASION { FIXED, DYNAMIC }
-        public enum MECHANICS { MECH_OTHER_LOW, TUGOFWAR_LOW, BALLONHILL_LOW, CIRCUIT_1_LOW, CIRCUIT_2_LOW, GRAVITY_HIGH, TUGOFWAR_HIGH, BALLONHILL_HIGH }
-        public enum MOOD { GOOD, BAD }
+        public enum MECHANICS { MECH_OTHER_LOW, TUGOFWAR_LOW, BALLONHILL_LOW, CIRCUIT_1_LOW, CIRCUIT_2_LOW }
         public enum LOGICTYPE { CLASSICAL, PROBABILITY, QUBIT }
         public enum SELECTCURRENT { PYTH, OTHER }
         public enum SELECTACTUAL { DOMINANT, OTHER }
@@ -25,7 +24,7 @@
         public enum FUZZYDOWN { VERYYES, YES, MAYBE, NO, VERYNO }
         public enum PERIODDOWN { YES, NO }
         public enum ORDER { NONE, BYINDEX, BYVARIABLE }
-        public enum PROPS { COMMUNICATION, BRAINWAVE }
+        public enum PROPS { TEMPERAMENT, COMMUNICATION, BRAINWAVE }
         public enum FILTERUNIT { NONE, CURRENT, ACTUAL }
         public enum FILTERTYPE { ONE, TWO, THREE }
         public enum ACTION { ACTION, DECLINE }

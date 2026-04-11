@@ -1,6 +1,5 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core.Spaces;
-using Awesome.AI.CoreInternals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -50,23 +49,20 @@ namespace Awesome.AI.Core
 
             pain_truth_something = old;
 
-            if (mind.z_current != "z_noise")
-                return true;
-
             bool ok;
             switch (mind.bot.mech_low)
             {
                 case MECHANICS.TUGOFWAR_LOW: 
-                    ok = ReciprocalOK(mind.mech_current.PosXY(), out pain_truth_something);
+                    ok = ReciprocalOK(mind.mech.PosXY(), out pain_truth_something);
                     return ok;
                 case MECHANICS.BALLONHILL_LOW:
-                    ok = ReciprocalOK(mind.mech_current.PosXY(), out pain_truth_something);
+                    ok = ReciprocalOK(mind.mech.PosXY(), out pain_truth_something);
                     return ok;
                 case MECHANICS.CIRCUIT_2_LOW:
-                    ok = ReciprocalOK(mind.mech_current.PosXY(), out pain_truth_something);
+                    ok = ReciprocalOK(mind.mech.PosXY(), out pain_truth_something);
                     return ok;
                 case MECHANICS.MECH_OTHER_LOW:
-                    ok = EventHorizonOK(mind.mech_current.PosXY(), out pain_truth_something);
+                    ok = EventHorizonOK(mind.mech.PosXY(), out pain_truth_something);
                     return ok;
                 default: 
                     throw new Exception("Core, OK");
@@ -125,9 +121,6 @@ namespace Awesome.AI.Core
              * should there be some procedure for this (unlocking)?
              * */
 
-            if (mind.z_current != "z_noise")
-                return;
-
             if ((mind.epochs) >= (60 * mind.bot.RUNTIME))
                 mind.theanswer.Data = "It does not";
                         
@@ -138,18 +131,15 @@ namespace Awesome.AI.Core
 
         public void UpdateCredit()
         {
-            if (mind.z_current != "z_noise")
-                return;
-
-            if (!Filters.FilterUnit(mind, FILTERUNIT.CURRENT, FILTERTYPE.TWO))
-                return;
-
             List<UNIT> list = mind.access.UNITS_ALL();
 
             //this could be a problem with many hubs
             foreach (UNIT _u in list)
             {
-                if (!Filters.FilterUnit(mind, FILTERUNIT.NONE, FILTERTYPE.TWO, _u))
+                if (_u.IsNull()) 
+                    continue;
+
+                if (_u.Root == "") 
                     continue;
 
                 if (_u.Root == mind.unit_current.Root)
@@ -169,9 +159,6 @@ namespace Awesome.AI.Core
 
         public void History()
         {
-            if (mind.z_current != "z_noise")
-                return;
-
             if (mind.unit_current.IsIDLE())
                 return;
 
@@ -180,10 +167,6 @@ namespace Awesome.AI.Core
 
             if (mind.unit_current.IsQDECISION())
                 return;
-
-            //if (mind.curr_unit.IsDECISION())
-            //    return;
-
 
             history.Insert(0, mind.unit_current);
             if (history.Count > CONST.HIST_TOTAL)
@@ -194,15 +177,6 @@ namespace Awesome.AI.Core
         {
             if (!_pro)
                 return;
-
-            if (mind.z_current != "z_noise")
-                return;
-
-            //if (mind.unit_current.IsQUICKDECISION())
-            //    return;
-
-            //if (mind.STATE == STATE.QUICKDECISION)
-            //    return;
 
             switch (CONST.select_a) 
             {
@@ -224,14 +198,11 @@ namespace Awesome.AI.Core
 
         public void Stats(bool _pro)
         {
-            if (mind.z_current != "z_noise")
-                return;
-
             if (!_pro)
                 return;
 
-            if (!Filters.FilterUnit(mind, FILTERUNIT.ACTUAL, FILTERTYPE.TWO))
-                return;
+            if (mind.unit_actual.IsNull()) return;
+            if (mind.unit_actual.Root == "") return;
 
             if (mind.STATE == STATE.QUICKDECISION)
                 return;

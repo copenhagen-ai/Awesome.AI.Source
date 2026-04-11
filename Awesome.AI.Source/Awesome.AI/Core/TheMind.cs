@@ -1,7 +1,7 @@
 ﻿using Awesome.AI.Awesome.AI.Core;
 using Awesome.AI.Common;
+using Awesome.AI.Core.Internals;
 using Awesome.AI.Core.Spaces;
-using Awesome.AI.CoreInternals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.CoreSystems.Arc;
 using Awesome.AI.Factorys;
@@ -54,9 +54,6 @@ namespace Awesome.AI.Core
         public string result_math { get; set; }
         public string result_arc { get; set; }
 
-        private List<string> zzzz = new List<string>() { "z_noise", "z_mech" };
-
-        public Dictionary<string, IMechanics> mech { get; set; }
         private Dictionary<LONGTYPE, string> lng_dec {  get; set; }
 
         public MyStats stats = new MyStats();
@@ -78,7 +75,6 @@ namespace Awesome.AI.Core
         public bool chat_asked { get; set; }
         public bool reward { get; set; }
 
-        public string z_current { get; set; }
         public int epochs = 1;
         public int cycles = 0; // Go TRON!
         public int cycles_all = 0;
@@ -93,9 +89,7 @@ namespace Awesome.AI.Core
         public UNIT unit_actual { get; set; }
 
         public IBot bot { get; set; }
-        public IMechanics mech_current { get { return mech[z_current]; } set { mech[z_current] = value; } }
-        public IMechanics mech_high { get { return mech["z_mech"]; } set { mech["z_mech"] = value; } }
-        public IMechanics mech_noise { get { return mech["z_noise"]; } set { mech["z_noise"] = value; } }
+        public IMechanics mech { get; set; }
 
         public MicroTimer microTimer = new MicroTimer();
 
@@ -121,15 +115,8 @@ namespace Awesome.AI.Core
 
                 this.lng_dec = bot.lng_dec;
 
-                z_current = "z_noise";
-
                 MechFactory _m = new MechFactory(this);
-                mech = new Dictionary<string, IMechanics>();
-                mech["z_noise"] = _m.GetMech(bot.mech_low);
-                mech["z_mech"] = _m.GetMech(bot.mech_high);
-
-                mech_noise = mech["z_noise"];
-                mech_high = mech["z_mech"];
+                mech = _m.GetMech(bot.mech_low, bot.props);
 
                 down = new Down(this);
                 calc = new MyCalc(this);
@@ -170,18 +157,15 @@ namespace Awesome.AI.Core
 
                 core = new Core(this, rand1, rand2, rand3);
                 
-                foreach (string s in zzzz)
-                {
-                    int half = access.UNITS_ALL().Count / 2;
-                    if (mindtype == MINDS.ANDREW)
-                        unit_current = access.UNITS_ALL()[half];
-                    if (mindtype == MINDS.ROBERTA)
-                        unit_current = access.UNITS_ALL()[half];
-                    if (mindtype == MINDS.BASIC)
-                        unit_current = access.UNITS_ALL()[half];
-                }
-
-                Pre("z_noise", true);
+                int half = access.UNITS_ALL().Count / 2;
+                if (mindtype == MINDS.ANDREW)
+                    unit_current = access.UNITS_ALL()[half];
+                if (mindtype == MINDS.ROBERTA)
+                    unit_current = access.UNITS_ALL()[half];
+                if (mindtype == MINDS.BASIC)
+                    unit_current = access.UNITS_ALL()[half];
+                
+                Pre(true);
                 Post(true);
 
                 theanswer = UNIT.Create(this, "GUID", [-1d, -1d], "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
@@ -252,20 +236,15 @@ namespace Awesome.AI.Core
 
                 SetAccess(_pro);
 
-                foreach (string s in zzzz)
-                {
-                    z_current = s;
+                Pre(_pro);
 
-                    Pre(z_current, _pro);
+                if (!Core(_pro))//the basics
+                    ok = false;
 
-                    if (!Core(_pro))//the basics
-                        ok = false;
-
-                    CorePost(_pro);
-                    Systems(_pro);
-                    Post(_pro);
-                }
-                
+                CorePost(_pro);
+                Systems(_pro);
+                Post(_pro);
+                                
                 if (_pro) 
                     cycles = 0;
             }
@@ -280,12 +259,9 @@ namespace Awesome.AI.Core
             }
         }
 
-        private void Pre(string current, bool _pro)
+        private void Pre(bool _pro)
         {
-            if (z_current != "z_noise")
-                return;
-
-            rand.SaveMomentum(mech_current.ms.dv_sym_curr);
+            rand.SaveMomentum(mech.ms.dv_sym_curr);
             
             if (!_pro)
                 return;
@@ -296,11 +272,9 @@ namespace Awesome.AI.Core
 
         private void Post(bool _pro)
         {
-            if (z_current == "z_mech")
-                o_vars.SetOut();
+            o_vars.SetOut();
 
-            if (z_current == "z_mech")
-                json = o_json.GetJson(_pro);
+            json = o_json.GetJson(_pro);
 
             if (!_pro)
                 return;
@@ -321,19 +295,17 @@ namespace Awesome.AI.Core
             if (unit_current.IsIDLE())
                 return true;
 
-            mech_noise.Calculate(PATTERN.NONE, cycles);
+            mech.Calculate(PATTERN.MOODGENERAL, cycles);
+            mech.Calculate(PATTERN.MOODGOOD, cycles);
+            mech.Calculate(PATTERN.MOODBAD, cycles);
 
             down.Update();
 
-            //soup.Counter++;
+            //mech_high.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
+            //mech_high.Calculate(PATTERN.MOODGOOD, cycles);//mood good
+            //mech_high.Calculate(PATTERN.MOODBAD, cycles);//mood bad
 
-            mech_high.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
-            mech_high.Calculate(PATTERN.MOODGOOD, cycles);//mood good
-            mech_high.Calculate(PATTERN.MOODBAD, cycles);//mood bad
-
-            mech_high.mp.props.Update();
-
-            //soup.Counter++;
+            mech.mp.mprops.Update();
 
             bool ok = core.OK(pain_truth_something, out pain_truth_something);
 
@@ -365,9 +337,6 @@ namespace Awesome.AI.Core
 
             foreach(var kv in this.lng_dec)
                 _long.Decide(_pro, kv.Key);
-
-            if (z_current == "z_noise")
-                return;
 
             mood.Generate(_pro);
             mood.MoodOK(_pro);

@@ -1,4 +1,4 @@
-﻿using Awesome.AI.Awesome.AI.Core;
+﻿using Awesome.AI.Core.Internals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -19,30 +19,35 @@ namespace Awesome.AI.Core.Mechanics
         public double dc_elec_prev { get; set; }
         public double dc_elec_curr { get; set; }
         public double peek_cc_elec { get; set; }
-        public double peek_max { get; set; }
-        public double peek_min { get; set; }
 
-
-
-        public double peek_velocity { get; set; }
-        public double peek_norm { get; set; }
+        public double peek_vv_curr { get; set; }
+        public double peek_vv_norm { get; set; }
         public double vv_100 { get; set; }
         public double dv_100 { get; set; }
         public double vv_90 { get; set; }
         public double dv_90 { get; set; }
-        public double vv_curr { get; set; }
-        public double vv_prev { get; set; }
-        public double dv_curr { get; set; }
+
         public double dv_prev { get; set; }
+        public double vv_prev { get; set; }
+        public double fnet_prev { get; set; }
+        public double mom_prev { get; set; }
+        public double acc_prev { get; set; }
+        public double ke_prev { get; set; }
+
+        public double dv_curr { get; set; }
+        public double vv_curr { get; set; }
         public double fnet_curr { get; set; }
-        //public double mo_curr { get; set; }
-        //public double mo_prev { get; set; }
-        public double vv_out_high_peek { get; set; }
-        public double vv_out_low_peek { get; set; }
+        public double mom_curr { get; set; }
+        public double acc_curr { get; set; }
+        public double ke_curr { get; set; }
+        
+        public double peek_vv_out_high { get; set; }
+        public double peek_vv_out_low { get; set; }
         public double vv_out_high { get; set; }
         public double vv_out_low { get; set; }
         public double dv_out_high { get; set; }
         public double dv_out_low { get; set; }
+
         public double posx_high { get; set; }
         public double posx_low { get; set; }
 
@@ -52,7 +57,8 @@ namespace Awesome.AI.Core.Mechanics
         public PATTERN pattern_curr = PATTERN.NONE;
         public PATTERN pattern_prev = PATTERN.NONE;
 
-        public Properties props {  get; set; }
+        public ModProperties mprops {  get; set; }
+        public BaseProperties eprops { get; set; }
 
         //Shared
         public double dt { get; set; }              // Time step (s)

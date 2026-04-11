@@ -50,9 +50,6 @@ namespace Awesome.AI.CoreSystems
 
         public void Decide(UNIT curr, string type)
         {
-            if (mind.z_current != "z_noise")
-                return;
-
             if (!curr.IsQDECISION())
                 return;
 

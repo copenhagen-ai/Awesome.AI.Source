@@ -1,8 +1,7 @@
-﻿using Awesome.AI.Core;
-using Awesome.AI.Variables;
+﻿using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.CoreInternals
+namespace Awesome.AI.Core.Internals
 {
     public class Lookup
     {
