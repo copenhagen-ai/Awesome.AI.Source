@@ -158,8 +158,8 @@ namespace Awesome.AI.Variables
         public const HACKMODE hack = HACKMODE.HACK;
 
         public const TRANSFER transfer = TRANSFER.NONE;        
-        public const SELECTCURRENT select_c = SELECTCURRENT.PYTH;
-        public const SELECTACTUAL select_a = SELECTACTUAL.DOMINANT;
+        public const SELECTCURRENT select_curr = SELECTCURRENT.PYTH;
+        public const SELECTACTUAL select_act = SELECTACTUAL.DOMINANT;
 
         public const bool AGENT_USE_TIMER = false;
         public const int AGENT_DELAY_MS = 10;

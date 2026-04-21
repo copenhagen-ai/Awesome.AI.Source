@@ -12,7 +12,8 @@ namespace Awesome.AI.Interfaces
 
         double PosXY();
         void Peek(UNIT c);
-        double Dir();
+        double Dir(string ax);
+        double Mean();
 
         //these are thought patterns: general, good, bad
         void Calculate(PATTERN match, int cycles);

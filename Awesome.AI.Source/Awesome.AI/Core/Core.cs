@@ -61,9 +61,6 @@ namespace Awesome.AI.Core
                 case MECHANICS.CIRCUIT_2_LOW:
                     ok = ReciprocalOK(mind.mech.PosXY(), out pain_truth_something);
                     return ok;
-                case MECHANICS.MECH_OTHER_LOW:
-                    ok = EventHorizonOK(mind.mech.PosXY(), out pain_truth_something);
-                    return ok;
                 default: 
                     throw new Exception("Core, OK");
             }
@@ -93,6 +90,7 @@ namespace Awesome.AI.Core
             }
         }
 
+        [Obsolete]
         public bool EventHorizonOK(double pos, out double time)
         {
             try
@@ -178,7 +176,7 @@ namespace Awesome.AI.Core
             if (!_pro)
                 return;
 
-            switch (CONST.select_a) 
+            switch (CONST.select_act) 
             {
                 case SELECTACTUAL.DOMINANT:
                     UNIT unit = history

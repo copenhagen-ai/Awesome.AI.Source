@@ -345,7 +345,7 @@ namespace Awesome.AI.Core.Spaces
             if (ax == "will")
                 dir = mind.down.Dir;
             else
-                dir = mind.mech.Dir();
+                dir = mind.mech.Dir(ax);
 
             double _new = UIget(ax) + (rnd * CONST.ETA * dir);
 

@@ -151,7 +151,12 @@ namespace Awesome.AI.Core.Electrical
             mp.peek_vv_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_vv_out_low - adj, mp.peek_vv_out_high, 0.0d, 100.0d);
         }
 
-        public double Dir()
+        public double Dir(string ax)
+        {
+            throw new NotImplementedException("e_CircuitSimulator, Dir");
+        }
+
+        public double Mean()
         {
             throw new NotImplementedException("e_CircuitSimulator, Dir");
         }

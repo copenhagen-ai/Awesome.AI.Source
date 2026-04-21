@@ -10,10 +10,15 @@ namespace Awesome.AI.Awesome.AI.Core
     {
         public double Dir
         {
-            get => WillProp <= 0 ? -1.0d : 1.0d;
+            get
+            {
+                double will = mind.mech.ms.dv_sym_curr.Norm1(mind);
+                double zero = 0.0.Norm1(mind);
+                
+                return will <= zero ? -1.0d : 1.0d;
+            } 
         }
-
-        public double WillProp { get; set; }
+                
         public int Error { get; set; }
         public List<double> Ratio { get; set; }
         private List<bool> Errors { get; set; }
@@ -73,17 +78,12 @@ namespace Awesome.AI.Awesome.AI.Core
             if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind) && NoInertia() && NoMomentum())
                 d_zero *= -1.0d;
 
-            if (mind.bot.logic == LOGICTYPE.QUBIT && Qubit(mind) && NoInertia() && NoMomentum())
+            if (mind.bot.logic == LOGICTYPE.SHARED && Shared(d_curr, mind) && NoInertia() && NoMomentum())
                 d_zero *= -1.0d;
 
             bool flip = d_save != d_zero;
             DoFlip(flip, d_curr, out d_curr);
             SetError(flip);
-
-            WillProp = d_curr;
-
-            if (double.IsNaN(WillProp))
-                throw new Exception("NAN");
         }
 
         private int i_decay { get; set; }
@@ -142,6 +142,27 @@ namespace Awesome.AI.Awesome.AI.Core
                 d_curr;
         }
 
+        public static bool Shared(double will, TheMind mind)
+        {
+            double awareness = 0.0d;
+            SimpleAgent agent = new SimpleAgent(mind);
+
+            double awareA = 1.0d - awareness;
+            double awareB = awareness;
+            double zero = 0.0.Norm1(mind);
+            double w_agentA = will.Norm1(mind);
+            double w_agentB = agent.SimulateDeltaVelocity();
+
+            double w_shared = (awareA * w_agentA + awareB * w_agentB);
+            bool down = w_shared <= zero;
+
+            bool flip = mind.prob.Use(w_shared, down, mind);
+
+            agent.SetProperty(flip);
+
+            return flip;
+        }
+
         public static bool Probability(double will, TheMind mind)
         {
             bool down = will <= 0;
@@ -149,6 +170,7 @@ namespace Awesome.AI.Awesome.AI.Core
             return mind.prob.Use(will, down, mind);
         }
 
+        [Obsolete]
         public static bool Qubit(TheMind mind)
         {
             /*

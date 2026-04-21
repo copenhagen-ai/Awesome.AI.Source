@@ -16,7 +16,7 @@
         public enum TAGS { ALL, EVEN }
         public enum OCCUPASION { FIXED, DYNAMIC }
         public enum MECHANICS { MECH_OTHER_LOW, TUGOFWAR_LOW, BALLONHILL_LOW, CIRCUIT_1_LOW, CIRCUIT_2_LOW }
-        public enum LOGICTYPE { CLASSICAL, PROBABILITY, QUBIT }
+        public enum LOGICTYPE { CLASSICAL, PROBABILITY, QUBIT, SHARED }
         public enum SELECTCURRENT { PYTH, OTHER }
         public enum SELECTACTUAL { DOMINANT, OTHER }
         public enum HACKMODE { HACK, NOHACK }

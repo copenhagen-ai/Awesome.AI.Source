@@ -22,6 +22,15 @@ namespace Awesome.AI.CoreSystems
             this.mind = mind;
         }
 
+        public double SimulateDeltaVelocity()
+        {
+            //bool samp = CONST.SAMPLE20.RandomSample(mind);
+
+            double rand = mind.rand.MyRandomDouble(1)[0];
+
+            return rand;
+        }
+
         public double SimulateDirection()
         {
             //bool samp = CONST.SAMPLE20.RandomSample(mind);

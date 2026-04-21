@@ -88,35 +88,6 @@ namespace Awesome.AI.Core.Spaces
         // brain, roberta { "will", "attention", "readiness" };
         //public string[] axis { get; set; }
         
-        private double Step(string axis_tmp)
-        {
-            switch(axis_tmp)
-            {
-                case "will": return mind.mech.mp.eprops.Will().Norm100(mind);
-                case "attention": return mind.mech.mp.eprops.Attention().Norm100(mind);
-                case "commitment": return mind.mech.mp.eprops.Commitment().Norm100(mind);
-                case "adaptation": return mind.mech.mp.eprops.Adaptation().Norm100(mind);
-                case "activation": return mind.mech.mp.eprops.Activation().Norm100(mind);
-                case "influence": return mind.mech.mp.eprops.Influence().Norm100(mind);
-                default: throw new Exception("UnitSpaceSoup, Step");
-            }
-        }
-
-        private double Direction(string axis_tmp, bool set_prev)
-        {
-            switch (axis_tmp)
-            {
-                case "will": return mind.down.Dir;
-                case "attention":
-                case "commitment":
-                case "adaptation":
-                case "activation":
-                case "influence":
-                    return mind.mech.mp.eprops.Dir(axis_tmp, set_prev);
-                default: throw new Exception("UnitSpaceSoup, Direction");
-            }
-        }
-
         private bool Quick(bool _pro)
         {
             /*
@@ -177,11 +148,11 @@ namespace Awesome.AI.Core.Spaces
             var near = Near();
             UNIT[] res = null;
 
-            if (CONST.select_c == SELECTCURRENT.PYTH)
-                res = SelectByPyth(units, near);
+            if (CONST.select_curr == SELECTCURRENT.PYTH)
+                res = ByPyth(units, near);
 
-            if (CONST.select_c == SELECTCURRENT.OTHER)
-                res = SelectByOther(units, near);
+            if (CONST.select_curr == SELECTCURRENT.OTHER)
+                res = ByOther(units, near);
 
             if (res == null)
                 throw new Exception("UnitSpaceSoup, Unit");
@@ -201,12 +172,12 @@ namespace Awesome.AI.Core.Spaces
             double[] near = new double[CONST.AXIS_MAX];
 
             for (int i = 0; i < CONST.AXIS_MAX; i++)
-               near[i] = JumpTo(CONST.AXES[i], Step(CONST.AXES[i]), Direction(CONST.AXES[i], true));
+               near[i] = JumpTo(CONST.AXES[i], mind.mech.mp.eprops.Step(mind, CONST.AXES[i]), mind.mech.mp.eprops.Direction(mind, CONST.AXES[i], true));
             
             return near;
         }
 
-        private UNIT[] SelectByPyth(List<UNIT> units, double[] near)
+        private UNIT[] ByPyth(List<UNIT> units, double[] near)
         {
             double near_x = near[0];
             double near_y = near[1];
@@ -218,8 +189,8 @@ namespace Awesome.AI.Core.Spaces
                 if (unit == mind.unit_current)
                     continue;
 
-                double nearest_x = JumpTo("will", Map(unit), Direction("will", false));
-                double nearest_y = JumpTo(CONST.AXES[1], Map(unit), Direction(CONST.AXES[1], false));
+                double nearest_x = JumpTo("will", Map(unit), mind.mech.mp.eprops.Direction(mind, "will", false));
+                double nearest_y = JumpTo(CONST.AXES[1], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[1], false));
 
                 double distance = mind.calc.Pyth(near_x, nearest_x, near_y, nearest_y);
 
@@ -241,7 +212,7 @@ namespace Awesome.AI.Core.Spaces
             return res.ToArray();
         }
 
-        private UNIT[] SelectByOther(List<UNIT> units, double[] near)
+        private UNIT[] ByOther(List<UNIT> units, double[] near)
         {
             throw new NotImplementedException("UnitSpaceSoup, SelectOther");
         }

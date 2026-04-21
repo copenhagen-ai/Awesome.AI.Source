@@ -38,7 +38,7 @@ namespace Awesome.AI.Factorys
         public Roberta()
         {
             mindtype = MINDS.ROBERTA;
-            logic = LOGICTYPE.PROBABILITY;
+            logic = LOGICTYPE.SHARED;
             mech_low = MECHANICS.TUGOFWAR_LOW;
             props = PROPS.TEMPERAMENT;
             lng_dec = CONST.lng_dec_roberta;
@@ -69,7 +69,7 @@ namespace Awesome.AI.Factorys
         public Andrew()
         {
             mindtype = MINDS.ANDREW;
-            logic = LOGICTYPE.PROBABILITY;
+            logic = LOGICTYPE.SHARED;
             mech_low = MECHANICS.TUGOFWAR_LOW;
             props = PROPS.TEMPERAMENT;
             lng_dec = CONST.lng_dec_andrew;
@@ -100,7 +100,7 @@ namespace Awesome.AI.Factorys
         public Basic()
         {
             mindtype = MINDS.BASIC;
-            logic = LOGICTYPE.PROBABILITY;
+            logic = LOGICTYPE.SHARED;
             mech_low = MECHANICS.TUGOFWAR_LOW;
             props = PROPS.TEMPERAMENT;
             lng_dec = CONST.lng_dec_basic;

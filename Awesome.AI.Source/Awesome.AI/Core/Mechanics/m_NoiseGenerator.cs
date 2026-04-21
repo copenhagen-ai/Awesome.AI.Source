@@ -64,13 +64,23 @@ namespace Awesome.AI.Core.Mechanics
             mp.peek_vv_norm = mind.calc.Normalize(mp.peek_vv_curr, mp.peek_vv_out_low - adj, mp.peek_vv_out_high, 0.0d, 100.0d);
         }
 
-        public double Dir()
+        public double Dir(string ax)
         {
             double dv = ms.dv_sym_100;
 
             double dir = dv > 50.0d ? 1.0d : -1.0d;
 
             return dir;
+        }
+
+        public double Mean()
+        {
+            double low = ms.dv_sym_low;
+            double high = ms.dv_sym_high;
+
+            double res = (low + high) / 2.0d;
+
+            return res;
         }
 
         public void Calc(UNIT curr, bool peek, int cycles)

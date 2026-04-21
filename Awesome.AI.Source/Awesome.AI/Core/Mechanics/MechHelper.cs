@@ -186,23 +186,23 @@ namespace Awesome.AI.Core.Mechanics
             return friction;
         }
 
-        public double GetRandomNoise(TheMind mind, double noiseAmplitude)
-        {
-            //double will_prop = mind.down.WillPropNorm0;
-            double will_prop = mind.down.WillProp.Norm0(mind);
+        //public double GetRandomNoise(TheMind mind, double noiseAmplitude)
+        //{
+        //    //double will_prop = mind.down.WillPropNorm0;
+        //    double will_prop = mind.down.WillProp.Norm0(mind);
 
-            return will_prop * noiseAmplitude;// Random value in range [-amplitude, amplitude]
-        }
+        //    return will_prop * noiseAmplitude;// Random value in range [-amplitude, amplitude]
+        //}
 
-        public double Sine(PATTERN pattern, double t, double omega, double gen1, double gen2, double good1, double good2, double bad1, double bad2)
-        {
-            switch (pattern)
-            {
-                case PATTERN.MOODGENERAL: return gen1 + (Math.Sin(omega * t) + 1.0d) / 2.0d * gen2;
-                case PATTERN.MOODGOOD: return good1 + (Math.Sin(omega * t) + 1.0d) / 2.0d * good2;
-                case PATTERN.MOODBAD: return bad1 + (Math.Sin(omega * t) + 1.0d) / 2.0d * bad2;
-                default: throw new Exception("MechHelper, Sine");
-            }
-        }
+        //public double Sine(PATTERN pattern, double t, double omega, double gen1, double gen2, double good1, double good2, double bad1, double bad2)
+        //{
+        //    switch (pattern)
+        //    {
+        //        case PATTERN.MOODGENERAL: return gen1 + (Math.Sin(omega * t) + 1.0d) / 2.0d * gen2;
+        //        case PATTERN.MOODGOOD: return good1 + (Math.Sin(omega * t) + 1.0d) / 2.0d * good2;
+        //        case PATTERN.MOODBAD: return bad1 + (Math.Sin(omega * t) + 1.0d) / 2.0d * bad2;
+        //        default: throw new Exception("MechHelper, Sine");
+        //    }
+        //}
     }
 }
