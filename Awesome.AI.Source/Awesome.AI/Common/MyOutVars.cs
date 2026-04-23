@@ -73,8 +73,8 @@ namespace Awesome.AI.Common
             vv_curr = $"{mind.mech.ms.vv_sym_curr.ToString("E3")}";
             dv_curr = $"{mind.mech.ms.dv_sym_curr.ToString("E3")}";
             noise_norm = $"{mind.mech.ms.vv_sym_90}";
-            actual_us_x = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.GetUI("will") : "-1")}";
-            actual_us_y = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.GetUI("attention") : "-1")}";
+            actual_us_x = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.UIget("will") : "-1")}";
+            actual_us_y = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.UIget("attention") : "-1")}";
 
             int n_units = mind.access.UNITS_ALL().Count;
             double a_area = (100.0 * 100.0) / n_units;

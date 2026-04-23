@@ -29,23 +29,29 @@ namespace Awesome.AI.Core.Spaces
             this.mind = mind;
         }
 
-        public double GetUI(string ax)
-        {
-            return u_index[ax];            
-        }
-
-        private Dictionary<string, double> u_index { get; set; }
+        private GPTVector2D vect = new GPTVector2D();
+                
         public double UIget(string ax)
         {
             if (IsIDLE())
                 return 50.0d;
 
-            return u_index[ax];
+            switch (ax)
+            {
+                case "will": return vect.xx;
+                case "attention": return vect.yy;
+                default: throw new Exception("Unit, UIget");
+            }
         }
 
         public void UIset(string ax, double val)
         {
-            u_index[ax] = val;
+            switch (ax)
+            {
+                case "will": vect.xx = val; break;
+                case "attention": vect.yy = val; break;
+                default: throw new Exception("Unit, UIget");
+            }            
         }
 
         private double h_index { get; set; }
@@ -167,10 +173,8 @@ namespace Awesome.AI.Core.Spaces
             
             UNIT _w = new UNIT() { mind = mind, created = create, guid = h_guid, data = data, unit_type = ut, ld_type = lt };
 
-            _w.u_index = new Dictionary<string, double>();
-            
             for (int i = 0; i < CONST.AXIS_MAX; i++)
-                _w.u_index[CONST.AXES[i]] = index[i];
+                _w.UIset(CONST.AXES[i], index[i]);
 
             ticket = ticket != "" ? ticket : "NOTICKET";
             _w.ticket = new Ticket(ticket);
