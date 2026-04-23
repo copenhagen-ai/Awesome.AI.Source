@@ -75,10 +75,10 @@ namespace Awesome.AI.Awesome.AI.Core
             double d_zero = d_curr.Norm0(mind);
             double d_save = d_curr.Norm0(mind);
 
-            if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind) && NoInertia() && NoMomentum())
+            if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind)/* && NoInertia() && NoMomentum()*/)
                 d_zero *= -1.0d;
 
-            if (mind.bot.logic == LOGICTYPE.SHARED && Shared(d_curr, mind) && NoInertia() && NoMomentum())
+            if (mind.bot.logic == LOGICTYPE.SHARED && Shared(d_curr, mind)/* && NoInertia()*/ && NoMomentum())
                 d_zero *= -1.0d;
 
             bool flip = d_save != d_zero;
@@ -110,6 +110,7 @@ namespace Awesome.AI.Awesome.AI.Core
             return !inertia && i_decay < 10;
         }
 
+        double abs_max {  get; set; }
         private bool NoMomentum()
         {
             /*
@@ -130,9 +131,14 @@ namespace Awesome.AI.Awesome.AI.Core
             if (mom < 0.0)
                 ;
 
-            bool abs = Math.Abs(mom) < 5.0;
+            double abs = Math.Abs(mom);
 
-            return abs;
+            if(abs > abs_max)
+                abs_max = abs;
+
+            bool res = abs < abs_max / 10.0d;
+
+            return res;
         }
 
         private void DoFlip(bool flip, double d_curr, out double _out)
@@ -152,11 +158,11 @@ namespace Awesome.AI.Awesome.AI.Core
             double zero = 0.0.Norm1(mind);
             double w_agentA = will.Norm1(mind);
             double w_agentB = agent.SimulateDeltaVelocity();
-
+            
             double w_shared = (awareA * w_agentA + awareB * w_agentB);
             bool down = w_shared <= zero;
 
-            bool flip = mind.prob.Use(w_shared, down, mind);
+            bool flip = mind.prob.Use(w_shared * 100.0d, down, mind);
 
             agent.SetProperty(flip);
 
@@ -168,23 +174,7 @@ namespace Awesome.AI.Awesome.AI.Core
             bool down = will <= 0;
 
             return mind.prob.Use(will, down, mind);
-        }
-
-        [Obsolete]
-        public static bool Qubit(TheMind mind)
-        {
-            /*
-             * proof of concept
-             * */
-
-            int measure = mind.quantum.Run();
-
-            SimpleAgent agent = new SimpleAgent(mind);
-
-            agent.SetProperty(measure > 0);
-
-            return measure > 0;
-        }
+        }        
 
         //public HARDDOWN ToHard()
         //{

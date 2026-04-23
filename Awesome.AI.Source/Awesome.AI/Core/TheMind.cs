@@ -43,7 +43,6 @@ namespace Awesome.AI.Core
         public MyOutJson o_json;
         public MyInternal _internal;
         public MyExternal _external;
-        public QUsage quantum;
         public GPTProbability prob;
         public Whistle whistle;
         public GoalMath g_math;
@@ -132,7 +131,6 @@ namespace Awesome.AI.Core
                 word = new WordGenerator(this);
                 mono1 = new Monologue1(this);
                 mono2 = new Monologue2(this);
-                quantum = new QUsage(this);
                 prob = new GPTProbability();
                 soup = new USSoup(this);
                 memory = new USSetup(this);

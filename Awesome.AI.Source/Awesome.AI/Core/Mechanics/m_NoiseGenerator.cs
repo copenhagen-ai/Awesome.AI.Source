@@ -161,11 +161,14 @@ namespace Awesome.AI.Core.Mechanics
             switch (type)
             {
                 case MECHANICS.TUGOFWAR_LOW:
-                    double _v = curr.Variable;
-                    //double mod = mh.Sine(mp.pattern_curr, mp.dt, mp.omega, 0.0d, 1.0d, 0.6d, 0.4d, 0.0d, 0.4d);
-                    double mod = 1.0d;
-                    double motor = mp.vv_curr < 0.0 ? (_v) / 100.0d : (_v * mod) / 100.0d;
-                    //double motor = (_v) / 100.0d;
+                    double _v0 = 0.01d * curr.Variable;
+                    double mod1 = 1.8d;
+                    double mod2 = 0.8d;
+                    double _v1 = Math.Tanh(mod1 * _v0);
+                    double _v2 = (mod2 * _v0);
+
+                    double motor = mp.vv_curr < 0.0 ? _v1 : _v2;
+                    
                     res = motor;
                     break;
                 case MECHANICS.BALLONHILL_LOW:
