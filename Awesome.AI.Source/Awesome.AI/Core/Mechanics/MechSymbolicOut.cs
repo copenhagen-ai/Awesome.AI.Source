@@ -1,5 +1,4 @@
-﻿using Awesome.AI.Awesome.AI.Core;
-using static Awesome.AI.Variables.Enums;
+﻿using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
@@ -16,12 +15,12 @@ namespace Awesome.AI.Core.Mechanics
         public double acc_sym_prev { get; set; }
         public double ke_sym_prev { get; set; }
 
-        public double vv_sym_curr { get; set; }
         public double dv_sym_curr { get; set; }
+        public double vv_sym_curr { get; set; }
+        public double fnet_sym_curr { get; set; }
         public double mom_sym_curr { get; set; }
         public double acc_sym_curr { get; set; }
         public double ke_sym_curr { get; set; }
-        public double fnet_sym_curr { get; set; }
         
         public double m1_sym { get; set; }
         public double m2_sym { get; set; }
@@ -33,14 +32,28 @@ namespace Awesome.AI.Core.Mechanics
         public double vv_sym_high { get; set; }
         public double dv_sym_low { get; set; }
         public double dv_sym_high { get; set; }
+        public double fnet_sym_low { get; set; }
+        public double fnet_sym_high { get; set; }
+        public double mom_sym_low { get; set; }
+        public double mom_sym_high { get; set; }
+        public double acc_sym_low { get; set; }
+        public double acc_sym_high { get; set; }
+        public double ke_sym_low { get; set; }
+        public double ke_sym_high { get; set; }
 
         public double vv_sym_100 { get; set; }
         public double dv_sym_100 { get; set; }
-        //public double mo_sym_100 {  set; get; }
+        public double fnet_sym_100 { get; set; }
+        public double mom_sym_100 { get; set; }
+        public double acc_sym_100 { get; set; }
+        public double ke_sym_100 { get; set; }
 
         public double vv_sym_90 { get; set; }
         public double dv_sym_90 { get; set; }
-        //public double mo_sym_90 { set; get; }
+        public double fnet_sym_90 { get; set; }
+        public double mom_sym_90 { get; set; }
+        public double acc_sym_90 { get; set; }
+        public double ke_sym_90 { get; set; }
 
         public double peek_sym_norm { get; set; }
         //public double inertia_sym { get; set; }
@@ -74,12 +87,28 @@ namespace Awesome.AI.Core.Mechanics
                     vv_sym_high = mp.vv_out_high;
                     dv_sym_low = mp.dv_out_low;
                     dv_sym_high = mp.dv_out_high;
+                    fnet_sym_low = mp.fnet_out_low;
+                    fnet_sym_high = mp.fnet_out_high;
+                    mom_sym_low = mp.mom_out_low;
+                    mom_sym_high = mp.mom_out_high;
+                    acc_sym_low = mp.acc_out_low;
+                    acc_sym_high = mp.acc_out_high;
+                    ke_sym_low = mp.ke_out_low;
+                    ke_sym_high = mp.ke_out_high;
 
                     vv_sym_100 = mp.vv_100;
                     dv_sym_100 = mp.dv_100;
+                    fnet_sym_100 = mp.fnet_100;
+                    mom_sym_100 = mp.mom_100;
+                    acc_sym_100 = mp.acc_100;
+                    ke_sym_100 = mp.ke_100;
 
                     vv_sym_90 = mp.vv_90;
                     dv_sym_90 = mp.dv_90;
+                    fnet_sym_90 = mp.fnet_90;
+                    mom_sym_90 = mp.mom_90;
+                    acc_sym_90 = mp.acc_90;
+                    ke_sym_90 = mp.ke_90;
 
                     peek_sym_norm = mp.peek_vv_norm;
 

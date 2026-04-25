@@ -67,7 +67,7 @@ namespace Awesome.AI.Common
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
             error = $"{mind.down.Error}";
-            go_down = $"{(mind.down.Dir > 0.0d ? "NO" : "YES")}";
+            go_down = $"{(mind.mech.mp.eprops.Direction(mind, "will", false) > 0.0d ? "NO" : "YES")}";
             ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
             vv_curr = $"{mind.mech.ms.vv_sym_curr.ToString("E3")}";

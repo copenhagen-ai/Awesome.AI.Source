@@ -1,6 +1,6 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Core;
+﻿using Awesome.AI.Core;
 using Awesome.AI.CoreSystems;
+using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -8,17 +8,15 @@ namespace Awesome.AI.Awesome.AI.Core
 {
     public class Down
     {
-        public double Dir
-        {
-            get
-            {
-                double will = mind.mech.ms.dv_sym_curr.Norm1(mind);
-                double zero = 0.0.Norm1(mind);
+        //public double Dir()
+        //{
+        //    double _v = mind.mech.ms.dv_sym_curr.Norm1(mind);
+        //    double zero = 0.0.Norm1(mind);
                 
-                return will <= zero ? -1.0d : 1.0d;
-            } 
-        }
+        //    return _v <= zero ? -1.0d : 1.0d;             
+        //}
                 
+        public bool Continue {  get; set; }
         public int Error { get; set; }
         public List<double> Ratio { get; set; }
         private List<bool> Errors { get; set; }
@@ -38,7 +36,8 @@ namespace Awesome.AI.Awesome.AI.Core
             Continous();
 
             //code: before or after?
-            Ratio.Add(Dir);
+            double cont = mind.mech.mp.eprops.Direction(mind, "will", false);
+            Ratio.Add(cont);
             if (Ratio.Count > CONST.LAPSES)
                 Ratio.RemoveAt(0);            
         }
@@ -72,8 +71,8 @@ namespace Awesome.AI.Awesome.AI.Core
              * */
 
             double d_curr = mind.mech.ms.dv_sym_curr;
-            double d_zero = d_curr.Norm0(mind);
-            double d_save = d_curr.Norm0(mind);
+            double d_zero = d_curr.Norm0DV(mind);
+            double d_save = d_curr.Norm0DV(mind);
 
             if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind)/* && NoInertia() && NoMomentum()*/)
                 d_zero *= -1.0d;
@@ -81,9 +80,9 @@ namespace Awesome.AI.Awesome.AI.Core
             if (mind.bot.logic == LOGICTYPE.SHARED && Shared(d_curr, mind)/* && NoInertia()*/ && NoMomentum())
                 d_zero *= -1.0d;
 
-            bool flip = d_save != d_zero;
-            DoFlip(flip, d_curr, out d_curr);
-            SetError(flip);
+            Continue = d_save == d_zero;
+            
+            SetError(!Continue);
         }
 
         private int i_decay { get; set; }
@@ -114,39 +113,27 @@ namespace Awesome.AI.Awesome.AI.Core
         private bool NoMomentum()
         {
             /*
-             * simple
              * cancels out some of the direction changes
              * */
 
-            //return true;
-            //double sign = Math.Sign(mind.mech_current.ms.fsta_sym + mind.mech_current.ms.fdyn_sym);
-
-            double vel = mind.mech.ms.vv_sym_curr;
-            double mass = mind.mech.ms.m1_sym + mind.mech.ms.m2_sym;
-            double mom = mass * vel;
-
-            if (mom >= 0.0)
-                ;
-
-            if (mom < 0.0)
-                ;
+            double mom = mind.mech.ms.mom_sym_curr;
 
             double abs = Math.Abs(mom);
 
             if(abs > abs_max)
                 abs_max = abs;
 
-            bool res = abs < abs_max / 10.0d;
+            bool res = abs < abs_max * 0.1d;
 
             return res;
         }
 
-        private void DoFlip(bool flip, double d_curr, out double _out)
-        {
-            _out = flip ? 
-                d_curr.Flip(mind) : 
-                d_curr;
-        }
+        //private void DoFlip(bool flip, double d_curr, out double _out)
+        //{
+        //    _out = flip ? 
+        //        d_curr.Flip(mind) : 
+        //        d_curr;
+        //}
 
         public static bool Shared(double will, TheMind mind)
         {
@@ -155,13 +142,12 @@ namespace Awesome.AI.Awesome.AI.Core
 
             double awareA = 1.0d - awareness;
             double awareB = awareness;
-            double zero = 0.0.Norm1(mind);
-            double w_agentA = will.Norm1(mind);
+            double zero = 0.0.Norm1DV(mind);
+            double w_agentA = will.Norm1DV(mind);
             double w_agentB = agent.SimulateDeltaVelocity();
             
             double w_shared = (awareA * w_agentA + awareB * w_agentB);
             bool down = w_shared <= zero;
-
             bool flip = mind.prob.Use(w_shared * 100.0d, down, mind);
 
             agent.SetProperty(flip);

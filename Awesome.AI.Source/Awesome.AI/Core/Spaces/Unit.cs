@@ -2,6 +2,7 @@
 using Awesome.AI.Core.Internals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
+using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -50,7 +51,7 @@ namespace Awesome.AI.Core.Spaces
             {
                 case "will": vect.xx = val; break;
                 case "attention": vect.yy = val; break;
-                default: throw new Exception("Unit, UIget");
+                default: throw new Exception("Unit, UIset");
             }            
         }
 
@@ -77,7 +78,7 @@ namespace Awesome.AI.Core.Spaces
                         if (sub == "init")
                             return "";
 
-                        double _i = mind.mech.ms.dv_sym_100.Norm0(mind, 0.0d, 100.0d);
+                        double _i = mind.mech.ms.dv_sym_100.Norm0DV(mind);
                         string idx = $"{_i.Index(mind)}";
 
                         Lookup lookup = new Lookup();
@@ -346,11 +347,8 @@ namespace Awesome.AI.Core.Spaces
             double dir = 0.0d;
             double rnd = mind.rand.MyRandomDouble(10)[5];
                        
-            if (ax == "will")
-                dir = mind.down.Dir;
-            else
-                dir = mind.mech.Dir(ax);
-
+            dir = mind.mech.mp.eprops.Direction(mind, ax, false);
+            
             double _new = UIget(ax) + (rnd * CONST.ETA * dir);
 
             if (_new <= CONST.MIN) _new = CONST.MIN;

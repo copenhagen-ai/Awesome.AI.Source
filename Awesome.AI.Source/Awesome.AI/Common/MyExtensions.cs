@@ -5,7 +5,7 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
 {
-    public static class GenExtensions
+    public static class MyExtensions
     {
         public static void BusyWait(this string txt, int count, TheMind mind)
         {
@@ -100,48 +100,6 @@ namespace Awesome.AI.Common
             }
 
             throw new Exception("Extensions, Index");
-        }
-
-        public static double Norm0(this double _x, TheMind mind, double _l = -1d, double _h = -1d)
-        {
-            if(_l == -1d && _h == -1d)
-            {
-                _l = mind.mech.ms.dv_sym_low;
-                _h = mind.mech.ms.dv_sym_high;
-                _l = _l == _h ? _l - 0.1d : _l;
-            }
-
-            double res = mind.calc.Normalize(_x, _l, _h, -1.0d, 1.0d);
-
-            return res;
-        }
-
-        public static double Norm1(this double _x, TheMind mind, double _l = -1d, double _h = -1d)
-        {
-            if (_l == -1d && _h == -1d)
-            {
-                _l = mind.mech.ms.dv_sym_low;
-                _h = mind.mech.ms.dv_sym_high;
-                _l = _l == _h ? _l - 0.1d : _l;
-            }
-
-            double res = mind.calc.Normalize(_x, _l, _h, 0.0d, 1.0d);
-
-            return res;
-        }
-
-        public static double Norm100(this double _x, TheMind mind, double _l = -1d, double _h = -1d)
-        {
-            if (_l == -1d && _h == -1d)
-            {
-                _l = mind.mech.ms.dv_sym_low;
-                _h = mind.mech.ms.dv_sym_high;
-                _l = _l == _h ? _l - 0.1d : _l;
-            }
-
-            double res = mind.calc.Normalize(_x, _l, _h, 0.0d, 100.0d);
-
-            return res;
         }
 
         public static double Sign(this double val)

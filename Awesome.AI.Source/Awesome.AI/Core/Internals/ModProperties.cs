@@ -1,4 +1,4 @@
-﻿using Awesome.AI.Common;
+﻿using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -146,7 +146,7 @@ namespace Awesome.AI.Core.Internals
         {
             switch (props)
             {
-                case PROPS.TEMPERAMENT: _norm = mind.mech.mp.eprops.Will().Norm100(mind); break;
+                case PROPS.TEMPERAMENT: _norm = mind.mech.mp.eprops.Will().Norm100DV(mind); break;
                 //case PROPS.BRAINWAVE: _norm = mind.mech.mp.eprops.Will().Norm0(mind, 0.0d, 100.0d); break;
                 //case PROPS.COMMUNICATION: _norm = mind.mech.mp.eprops.Will().Norm0(mind, 0.0d, 100.0d); break;
                 default: throw new NotImplementedException("Properties, GetProps");

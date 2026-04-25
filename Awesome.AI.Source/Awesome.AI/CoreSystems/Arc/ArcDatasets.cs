@@ -41,7 +41,7 @@ namespace Awesome.AI.CoreSystems.Arc
             public static ArcTask GetRandomTask()
             {
                 string root = MyPath.Root;
-                string data = GenHelper.IsDebug() ? "Data" : "DataFiles";
+                string data = MyHelper.IsDebug() ? "Data" : "DataFiles";
                 string path = root + data + "\\arc\\training";
 
                 var files = Directory.GetFiles(path, "*.json");

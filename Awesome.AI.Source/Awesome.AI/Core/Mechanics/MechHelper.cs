@@ -1,6 +1,5 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Variables;
-using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Mechanics
 {
@@ -67,11 +66,6 @@ namespace Awesome.AI.Core.Mechanics
             mp.posx_low = 1E10d;
         }
 
-
-
-
-
-
         public void NormalizeCircuit(TheMind mind, MechParams mp)
         {
             // Adjust for degenerate ranges
@@ -105,22 +99,34 @@ namespace Awesome.AI.Core.Mechanics
             if (mp.dc_elec_curr > mp.dc_elec_max) mp.dc_elec_max = mp.dc_elec_curr;
         }
 
-        public void NormalizeNoise(TheMind mind, MechParams mp)
+        public void Normalize(TheMind mind, MechParams mp)
         {
             double adj1 = mp.vv_out_low == mp.vv_out_high ? 0.1d : 0.0d;
             double adj2 = mp.dv_out_low == mp.dv_out_high ? 0.1d : 0.0d;
+            double adj3 = mp.fnet_out_low == mp.fnet_out_high ? 0.1d : 0.0d;
+            double adj4 = mp.mom_out_low == mp.mom_out_high ? 0.1d : 0.0d;
+            double adj5 = mp.acc_out_low == mp.acc_out_high ? 0.1d : 0.0d;
+            double adj6 = mp.ke_out_low == mp.ke_out_high ? 0.1d : 0.0d;
 
-            if (adj1 == 0.1d || adj2 == 0.1d)
+            if (adj1 == 0.1d || adj2 == 0.1d || adj3 == 0.1d || adj4 == 0.1d || adj5 == 0.1d || adj6 == 0.1d)
                 ;
 
             mp.vv_100 = mind.calc.Normalize(mp.vv_curr, mp.vv_out_low - adj1, mp.vv_out_high, 0.0d, 100.0d);
             mp.dv_100 = mind.calc.Normalize(mp.dv_curr, mp.dv_out_low - adj2, mp.dv_out_high, 0.0d, 100.0d);
+            mp.fnet_100 = mind.calc.Normalize(mp.fnet_curr, mp.fnet_out_low - adj3, mp.fnet_out_high, 0.0d, 100.0d);
+            mp.mom_100 = mind.calc.Normalize(mp.mom_curr, mp.mom_out_low - adj4, mp.mom_out_high, 0.0d, 100.0d);
+            mp.acc_100 = mind.calc.Normalize(mp.acc_curr, mp.acc_out_low - adj5, mp.acc_out_high, 0.0d, 100.0d);
+            mp.ke_100 = mind.calc.Normalize(mp.ke_curr, mp.ke_out_low - adj6, mp.ke_out_high, 0.0d, 100.0d);
 
             mp.vv_90 = mind.calc.Normalize(mp.vv_curr, mp.vv_out_low - adj1, mp.vv_out_high, 10.0d, 90.0d);
             mp.dv_90 = mind.calc.Normalize(mp.dv_curr, mp.dv_out_low - adj2, mp.dv_out_high, 10.0d, 90.0d);
+            mp.fnet_90 = mind.calc.Normalize(mp.fnet_curr, mp.fnet_out_low - adj3, mp.fnet_out_high, 10.0d, 90.0d);
+            mp.mom_90 = mind.calc.Normalize(mp.mom_curr, mp.mom_out_low - adj4, mp.mom_out_high, 10.0d, 90.0d);
+            mp.acc_90 = mind.calc.Normalize(mp.acc_curr, mp.acc_out_low - adj5, mp.acc_out_high, 10.0d, 90.0d);
+            mp.ke_90 = mind.calc.Normalize(mp.ke_curr, mp.ke_out_low - adj6, mp.ke_out_high, 10.0d, 90.0d);
         }
 
-        public void ExtremesNoise(MechParams mp)
+        public void Extremes(MechParams mp)
         {
             if (mp.peek_vv_curr <= mp.peek_vv_out_low) mp.peek_vv_out_low = mp.peek_vv_curr;
             if (mp.peek_vv_curr > mp.peek_vv_out_high) mp.peek_vv_out_high = mp.peek_vv_curr;
@@ -130,30 +136,18 @@ namespace Awesome.AI.Core.Mechanics
 
             if (mp.dv_curr <= mp.dv_out_low) mp.dv_out_low = mp.dv_curr;
             if (mp.dv_curr > mp.dv_out_high) mp.dv_out_high = mp.dv_curr;
-        }
 
-        public void Normalize(TheMind mind, MechParams mp)
-        {
-            double adj1 = mp.vv_out_low == mp.vv_out_high ? 0.1d : 0.0d;
-            double adj2 = mp.dv_out_low == mp.dv_out_high ? 0.1d : 0.0d;
+            if (mp.fnet_curr <= mp.fnet_out_low) mp.fnet_out_low = mp.fnet_curr;
+            if (mp.fnet_curr > mp.fnet_out_high) mp.fnet_out_high = mp.fnet_curr;
 
-            if (adj1 == 0.1d || adj2 == 0.1d)
-                ;
+            if (mp.mom_curr <= mp.mom_out_low) mp.mom_out_low = mp.mom_curr;
+            if (mp.mom_curr > mp.mom_out_high) mp.mom_out_high = mp.mom_curr;
 
-            mp.vv_100 = mind.calc.Normalize(mp.vv_curr, mp.vv_out_low - adj1, mp.vv_out_high, 0.0d, 100.0d);
-            mp.dv_100 = mind.calc.Normalize(mp.dv_curr, mp.dv_out_low - adj2, mp.dv_out_high, 0.0d, 100.0d);
+            if (mp.acc_curr <= mp.acc_out_low) mp.acc_out_low = mp.acc_curr;
+            if (mp.acc_curr > mp.acc_out_high) mp.acc_out_high = mp.acc_curr;
 
-            mp.vv_90 = mind.calc.Normalize(mp.vv_curr, mp.vv_out_low - adj1, mp.vv_out_high, 10.0d, 90.0d);
-            mp.dv_90 = mind.calc.Normalize(mp.dv_curr, mp.dv_out_low - adj2, mp.dv_out_high, 10.0d, 90.0d);
-        }
-
-        public void Extremes(MechParams mp)
-        {
-            if (mp.vv_curr <= mp.vv_out_low) mp.vv_out_low = mp.vv_curr;
-            if (mp.vv_curr > mp.vv_out_high) mp.vv_out_high = mp.vv_curr;
-
-            if (mp.dv_curr <= mp.dv_out_low) mp.dv_out_low = mp.dv_curr;
-            if (mp.dv_curr > mp.dv_out_high) mp.dv_out_high = mp.dv_curr;
+            if (mp.ke_curr <= mp.ke_out_low) mp.ke_out_low = mp.ke_curr;
+            if (mp.ke_curr > mp.ke_out_high) mp.ke_out_high = mp.ke_curr;
         }
 
         public double PosXY(TheMind mind, MechParams mp)

@@ -26,7 +26,7 @@ namespace Awesome.AI.Generators
                 return;
 
             string root = MyPath.Root;
-            string data = GenHelper.IsDebug() ? "Data" : "DataFiles";
+            string data = MyHelper.IsDebug() ? "Data" : "DataFiles";
             
             if (mind.environment == Variables.Enums.ENV.LOCAL)
                 data = "Data";

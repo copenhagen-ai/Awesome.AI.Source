@@ -1,6 +1,6 @@
 ﻿namespace Awesome.AI.Common
 {
-    public class GenHelper
+    public class MyHelper
     {
         private static readonly object fileLock = new object();
 

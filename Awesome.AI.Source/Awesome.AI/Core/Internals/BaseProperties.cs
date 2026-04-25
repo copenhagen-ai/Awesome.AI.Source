@@ -1,6 +1,6 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Core.Mechanics;
-using static Awesome.AI.Variables.Enums;
+﻿using Awesome.AI.Core.Mechanics;
+using Awesome.AI.Source.Awesome.AI.Common;
+using Awesome.AI.Variables;
 
 namespace Awesome.AI.Core.Internals
 {
@@ -11,6 +11,13 @@ namespace Awesome.AI.Core.Internals
         public BaseProperties(MechSymbolicOut ms)
         {
             this.ms = ms;
+
+            curr_dir[CONST.AXES[0]] = 0.0d;
+            curr_dir[CONST.AXES[1]] = 0.0d;
+            curr_dir[CONST.AXES[2]] = 0.0d;
+            curr_dir[CONST.AXES[3]] = 0.0d;
+            curr_dir[CONST.AXES[4]] = 0.0d;
+            curr_dir[CONST.AXES[5]] = 0.0d;            
         }
 
         // Maps mechanics to emergent cognition
@@ -36,7 +43,8 @@ namespace Awesome.AI.Core.Internals
         }
 
         public Dictionary<string, double> prev_dir = new Dictionary<string, double>();
-        double dir = 0.0d;
+        public Dictionary<string, double> curr_dir = new Dictionary<string, double>();
+        
         public double DirPrev(string ax)
         {
             if (prev_dir.ContainsKey(ax))
@@ -44,35 +52,16 @@ namespace Awesome.AI.Core.Internals
             return -1d;
         }
 
-        //public double Dir(string ax, bool set_prev)
-        //{
-        //    if (set_prev)
-        //        prev_dir[ax] = dir;
-
-        //    switch (ax)
-        //    {
-        //        case "will": dir = ms.dv_sym_curr > ms.dv_sym_prev ? 1.0d : -1.0d; break;
-        //        case "attention": dir = ms.vv_sym_curr > ms.vv_sym_prev ? 1.0d : -1.0d; break;
-        //        case "commitment": dir = ms.mom_sym_curr > ms.mom_sym_prev ? 1.0d : -1.0d; break;
-        //        case "adaption": dir = ms.acc_sym_curr > ms.acc_sym_prev ? 1.0d : -1.0d; break;
-        //        case "activation": dir = ms.ke_sym_curr > ms.ke_sym_prev ? 1.0d : -1.0d; break;
-        //        case "influence": dir = ms.fnet_sym_curr > ms.fnet_sym_prev ? 1.0d : -1.0d; break;
-        //        default: throw new Exception("EmProperties, Dir");
-        //    }
-
-        //    return dir;
-        //}
-
         public double Step(TheMind mind, string axis_tmp)
         {
             switch (axis_tmp)
             {
-                case "will": return Will().Norm100(mind);
-                case "attention": return Attention().Norm100(mind);
-                case "commitment": return Commitment().Norm100(mind);
-                case "adaptation": return Adaptation().Norm100(mind);
-                case "activation": return Activation().Norm100(mind);
-                case "influence": return Influence().Norm100(mind);
+                case "will": return Will().Norm100DV(mind);
+                case "attention": return Attention().Norm100VV(mind);
+                case "commitment": return Commitment().Norm100MOM(mind);
+                case "adaptation": return Adaptation().Norm100ACC(mind);
+                case "activation": return Activation().Norm100KE(mind);
+                case "influence": return Influence().Norm100FNET(mind);
                 default: throw new Exception("UnitSpaceSoup, Step");
             }
         }
@@ -80,20 +69,24 @@ namespace Awesome.AI.Core.Internals
         public double Direction(TheMind mind, string ax, bool set_prev)
         {
             if (set_prev)
-                prev_dir[ax] = dir;
+                prev_dir[ax] = curr_dir[ax];
 
             switch (ax)
             {
-                case "will": return mind.down.Dir;
-                case "attention": dir = ms.vv_sym_curr > ms.vv_sym_prev ? 1.0d : -1.0d; break;
-                case "commitment": dir = ms.mom_sym_curr > ms.mom_sym_prev ? 1.0d : -1.0d; break;
-                case "adaption": dir = ms.acc_sym_curr > ms.acc_sym_prev ? 1.0d : -1.0d; break;
-                case "activation": dir = ms.ke_sym_curr > ms.ke_sym_prev ? 1.0d : -1.0d; break;
-                case "influence": dir = ms.fnet_sym_curr > ms.fnet_sym_prev ? 1.0d : -1.0d; break;
+                //case "will": return mind.down.Dir;
+                case "will": curr_dir[ax] = ms.dv_sym_curr > ms.dv_sym_prev ? 1.0d : -1.0d; break;
+                case "attention": curr_dir[ax] = ms.vv_sym_curr > ms.vv_sym_prev ? 1.0d : -1.0d; break;
+                case "commitment": curr_dir[ax] = ms.mom_sym_curr > ms.mom_sym_prev ? 1.0d : -1.0d; break;
+                case "adaption": curr_dir[ax] = ms.acc_sym_curr > ms.acc_sym_prev ? 1.0d : -1.0d; break;
+                case "activation": curr_dir[ax] = ms.ke_sym_curr > ms.ke_sym_prev ? 1.0d : -1.0d; break;
+                case "influence": curr_dir[ax] = ms.fnet_sym_curr > ms.fnet_sym_prev ? 1.0d : -1.0d; break;
                 default: throw new Exception("UnitSpaceSoup, Direction");
             }
 
-            return dir;
+            double cont = mind.down.Continue ? 1d : -1d;
+            curr_dir[ax] = curr_dir[ax] * cont;
+
+            return curr_dir[ax];
         }
     }
 }

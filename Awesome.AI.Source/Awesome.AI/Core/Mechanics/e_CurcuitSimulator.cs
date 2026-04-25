@@ -3,6 +3,7 @@ using Awesome.AI.Core.Internals;
 using Awesome.AI.Core.Mechanics;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.Interfaces;
+using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -151,15 +152,15 @@ namespace Awesome.AI.Core.Electrical
             mp.peek_vv_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_vv_out_low - adj, mp.peek_vv_out_high, 0.0d, 100.0d);
         }
 
-        public double Dir(string ax)
-        {
-            throw new NotImplementedException("e_CircuitSimulator, Dir");
-        }
+        //public double Dir(string ax)
+        //{
+        //    throw new NotImplementedException("e_CircuitSimulator, Dir");
+        //}
 
-        public double Mean()
-        {
-            throw new NotImplementedException("e_CircuitSimulator, Dir");
-        }
+        //public double Mean()
+        //{
+        //    throw new NotImplementedException("e_CircuitSimulator, Dir");
+        //}
 
         public void Calc(UNIT curr, bool peek, int cycles)
         {
@@ -218,7 +219,7 @@ namespace Awesome.AI.Core.Electrical
                         double voltage = register.Average() + (mind.rand.MyRandomDouble(1)[0] - 0.5) * 0.01; ;
                         double dCurrent = 0.0d;
                         
-                        double g1 = curr.Variable.Norm1(mind, 0.0d, 100.0d);
+                        double g1 = curr.Variable.Norm1DV(mind);
                         double g2 = Damping(mind);
 
                         double gain1 = g1 * mp.damp;
