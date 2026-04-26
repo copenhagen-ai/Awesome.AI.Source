@@ -18,9 +18,11 @@ namespace Awesome.AI.Core.Spaces
         /// <param name="axisY">Secondary axis name (like axis[1]).</param>
         /// <param name="width">Width of the corridor rectangle.</param>
         /// <returns>List of UNITs inside the corridor, ordered along the corridor line.</returns>
-        public List<UNIT> Corridor(List<UNIT> allUnits, UNIT unitA, UNIT unitB, string axisX, string axisY, double width = 10.0)
+        public List<UNIT> Corridor(List<UNIT> allUnits, UNIT unitA, UNIT unitB)
         {
-            //List<UNIT> allUnits = mind.access.UNITS_ALL();
+            string axisX = CONST.AXES[0];
+            string axisY = CONST.AXES[1];
+            double width = 5.0;
 
             // 1. Convert UNITs to 2D points using provided axes
             Vector2 p1 = new Vector2((float)unitA.UIget(axisX), (float)unitA.UIget(axisY));
@@ -145,7 +147,7 @@ namespace Awesome.AI.Core.Spaces
             if (units is null)
                 throw new Exception("TheSoup, Unit");
 
-            var near = Near();
+            GPTVector2D near = Near();
             UNIT[] res = null;
 
             if (CONST.select_curr == SELECTCURRENT.PYTH)
@@ -160,27 +162,23 @@ namespace Awesome.AI.Core.Spaces
             if (res[0].IsIDLE())
                 return res;
 
-            GPTVector2D v_near = new GPTVector2D(near[0], near[1], null, null);
-            
-            res[0].Update(v_near);
+            res[0].Update(near);
 
             return res;
         }
 
-        private double[] Near()
+        private GPTVector2D Near()
         {
             double[] near = new double[CONST.AXIS_MAX];
 
             for (int i = 0; i < CONST.AXIS_MAX; i++)
                near[i] = JumpTo(CONST.AXES[i], mind.mech.mp.eprops.Step(mind, CONST.AXES[i]), mind.mech.mp.eprops.Direction(mind, CONST.AXES[i], true));
             
-            return near;
+            return new GPTVector2D(near[0], near[1], null, null);
         }
 
-        private UNIT[] ByPyth(List<UNIT> units, double[] near)
+        private UNIT[] ByPyth(List<UNIT> units, GPTVector2D v_near)
         {
-            double near_x = near[0];
-            double near_y = near[1];
             double min_distance = 10E20d;
             UNIT nearest = null;
 
@@ -189,10 +187,12 @@ namespace Awesome.AI.Core.Spaces
                 if (unit == mind.unit_current)
                     continue;
 
-                double nearest_x = JumpTo("will", Map(unit), mind.mech.mp.eprops.Direction(mind, "will", false));
+                double nearest_x = JumpTo(CONST.AXES[0], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[0], false));
                 double nearest_y = JumpTo(CONST.AXES[1], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[1], false));
 
-                double distance = mind.calc.Pyth(near_x, nearest_x, near_y, nearest_y);
+                GPTVector2D v_nearest = new GPTVector2D(nearest_x, nearest_y, null, null);
+
+                double distance = mind.calc.Pyth(v_near.xx, v_nearest.xx, v_near.yy, v_nearest.yy);
 
                 if (distance < min_distance)
                 {
@@ -201,18 +201,17 @@ namespace Awesome.AI.Core.Spaces
                 }
             }
 
-
             List<UNIT> res = new List<UNIT>() { mind.unit_current };
 
             if (nearest == null)
                 res.Insert(0, UNIT.CreateIdle(mind));
             else
-                res = GPT.Create().Corridor(units, mind.unit_current, nearest, CONST.AXES[0], CONST.AXES[1], 5.0d);
+                res = GPT.Create().Corridor(units, mind.unit_current, nearest);
 
             return res.ToArray();
         }
 
-        private UNIT[] ByOther(List<UNIT> units, double[] near)
+        private UNIT[] ByOther(List<UNIT> units, GPTVector2D near)
         {
             throw new NotImplementedException("UnitSpaceSoup, SelectOther");
         }

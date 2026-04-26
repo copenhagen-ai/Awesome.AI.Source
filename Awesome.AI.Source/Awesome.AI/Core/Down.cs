@@ -7,15 +7,7 @@ using static Awesome.AI.Variables.Enums;
 namespace Awesome.AI.Awesome.AI.Core
 {
     public class Down
-    {
-        //public double Dir()
-        //{
-        //    double _v = mind.mech.ms.dv_sym_curr.Norm1(mind);
-        //    double zero = 0.0.Norm1(mind);
-                
-        //    return _v <= zero ? -1.0d : 1.0d;             
-        //}
-                
+    {                
         public bool Continue {  get; set; }
         public int Error { get; set; }
         public List<double> Ratio { get; set; }
@@ -127,13 +119,6 @@ namespace Awesome.AI.Awesome.AI.Core
 
             return res;
         }
-
-        //private void DoFlip(bool flip, double d_curr, out double _out)
-        //{
-        //    _out = flip ? 
-        //        d_curr.Flip(mind) : 
-        //        d_curr;
-        //}
 
         public static bool Shared(double will, TheMind mind)
         {
