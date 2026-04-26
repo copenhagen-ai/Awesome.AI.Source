@@ -76,6 +76,69 @@ namespace Awesome.AI.Core.Spaces
         }
     }
 
+    public class Select
+    {
+        private TheMind mind { get; set; }
+        private USSoup soup { get; set; }
+        public static Select Create(TheMind mind, USSoup soup)
+        {
+            Select select = new Select();
+            select.soup = soup;
+            select.mind = mind;
+            return select;
+        }
+
+        public UNIT[] ByPyth(List<UNIT> units, GPTVector2D v_near)
+        {
+            double min_distance = 10E20d;
+            UNIT nearest = null;
+
+            foreach (UNIT unit in units)
+            {
+                if (unit == mind.unit_current)
+                    continue;
+
+                double nearest_x = soup.JumpTo(CONST.AXES[0], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[0], false));
+                double nearest_y = soup.JumpTo(CONST.AXES[1], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[1], false));
+
+                GPTVector2D v_nearest = new GPTVector2D(nearest_x, nearest_y, null, null);
+
+                double distance = mind.calc.Pyth(v_near.xx, v_nearest.xx, v_near.yy, v_nearest.yy);
+
+                if (distance < min_distance)
+                {
+                    min_distance = distance;
+                    nearest = unit;
+                }
+            }
+
+            List<UNIT> res = new List<UNIT>() { mind.unit_current };
+
+            if (nearest == null)
+                res.Insert(0, UNIT.CreateIdle(mind));
+            else
+                res = GPT.Create().Corridor(units, mind.unit_current, nearest);
+
+            return res.ToArray();
+        }
+
+        public UNIT[] ByOther(List<UNIT> units, GPTVector2D near)
+        {
+            throw new NotImplementedException("UnitSpaceSoup, SelectOther");
+        }
+
+        public double Map(UNIT x)
+        {
+            IMechanics mech = mind.mech;
+
+            mech.Peek(x);
+
+            double norm = mech.ms.peek_sym_norm;
+
+            return norm;
+        }
+    }
+
     public class USSoup
     {
         private TheMind mind;
@@ -151,10 +214,10 @@ namespace Awesome.AI.Core.Spaces
             UNIT[] res = null;
 
             if (CONST.select_curr == SELECTCURRENT.PYTH)
-                res = ByPyth(units, near);
+                res = Select.Create(mind, this).ByPyth(units, near);
 
             if (CONST.select_curr == SELECTCURRENT.OTHER)
-                res = ByOther(units, near);
+                res = Select.Create(mind, this).ByOther(units, near);
 
             if (res == null)
                 throw new Exception("UnitSpaceSoup, Unit");
@@ -177,46 +240,7 @@ namespace Awesome.AI.Core.Spaces
             return new GPTVector2D(near[0], near[1], null, null);
         }
 
-        private UNIT[] ByPyth(List<UNIT> units, GPTVector2D v_near)
-        {
-            double min_distance = 10E20d;
-            UNIT nearest = null;
-
-            foreach (UNIT unit in units)
-            {
-                if (unit == mind.unit_current)
-                    continue;
-
-                double nearest_x = JumpTo(CONST.AXES[0], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[0], false));
-                double nearest_y = JumpTo(CONST.AXES[1], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[1], false));
-
-                GPTVector2D v_nearest = new GPTVector2D(nearest_x, nearest_y, null, null);
-
-                double distance = mind.calc.Pyth(v_near.xx, v_nearest.xx, v_near.yy, v_nearest.yy);
-
-                if (distance < min_distance)
-                {
-                    min_distance = distance;
-                    nearest = unit;
-                }
-            }
-
-            List<UNIT> res = new List<UNIT>() { mind.unit_current };
-
-            if (nearest == null)
-                res.Insert(0, UNIT.CreateIdle(mind));
-            else
-                res = GPT.Create().Corridor(units, mind.unit_current, nearest);
-
-            return res.ToArray();
-        }
-
-        private UNIT[] ByOther(List<UNIT> units, GPTVector2D near)
-        {
-            throw new NotImplementedException("UnitSpaceSoup, SelectOther");
-        }
-
-        private double JumpTo(string ax, double step, double dir)
+        public double JumpTo(string ax, double step, double dir)
         {
             double prev_dir = mind.mech.mp.eprops.DirPrev(ax);
             double res = 0.0d;
@@ -229,17 +253,6 @@ namespace Awesome.AI.Core.Spaces
                 res = 100.0d - step;
 
             return res;
-        }
-
-        public double Map(UNIT x)
-        {
-            IMechanics mech = mind.mech;
-
-            mech.Peek(x);
-
-            double norm = mech.ms.peek_sym_norm;
-
-            return norm;
         }
 
         /*
