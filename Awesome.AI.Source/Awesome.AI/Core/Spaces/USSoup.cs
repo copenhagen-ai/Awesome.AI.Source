@@ -148,11 +148,6 @@ namespace Awesome.AI.Core.Spaces
             this.mind = mind;            
         }
 
-        //each axis should run its own mechanics - update function
-        // comm, andrew { "will", "opinion", "temporality", "abstraction" };
-        // brain, roberta { "will", "attention", "readiness" };
-        //public string[] axis { get; set; }
-        
         private bool Quick(bool _pro)
         {
             /*
