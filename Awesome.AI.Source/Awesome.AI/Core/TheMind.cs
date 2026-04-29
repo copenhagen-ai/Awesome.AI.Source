@@ -79,8 +79,6 @@ namespace Awesome.AI.Core
         public int cycles_all = 0;
         public double pain_truth_something = 0;
 
-        public STATE _s { get; set; } = STATE.JUSTRUNNING;
-        public STATE _s_tmp { get; set; }
         public STATE STATE { get; set; }
 
         public UNIT[] unit_corridor { get; set; }

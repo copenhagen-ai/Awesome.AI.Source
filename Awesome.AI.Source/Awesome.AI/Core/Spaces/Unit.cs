@@ -199,6 +199,11 @@ namespace Awesome.AI.Core.Spaces
             return Create(mind, "GUID", dex, name, "NONE", UNITTYPE.QDECISION, LONGTYPE.NONE);
         }
 
+        public GPTVector2D ToVector() 
+        {
+            return new GPTVector2D(UIget(CONST.AXES[0]), UIget(CONST.AXES[1]), null, null);
+        }
+
         public void Update(GPTVector2D v_near)
         {
             UpdateTRA();
@@ -284,8 +289,7 @@ namespace Awesome.AI.Core.Spaces
             if (Add2D(v_near))
                 return;
 
-            for (int i = 0; i < CONST.AXIS_MAX; i++)
-                Adjust(CONST.AXES[i]);
+            Adjust();
         }
 
         private bool Add2D(GPTVector2D v_near)
@@ -307,58 +311,47 @@ namespace Awesome.AI.Core.Spaces
             double[] xx = [-1d, -1d];
             double[] yy = [-1d, -1d];
             
-            for (int i = 0; i < axis_count; i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        xx[0] = Math.Clamp(v_near.xx - CONST.ALPHA, CONST.MIN, CONST.MAX);
-                        xx[1] = Math.Clamp(v_near.xx + CONST.ALPHA, CONST.MIN, CONST.MAX);
-                        break;
-                    case 1: 
-                        yy[0] = Math.Clamp(v_near.yy - CONST.ALPHA, CONST.MIN, CONST.MAX);
-                        yy[1] = Math.Clamp(v_near.yy + CONST.ALPHA, CONST.MIN, CONST.MAX);
-                        break;
-                    default: throw new Exception("Unit, Add2D");
-                }
-            }
-
+            xx[0] = Math.Clamp(v_near.xx - CONST.ALPHA, CONST.MIN, CONST.MAX);
+            xx[1] = Math.Clamp(v_near.xx + CONST.ALPHA, CONST.MIN, CONST.MAX);
+            
+            yy[0] = Math.Clamp(v_near.yy - CONST.ALPHA, CONST.MIN, CONST.MAX);
+            yy[1] = Math.Clamp(v_near.yy + CONST.ALPHA, CONST.MIN, CONST.MAX);
+            
             double[][] axis = new double[axis_count][];
             
-            if (axis_count == 1) {
-                axis[0] = xx;
-            }
-
-            if (axis_count == 2) {
-                axis[0] = xx;
-                axis[1] = yy;
-            }
-
+            axis[0] = xx;
+            axis[1] = yy;
+            
             mind.access.UNITS_ADD(this, axis, axis_count);
 
             return true;
         }
                 
-        private void Adjust(string ax)
+        private void Adjust()
         {
-            //if (ax == "will" && dist < CONST.ALPHA)
-            //    return;
-
-            double dir = 0.0d;
             double rnd = mind.rand.MyRandomDouble(10)[5];
-                       
-            dir = mind.mech.mp.eprops.Direction(mind, ax, false);
-            
-            double _new = UIget(ax) + (rnd * CONST.ETA * dir);
 
-            if (_new <= CONST.MIN) _new = CONST.MIN;
-            if (_new >= CONST.MAX) _new = CONST.MAX;
+            GPTVector2D func = new GPTVector2D();
+            GPTVector2D vec = ToVector();
+            GPTVector2D dir = mind.down.FlipUnit(vec);
+            dir = func.Mul(dir, rnd * CONST.ETA);
+            GPTVector2D _new = func.Add(vec, dir);
 
-            switch (_new)
+            if (_new.xx <= CONST.MIN) _new.xx = CONST.MIN;
+            if (_new.yy >= CONST.MAX) _new.yy = CONST.MAX;
+
+            switch (_new.xx)
             {
                 case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
                 case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
-                default: UIset(ax, _new); break;
+                default: UIset("will", _new.xx); return;
+            }
+
+            switch (_new.yy)
+            {
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                default: UIset("attention", _new.yy); return;
             }
         }
 

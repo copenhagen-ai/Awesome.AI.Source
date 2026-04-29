@@ -64,9 +64,9 @@ namespace Awesome.AI.Core.Mechanics
             {
                 case MECHANICS.TUGOFWAR_LOW:
                 case MECHANICS.BALLONHILL_LOW:
-                    vv_sym_peek = mp.peek_vv_curr;
-                    vv_sym_low_peek = mp.peek_vv_out_low;
-                    vv_sym_high_peek = mp.peek_vv_out_high;
+                    //vv_sym_peek = mp.peek_vv_curr;
+                    //vv_sym_low_peek = mp.peek_vv_out_low;
+                    //vv_sym_high_peek = mp.peek_vv_out_high;
 
                     dv_sym_prev = mp.dv_prev;
                     vv_sym_prev = mp.vv_prev;
@@ -110,7 +110,7 @@ namespace Awesome.AI.Core.Mechanics
                     acc_sym_90 = mp.acc_90;
                     ke_sym_90 = mp.ke_90;
 
-                    peek_sym_norm = mp.peek_vv_norm;
+                    //peek_sym_norm = mp.peek_vv_norm;
 
                     m1_sym = mp.m1;
                     m2_sym = mp.m2;
@@ -121,9 +121,9 @@ namespace Awesome.AI.Core.Mechanics
                     break;
                 case MECHANICS.CIRCUIT_1_LOW:
                 case MECHANICS.CIRCUIT_2_LOW:
-                    vv_sym_peek = mp.peek_cc_elec;
-                    vv_sym_low_peek = mp.peek_vv_out_low;
-                    vv_sym_high_peek = mp.peek_vv_out_high;
+                    //vv_sym_peek = mp.peek_cc_elec;
+                    //vv_sym_low_peek = mp.peek_vv_out_low;
+                    //vv_sym_high_peek = mp.peek_vv_out_high;
 
                     vv_sym_curr = mp.cc_elec_curr;
                     dv_sym_curr = mp.dc_elec_curr;
@@ -139,7 +139,7 @@ namespace Awesome.AI.Core.Mechanics
                     vv_sym_90 = mp.cc_elec_90;
                     dv_sym_90 = mp.dc_elec_90;
 
-                    peek_sym_norm = mp.peek_vv_norm;
+                    //peek_sym_norm = mp.peek_vv_norm;
                     //inertia_sym = mp.inertia_lim;
                     break;
             }

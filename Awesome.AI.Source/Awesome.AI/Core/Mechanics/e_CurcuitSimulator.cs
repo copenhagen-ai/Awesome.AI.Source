@@ -112,8 +112,8 @@ namespace Awesome.AI.Core.Electrical
 
             mp.posxy = CONST.STARTXY;
 
-            mp.peek_vv_out_high = -1000.0d;
-            mp.peek_vv_out_low = 1000.0d;
+            //mp.peek_vv_out_high = -1000.0d;
+            //mp.peek_vv_out_low = 1000.0d;
             mp.vv_out_high = -1000.0d;
             mp.vv_out_low = 1000.0d;
             mp.dv_out_high = -1000.0d;
@@ -137,20 +137,20 @@ namespace Awesome.AI.Core.Electrical
             return meter;
         }
 
-        public void Peek(UNIT curr)
-        {
-            if (curr.IsNull())
-                throw new Exception("CircuitSimulator, Current NULL");
+        //public void Peek(UNIT curr)
+        //{
+        //    if (curr.IsNull())
+        //        throw new Exception("CircuitSimulator, Current NULL");
 
-            if (curr.IsIDLE())
-                throw new Exception("CircuitSimulator, Current IDLE");
+        //    if (curr.IsIDLE())
+        //        throw new Exception("CircuitSimulator, Current IDLE");
 
-            Calc(curr, true, -1);
+        //    Calc(curr, true, -1);
 
-            double adj = mp.peek_vv_out_low == mp.peek_vv_out_high ? 0.1d : 0.0d;
+        //    double adj = mp.peek_vv_out_low == mp.peek_vv_out_high ? 0.1d : 0.0d;
 
-            mp.peek_vv_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_vv_out_low - adj, mp.peek_vv_out_high, 0.0d, 100.0d);
-        }
+        //    mp.peek_vv_norm = mind.calc.Normalize(mp.peek_cc_elec, mp.peek_vv_out_low - adj, mp.peek_vv_out_high, 0.0d, 100.0d);
+        //}
 
         //public double Dir(string ax)
         //{
@@ -162,7 +162,7 @@ namespace Awesome.AI.Core.Electrical
         //    throw new NotImplementedException("e_CircuitSimulator, Dir");
         //}
 
-        public void Calc(UNIT curr, bool peek, int cycles)
+        public void Calc(UNIT curr, int cycles)
         {
             DeltaTime();
 
@@ -190,62 +190,54 @@ namespace Awesome.AI.Core.Electrical
                     break;
                 default: throw new Exception("e_CircuitSimulator, Calc 1");
             }
-
-            if (peek) 
+            
+            switch (type)
             {
-                mp.peek_cc_elec = mp.cc_elec_curr + mp.deltaCurrent;
-            }
-            else 
-            {
-                switch (type)
-                {
-                    case MECHANICS.CIRCUIT_1_LOW:
-                        // Calculate voltages
-                        double vBattery = -(CONST.MAX * CONST.BASE_SCALE * 0.05d) * mp.damp;
-                        double vResistor = (curr.Variable * 0.1d) * mp.damp;
-                        double vLoss = mp.cc_elec_curr * Damping(mind) * mp.damp;
-                        double netVoltage = vBattery + vResistor + vLoss;
+                case MECHANICS.CIRCUIT_1_LOW:
+                    // Calculate voltages
+                    double vBattery = -(CONST.MAX * CONST.BASE_SCALE * 0.05d) * mp.damp;
+                    double vResistor = (curr.Variable * 0.1d) * mp.damp;
+                    double vLoss = mp.cc_elec_curr * Damping(mind) * mp.damp;
+                    double netVoltage = vBattery + vResistor + vLoss;
 
-                        // Inductor: L * di/dt = V_net => di = V_net / L * dt
-                        mp.deltaCurrent = (netVoltage / mp.inductance) * mp.dt;
+                    // Inductor: L * di/dt = V_net => di = V_net / L * dt
+                    mp.deltaCurrent = (netVoltage / mp.inductance) * mp.dt;
 
-                        mp.dc_elec_prev = mp.dc_elec_curr;
-                        mp.dc_elec_curr = mp.deltaCurrent;
-                        mp.cc_elec_prev = mp.cc_elec_curr;
-                        mp.cc_elec_curr += mp.deltaCurrent;
+                    mp.dc_elec_prev = mp.dc_elec_curr;
+                    mp.dc_elec_curr = mp.deltaCurrent;
+                    mp.cc_elec_prev = mp.cc_elec_curr;
+                    mp.cc_elec_curr += mp.deltaCurrent;
 
-                        break;
-                    case MECHANICS.CIRCUIT_2_LOW:
-                        double voltage = register.Average() + (mind.rand.MyRandomDouble(1)[0] - 0.5) * 0.01; ;
-                        double dCurrent = 0.0d;
+                    break;
+                case MECHANICS.CIRCUIT_2_LOW:
+                    double voltage = register.Average() + (mind.rand.MyRandomDouble(1)[0] - 0.5) * 0.01; ;
+                    double dCurrent = 0.0d;
                         
-                        double g1 = curr.Variable.Norm1DV(mind);
-                        double g2 = Damping(mind);
+                    double g1 = curr.Variable.Norm1DV(mind);
+                    double g2 = Damping(mind);
 
-                        double gain1 = g1 * mp.damp;
-                        double gain2 = g2 * mp.damp;
+                    double gain1 = g1 * mp.damp;
+                    double gain2 = g2 * mp.damp;
 
-                        foreach (var stage in circuit)
-                        {
-                            //stage.Resistance = 1000 + 500 * Math.Sin(2 * Math.PI * time * 0.1);
-                            voltage = stage.Step(voltage, g1, g2, mp.dt);
-                            dCurrent += stage.DeltaCurrent;
+                    foreach (var stage in circuit)
+                    {
+                        //stage.Resistance = 1000 + 500 * Math.Sin(2 * Math.PI * time * 0.1);
+                        voltage = stage.Step(voltage, g1, g2, mp.dt);
+                        dCurrent += stage.DeltaCurrent;
 
-                            if (double.IsNaN(dCurrent) || double.IsInfinity(dCurrent))
-                                throw new Exception("e_CircuitSimulator, Calc 2");
-                        }
+                        if (double.IsNaN(dCurrent) || double.IsInfinity(dCurrent))
+                            throw new Exception("e_CircuitSimulator, Calc 2");
+                    }
 
-                        register.Push(voltage);
+                    register.Push(voltage);
 
-                        mp.dc_elec_prev = mp.dc_elec_curr;
-                        mp.dc_elec_curr = dCurrent;
-                        mp.cc_elec_prev = mp.cc_elec_curr;
-                        mp.cc_elec_curr += dCurrent;
+                    mp.dc_elec_prev = mp.dc_elec_curr;
+                    mp.dc_elec_curr = dCurrent;
+                    mp.cc_elec_prev = mp.cc_elec_curr;
+                    mp.cc_elec_curr += dCurrent;
 
-                        break;
-                    default : throw new Exception("e_CircuitSimulator, Calc 3");
-                }
-
+                    break;
+                default : throw new Exception("e_CircuitSimulator, Calc 3");
             }
 
             if (double.IsNaN(mp.cc_elec_curr) || double.IsNaN(mp.cc_elec_prev) || double.IsNaN(mp.dc_elec_curr) || double.IsNaN(mp.dc_elec_prev))
@@ -282,7 +274,7 @@ namespace Awesome.AI.Core.Electrical
             if (cycles == 1)
                 mh.ResetCircuit(mind, mp);
 
-            Calc(mind.unit_current, false, cycles);
+            Calc(mind.unit_current/*, false*/, cycles);
 
             mh.ExtremesCircuit(mp);
             mh.NormalizeCircuit(mind, mp);

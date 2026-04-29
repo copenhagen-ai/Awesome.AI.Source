@@ -1,5 +1,4 @@
 ﻿using Awesome.AI.Common;
-using Awesome.AI.Interfaces;
 using Awesome.AI.Variables;
 using System.Numerics;
 using static Awesome.AI.Variables.Enums;
@@ -8,16 +7,6 @@ namespace Awesome.AI.Core.Spaces
 {
     public class GPT
     {
-        /// <summary>
-        /// Returns all UNITs within a rectangular corridor connecting unitA and unitB, ordered along the corridor.
-        /// </summary>
-        /// <param name="mind">Reference to TheMind for accessing all UNITs.</param>
-        /// <param name="unitA">Start UNIT of the corridor.</param>
-        /// <param name="unitB">End UNIT of the corridor.</param>
-        /// <param name="axisX">Primary axis name (like axis[0]).</param>
-        /// <param name="axisY">Secondary axis name (like axis[1]).</param>
-        /// <param name="width">Width of the corridor rectangle.</param>
-        /// <returns>List of UNITs inside the corridor, ordered along the corridor line.</returns>
         public List<UNIT> Corridor(List<UNIT> allUnits, UNIT unitA, UNIT unitB)
         {
             string axisX = CONST.AXES[0];
@@ -58,6 +47,9 @@ namespace Awesome.AI.Core.Spaces
 
             Fix(corridorUnits, unitA, unitB);
 
+            if (corridorUnits.Count == 0)
+                throw new Exception("USSoup, Corridor");
+
             return corridorUnits;
         }
 
@@ -88,54 +80,33 @@ namespace Awesome.AI.Core.Spaces
             return select;
         }
 
-        public UNIT[] ByPyth(List<UNIT> units, GPTVector2D v_near)
+        public UNIT ByPyth(List<UNIT> units, GPTVector2D v_near)
         {
             double min_distance = 10E20d;
-            UNIT nearest = null;
+            UNIT res = null;
 
             foreach (UNIT unit in units)
             {
                 if (unit == mind.unit_current)
                     continue;
 
-                double nearest_x = soup.JumpTo(CONST.AXES[0], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[0], false));
-                double nearest_y = soup.JumpTo(CONST.AXES[1], Map(unit), mind.mech.mp.eprops.Direction(mind, CONST.AXES[1], false));
-
-                GPTVector2D v_nearest = new GPTVector2D(nearest_x, nearest_y, null, null);
-
-                double distance = mind.calc.Pyth(v_near.xx, v_nearest.xx, v_near.yy, v_nearest.yy);
+                GPTVector2D nearest = soup.Near(unit);
+                
+                double distance = mind.calc.Pyth(v_near.xx, nearest.xx, v_near.yy, nearest.yy);
 
                 if (distance < min_distance)
                 {
                     min_distance = distance;
-                    nearest = unit;
+                    res = unit;
                 }
             }
 
-            List<UNIT> res = new List<UNIT>() { mind.unit_current };
-
-            if (nearest == null)
-                res.Insert(0, UNIT.CreateIdle(mind));
-            else
-                res = GPT.Create().Corridor(units, mind.unit_current, nearest);
-
-            return res.ToArray();
+            return res;            
         }
 
-        public UNIT[] ByOther(List<UNIT> units, GPTVector2D near)
+        public UNIT ByOther(List<UNIT> units, GPTVector2D near)
         {
-            throw new NotImplementedException("UnitSpaceSoup, SelectOther");
-        }
-
-        public double Map(UNIT x)
-        {
-            IMechanics mech = mind.mech;
-
-            mech.Peek(x);
-
-            double norm = mech.ms.peek_sym_norm;
-
-            return norm;
+            throw new NotImplementedException("USSoup, SelectOther");
         }
     }
 
@@ -180,7 +151,10 @@ namespace Awesome.AI.Core.Spaces
             UNIT _u = mind.unit_current;
             UNIT[] res = null;
 
-            if (_u.IsIDLE())
+            bool still_quick = _u.IsQDECISION() && mind.STATE == STATE.JUSTRUNNING;
+            bool is_idle = _u.IsIDLE();
+
+            if (still_quick || is_idle)
                 res = Buffer();
             else
                 res = Unit();
@@ -202,11 +176,12 @@ namespace Awesome.AI.Core.Spaces
                 && mind.filters.Credits(x, "will")          //comment to turn off
                 ).ToList();
 
-            if (units is null)
-                throw new Exception("TheSoup, Unit");
+            if (units == null)
+                throw new Exception("USSoup, Unit");
 
-            GPTVector2D near = Near();
-            UNIT[] res = null;
+            GPTVector2D near = Near(mind.unit_current);
+            List<UNIT> list = new List<UNIT>() { mind.unit_current };
+            UNIT res = null;
 
             if (CONST.select_curr == SELECTCURRENT.PYTH)
                 res = Select.Create(mind, this).ByPyth(units, near);
@@ -215,39 +190,32 @@ namespace Awesome.AI.Core.Spaces
                 res = Select.Create(mind, this).ByOther(units, near);
 
             if (res == null)
-                throw new Exception("UnitSpaceSoup, Unit");
+                return (new List<UNIT>() { UNIT.CreateIdle(mind) }).ToArray();
             
-            if (res[0].IsIDLE())
-                return res;
+            list = GPT.Create().Corridor(units, mind.unit_current, res);
 
-            res[0].Update(near);
+            list[0].Update(near);            
 
-            return res;
+            return list.ToArray();
         }
 
-        private GPTVector2D Near()
+        public GPTVector2D Near(UNIT unit)
         {
-            double[] near = new double[CONST.AXIS_MAX];
-
-            for (int i = 0; i < CONST.AXIS_MAX; i++)
-               near[i] = JumpTo(CONST.AXES[i], mind.mech.mp.eprops.Step(mind, CONST.AXES[i]), mind.mech.mp.eprops.Direction(mind, CONST.AXES[i], true));
+            GPTVector2D func = new GPTVector2D();
+            GPTVector2D near = new GPTVector2D();
+            GPTVector2D vec = unit.ToVector();
+            GPTVector2D vec_u = vec.Unit();
+            GPTVector2D dir_u = mind.down.FlipUnit(vec_u);
             
-            return new GPTVector2D(near[0], near[1], null, null);
-        }
-
-        public double JumpTo(string ax, double step, double dir)
-        {
-            double prev_dir = mind.mech.mp.eprops.DirPrev(ax);
-            double res = 0.0d;
-            bool same = dir == prev_dir;
+            bool same = (int)func.ToDegrees(vec_u) == (int)func.ToDegrees(dir_u);
 
             if (same)
-                res = step;
+                near = vec;
 
             if (!same)
-                res = 100.0d - step;
+                near = vec.Reverse();
 
-            return res;
+            return near;
         }
 
         /*

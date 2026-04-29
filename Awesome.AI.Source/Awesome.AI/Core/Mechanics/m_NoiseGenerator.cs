@@ -32,8 +32,8 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.posxy = CONST.STARTXY;
 
-            mp.peek_vv_out_high = -1000.0d;
-            mp.peek_vv_out_low = 1000.0d;
+            //mp.peek_vv_out_high = -1000.0d;
+            //mp.peek_vv_out_low = 1000.0d;
             mp.vv_out_high = -1000.0d;
             mp.vv_out_low = 1000.0d;
             mp.dv_out_high = -1000.0d;
@@ -49,20 +49,20 @@ namespace Awesome.AI.Core.Mechanics
             return meter;
         }
 
-        public void Peek(UNIT curr)
-        {
-            if (curr.IsNull())
-                throw new Exception("NoiseGenerator, Momentum");
+        //public void Peek(UNIT curr)
+        //{
+        //    if (curr.IsNull())
+        //        throw new Exception("NoiseGenerator, Momentum");
 
-            if (curr.IsIDLE())
-                throw new Exception("NoiseGenerator, Momentum");
+        //    if (curr.IsIDLE())
+        //        throw new Exception("NoiseGenerator, Momentum");
 
-            Calc(curr, true, -1);
+        //    Calc(curr, true, -1);
 
-            double adj = mp.peek_vv_out_low == mp.peek_vv_out_high ? 0.1d : 0.0d;
+        //    double adj = mp.peek_vv_out_low == mp.peek_vv_out_high ? 0.1d : 0.0d;
 
-            mp.peek_vv_norm = mind.calc.Normalize(mp.peek_vv_curr, mp.peek_vv_out_low - adj, mp.peek_vv_out_high, 0.0d, 100.0d);
-        }
+        //    mp.peek_vv_norm = mind.calc.Normalize(mp.peek_vv_curr, mp.peek_vv_out_low - adj, mp.peek_vv_out_high, 0.0d, 100.0d);
+        //}
 
         //public double Dir(string ax)
         //{
@@ -83,7 +83,7 @@ namespace Awesome.AI.Core.Mechanics
         //    return res;
         //}
 
-        public void Calc(UNIT curr, bool peek, int cycles)
+        public void Calc(UNIT curr, int cycles)
         {
             //F=m*a
             //a=dv/dt
@@ -92,8 +92,6 @@ namespace Awesome.AI.Core.Mechanics
             //dv=(F*dt)/m
 
             //momentum: p = m * v
-
-            //DeltaTime();
 
             switch (type)
             {
@@ -122,29 +120,22 @@ namespace Awesome.AI.Core.Mechanics
 
             double f = mp.f_sta + mp.f_dyn + mp.f_friction;
 
-            if (peek)
-            {
-                mp.peek_vv_curr = mp.vv_prev + (f * mp.dt) / (mp.m1 + mp.m2);
-            }
-            else
-            {
-                mp.dv_prev = mp.dv_curr;
-                mp.vv_prev = mp.vv_curr;
-                mp.mom_prev = mp.mom_curr;
-                mp.acc_prev = mp.acc_curr;
-                mp.ke_prev = mp.ke_curr;
-                mp.fnet_prev = mp.fnet_curr;
+            mp.dv_prev = mp.dv_curr;
+            mp.vv_prev = mp.vv_curr;
+            mp.mom_prev = mp.mom_curr;
+            mp.acc_prev = mp.acc_curr;
+            mp.ke_prev = mp.ke_curr;
+            mp.fnet_prev = mp.fnet_curr;
 
-                mp.dv_curr = (f * mp.dt) / (mp.m1 + mp.m2);
-                mp.vv_curr = mp.vv_prev + mp.dv_curr;
-                mp.mom_curr = mp.vv_curr * (mp.m1 + mp.m2);
-                mp.acc_curr = mp.dv_curr / mp.dt;
-                mp.ke_curr = 0.5d * (mp.m1 + mp.m2) * (mp.vv_curr * mp.vv_curr);
-                mp.fnet_curr = f;
+            mp.dv_curr = (f * mp.dt) / (mp.m1 + mp.m2);
+            mp.vv_curr = mp.vv_prev + mp.dv_curr;
+            mp.mom_curr = mp.vv_curr * (mp.m1 + mp.m2);
+            mp.acc_curr = mp.dv_curr / mp.dt;
+            mp.ke_curr = 0.5d * (mp.m1 + mp.m2) * (mp.vv_curr * mp.vv_curr);
+            mp.fnet_curr = f;
 
-                mp.pos_x += mp.vv_curr * mp.dt;
-            }
-
+            mp.pos_x += mp.vv_curr * mp.dt;
+        
             if (double.IsNaN(mp.dv_prev)) throw new Exception("NAN");
             if (double.IsNaN(mp.dv_curr)) throw new Exception("NAN");
             if (double.IsNaN(mp.vv_prev)) throw new Exception("NAN");
@@ -297,7 +288,7 @@ namespace Awesome.AI.Core.Mechanics
             if (cycles == 1)
                 mh.ResetNoise(mind, mp);
 
-            Calc(mind.unit_current, false, cycles);
+            Calc(mind.unit_current, cycles);
 
             mh.Extremes(mp);
             mh.Normalize(mind, mp);

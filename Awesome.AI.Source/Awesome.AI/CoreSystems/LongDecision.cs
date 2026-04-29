@@ -95,7 +95,7 @@ namespace Awesome.AI.CoreSystems
             {
                 string _new = unit.Data.Replace(CONST.lng_what, "");
 
-                if (mind.mech.mp.eprops.Direction(mind, "will", false) > 0.0)
+                if (mind.mech.mp.eprops.Direction(mind, "will", false) > 0.0d)
                     SetResult(type, "", 0);
 
                 else if (unit.Data != CONST.lng_what + Result[type])

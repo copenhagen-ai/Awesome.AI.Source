@@ -1,4 +1,5 @@
-﻿using Awesome.AI.Core;
+﻿using Awesome.AI.Common;
+using Awesome.AI.Core;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
@@ -23,13 +24,38 @@ namespace Awesome.AI.Awesome.AI.Core
             Errors = new List<bool>();
         }
 
+        public GPTVector2D FlipUnit(GPTVector2D vec)
+        {
+            if (Continue)
+                return vec.Unit();
+
+            return vec.Unit().ReverseUnit();
+        }
+
         public void Update()
         {
-            Continous();
+            /*
+             * this can be extended with a mechanism to alter between the two
+             * thereby expressing levels of social entanglement
+             * */
+
+            double d_curr = mind.mech.ms.dv_sym_curr;
+            double d_zero = d_curr.Norm0DV(mind);
+            double d_save = d_curr.Norm0DV(mind);
+
+            if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind)/* && NoInertia() && NoMomentum()*/)
+                d_zero *= -1.0d;
+
+            if (mind.bot.logic == LOGICTYPE.SHARED && Shared(d_curr, mind)/* && NoInertia()*/ && NoMomentum())
+                d_zero *= -1.0d;
+
+            Continue = d_save == d_zero;
+
+            SetError(!Continue);
 
             //code: before or after?
-            double cont = mind.mech.mp.eprops.Direction(mind, "will", false);
-            Ratio.Add(cont);
+            double ratio = mind.mech.mp.eprops.Direction(mind, "will", false);
+            Ratio.Add(ratio);
             if (Ratio.Count > CONST.LAPSES)
                 Ratio.RemoveAt(0);            
         }
@@ -53,29 +79,7 @@ namespace Awesome.AI.Awesome.AI.Core
                 Errors.RemoveAt(0);
 
             Error = Errors.Count(x => x == true);
-        }
-        
-        public void Continous()
-        {
-            /*
-             * this can be extended with a mechanism to alter between the two
-             * thereby expressing levels of social entanglement
-             * */
-
-            double d_curr = mind.mech.ms.dv_sym_curr;
-            double d_zero = d_curr.Norm0DV(mind);
-            double d_save = d_curr.Norm0DV(mind);
-
-            if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind)/* && NoInertia() && NoMomentum()*/)
-                d_zero *= -1.0d;
-
-            if (mind.bot.logic == LOGICTYPE.SHARED && Shared(d_curr, mind)/* && NoInertia()*/ && NoMomentum())
-                d_zero *= -1.0d;
-
-            Continue = d_save == d_zero;
-            
-            SetError(!Continue);
-        }
+        }        
 
         private int i_decay { get; set; }
         private bool NoInertia()

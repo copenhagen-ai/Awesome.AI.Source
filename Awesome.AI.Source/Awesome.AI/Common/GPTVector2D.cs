@@ -50,17 +50,24 @@
             return v1.xx * v2.xx + v1.yy * v2.yy;
         }
 
-        public GPTVector2D Normalize()
+        public GPTVector2D Unit()
         {
-            if (this.magnitude == 0)
-                throw new DivideByZeroException("Cannot divide by zero.");
+            double len = Math.Sqrt(xx * xx + yy * yy);
 
-            double magnitude = this.magnitude;
+            if (len == 0)
+                throw new DivideByZeroException("Cannot normalize a zero vector.");
 
-            double _x = xx / magnitude;
-            double _y = yy / magnitude;
+            return new GPTVector2D(xx / len, yy / len, 1.0, null);
+        }
 
-            return new GPTVector2D(_x, _y, null, null);
+        public GPTVector2D Reverse()
+        {
+            return new GPTVector2D(100.0d - xx, 100.0d - yy, null, null);
+        }
+
+        public GPTVector2D ReverseUnit()
+        {
+            return new GPTVector2D(-xx, -yy, null, null);
         }
 
         public double ToRadians(double angle)

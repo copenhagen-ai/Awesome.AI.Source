@@ -11,7 +11,7 @@ namespace Awesome.AI.Interfaces
         MechParams mp { get; set; }
 
         double PosXY();
-        void Peek(UNIT c);
+        //void Peek(UNIT c);
         
         //these are thought patterns: general, good, bad
         void Calculate(PATTERN match, int cycles);

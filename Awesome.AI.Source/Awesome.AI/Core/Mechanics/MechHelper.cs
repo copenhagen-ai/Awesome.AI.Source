@@ -17,8 +17,8 @@ namespace Awesome.AI.Core.Mechanics
             mp.dc_elec_max = -1000.0d;
             mp.dc_elec_min = 1000.0d;
 
-            mp.peek_vv_out_high = -1000.0d;
-            mp.peek_vv_out_low = 1000.0d;
+            //mp.peek_vv_out_high = -1000.0d;
+            //mp.peek_vv_out_low = 1000.0d;
             mp.vv_out_high = -1000.0d;
             mp.vv_out_low = 1000.0d;
             mp.dv_out_high = -1000.0d;
@@ -35,8 +35,8 @@ namespace Awesome.AI.Core.Mechanics
 
             mp.posxy = CONST.STARTXY;
 
-            mp.peek_vv_out_high = -1000.0d;
-            mp.peek_vv_out_low = 1000.0d;
+            //mp.peek_vv_out_high = -1000.0d;
+            //mp.peek_vv_out_low = 1000.0d;
             mp.vv_out_high = -1000.0d;
             mp.vv_out_low = 1000.0d;
             mp.dv_out_high = -1000.0d;
@@ -87,8 +87,8 @@ namespace Awesome.AI.Core.Mechanics
         public void ExtremesCircuit(MechParams mp)
         {
             // Update flux linkage extremes
-            if (mp.peek_cc_elec <= mp.peek_vv_out_low) mp.peek_vv_out_low = mp.peek_cc_elec;
-            if (mp.peek_cc_elec > mp.peek_vv_out_high) mp.peek_vv_out_high = mp.peek_cc_elec;
+            //if (mp.peek_cc_elec <= mp.peek_vv_out_low) mp.peek_vv_out_low = mp.peek_cc_elec;
+            //if (mp.peek_cc_elec > mp.peek_vv_out_high) mp.peek_vv_out_high = mp.peek_cc_elec;
 
             // Update current extremes
             if (mp.cc_elec_curr <= mp.cc_elec_min) mp.cc_elec_min = mp.cc_elec_curr;
@@ -128,8 +128,8 @@ namespace Awesome.AI.Core.Mechanics
 
         public void Extremes(MechParams mp)
         {
-            if (mp.peek_vv_curr <= mp.peek_vv_out_low) mp.peek_vv_out_low = mp.peek_vv_curr;
-            if (mp.peek_vv_curr > mp.peek_vv_out_high) mp.peek_vv_out_high = mp.peek_vv_curr;
+            //if (mp.peek_vv_curr <= mp.peek_vv_out_low) mp.peek_vv_out_low = mp.peek_vv_curr;
+            //if (mp.peek_vv_curr > mp.peek_vv_out_high) mp.peek_vv_out_high = mp.peek_vv_curr;
 
             if (mp.vv_curr <= mp.vv_out_low) mp.vv_out_low = mp.vv_curr;
             if (mp.vv_curr > mp.vv_out_high) mp.vv_out_high = mp.vv_curr;

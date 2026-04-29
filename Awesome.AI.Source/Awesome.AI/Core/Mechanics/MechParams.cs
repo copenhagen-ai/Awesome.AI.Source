@@ -18,10 +18,10 @@ namespace Awesome.AI.Core.Mechanics
         public double cc_elec_curr { get; set; }
         public double dc_elec_prev { get; set; }
         public double dc_elec_curr { get; set; }
-        public double peek_cc_elec { get; set; }
+        //public double peek_cc_elec { get; set; }
 
-        public double peek_vv_curr { get; set; }
-        public double peek_vv_norm { get; set; }
+        //public double peek_vv_curr { get; set; }
+        //public double peek_vv_norm { get; set; }
         public double vv_100 { get; set; }
         public double dv_100 { get; set; }
         public double fnet_100 { get; set; }
@@ -49,8 +49,8 @@ namespace Awesome.AI.Core.Mechanics
         public double acc_curr { get; set; }
         public double ke_curr { get; set; }
         
-        public double peek_vv_out_high { get; set; }
-        public double peek_vv_out_low { get; set; }
+        //public double peek_vv_out_high { get; set; }
+        //public double peek_vv_out_low { get; set; }
 
         public double vv_out_high { get; set; }
         public double vv_out_low { get; set; }
