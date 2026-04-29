@@ -205,7 +205,7 @@ namespace Awesome.AI.Core.Spaces
             GPTVector2D near = new GPTVector2D();
             GPTVector2D vec = unit.ToVector();
             GPTVector2D vec_u = vec.Unit();
-            GPTVector2D dir_u = mind.down.FlipUnit(vec_u);
+            GPTVector2D dir_u = mind.down.FlipUnit(vec);
             
             bool same = (int)func.ToDegrees(vec_u) == (int)func.ToDegrees(dir_u);
 
