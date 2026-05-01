@@ -40,7 +40,7 @@ namespace Awesome.AI.Core.Spaces
             switch (ax)
             {
                 case "will": return vect.xx;
-                case "attention": return vect.yy;
+                case "conflict": return vect.yy;
                 default: throw new Exception("Unit, UIget");
             }
         }
@@ -50,7 +50,7 @@ namespace Awesome.AI.Core.Spaces
             switch (ax)
             {
                 case "will": vect.xx = val; break;
-                case "attention": vect.yy = val; break;
+                case "conflict": vect.yy = val; break;
                 default: throw new Exception("Unit, UIset");
             }            
         }
@@ -78,7 +78,7 @@ namespace Awesome.AI.Core.Spaces
                         if (sub == "init")
                             return "";
 
-                        double _i = mind.mech.ms.dv_sym_100.Norm0DV(mind);
+                        double _i = mind.mech.ms.vv_sym_100.Norm0VV(mind);
                         string idx = $"{_i.Index(mind)}";
 
                         Lookup lookup = new Lookup();
@@ -351,7 +351,7 @@ namespace Awesome.AI.Core.Spaces
             {
                 case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
                 case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
-                default: UIset("attention", _new.yy); return;
+                default: UIset("conflict", _new.yy); return;
             }
         }
 

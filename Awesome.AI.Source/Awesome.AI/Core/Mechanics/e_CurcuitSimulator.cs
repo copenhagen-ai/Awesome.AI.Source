@@ -213,7 +213,7 @@ namespace Awesome.AI.Core.Electrical
                     double voltage = register.Average() + (mind.rand.MyRandomDouble(1)[0] - 0.5) * 0.01; ;
                     double dCurrent = 0.0d;
                         
-                    double g1 = curr.Variable.Norm1DV(mind);
+                    double g1 = curr.Variable.Norm1VV(mind);
                     double g2 = Damping(mind);
 
                     double gain1 = g1 * mp.damp;

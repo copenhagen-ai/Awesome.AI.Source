@@ -66,15 +66,15 @@ namespace Awesome.AI.Common
             ok = $"{mind.ok}"; 
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
-            error = $"{mind.down.Error}";
-            go_down = $"{(mind.mech.mp.eprops.Direction(mind, "will", false) > 0.0d ? "NO" : "YES")}";
+            error = $"{mind.down._Error}";
+            go_down = $"{(mind.mech.mp.eprops.Direction(mind, "will") > 0.0d ? "NO" : "YES")}";
             ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
             ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
             vv_curr = $"{mind.mech.ms.vv_sym_curr.ToString("E3")}";
             dv_curr = $"{mind.mech.ms.dv_sym_curr.ToString("E3")}";
             noise_norm = $"{mind.mech.ms.vv_sym_90}";
             actual_us_x = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.UIget("will") : "-1")}";
-            actual_us_y = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.UIget("attention") : "-1")}";
+            actual_us_y = $"{(mind.environment == ENV.LOCAL ? mind.unit_actual.UIget("conflict") : "-1")}";
 
             int n_units = mind.access.UNITS_ALL().Count;
             double a_area = (100.0 * 100.0) / n_units;

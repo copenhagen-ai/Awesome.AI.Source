@@ -9,10 +9,10 @@ namespace Awesome.AI.Awesome.AI.Core
 {
     public class Down
     {                
-        public bool Continue {  get; set; }
-        public int Error { get; set; }
-        public List<double> Ratio { get; set; }
-        private List<bool> Errors { get; set; }
+        public bool _Down {  get; set; }
+        public int _Error { get; set; }
+        public List<double> _Ratio { get; set; }
+        private List<bool> _Errors { get; set; }
 
         private TheMind mind;
         private Down() { }
@@ -20,25 +20,20 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             this.mind = mind;
 
-            Ratio = new List<double>();
-            Errors = new List<bool>();
+            _Ratio = new List<double>();
+            _Errors = new List<bool>();
         }
 
         public GPTVector2D FlipUnit(GPTVector2D vec)
         {
-            if (Continue)
-                return vec.Unit();
+            if (_Down)
+                return vec.Unit().ReverseUnit();
 
-            return vec.Unit().ReverseUnit();
+            return vec.Unit();
         }
 
         public void Update()
         {
-            /*
-             * this can be extended with a mechanism to alter between the two
-             * thereby expressing levels of social entanglement
-             * */
-
             double d_curr = mind.mech.ms.dv_sym_curr;
             double d_zero = d_curr.Norm0DV(mind);
             double d_save = d_curr.Norm0DV(mind);
@@ -49,15 +44,15 @@ namespace Awesome.AI.Awesome.AI.Core
             if (mind.bot.logic == LOGICTYPE.SHARED && Shared(d_curr, mind)/* && NoInertia()*/ && NoMomentum())
                 d_zero *= -1.0d;
 
-            Continue = d_save == d_zero;
+            _Down = d_save != d_zero;
 
-            SetError(!Continue);
+            SetError(_Down);
 
             //code: before or after?
-            double ratio = mind.mech.mp.eprops.Direction(mind, "will", false);
-            Ratio.Add(ratio);
-            if (Ratio.Count > CONST.LAPSES)
-                Ratio.RemoveAt(0);            
+            double ratio = mind.mech.mp.eprops.Direction(mind, "will");
+            _Ratio.Add(ratio);
+            if (_Ratio.Count > CONST.LAPSES)
+                _Ratio.RemoveAt(0);            
         }
 
         public int Count(HARDDOWN dir)
@@ -65,8 +60,8 @@ namespace Awesome.AI.Awesome.AI.Core
             int count = 0;
             switch (dir)
             {
-                case HARDDOWN.YES: count = Ratio.Where(z => z <= 0.0d).Count(); break;
-                case HARDDOWN.NO: count = Ratio.Where(z => z > 0.0d).Count(); break;
+                case HARDDOWN.YES: count = _Ratio.Where(z => z <= 0.0d).Count(); break;
+                case HARDDOWN.NO: count = _Ratio.Where(z => z > 0.0d).Count(); break;
             }
 
             return count;
@@ -74,11 +69,11 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public void SetError(bool err)
         {
-            Errors.Add(err);
-            if (Errors.Count > 100)
-                Errors.RemoveAt(0);
+            _Errors.Add(err);
+            if (_Errors.Count > 100)
+                _Errors.RemoveAt(0);
 
-            Error = Errors.Count(x => x == true);
+            _Error = _Errors.Count(x => x == true);
         }        
 
         private int i_decay { get; set; }
@@ -131,8 +126,8 @@ namespace Awesome.AI.Awesome.AI.Core
 
             double awareA = 1.0d - awareness;
             double awareB = awareness;
-            double zero = 0.0.Norm1DV(mind);
-            double w_agentA = will.Norm1DV(mind);
+            double zero = 0.0.Norm1VV(mind);
+            double w_agentA = will.Norm1VV(mind);
             double w_agentB = agent.SimulateDeltaVelocity();
             
             double w_shared = (awareA * w_agentA + awareB * w_agentB);

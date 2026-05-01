@@ -119,7 +119,7 @@ namespace Awesome.AI.Core.Internals
                     break;
 
                 case PROPS.BRAINWAVE:
-                    //attention, readyness
+                    //conflict, readyness
                     attr = new Dictionary<string, double> { { "base", double.NaN }, { CONST.prop2_brain, 2.0 }, { CONST.prop3_brain, 1.2 } };
 
                     matr = new Dictionary<(string, string), double>();
@@ -146,7 +146,7 @@ namespace Awesome.AI.Core.Internals
         {
             switch (props)
             {
-                case PROPS.TEMPERAMENT: _norm = mind.mech.mp.eprops.Will().Norm100DV(mind); break;
+                case PROPS.TEMPERAMENT: _norm = mind.mech.mp.eprops.Will().Norm100VV(mind); break;
                 //case PROPS.BRAINWAVE: _norm = mind.mech.mp.eprops.Will().Norm0(mind, 0.0d, 100.0d); break;
                 //case PROPS.COMMUNICATION: _norm = mind.mech.mp.eprops.Will().Norm0(mind, 0.0d, 100.0d); break;
                 default: throw new NotImplementedException("Properties, GetProps");

@@ -1,6 +1,4 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Core.Mechanics;
-using Awesome.AI.Source.Awesome.AI.Common;
+﻿using Awesome.AI.Core.Mechanics;
 using Awesome.AI.Variables;
 
 namespace Awesome.AI.Core.Internals
@@ -22,9 +20,9 @@ namespace Awesome.AI.Core.Internals
         }
 
         // Maps mechanics to emergent cognition
-        public double Will() => ms.dv_sym_curr;
+        public double Will() => ms.vv_sym_curr;
 
-        public double Attention() => ms.vv_sym_curr;
+        public double Conflict() => ms.dv_sym_curr;
 
         public double Commitment() => ms.mom_sym_curr;
 
@@ -44,12 +42,12 @@ namespace Awesome.AI.Core.Internals
         }
 
         public Dictionary<string, double> curr_dir = new Dictionary<string, double>();
-        public double Direction(TheMind mind, string ax, bool set_prev)
+        public double Direction(TheMind mind, string ax)
         {
             switch (ax)
             {
-                case "will": curr_dir[ax] = ms.dv_sym_curr > ms.dv_sym_prev ? 1.0d : -1.0d; break;
-                case "attention": curr_dir[ax] = ms.vv_sym_curr > ms.vv_sym_prev ? 1.0d : -1.0d; break;
+                case "will": curr_dir[ax] = ms.vv_sym_curr > ms.vv_sym_prev ? 1.0d : -1.0d; break;
+                case "conflict": curr_dir[ax] = ms.dv_sym_curr > ms.dv_sym_prev ? 1.0d : -1.0d; break;
                 case "commitment": curr_dir[ax] = ms.mom_sym_curr > ms.mom_sym_prev ? 1.0d : -1.0d; break;
                 case "adaption": curr_dir[ax] = ms.acc_sym_curr > ms.acc_sym_prev ? 1.0d : -1.0d; break;
                 case "activation": curr_dir[ax] = ms.ke_sym_curr > ms.ke_sym_prev ? 1.0d : -1.0d; break;
@@ -57,7 +55,7 @@ namespace Awesome.AI.Core.Internals
                 default: throw new Exception("BaseProperties, Direction");
             }
 
-            double cont = mind.down.Continue ? 1d : -1d;
+            double cont = mind.down._Down ? -1d : 1d;
             curr_dir[ax] = curr_dir[ax] * cont;
 
             return curr_dir[ax];
