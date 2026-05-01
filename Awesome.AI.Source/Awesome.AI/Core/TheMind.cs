@@ -257,7 +257,7 @@ namespace Awesome.AI.Core
 
         private void Pre(bool _pro)
         {
-            rand.SaveMomentum(mech.ms.dv_sym_curr);
+            rand.SaveDeltaVel(mech.ms.dv_sym_curr);
             
             if (!_pro)
                 return;

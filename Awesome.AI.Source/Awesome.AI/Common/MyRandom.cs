@@ -19,24 +19,24 @@ namespace Awesome.AI.Common
         }
 
         private List<double> saves { get; set; }
-        public void SaveMomentum(double momentum)
+        public void SaveDeltaVel(double dv)
         {
-            if (double.IsNaN(momentum))
+            if (double.IsNaN(dv))
                 throw new Exception("SaveMomentum");
 
-            if (double.IsInfinity(momentum))
+            if (double.IsInfinity(dv))
                 throw new Exception("SaveMomentum");
 
             if (mind.cycles_all < CONST.FIRST_RUN)
-                momentum = saves[mind.cycles_all];
+                dv = saves[mind.cycles_all];
 
-            if (momentum == 0.0d)
+            if (dv == 0.0d)
                 return;
 
-            if (saves.Contains(momentum))
+            if (saves.Contains(dv))
                 return;
             
-            saves.Add(momentum);
+            saves.Add(dv);
             if (saves.Count > 500)
                 saves.RemoveAt(0);
         }

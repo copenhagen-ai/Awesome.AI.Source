@@ -34,7 +34,7 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public void Update()
         {
-            double d_curr = mind.mech.ms.dv_sym_curr;
+            double d_curr = mind.mech.mp.eprops.Conflict();
             double d_zero = d_curr.Norm0DV(mind);
             double d_save = d_curr.Norm0DV(mind);
 
