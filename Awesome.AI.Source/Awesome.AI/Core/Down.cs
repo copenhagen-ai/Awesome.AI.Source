@@ -24,6 +24,13 @@ namespace Awesome.AI.Awesome.AI.Core
             _Errors = new List<bool>();
         }
 
+        public void SetDown()
+        {
+            double curr_dir = mind.mech.mp.eprops.Conflict() < 0 ? -1.0d : 1.0d;
+
+            _Down = curr_dir == -1.0d;            
+        }
+
         public GPTVector2D FlipUnit(GPTVector2D vec)
         {
             if (_Down)
@@ -34,25 +41,24 @@ namespace Awesome.AI.Awesome.AI.Core
 
         public void Update()
         {
+            SetDown();
+
             double d_curr = mind.mech.mp.eprops.Conflict();
             double d_zero = d_curr.Norm0DV(mind);
             double d_save = d_curr.Norm0DV(mind);
-
+            
             if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind)/* && NoInertia() && NoMomentum()*/)
                 d_zero *= -1.0d;
 
             if (mind.bot.logic == LOGICTYPE.SHARED && Shared(d_curr, mind)/* && NoInertia()*/ && NoMomentum())
                 d_zero *= -1.0d;
 
-            _Down = d_save != d_zero;
-
-            SetError(_Down);
-
-            //code: before or after?
-            double ratio = mind.mech.mp.eprops.Direction(mind, "will");
-            _Ratio.Add(ratio);
-            if (_Ratio.Count > CONST.LAPSES)
-                _Ratio.RemoveAt(0);            
+            bool flip = d_save != d_zero;
+            
+            _Down = flip ? !_Down : _Down;
+            
+            SetError(flip);
+            SetRatio(_Down);
         }
 
         public int Count(HARDDOWN dir)
@@ -65,6 +71,15 @@ namespace Awesome.AI.Awesome.AI.Core
             }
 
             return count;
+        }
+
+        public void SetRatio(bool down)
+        {
+            double ratio = down ? -1d : 1d;
+
+            _Ratio.Add(ratio);
+            if (_Ratio.Count > CONST.LAPSES)
+                _Ratio.RemoveAt(0);
         }
 
         public void SetError(bool err)
@@ -119,7 +134,7 @@ namespace Awesome.AI.Awesome.AI.Core
             return res;
         }
 
-        public static bool Shared(double will, TheMind mind)
+        public static bool Shared(double _d, TheMind mind)
         {
             double awareness = 0.0d;
             SimpleAgent agent = new SimpleAgent(mind);
@@ -127,7 +142,7 @@ namespace Awesome.AI.Awesome.AI.Core
             double awareA = 1.0d - awareness;
             double awareB = awareness;
             double zero = 0.0.Norm1VV(mind);
-            double w_agentA = will.Norm1VV(mind);
+            double w_agentA = _d.Norm1VV(mind);
             double w_agentB = agent.SimulateDeltaVelocity();
             
             double w_shared = (awareA * w_agentA + awareB * w_agentB);
@@ -139,11 +154,11 @@ namespace Awesome.AI.Awesome.AI.Core
             return flip;
         }
 
-        public static bool Probability(double will, TheMind mind)
+        public static bool Probability(double _d, TheMind mind)
         {
-            bool down = will <= 0;
+            bool down = _d <= 0;
 
-            return mind.prob.Use(will, down, mind);
+            return mind.prob.Use(_d, down, mind);
         }        
 
         //public HARDDOWN ToHard()
