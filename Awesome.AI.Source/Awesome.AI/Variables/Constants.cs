@@ -52,7 +52,7 @@ namespace Awesome.AI.Variables
         public const string prop2_temperament = "mood";
 
         public const string prop1_brain = "will";
-        public const string prop2_brain = "conclict";
+        public const string prop2_brain = "attention";
         public const string prop3_brain = "readiness";
 
         public const string prop1_comm = "will";

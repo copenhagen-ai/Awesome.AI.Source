@@ -9,10 +9,10 @@ namespace Awesome.AI.Awesome.AI.Core
 {
     public class Down
     {                
-        public bool _Down {  get; set; }
-        public int _Error { get; set; }
-        public List<double> _Ratio { get; set; }
-        private List<bool> _Errors { get; set; }
+        public bool _down {  get; set; }
+        public int _error { get; set; }
+        public List<double> _ratio { get; set; }
+        private List<bool> _errors { get; set; }
 
         private TheMind mind;
         private Down() { }
@@ -20,20 +20,20 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             this.mind = mind;
 
-            _Ratio = new List<double>();
-            _Errors = new List<bool>();
+            _ratio = new List<double>();
+            _errors = new List<bool>();
         }
 
         public void SetDown()
         {
             double curr_dir = mind.mech.mp.eprops.Conflict() < 0 ? -1.0d : 1.0d;
 
-            _Down = curr_dir == -1.0d;            
+            _down = curr_dir == -1.0d;            
         }
 
         public GPTVector2D FlipUnit(GPTVector2D vec)
         {
-            if (_Down)
+            if (_down)
                 return vec.Unit().ReverseUnit();
 
             return vec.Unit();
@@ -55,10 +55,10 @@ namespace Awesome.AI.Awesome.AI.Core
 
             bool flip = d_save != d_zero;
             
-            _Down = flip ? !_Down : _Down;
+            _down = flip ? !_down : _down;
             
             SetError(flip);
-            SetRatio(_Down);
+            SetRatio(_down);
         }
 
         public int Count(HARDDOWN dir)
@@ -66,8 +66,8 @@ namespace Awesome.AI.Awesome.AI.Core
             int count = 0;
             switch (dir)
             {
-                case HARDDOWN.YES: count = _Ratio.Where(z => z <= 0.0d).Count(); break;
-                case HARDDOWN.NO: count = _Ratio.Where(z => z > 0.0d).Count(); break;
+                case HARDDOWN.YES: count = _ratio.Where(z => z <= 0.0d).Count(); break;
+                case HARDDOWN.NO: count = _ratio.Where(z => z > 0.0d).Count(); break;
             }
 
             return count;
@@ -77,18 +77,18 @@ namespace Awesome.AI.Awesome.AI.Core
         {
             double ratio = down ? -1d : 1d;
 
-            _Ratio.Add(ratio);
-            if (_Ratio.Count > CONST.LAPSES)
-                _Ratio.RemoveAt(0);
+            _ratio.Add(ratio);
+            if (_ratio.Count > CONST.LAPSES)
+                _ratio.RemoveAt(0);
         }
 
         public void SetError(bool err)
         {
-            _Errors.Add(err);
-            if (_Errors.Count > 100)
-                _Errors.RemoveAt(0);
+            _errors.Add(err);
+            if (_errors.Count > 100)
+                _errors.RemoveAt(0);
 
-            _Error = _Errors.Count(x => x == true);
+            _error = _errors.Count(x => x == true);
         }        
 
         private int i_decay { get; set; }

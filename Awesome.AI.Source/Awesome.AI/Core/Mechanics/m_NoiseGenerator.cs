@@ -221,9 +221,25 @@ namespace Awesome.AI.Core.Mechanics
             if (mind.goodbye)
                 return 0.0d;
 
-            double k = -500.0d;
+            double k = 500.0d;
             double u = mh.Friction(mind);
             double sign = mp.vv_curr.Sign();
+
+            double f_friction = k * u * -sign;
+
+            return f_friction;
+        }
+
+        public double Friction4(MechParams mp, MECHANICS type)
+        {
+            if (mind.goodbye)
+                return 0.0d;
+
+            double f_net = mp.f_sta + mp.f_dyn;
+
+            double k = 500.0d;
+            double u = mh.Friction(mind);
+            double sign = -f_net.Sign();
 
             double f_friction = k * u * sign;
 

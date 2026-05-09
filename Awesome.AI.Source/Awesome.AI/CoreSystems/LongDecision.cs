@@ -95,7 +95,7 @@ namespace Awesome.AI.CoreSystems
             {
                 string _new = unit.Data.Replace(CONST.lng_what, "");
 
-                if (!mind.down._Down)
+                if (!mind.down._down)
                     SetResult(type, "", 0);
 
                 else if (unit.Data != CONST.lng_what + Result[type])

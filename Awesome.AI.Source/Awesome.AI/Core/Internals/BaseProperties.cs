@@ -9,13 +9,6 @@ namespace Awesome.AI.Core.Internals
         public BaseProperties(MechSymbolicOut ms)
         {
             this.ms = ms;
-
-            //curr_dir[CONST.AXES[0]] = 0.0d;
-            //curr_dir[CONST.AXES[1]] = 0.0d;
-            //curr_dir[CONST.AXES[2]] = 0.0d;
-            //curr_dir[CONST.AXES[3]] = 0.0d;
-            //curr_dir[CONST.AXES[4]] = 0.0d;
-            //curr_dir[CONST.AXES[5]] = 0.0d;
         }
 
         // Maps mechanics to emergent cognition
