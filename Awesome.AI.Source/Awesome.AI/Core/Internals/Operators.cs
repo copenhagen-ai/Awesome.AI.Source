@@ -1,49 +1,56 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
+using Awesome.AI.Core.Internals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Awesome.AI.Core
+namespace Awesome.AI.Source.Awesome.AI.Core.Internals
 {
-    public class Down
-    {                
-        public bool _down {  get; set; }
-        public int _error { get; set; }
+    public class Operators
+    {
+        public BaseProperties prop {  get; set; }
         public List<double> _ratio { get; set; }
-        private List<bool> _errors { get; set; }
+        public List<bool> _errors { get; set; }
+        public bool RES_BOOL { get; set; }
+        public bool RES_DOUBLE { get; set; }
+        public int _error { get; set; }
 
-        private TheMind mind;
-        private Down() { }
-        public Down(TheMind mind)
+        public TheMind mind;
+        private Operators() { }
+        public Operators(TheMind mind)
         {
             this.mind = mind;
+            this.prop = mind.mech.mp.eprops;
 
             _ratio = new List<double>();
             _errors = new List<bool>();
         }
+        
+        public virtual object Output(object obj) { return null; }
+        public virtual void Modify() { }
+    }
 
-        public void SetDown()
-        {
-            double curr_dir = mind.mech.mp.eprops.Conflict() < 0 ? -1.0d : 1.0d;
-
-            _down = curr_dir == -1.0d;            
+    public class Down : Operators
+    {
+        public Down(TheMind mind) : base(mind)
+        {            
         }
 
-        public GPTVector2D FlipUnit(GPTVector2D vec)
+        public override object Output(object vec)
         {
-            if (_down)
-                return vec.Unit().ReverseUnit();
+            if (RES_BOOL)
+                return ((GPTVector2D)vec).Unit().ReverseUnit();
 
-            return vec.Unit();
+            return ((GPTVector2D)vec).Unit();
         }
 
-        public void Update()
+        public override void Modify()
         {
             SetDown();
 
-            double d_curr = mind.mech.mp.eprops.Conflict();
+            double d_curr = prop.Conflict();
             double d_zero = d_curr.Norm0DV(mind);
             double d_save = d_curr.Norm0DV(mind);
             
@@ -54,11 +61,18 @@ namespace Awesome.AI.Awesome.AI.Core
                 d_zero *= -1.0d;
 
             bool flip = d_save != d_zero;
-            
-            _down = flip ? !_down : _down;
+
+            RES_BOOL = flip ? !RES_BOOL : RES_BOOL;
             
             SetError(flip);
-            SetRatio(_down);
+            SetRatio(RES_BOOL);
+        }
+
+        public void SetDown()
+        {
+            double curr_dir = mind.mech.mp.eprops.Conflict() < 0 ? -1.0d : 1.0d;
+
+            RES_BOOL = curr_dir == -1.0d;            
         }
 
         public int Count(HARDDOWN dir)
@@ -145,7 +159,7 @@ namespace Awesome.AI.Awesome.AI.Core
             double w_agentA = _d.Norm1VV(mind);
             double w_agentB = agent.SimulateDeltaVelocity();
             
-            double w_shared = (awareA * w_agentA + awareB * w_agentB);
+            double w_shared = awareA * w_agentA + awareB * w_agentB;
             bool down = w_shared <= zero;
             bool flip = mind.prob.Use(w_shared * 100.0d, down, mind);
 

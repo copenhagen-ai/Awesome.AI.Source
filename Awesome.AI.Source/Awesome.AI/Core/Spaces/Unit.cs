@@ -3,6 +3,7 @@ using Awesome.AI.Core.Internals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Source.Awesome.AI.Common;
+using Awesome.AI.Source.Awesome.AI.Core.Internals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
@@ -333,7 +334,7 @@ namespace Awesome.AI.Core.Spaces
 
             GPTVector2D func = new GPTVector2D();
             GPTVector2D vec = ToVector();
-            GPTVector2D dir = mind.down.FlipUnit(vec);
+            GPTVector2D dir = (GPTVector2D)((Down)mind.down).Output(vec);
             dir = func.Mul(dir, rnd * CONST.ETA);
             GPTVector2D _new = func.Add(vec, dir);
 

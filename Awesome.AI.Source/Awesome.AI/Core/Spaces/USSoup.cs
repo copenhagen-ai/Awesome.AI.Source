@@ -1,6 +1,8 @@
 ﻿using Awesome.AI.Common;
+using Awesome.AI.Source.Awesome.AI.Core.Internals;
 using Awesome.AI.Variables;
 using System.Numerics;
+using System.Xml.Schema;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
@@ -205,7 +207,7 @@ namespace Awesome.AI.Core.Spaces
             GPTVector2D near = new GPTVector2D();
             GPTVector2D vec = unit.ToVector();
             GPTVector2D vec_u = vec.Unit();
-            GPTVector2D dir_u = mind.down.FlipUnit(vec);
+            GPTVector2D dir_u = (GPTVector2D)((Down)mind.down).Output(vec);
             
             bool same = (int)func.ToDegrees(vec_u) == (int)func.ToDegrees(dir_u);
 

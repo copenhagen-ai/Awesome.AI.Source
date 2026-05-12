@@ -42,14 +42,15 @@ namespace Awesome.AI.Generators
         }
 
         public PATTERNCOLOR res_color { get; set; } = PATTERNCOLOR.RED;
-        public double p_90 { get; set; } = -1d;
+        public double res_norm { get; set; } = -1d;
         PATTERN currentmood { get; set; } = PATTERN.NONE;
         public void MoodOK(bool _pro)
         {
-            currentmood = mind.bot.pattern;
-
             double res = mind.mech.mp.mprops.PropsOut[CONST.prop2_temperament];
-            p_90 = res;
+            
+            res_norm = mind.mech.mp.mprops.PropsOut[CONST.prop2_temperament];
+            
+            currentmood = mind.bot.pattern;
 
             switch (currentmood)
             {

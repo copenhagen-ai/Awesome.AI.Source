@@ -1,5 +1,4 @@
-﻿using Awesome.AI.Awesome.AI.Core;
-using Awesome.AI.Common;
+﻿using Awesome.AI.Common;
 using Awesome.AI.Core.Internals;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.CoreSystems;
@@ -7,6 +6,7 @@ using Awesome.AI.CoreSystems.Arc;
 using Awesome.AI.Factorys;
 using Awesome.AI.Generators;
 using Awesome.AI.Interfaces;
+using Awesome.AI.Source.Awesome.AI.Core.Internals;
 using Awesome.AI.Variables;
 using System.Diagnostics;
 using static Awesome.AI.Common.MicroTimer;
@@ -24,7 +24,7 @@ namespace Awesome.AI.Core
 
     public class TheMind
     {
-        public Down down;
+        public Operators down;
         public HubSpace hub;
         public USSoup soup;
         public USSetup memory;
@@ -295,7 +295,7 @@ namespace Awesome.AI.Core
             mech.Calculate(PATTERN.MOODGOOD, cycles);
             mech.Calculate(PATTERN.MOODBAD, cycles);
 
-            down.Update();
+            down.Modify();
 
             //mech_high.Calculate(PATTERN.MOODGENERAL, cycles);//mood general
             //mech_high.Calculate(PATTERN.MOODGOOD, cycles);//mood good

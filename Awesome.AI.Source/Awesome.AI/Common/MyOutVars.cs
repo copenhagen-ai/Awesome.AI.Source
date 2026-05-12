@@ -1,4 +1,5 @@
 ﻿using Awesome.AI.Core;
+using Awesome.AI.Source.Awesome.AI.Core.Internals;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Common
@@ -67,9 +68,9 @@ namespace Awesome.AI.Common
             cycles = $"{mind.cycles}";
             cycles_total = $"{mind.cycles_all}";
             error = $"{mind.down._error}";
-            go_down = $"{(mind.down._down ? "NO" : "YES")}";
-            ratio_yes_n = $"{mind.down.Count(HARDDOWN.YES)}";
-            ratio_no_n = $"{mind.down.Count(HARDDOWN.NO)}";
+            go_down = $"{(mind.down.RES_BOOL ? "NO" : "YES")}";
+            ratio_yes_n = $"{((Down)mind.down).Count(HARDDOWN.YES)}";
+            ratio_no_n = $"{((Down)mind.down).Count(HARDDOWN.NO)}";
             vv_curr = $"{mind.mech.ms.vv_sym_curr.ToString("E3")}";
             dv_curr = $"{mind.mech.ms.dv_sym_curr.ToString("E3")}";
             noise_norm = $"{mind.mech.ms.vv_sym_90}";
@@ -104,7 +105,7 @@ namespace Awesome.AI.Common
 
             mood_pattern = $"{mind.bot.pattern.ToString()}";
             mood_green = $"{mind.mood.res_color == PATTERNCOLOR.GREEN}";
-            mood_norm = $"{mind.mood.p_90}";
+            mood_norm = $"{mind.mood.res_norm}";
 
             monologue_det_result = $"{mind.mono1.Result}";
             monologue_det_subject = $"{mind.mono1.Subject}";
