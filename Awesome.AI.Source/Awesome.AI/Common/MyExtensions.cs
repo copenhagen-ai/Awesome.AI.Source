@@ -79,7 +79,8 @@ namespace Awesome.AI.Common
 
         public static string Index(this double _in, TheMind mind)
         {
-            _in = mind.calc.Normalize(_in, -1.0d, 1.0d, 0.0d, 100.0d);
+            //for mood
+            _in = mind.calc.Normalize(_in, 10.0d, 90.0d, 0.0d, 100.0d);
 
             if (_in < 10.0d)
                 return "" + 0;

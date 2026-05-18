@@ -78,7 +78,7 @@ namespace Awesome.AI.Common
                  * 0 <= res < i_max
                  */
 
-                if (i_max > 99999)
+                if (i_max > 9999)
                     throw new Exception("MyRandomInt");
 
                 int[] res = new int[count];
@@ -87,8 +87,15 @@ namespace Awesome.AI.Common
                 {
                     string rand = Rand(i + shift_a);
 
-                    double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}{rand[3]}{rand[4]}") / 100000;
-                    res[i] = (int)((double)(i_max + 1) * dec);
+                    try
+                    {
+                        double dec = double.Parse($"{rand[0]}{rand[1]}{rand[2]}{rand[3]}") / 10000;
+                        res[i] = (int)((double)(i_max + 1) * dec);
+                    }
+                    catch (Exception ex)
+                    {
+                        ;
+                    }
                 }
 
                 shift_a++;
@@ -107,21 +114,23 @@ namespace Awesome.AI.Common
         {
             try
             {
-                if (index + 1 > saves.Count)
+                if (index + 1 >= saves.Count)
                     throw new Exception("Rand");
 
                 //get momentum
-                string rand = "" + (saves[index]);
+                string rand1 = "" + (saves[index]);
+                string rand2 = "" + (saves[index + 1]);
+                rand1 = rand1.Length < 10 ? rand2 : rand1;
 
                 //remove exponent
-                int index_e = rand.ToUpper().IndexOf('E');
-                if (rand.ToUpper().Contains("E"))
-                    rand = rand[..index_e];
+                int index_e = rand1.ToUpper().IndexOf('E');
+                if (rand1.ToUpper().Contains("E"))
+                    rand1 = rand1[..index_e];
 
                 //reverse, this is the random part
                 string res = "";
-                for (int i = rand.Length; i > 0; i--)
-                    res += char.IsDigit(rand[i - 1]) ? rand[i - 1] : "";
+                for (int i = rand1.Length; i > 0; i--)
+                    res += char.IsDigit(rand1[i - 1]) ? rand1[i - 1] : "";
 
                 //string res = "";
                 //for (int i = 3; i < rand.Length; i++)

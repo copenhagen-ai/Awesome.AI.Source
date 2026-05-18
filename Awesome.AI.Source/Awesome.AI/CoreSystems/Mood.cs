@@ -2,14 +2,14 @@
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
 
-namespace Awesome.AI.Generators
+namespace Awesome.AI.Source.Awesome.AI.CoreSystems
 {
-    public class MoodGenerator
+    public class Mood
     {
         private TheMind mind;
-        private MoodGenerator() { }
+        private Mood() { }
 
-        public MoodGenerator(TheMind mind)
+        public Mood(TheMind mind)
         {
             this.mind = mind;
         }
@@ -38,12 +38,14 @@ namespace Awesome.AI.Generators
                 }
             }
 
+            MoodOK(_pro);
+
             Count++;
         }
 
-        public PATTERNCOLOR res_color { get; set; } = PATTERNCOLOR.RED;
         public double res_norm { get; set; } = -1d;
-        PATTERN currentmood { get; set; } = PATTERN.NONE;
+        public PATTERNCOLOR res_color { get; set; } = PATTERNCOLOR.RED;
+        private PATTERN currentmood { get; set; } = PATTERN.NONE;
         public void MoodOK(bool _pro)
         {
             double res = mind.mech.mp.mprops.PropsOut[CONST.prop2_temperament];

@@ -7,6 +7,7 @@ using Awesome.AI.Factorys;
 using Awesome.AI.Generators;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Source.Awesome.AI.Core.Internals;
+using Awesome.AI.Source.Awesome.AI.CoreSystems;
 using Awesome.AI.Variables;
 using System.Diagnostics;
 using static Awesome.AI.Common.MicroTimer;
@@ -32,7 +33,7 @@ namespace Awesome.AI.Core
         public Core core;
         public QuickDecision _quick;
         public LongDecision _long;
-        public MoodGenerator mood;
+        public Mood mood;
         public WordGenerator word;
         public Monologue1 mono1;
         public Monologue2 mono2;
@@ -125,7 +126,7 @@ namespace Awesome.AI.Core
                 o_json = new MyOutJson(this);
                 _long = new LongDecision(this, this.lng_dec);
                 _quick = new QuickDecision(this);
-                mood = new MoodGenerator(this);
+                mood = new Mood(this);
                 word = new WordGenerator(this);
                 mono1 = new Monologue1(this);
                 mono2 = new Monologue2(this);
@@ -334,8 +335,7 @@ namespace Awesome.AI.Core
             foreach(var kv in this.lng_dec)
                 _long.Decide(_pro, kv.Key);
 
-            mood.Generate(_pro);
-            mood.MoodOK(_pro);
+            mood.Generate(_pro);            
             mono1.Create(_pro);
             mono2.Create(_pro);
         }

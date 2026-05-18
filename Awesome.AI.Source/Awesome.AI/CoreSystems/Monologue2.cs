@@ -54,7 +54,8 @@ namespace Awesome.AI.CoreSystems
 
         private string Index(double _in)
         {
-            _in = mind.calc.Normalize(_in, -1.0d, 1.0d, 0.0d, 100.0d);
+            //for mood
+            _in = mind.calc.Normalize(_in, 10.0d, 90.0d, 0.0d, 100.0d);
 
             if(_in < 10.0d)
                 return "" + 0;
@@ -101,7 +102,7 @@ namespace Awesome.AI.CoreSystems
 
                 mt = mind.mindtype;
                 sub = mind.hub.GetSubject(mind.unit_actual) ?? "";
-                idx = $"{Index(mind.mech.mp.mprops.PropsOut[_base])}";
+                idx = $"{Index(mind.mood.res_norm)}";
                 //idx = $"{Index(mind.mech.ms.dv_sym_100)}";
                 //idx = $"{Index(mind.down.Props["noise"])}";
                 //idx = $"{mind.mech_current.mp.p_100}"[..1];

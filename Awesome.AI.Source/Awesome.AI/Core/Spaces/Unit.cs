@@ -79,7 +79,8 @@ namespace Awesome.AI.Core.Spaces
                         if (sub == "init")
                             return "";
 
-                        double _i = mind.mech.ms.vv_sym_100.Norm0VV(mind);
+                        //double _i = mind.mech.ms.vv_sym_100.Norm0VV(mind);
+                        double _i = mind.mood.res_norm;
                         string idx = $"{_i.Index(mind)}";
 
                         Lookup lookup = new Lookup();
