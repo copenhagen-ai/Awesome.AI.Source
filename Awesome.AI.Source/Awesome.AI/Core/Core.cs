@@ -166,6 +166,9 @@ namespace Awesome.AI.Core
             if (mind.unit_current.IsQDECISION())
                 return;
 
+            if (mind.unit_current.IsDECISION())
+                return;
+
             history.Insert(0, mind.unit_current);
             if (history.Count > CONST.HIST_TOTAL)
                 history.RemoveAt(history.Count - 1);

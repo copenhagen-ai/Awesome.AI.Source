@@ -133,7 +133,7 @@ namespace Awesome.AI.Core.Spaces
             if (mind.STATE == STATE.QUICKDECISION)
                 return false;
 
-            if (!CONST.SAMPLE20.RandomSample(mind))
+            if (!CONST.SAMPLE50.RandomSample(mind))
                 return false;
 
             UNIT[] list = { mind.q_u_whistle, mind.q_u_mathlearn, mind.q_u_mathsolve, mind.q_u_arclearn/*, mind.q_u_arclearn*/, mind.q_u_arcsolve/*, mind.q_u_arcsolve*/ };
