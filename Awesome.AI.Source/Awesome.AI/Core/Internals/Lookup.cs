@@ -451,7 +451,7 @@ namespace Awesome.AI.Core.Internals
             CONST.basic_s10,//"having fun"
         };
 
-        public List<string> GetHUBS(MINDS mind, string axis)
+        public List<string> GetHUBS(MINDS mindtype, string axis)
         {
             /*
              * call LLM here
@@ -477,7 +477,7 @@ namespace Awesome.AI.Core.Internals
                 basic_res.Add(basic_sem[i]);
             }
             
-            switch (mind)
+            switch (mindtype)
             {
                 case MINDS.ROBERTA: return roberta_res;
                 case MINDS.ANDREW: return andrew_res;
@@ -489,6 +489,10 @@ namespace Awesome.AI.Core.Internals
         public string[] occupasions = { "socializing", "hobbys" };
         public List<string> GetHUBS(MINDS mindtype, int count, out string occu)
         {
+            /*
+             * call LLM here
+             * */
+
             if (count >= occupasions.Length)
                 throw new Exception("Lookup, GetOCCU 1");
 
@@ -520,7 +524,7 @@ namespace Awesome.AI.Core.Internals
             }
         }
 
-        public int CountHUBS(MINDS mind)
+        public int CountHUBS(MINDS mindtype)
         {
             List<int> semantics = new List<int>() { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 
@@ -537,7 +541,7 @@ namespace Awesome.AI.Core.Internals
                 basic_res.Add(basic_sem[i]);
             }
 
-            switch (mind)
+            switch (mindtype)
             {
                 case MINDS.ROBERTA: return roberta_res.Count;
                 case MINDS.ANDREW: return andrew_res.Count;
