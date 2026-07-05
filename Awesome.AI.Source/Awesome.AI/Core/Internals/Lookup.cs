@@ -458,7 +458,7 @@ namespace Awesome.AI.Core.Internals
                 mindtype == MINDS.ANDREW ? andrew_sem : 
                 basic_sem;
 
-            list = axis == "socializing" ?
+            list = axis == CONST.occupasions[0] ?
                 list.OrderByDescending(x => x.Social).ToList() :
                 list.OrderByDescending(x => x.Hobby).ToList();
 
@@ -466,8 +466,8 @@ namespace Awesome.AI.Core.Internals
 
             foreach (Entry elem in list)
             {
-                if (axis == "socializing" && elem.Social <= 0) continue;
-                if (axis == "hobby" && elem.Hobby <= 0) continue;
+                if (axis == CONST.occupasions[0] && elem.Social <= 0) continue;
+                if (axis == CONST.occupasions[1] && elem.Hobby <= 0) continue;
 
                 res.Add(elem.Name);
             }
@@ -475,17 +475,16 @@ namespace Awesome.AI.Core.Internals
             return res;
         }
 
-        public string[] occupasions = { "socializing", "hobbys" };
         public List<string> GetHUBS(MINDS mindtype, int count, out string occu)
         {
             /*
              * call LLM here
              * */
 
-            if (count >= occupasions.Length)
-                throw new Exception("Lookup, GetOCCU 1");
+            if (count >= CONST.occupasions.Length)
+                throw new Exception("Lookup, GetHUBS");
 
-            occu = occupasions[count];
+            occu = CONST.occupasions[count];
 
             string axis = occu;
 
@@ -494,7 +493,7 @@ namespace Awesome.AI.Core.Internals
                 mindtype == MINDS.ANDREW ? andrew_sem :
                 basic_sem;
 
-            list = axis == "socializing" ?
+            list = axis == CONST.occupasions[0] ?
                 list.OrderByDescending(x => x.Social).ToList() :
                 list.OrderByDescending(x => x.Hobby).ToList();
 
@@ -502,8 +501,8 @@ namespace Awesome.AI.Core.Internals
 
             foreach (Entry elem in list)
             {
-                if (axis == "socializing" && elem.Social <= 0) continue;
-                if (axis == "hobby" && elem.Hobby <= 0) continue;
+                if (axis == CONST.occupasions[0] && elem.Social <= 0) continue;
+                if (axis == CONST.occupasions[1] && elem.Hobby <= 0) continue;
 
                 res.Add(elem.Name);
             }

@@ -20,7 +20,7 @@ namespace Awesome.AI.Core.Spaces
 
             MINDS mindtype = mind.mindtype;
             Lookup lookup = new Lookup();
-            string[] occus = lookup.occupasions;
+            string[] occus = CONST.occupasions;
 
             Random rand = new Random();
             foreach (string occ in occus)

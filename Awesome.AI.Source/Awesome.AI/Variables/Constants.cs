@@ -41,6 +41,8 @@ namespace Awesome.AI.Variables
         public const string basic_s9 = "the weather";
         public const string basic_s10 = "having fun";
 
+        public static string[] occupasions = { "socializing", "hobbys" };
+
         public static string[] sub_roberta = { CONST.roberta_s1, CONST.roberta_s2, CONST.roberta_s3, CONST.roberta_s4, CONST.roberta_s5, CONST.roberta_s6, CONST.roberta_s7, CONST.roberta_s8, CONST.roberta_s9, CONST.roberta_s10 };
         public static string[] sub_andrew = { CONST.andrew_s1, CONST.andrew_s2, CONST.andrew_s3, CONST.andrew_s4, CONST.andrew_s5, CONST.andrew_s6, CONST.andrew_s7, CONST.andrew_s8, CONST.andrew_s9, CONST.andrew_s10 };
         public static string[] sub_basic = { CONST.basic_s1, CONST.basic_s2, CONST.basic_s3, CONST.basic_s4, CONST.basic_s5, CONST.basic_s6, CONST.basic_s7, CONST.basic_s8, CONST.basic_s9, CONST.basic_s10 };

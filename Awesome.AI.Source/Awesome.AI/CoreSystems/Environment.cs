@@ -204,7 +204,7 @@ namespace Awesome.AI.CoreSystems
                 new MINDS[] { MINDS.BASIC } : 
                 new MINDS[]{ MINDS.ROBERTA, MINDS.ANDREW };
 
-            int occu_count = lookup.occupasions.Length;
+            int occu_count = CONST.occupasions.Length;
             
             foreach (MINDS mind in minds)
             {
