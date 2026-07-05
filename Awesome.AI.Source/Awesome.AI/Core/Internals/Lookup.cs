@@ -460,9 +460,9 @@ namespace Awesome.AI.Core.Internals
             if (axis == "init")
                 return new List<string>();
 
-            List<int> semantics = axis == "socializing" ? 
-                new List<int>() { 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0 } : 
-                new List<int>() { 0, 0, 0, 0, 0, 0, 5, 4, 3, 2, 1 };
+            List<int> semantics = axis == "socializing" ?
+                new List<int>() { 1, 2, 3, 4, 5, 6, -1, -1, -1, -1, -1 } :
+                new List<int>() { -1, -1, -1, -1, -1, -1, 7, 8, 9, 10, 11 };
 
             List<string> roberta_res = new List<string>();
             List<string> andrew_res = new List<string>();
@@ -472,9 +472,9 @@ namespace Awesome.AI.Core.Internals
             {
                 if (i <= 0) continue;
 
-                roberta_res.Add(roberta_sem[i]);
-                andrew_res.Add(andrew_sem[i]);
-                basic_res.Add(basic_sem[i]);
+                roberta_res.Add(roberta_sem[i - 1]);
+                andrew_res.Add(andrew_sem[i - 1]);
+                basic_res.Add(basic_sem[i - 1]);
             }
             
             switch (mindtype)
@@ -499,8 +499,8 @@ namespace Awesome.AI.Core.Internals
             occu = occupasions[count];
 
             List<int> semantics = occu == "socializing" ?
-                new List<int>() { 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0 } :
-                new List<int>() { 0, 0, 0, 0, 0, 0, 5, 4, 3, 2, 1 };
+                new List<int>() { 1, 2, 3, 4, 5, 6, -1, -1, -1, -1, -1 } :
+                new List<int>() { -1, -1, -1, -1, -1, -1, 7, 8, 9, 10, 11 };
 
             List<string> roberta_res = new List<string>();
             List<string> andrew_res = new List<string>();
@@ -510,9 +510,9 @@ namespace Awesome.AI.Core.Internals
             {
                 if (i <= 0) continue;
 
-                roberta_res.Add(roberta_sem[i]);
-                andrew_res.Add(andrew_sem[i]);
-                basic_res.Add(basic_sem[i]);
+                roberta_res.Add(roberta_sem[i - 1]);
+                andrew_res.Add(andrew_sem[i - 1]);
+                basic_res.Add(basic_sem[i - 1]);
             }
 
             switch (mindtype)
