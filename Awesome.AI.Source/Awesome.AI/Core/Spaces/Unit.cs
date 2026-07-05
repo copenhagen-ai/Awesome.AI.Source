@@ -2,7 +2,6 @@
 using Awesome.AI.Core.Internals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
-using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Source.Awesome.AI.Core.Internals;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
@@ -31,31 +30,10 @@ namespace Awesome.AI.Core.Spaces
             this.mind = mind;
         }
 
-        private GPTVector2D vect = new GPTVector2D();
-                
-        public double UIget(string ax)
-        {
-            if (IsIDLE())
-                return 50.0d;
-
-            switch (ax)
-            {
-                case "will": return vect.xx;
-                case "conflict": return vect.yy;
-                default: throw new Exception("Unit, UIget");
-            }
-        }
-
-        public void UIset(string ax, double val)
-        {
-            switch (ax)
-            {
-                case "will": vect.xx = val; break;
-                case "conflict": vect.yy = val; break;
-                default: throw new Exception("Unit, UIset");
-            }            
-        }
-
+        private Dictionary<string, double> base_props = new Dictionary<string, double>();        
+        public double UIget(string ax) => base_props[ax];
+        public void UIset(string ax, double val) => base_props[ax] = val;
+        
         private double h_index { get; set; }
         public double HI
         {

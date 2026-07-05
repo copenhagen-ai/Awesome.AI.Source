@@ -397,20 +397,17 @@ namespace Awesome.AI.Core.Internals
             return curr;
         }
 
-        //socializing
-        public List<string> andrew1 = new List<string>()
+        public List<string> andrew_sem = new List<string>()
         {
+            //socializing
             CONST.andrew_s1,//"procrastination",
             CONST.andrew_s2,//"fembots",
             CONST.andrew_s3,//"power tools",
             CONST.andrew_s4,//"cars",
             CONST.andrew_s5,//"movies",
             CONST.andrew_s6,//"programming"
-        };
 
-        //hobbys
-        public List<string> andrew2 = new List<string>()
-        {
+            //hobbys
             CONST.andrew_s6,//"programming",
             CONST.andrew_s7,//"the weather",
             CONST.andrew_s8,//"life",
@@ -418,20 +415,17 @@ namespace Awesome.AI.Core.Internals
             CONST.andrew_s10,//"work"
         };
 
-        //socializing
-        public List<string> roberta1 = new List<string>()
+        public List<string> roberta_sem = new List<string>()
         {
+            //socializing
             CONST.roberta_s1,//"love",
             CONST.roberta_s2,//"macho machines",
             CONST.roberta_s3,//"music",
             CONST.roberta_s4,//"friends",
             CONST.roberta_s5,//"socializing",
             CONST.roberta_s6,//"dancing"
-        };
 
-        //hobbys
-        public List<string> roberta2 = new List<string>()
-        {
+            //hobbys
             CONST.roberta_s6,//"dancing",
             CONST.roberta_s7,//"movies",
             CONST.roberta_s8,//"hobbys",
@@ -439,19 +433,17 @@ namespace Awesome.AI.Core.Internals
             CONST.roberta_s10,//"having fun"
         };
 
-        public List<string> basic1 = new List<string>()
+        public List<string> basic_sem = new List<string>()
         {
+            //socializing
             CONST.basic_s1,//"love",
             CONST.basic_s2,//"macho machines",
             CONST.basic_s3,//"music",
             CONST.basic_s4,//"friends",
             CONST.basic_s5,//"socializing",
             CONST.basic_s6,//"dancing"
-        };
 
-        //hobbys
-        public List<string> basic2 = new List<string>()
-        {
+            //hobbys
             CONST.basic_s6,//"dancing",
             CONST.basic_s7,//"movies",
             CONST.basic_s8,//"hobbys",
@@ -461,33 +453,37 @@ namespace Awesome.AI.Core.Internals
 
         public List<string> GetHUBS(MINDS mind, string axis)
         {
-            if (axis == "init")
-                return new List<string>();
-
             /*
              * call LLM here
              * */
-            List<string> ax = null;
-            switch (mind)
+
+            if (axis == "init")
+                return new List<string>();
+
+            List<int> semantics = axis == "socializing" ? 
+                new List<int>() { 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0 } : 
+                new List<int>() { 0, 0, 0, 0, 0, 0, 5, 4, 3, 2, 1 };
+
+            List<string> roberta_res = new List<string>();
+            List<string> andrew_res = new List<string>();
+            List<string> basic_res = new List<string>();
+
+            foreach (int i in semantics)
             {
-                case MINDS.ROBERTA:
-                    if (axis == "socializing") ax = roberta1;
-                    if (axis == "hobbys") ax = roberta2;
-                    break;
-                case MINDS.ANDREW:
-                    if (axis == "socializing") ax = andrew1;
-                    if (axis == "hobbys") ax = andrew2;
-                    break;
-                case MINDS.BASIC:
-                    if (axis == "socializing") ax = basic1;
-                    if (axis == "hobbys") ax = basic2;
-                    break;
+                if (i <= 0) continue;
+
+                roberta_res.Add(roberta_sem[i]);
+                andrew_res.Add(andrew_sem[i]);
+                basic_res.Add(basic_sem[i]);
             }
             
-            if (ax == null)
-                throw new Exception("Lookup, GetHUB");
-
-            return ax;
+            switch (mind)
+            {
+                case MINDS.ROBERTA: return roberta_res;
+                case MINDS.ANDREW: return andrew_res;
+                case MINDS.BASIC: return basic_res;
+                default: throw new Exception("Lookup, GetHUB");
+            }
         }
 
         public string[] occupasions = { "socializing", "hobbys" };
@@ -498,51 +494,56 @@ namespace Awesome.AI.Core.Internals
 
             occu = occupasions[count];
 
-            List<string> res = null;
+            List<int> semantics = occu == "socializing" ?
+                new List<int>() { 6, 5, 4, 3, 2, 1, 0, 0, 0, 0, 0 } :
+                new List<int>() { 0, 0, 0, 0, 0, 0, 5, 4, 3, 2, 1 };
 
-            switch (occu)
+            List<string> roberta_res = new List<string>();
+            List<string> andrew_res = new List<string>();
+            List<string> basic_res = new List<string>();
+
+            foreach (int i in semantics)
             {
-                case "socializing":
-                    res = 
-                        mindtype == MINDS.ROBERTA ? roberta1 :
-                        mindtype == MINDS.ANDREW ? andrew1 :
-                        basic1;
-                    break;
-                case "hobbys":
-                    res = 
-                        mindtype == MINDS.ROBERTA ? roberta2 :
-                        mindtype == MINDS.ANDREW ? andrew2 :
-                        basic2;
-                    break;
-                default: throw new Exception("Lookup, GetOCCU 2");
+                if (i <= 0) continue;
+
+                roberta_res.Add(roberta_sem[i]);
+                andrew_res.Add(andrew_sem[i]);
+                basic_res.Add(basic_sem[i]);
             }
 
-            return res;
+            switch (mindtype)
+            {
+                case MINDS.ROBERTA: return roberta_res;
+                case MINDS.ANDREW: return andrew_res;
+                case MINDS.BASIC: return basic_res;
+                default: throw new Exception("Lookup, GetOCCU 2");
+            }
         }
 
         public int CountHUBS(MINDS mind)
         {
-            List<string> ax = new List<string>();
-            switch (mind)
+            List<int> semantics = new List<int>() { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+            List<string> roberta_res = new List<string>();
+            List<string> andrew_res = new List<string>();
+            List<string> basic_res = new List<string>();
+
+            foreach (int i in semantics)
             {
-                case MINDS.ROBERTA:
-                    ax.AddRange(roberta1);
-                    ax.AddRange(roberta2);
-                    break;
-                case MINDS.ANDREW:
-                    ax.AddRange(andrew1);
-                    ax.AddRange(andrew2);
-                    break;
-                case MINDS.BASIC:
-                    ax.AddRange(basic1);
-                    ax.AddRange(basic2);
-                    break;
+                if (i <= 0) continue;
+
+                roberta_res.Add(roberta_sem[i]);
+                andrew_res.Add(andrew_sem[i]);
+                basic_res.Add(basic_sem[i]);
             }
 
-            if (ax == null)
-                throw new Exception("Lookup, GetHUB");
-
-            return ax.Count();
+            switch (mind)
+            {
+                case MINDS.ROBERTA: return roberta_res.Count;
+                case MINDS.ANDREW: return andrew_res.Count;
+                case MINDS.BASIC: return basic_res.Count;
+                default: throw new Exception("Lookup, GetHUB");
+            }
         }
     }
 }
