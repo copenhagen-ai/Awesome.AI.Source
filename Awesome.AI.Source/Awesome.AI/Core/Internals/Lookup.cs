@@ -397,59 +397,51 @@ namespace Awesome.AI.Core.Internals
             return curr;
         }
 
-        public List<string> andrew_sem = new List<string>()
+        public Dictionary<string, Score> roberta_sem = new Dictionary<string, Score>()
         {
-            //socializing
-            CONST.andrew_s1,//"procrastination",
-            CONST.andrew_s2,//"fembots",
-            CONST.andrew_s3,//"power tools",
-            CONST.andrew_s4,//"cars",
-            CONST.andrew_s5,//"movies",
-            CONST.andrew_s6,//"programming"
-
-            //hobbys
-            CONST.andrew_s6,//"programming",
-            CONST.andrew_s7,//"the weather",
-            CONST.andrew_s8,//"life",
-            CONST.andrew_s9,//"computers",
-            CONST.andrew_s10,//"work"
+            { CONST.roberta_s1, new Score(6, -1) },//"love",
+            { CONST.roberta_s2, new Score(5, -1) },//"macho machines",
+            { CONST.roberta_s3, new Score(4, -1) },//"music",
+            { CONST.roberta_s4, new Score(3, -1) },//"friends",
+            { CONST.roberta_s5, new Score(2, -1) },//"socializing",
+            { CONST.roberta_s6, new Score(1, 5) },//"dancing",
+            { CONST.roberta_s7, new Score(-1, 4) },//"movies",
+            { CONST.roberta_s8, new Score(-1, 3) },//"hobbys",
+            { CONST.roberta_s9, new Score(-1, 2) },//"the weather",
+            { CONST.roberta_s10, new Score(-1, 1) },//"having fun"
         };
 
-        public List<string> roberta_sem = new List<string>()
+        public Dictionary<string, Score> andrew_sem = new Dictionary<string, Score>()
         {
-            //socializing
-            CONST.roberta_s1,//"love",
-            CONST.roberta_s2,//"macho machines",
-            CONST.roberta_s3,//"music",
-            CONST.roberta_s4,//"friends",
-            CONST.roberta_s5,//"socializing",
-            CONST.roberta_s6,//"dancing"
-
-            //hobbys
-            CONST.roberta_s6,//"dancing",
-            CONST.roberta_s7,//"movies",
-            CONST.roberta_s8,//"hobbys",
-            CONST.roberta_s9,//"the weather",
-            CONST.roberta_s10,//"having fun"
+            { CONST.andrew_s1, new Score(6, -1) },//"procrastination",
+            { CONST.andrew_s2, new Score(5, -1) },//"fembots",
+            { CONST.andrew_s3, new Score(4, -1) },//"power tools",
+            { CONST.andrew_s4, new Score(3, -1) },//"cars",
+            { CONST.andrew_s5, new Score(2, -1) },//"movies",
+            { CONST.andrew_s6, new Score(1, 5) },//"programming"
+            { CONST.andrew_s7, new Score(-1, 4) },//"the weather",
+            { CONST.andrew_s8, new Score(-1, 3) },//"life",
+            { CONST.andrew_s9, new Score(-1, 2) },//"computers",
+            { CONST.andrew_s10, new Score(-1, 1) },//"work"        
         };
 
-        public List<string> basic_sem = new List<string>()
+        public Dictionary<string, Score> basic_sem = new Dictionary<string, Score>()
         {
-            //socializing
-            CONST.basic_s1,//"love",
-            CONST.basic_s2,//"macho machines",
-            CONST.basic_s3,//"music",
-            CONST.basic_s4,//"friends",
-            CONST.basic_s5,//"socializing",
-            CONST.basic_s6,//"dancing"
-
-            //hobbys
-            CONST.basic_s6,//"dancing",
-            CONST.basic_s7,//"movies",
-            CONST.basic_s8,//"hobbys",
-            CONST.basic_s9,//"the weather",
-            CONST.basic_s10,//"having fun"
+            { CONST.basic_s1, new Score(5, -1) },//"love",
+            { CONST.basic_s2, new Score(6, -1) },//"macho machines",
+            { CONST.basic_s3, new Score(3, -1) },//"music",
+            { CONST.basic_s4, new Score(4, -1) },//"friends",
+            { CONST.basic_s5, new Score(2, -1) },//"socializing",
+            { CONST.basic_s6, new Score(1, 4) },//"dancing"
+            { CONST.basic_s7, new Score(-1, 5) },//"movies",
+            { CONST.basic_s8, new Score(-1, 2) },//"hobbys",
+            { CONST.basic_s9, new Score(-1, 3) },//"the weather",
+            { CONST.basic_s10, new Score(-1, 1) },//"having fun"
         };
+
+        public sealed record Score(
+        int Social,
+        int Hobby);
 
         public List<string> GetHUBS(MINDS mindtype, string axis)
         {
@@ -460,30 +452,34 @@ namespace Awesome.AI.Core.Internals
             if (axis == "init")
                 return new List<string>();
 
-            List<int> semantics = axis == "socializing" ?
-                new List<int>() { 1, 2, 3, 4, 5, 6, -1, -1, -1, -1, -1 } :
-                new List<int>() { -1, -1, -1, -1, -1, -1, 7, 8, 9, 10, 11 };
+            List<KeyValuePair<string, Score>> r_semantics = axis == "socializing" ?
+                roberta_sem.OrderByDescending(x => x.Value.Social).ToList() :
+                roberta_sem.OrderByDescending(x => x.Value.Hobby).ToList();
 
-            List<string> roberta_res = new List<string>();
-            List<string> andrew_res = new List<string>();
-            List<string> basic_res = new List<string>();
+            List<KeyValuePair<string, Score>> a_semantics = axis == "socializing" ?
+                andrew_sem.OrderByDescending(x => x.Value.Social).ToList() :
+                andrew_sem.OrderByDescending(x => x.Value.Hobby).ToList();
 
-            foreach (int i in semantics)
+            List<KeyValuePair<string, Score>> b_semantics = axis == "socializing" ?
+                basic_sem.OrderByDescending(x => x.Value.Social).ToList() :
+                basic_sem.OrderByDescending(x => x.Value.Hobby).ToList();
+
+            List<KeyValuePair<string, Score>> list =
+                mindtype == MINDS.ROBERTA ? r_semantics :
+                mindtype == MINDS.ANDREW ? a_semantics : 
+                b_semantics;
+
+            List<string> res = new List<string>();
+
+            foreach (KeyValuePair<string, Score> elem in list)
             {
-                if (i <= 0) continue;
+                if (axis == "socializing" && elem.Value.Social <= 0) continue;
+                if (axis == "hobby" && elem.Value.Hobby <= 0) continue;
 
-                roberta_res.Add(roberta_sem[i - 1]);
-                andrew_res.Add(andrew_sem[i - 1]);
-                basic_res.Add(basic_sem[i - 1]);
+                res.Add(elem.Key);                
             }
             
-            switch (mindtype)
-            {
-                case MINDS.ROBERTA: return roberta_res;
-                case MINDS.ANDREW: return andrew_res;
-                case MINDS.BASIC: return basic_res;
-                default: throw new Exception("Lookup, GetHUB");
-            }
+            return res;
         }
 
         public string[] occupasions = { "socializing", "hobbys" };
@@ -498,56 +494,54 @@ namespace Awesome.AI.Core.Internals
 
             occu = occupasions[count];
 
-            List<int> semantics = occu == "socializing" ?
-                new List<int>() { 1, 2, 3, 4, 5, 6, -1, -1, -1, -1, -1 } :
-                new List<int>() { -1, -1, -1, -1, -1, -1, 7, 8, 9, 10, 11 };
+            string axis = occu;
 
-            List<string> roberta_res = new List<string>();
-            List<string> andrew_res = new List<string>();
-            List<string> basic_res = new List<string>();
+            List<KeyValuePair<string, Score>> r_semantics = axis == "socializing" ?
+                roberta_sem.OrderByDescending(x => x.Value.Social).ToList() :
+                roberta_sem.OrderByDescending(x => x.Value.Hobby).ToList();
 
-            foreach (int i in semantics)
+            List<KeyValuePair<string, Score>> a_semantics = axis == "socializing" ?
+                andrew_sem.OrderByDescending(x => x.Value.Social).ToList() :
+                andrew_sem.OrderByDescending(x => x.Value.Hobby).ToList();
+
+            List<KeyValuePair<string, Score>> b_semantics = axis == "socializing" ?
+                basic_sem.OrderByDescending(x => x.Value.Social).ToList() :
+                basic_sem.OrderByDescending(x => x.Value.Hobby).ToList();
+
+            List<KeyValuePair<string, Score>> list =
+                mindtype == MINDS.ROBERTA ? r_semantics :
+                mindtype == MINDS.ANDREW ? a_semantics :
+                b_semantics;
+
+            List<string> res = new List<string>();
+
+            foreach (KeyValuePair<string, Score> elem in list)
             {
-                if (i <= 0) continue;
+                if (axis == "socializing" && elem.Value.Social <= 0) continue;
+                if (axis == "hobby" && elem.Value.Hobby <= 0) continue;
 
-                roberta_res.Add(roberta_sem[i - 1]);
-                andrew_res.Add(andrew_sem[i - 1]);
-                basic_res.Add(basic_sem[i - 1]);
+                res.Add(elem.Key);
             }
 
-            switch (mindtype)
-            {
-                case MINDS.ROBERTA: return roberta_res;
-                case MINDS.ANDREW: return andrew_res;
-                case MINDS.BASIC: return basic_res;
-                default: throw new Exception("Lookup, GetOCCU 2");
-            }
+            return res;
         }
 
         public int CountHUBS(MINDS mindtype)
         {
-            List<int> semantics = new List<int>() { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+            List<KeyValuePair<string, Score>> r_semantics = roberta_sem.ToList();
 
-            List<string> roberta_res = new List<string>();
-            List<string> andrew_res = new List<string>();
-            List<string> basic_res = new List<string>();
+            List<KeyValuePair<string, Score>> a_semantics = andrew_sem.ToList();
 
-            foreach (int i in semantics)
-            {
-                if (i <= 0) continue;
+            List<KeyValuePair<string, Score>> b_semantics = basic_sem.ToList();
 
-                roberta_res.Add(roberta_sem[i]);
-                andrew_res.Add(andrew_sem[i]);
-                basic_res.Add(basic_sem[i]);
-            }
+            List<KeyValuePair<string, Score>> list =
+                mindtype == MINDS.ROBERTA ? r_semantics :
+                mindtype == MINDS.ANDREW ? a_semantics :
+                b_semantics;
 
-            switch (mindtype)
-            {
-                case MINDS.ROBERTA: return roberta_res.Count;
-                case MINDS.ANDREW: return andrew_res.Count;
-                case MINDS.BASIC: return basic_res.Count;
-                default: throw new Exception("Lookup, GetHUB");
-            }
+            List<string> res = list.Select(x => x.Key).ToList();
+
+            return res.Count;
         }
     }
 }
