@@ -165,7 +165,7 @@ namespace Awesome.AI.Core.Spaces
 
                     sub = weight.Key;
 
-                    if (count >= unit.HI)
+                    if (count >= unit.HIget())
                         break;
                 }
 
@@ -226,7 +226,7 @@ namespace Awesome.AI.Core.Spaces
 
                 foreach (var unit in units)
                 {
-                    var sub = GetSubject(unit.HI);
+                    var sub = GetSubject(unit.HIget());
                     if (sub == hub && !res.Contains(unit))
                         res.Add(unit);
                 }

@@ -31,15 +31,12 @@ namespace Awesome.AI.Core.Spaces
         }
 
         private Dictionary<string, double> base_props = new Dictionary<string, double>();        
-        public double UIget(string ax) => base_props[ax];
+        public double UIget(string ax) => IsIDLE() ? 50.0 : base_props[ax];
         public void UIset(string ax, double val) => base_props[ax] = val;
         
         private double h_index { get; set; }
-        public double HI
-        {
-            get => IsIDLE() ? 50.0 : h_index;
-            set { h_index = value; }
-        }
+        public double HIget() => IsIDLE() ? 50.0 : h_index;
+        public void HIset(double val) => h_index = val;
 
         private string data { get; set; }//data
         public string Data
@@ -256,7 +253,9 @@ namespace Awesome.AI.Core.Spaces
 
             double effective_gamma = CONST.GAMMA * (1.0d + reward_norm);
 
-            HI += HI < index ? effective_gamma : -effective_gamma;
+            double hi = HIget();
+            double ga = HIget() < index ? effective_gamma : -effective_gamma;
+            HIset(hi + ga);
 
             mind.hub.AdjustWeights(sub, effective_gamma * 0.1d);
         }
