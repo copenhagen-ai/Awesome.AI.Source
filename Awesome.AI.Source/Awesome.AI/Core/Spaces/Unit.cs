@@ -176,17 +176,30 @@ namespace Awesome.AI.Core.Spaces
             return Create(mind, "GUID", dex, name, "NONE", UNITTYPE.QDECISION, LONGTYPE.NONE);
         }
 
-        public GPTVector2D ToVector() 
+        public GPTVector2D ToVector2D()
         {
             return new GPTVector2D(UIget(CONST.AXES[0]), UIget(CONST.AXES[1]), null, null);
         }
 
-        public void Update(GPTVector2D v_near)
+        public GPTVector6D ToVector6D()
+        {
+            return new GPTVector6D(UIget(CONST.AXES[0]), UIget(CONST.AXES[1]), UIget(CONST.AXES[2]), UIget(CONST.AXES[3]), UIget(CONST.AXES[4]), UIget(CONST.AXES[5]));
+        }
+
+        public void Update2D(GPTVector2D v_near)
         {
             UpdateTRA();
             UpdateREW();
             UpdateHUB();
-            UpdateUNT(v_near);
+            UpdateUNT2D(v_near);
+        }
+
+        public void Update6D(GPTVector6D v_near)
+        {
+            UpdateTRA();
+            UpdateREW();
+            UpdateHUB();
+            UpdateUNT6D(v_near);
         }
 
         private void UpdateTRA()
@@ -260,7 +273,7 @@ namespace Awesome.AI.Core.Spaces
             mind.hub.AdjustWeights(sub, effective_gamma * 0.1d);
         }
 
-        private void UpdateUNT(GPTVector2D v_near)
+        private void UpdateUNT2D(GPTVector2D v_near)
         {
             if (mind.STATE == STATE.QUICKDECISION)
                 return;
@@ -268,7 +281,18 @@ namespace Awesome.AI.Core.Spaces
             if (Add2D(v_near))
                 return;
 
-            Adjust();
+            Adjust2D();
+        }
+
+        private void UpdateUNT6D(GPTVector6D v_near)
+        {
+            if (mind.STATE == STATE.QUICKDECISION)
+                return;
+
+            if (Add6D(v_near))
+                return;
+
+            Adjust6D();
         }
 
         private bool Add2D(GPTVector2D v_near)
@@ -289,30 +313,86 @@ namespace Awesome.AI.Core.Spaces
 
             double[] xx = [-1d, -1d];
             double[] yy = [-1d, -1d];
-            
+
             xx[0] = Math.Clamp(v_near.xx - CONST.ALPHA, CONST.MIN, CONST.MAX);
             xx[1] = Math.Clamp(v_near.xx + CONST.ALPHA, CONST.MIN, CONST.MAX);
-            
+
             yy[0] = Math.Clamp(v_near.yy - CONST.ALPHA, CONST.MIN, CONST.MAX);
             yy[1] = Math.Clamp(v_near.yy + CONST.ALPHA, CONST.MIN, CONST.MAX);
-            
+
             double[][] axis = new double[axis_count][];
-            
+
             axis[0] = xx;
             axis[1] = yy;
-            
+
             mind.access.UNITS_ADD(this, axis, axis_count);
 
             return true;
         }
-                
-        private void Adjust()
+
+        private bool Add6D(GPTVector6D v_near)
+        {
+            int axis_count = CONST.AXES.Length;
+            Lookup lookup = new Lookup();
+            int count_units = mind.access.UNITS_ALL().Count;
+            int count_hubs = lookup.CountHUBS(mind.mindtype);
+
+            //double avg_area = (100.0 * 100.0) / count;
+            //double avg_radius = Math.Sqrt(avg_area / Math.PI);
+
+            //if (dist < avg_radius)
+            //    return false;
+
+            if (count_units > (CONST.MAX_UNITS * count_hubs))
+                return false;
+
+            double[] xx = [-1d, -1d];
+            double[] yy = [-1d, -1d];
+            double[] zz = [-1d, -1d];
+            double[] ww = [-1d, -1d];
+            double[] vv = [-1d, -1d];
+            double[] uu = [-1d, -1d];
+            
+            xx[0] = Math.Clamp(v_near.xx - CONST.ALPHA, CONST.MIN, CONST.MAX);
+            xx[1] = Math.Clamp(v_near.xx + CONST.ALPHA, CONST.MIN, CONST.MAX);
+
+            yy[0] = Math.Clamp(v_near.yy - CONST.ALPHA, CONST.MIN, CONST.MAX);
+            yy[1] = Math.Clamp(v_near.yy + CONST.ALPHA, CONST.MIN, CONST.MAX);
+
+            zz[0] = Math.Clamp(v_near.zz - CONST.ALPHA, CONST.MIN, CONST.MAX);
+            zz[1] = Math.Clamp(v_near.zz + CONST.ALPHA, CONST.MIN, CONST.MAX);
+
+            ww[0] = Math.Clamp(v_near.ww - CONST.ALPHA, CONST.MIN, CONST.MAX);
+            ww[1] = Math.Clamp(v_near.ww + CONST.ALPHA, CONST.MIN, CONST.MAX);
+
+            vv[0] = Math.Clamp(v_near.vv - CONST.ALPHA, CONST.MIN, CONST.MAX);
+            vv[1] = Math.Clamp(v_near.vv + CONST.ALPHA, CONST.MIN, CONST.MAX);
+
+            uu[0] = Math.Clamp(v_near.uu - CONST.ALPHA, CONST.MIN, CONST.MAX);
+            uu[1] = Math.Clamp(v_near.uu + CONST.ALPHA, CONST.MIN, CONST.MAX);
+
+            double[][] axis = new double[axis_count][];
+
+            axis[0] = xx;
+            axis[1] = yy;
+            axis[2] = zz;
+            axis[3] = ww;
+            axis[4] = vv;
+            axis[5] = uu;
+
+            mind.access.UNITS_ADD(this, axis, axis_count);
+
+            return true;
+        }
+
+        private void Adjust2D()
         {
             double rnd = mind.rand.MyRandomDouble(10)[5];
 
             GPTVector2D func = new GPTVector2D();
-            GPTVector2D vec = ToVector();
-            GPTVector2D dir = (GPTVector2D)((Down)mind.down).Output(vec);
+            GPTVector2D vec = ToVector2D();
+            int _out = (int)((Down)mind.down).Output(vec);
+            GPTVector2D dir = _out < 0 ? vec.Unit().ReverseUnit() : vec.Unit();
             dir = func.Mul(dir, rnd * CONST.ETA);
             GPTVector2D _new = func.Add(vec, dir);
 
@@ -331,6 +411,68 @@ namespace Awesome.AI.Core.Spaces
                 case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
                 case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
                 default: UIset("conflict", _new.yy); return;
+            }
+        }
+
+        private void Adjust6D()
+        {
+            double rnd = mind.rand.MyRandomDouble(10)[5];
+
+            GPTVector6D func6 = new GPTVector6D();
+            GPTVector2D vec2 = ToVector2D();
+            GPTVector6D vec6 = ToVector6D();
+            int _out = (int)((Down)mind.down).Output(vec2);
+            GPTVector6D dir = _out < 0 ? vec6.Unit().ReverseUnit() : vec6.Unit();
+            dir = func6.Mul(dir, rnd * CONST.ETA);
+            GPTVector6D _new = func6.Add(vec6, dir);
+
+            if (_new.xx <= CONST.MIN) _new.xx = CONST.MIN;
+            if (_new.yy >= CONST.MAX) _new.yy = CONST.MAX;
+            if (_new.zz >= CONST.MAX) _new.zz = CONST.MAX;
+            if (_new.ww >= CONST.MAX) _new.ww = CONST.MAX;
+            if (_new.vv >= CONST.MAX) _new.vv = CONST.MAX;
+            if (_new.uu >= CONST.MAX) _new.uu = CONST.MAX;
+
+            switch (_new.xx)
+            {
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                default: UIset("will", _new.xx); return;
+            }
+
+            switch (_new.yy)
+            {
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                default: UIset("conflict", _new.yy); return;
+            }
+
+            switch (_new.zz)
+            {
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                default: UIset("conflict", _new.zz); return;
+            }
+
+            switch (_new.ww)
+            {
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                default: UIset("conflict", _new.ww); return;
+            }
+
+            switch (_new.vv)
+            {
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                default: UIset("conflict", _new.vv); return;
+            }
+
+            switch (_new.uu)
+            {
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                default: UIset("conflict", _new.uu); return;
             }
         }
 

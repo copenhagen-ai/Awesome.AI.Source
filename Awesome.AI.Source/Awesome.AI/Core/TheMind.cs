@@ -140,11 +140,11 @@ namespace Awesome.AI.Core
                 g_arc = new ArcGoal(this);
 
                 string[] list = { "WHISTLE", "MATHLEARN", "MATHSOLVE", "ARCLEARN", "ARCSOLVE" };
-                q_u_whistle = UNIT.CreateQuick(this, list[0], [50d, 50d]);
-                q_u_mathlearn = UNIT.CreateQuick(this, list[1], [51d, 50d]);
-                q_u_mathsolve = UNIT.CreateQuick(this, list[2], [52d, 50d]);
-                q_u_arclearn = UNIT.CreateQuick(this, list[3], [53d, 50d]);
-                q_u_arcsolve = UNIT.CreateQuick(this, list[4], [54d, 50d]);
+                q_u_whistle = UNIT.CreateQuick(this, list[0], [50d, 50d, 50d, 50d, 50d, 50d]);
+                q_u_mathlearn = UNIT.CreateQuick(this, list[1], [51d, 50d, 50d, 50d, 50d, 50d]);
+                q_u_mathsolve = UNIT.CreateQuick(this, list[2], [52d, 50d, 50d, 50d, 50d, 50d]);
+                q_u_arclearn = UNIT.CreateQuick(this, list[3], [53d, 50d, 50d, 50d, 50d, 50d]);
+                q_u_arcsolve = UNIT.CreateQuick(this, list[4], [54d, 50d, 50d, 50d, 50d, 50d]);
 
                 Random random = new Random();
                 int u_count = access.UNITS_ALL().Count;
@@ -165,7 +165,7 @@ namespace Awesome.AI.Core
                 Pre(true);
                 Post(true);
 
-                theanswer = UNIT.Create(this, "GUID", [-1d, -1d], "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
+                theanswer = UNIT.Create(this, "GUID", [-1d, -1d, -1d, -1d, -1d, -1d], "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
 
                 ok = true;
                 do_process = false;

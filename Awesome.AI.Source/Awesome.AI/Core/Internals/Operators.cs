@@ -41,9 +41,9 @@ namespace Awesome.AI.Source.Awesome.AI.Core.Internals
         public override object Output(object vec)
         {
             if (RES_BOOL)
-                return ((GPTVector2D)vec).Unit().ReverseUnit();
+                return -1;
 
-            return ((GPTVector2D)vec).Unit();
+            return 1;
         }
 
         public override void Modify()

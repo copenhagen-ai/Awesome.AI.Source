@@ -9,45 +9,47 @@ namespace Awesome.AI.Core.Spaces
 {
     public class GPT
     {
-        public List<UNIT> Corridor(List<UNIT> allUnits, UNIT unitA, UNIT unitB)
+        public List<UNIT> Corridor2D(List<UNIT> allUnits, UNIT unitA, UNIT unitB)
         {
             string axisX = CONST.AXES[0];
             string axisY = CONST.AXES[1];
             double width = 5.0;
 
-            // 1. Convert UNITs to 2D points using provided axes
-            Vector2 p1 = new Vector2((float)unitA.UIget(axisX), (float)unitA.UIget(axisY));
-            Vector2 p2 = new Vector2((float)unitB.UIget(axisX), (float)unitB.UIget(axisY));
+            GPTVector2D func = new GPTVector2D();
 
-            Vector2 dir = p2 - p1;
-            float length = dir.Length();
+            // 1. Convert UNITs to 2D points using provided axes
+            GPTVector2D p1 = new GPTVector2D((float)unitA.UIget(axisX), (float)unitA.UIget(axisY), null, null);
+            GPTVector2D p2 = new GPTVector2D((float)unitB.UIget(axisX), (float)unitB.UIget(axisY), null, null);
+
+            GPTVector2D dir = func.Sub(p2, p1);
+            double length = dir.magnitude;
             if (length == 0) return new List<UNIT>();
 
-            dir /= length; // normalize
-            Vector2 perp = new Vector2(-dir.Y, dir.X); // perpendicular
+            dir = func.Div(dir, length); // normalize
+            GPTVector2D perp = new GPTVector2D(-dir.yy, dir.xx, null, null); // perpendicular
 
             // 2. Filter UNITs inside corridor
             var corridorUnits = allUnits
                 .Where(u =>
                 {
-                    Vector2 pu = new Vector2((float)u.UIget(axisX), (float)u.UIget(axisY));
-                    Vector2 rel = pu - p1;
+                    GPTVector2D pu = new GPTVector2D((float)u.UIget(axisX), (float)u.UIget(axisY), null, null);
+                    GPTVector2D rel = func.Sub(pu, p1);
 
-                    float along = Vector2.Dot(rel, dir);
-                    float across = Vector2.Dot(rel, perp);
+                    double along = func.Dot(rel, dir);
+                    double across = func.Dot(rel, perp);
 
                     return along >= 0 && along <= length && Math.Abs(across) <= width / 2;
                 })
                 .Select(u => new
                 {
                     Unit = u,
-                    DistanceAlong = Vector2.Dot(new Vector2((float)u.UIget(axisX), (float)u.UIget(axisY)) - p1, dir)
+                    DistanceAlong = func.Dot(func.Sub(new GPTVector2D((float)u.UIget(axisX), (float)u.UIget(axisY), null, null), p1), dir)
                 })
                 .OrderByDescending(x => x.DistanceAlong) // closest to unitB first
                 .Select(x => x.Unit)
                 .ToList();
 
-            Fix(corridorUnits, unitA, unitB);
+            Fix2D(corridorUnits, unitA, unitB);
 
             if (corridorUnits.Count == 0)
                 throw new Exception("USSoup, Corridor");
@@ -55,7 +57,90 @@ namespace Awesome.AI.Core.Spaces
             return corridorUnits;
         }
 
-        public void Fix(List<UNIT> corridorUnits, UNIT unitA, UNIT unitB)
+        public List<UNIT> Corridor6D(List<UNIT> allUnits, UNIT unitA, UNIT unitB)
+        {
+            string axisX = CONST.AXES[0];
+            string axisY = CONST.AXES[1];
+            string axisZ = CONST.AXES[2];
+            string axisW = CONST.AXES[3];
+            string axisV = CONST.AXES[4];
+            string axisU = CONST.AXES[5];
+
+            double width = 5.0;
+
+            GPTVector6D func = new GPTVector6D();
+
+            GPTVector6D ToVector(UNIT unit)
+            {
+                return new GPTVector6D(
+                    unit.UIget(axisX),
+                    unit.UIget(axisY),
+                    unit.UIget(axisZ),
+                    unit.UIget(axisW),
+                    unit.UIget(axisV),
+                    unit.UIget(axisU));
+            }
+
+            GPTVector6D p1 = ToVector(unitA);
+            GPTVector6D p2 = ToVector(unitB);
+
+            GPTVector6D dir = func.Sub(p2, p1);
+            double length = dir.magnitude;
+
+            if (length == 0)
+                return new List<UNIT>();
+
+            dir = func.Div(dir, length);
+
+            var corridorUnits = allUnits
+                .Select(unit =>
+                {
+                    GPTVector6D point = ToVector(unit);
+                    GPTVector6D relative = func.Sub(point, p1);
+
+                    double distanceAlong = func.Dot(relative, dir);
+
+                    GPTVector6D closestPointOffset =
+                        func.Mul(dir, distanceAlong);
+
+                    GPTVector6D perpendicularOffset =
+                        func.Sub(relative, closestPointOffset);
+
+                    double distanceAcross = perpendicularOffset.magnitude;
+
+                    return new
+                    {
+                        Unit = unit,
+                        DistanceAlong = distanceAlong,
+                        DistanceAcross = distanceAcross
+                    };
+                })
+                .Where(x =>
+                    x.DistanceAlong >= 0 &&
+                    x.DistanceAlong <= length &&
+                    x.DistanceAcross <= width / 2.0)
+                .OrderByDescending(x => x.DistanceAlong)
+                .Select(x => x.Unit)
+                .ToList();
+
+            Fix6D(corridorUnits, unitA, unitB);
+
+            if (corridorUnits.Count == 0)
+                throw new Exception("USSoup, Corridor");
+
+            return corridorUnits;
+        }
+
+        public void Fix2D(List<UNIT> corridorUnits, UNIT unitA, UNIT unitB)
+        {
+            corridorUnits.Remove(unitA);
+            corridorUnits.Remove(unitB);
+
+            corridorUnits.Insert(0, unitB);
+            corridorUnits.Add(unitA);
+        }
+
+        public void Fix6D(List<UNIT> corridorUnits, UNIT unitA, UNIT unitB)
         {
             corridorUnits.Remove(unitA);
             corridorUnits.Remove(unitB);
@@ -82,7 +167,7 @@ namespace Awesome.AI.Core.Spaces
             return select;
         }
 
-        public UNIT ByPyth(List<UNIT> units, GPTVector2D v_near)
+        public UNIT ByPyth2D(List<UNIT> units, GPTVector2D v_near)
         {
             double min_distance = 10E20d;
             UNIT res = null;
@@ -92,9 +177,9 @@ namespace Awesome.AI.Core.Spaces
                 if (unit == mind.unit_current)
                     continue;
 
-                GPTVector2D nearest = soup.Near(unit);
+                GPTVector2D nearest = soup.Near2(unit);
                 
-                double distance = mind.calc.Pyth(v_near.xx, nearest.xx, v_near.yy, nearest.yy);
+                double distance = mind.calc.Pyth2D(v_near.xx, nearest.xx, v_near.yy, nearest.yy);
 
                 if (distance < min_distance)
                 {
@@ -104,6 +189,30 @@ namespace Awesome.AI.Core.Spaces
             }
 
             return res;            
+        }
+
+        public UNIT ByPyth6D(List<UNIT> units, GPTVector6D v_near)
+        {
+            double min_distance = 10E20d;
+            UNIT res = null;
+
+            foreach (UNIT unit in units)
+            {
+                if (unit == mind.unit_current)
+                    continue;
+
+                GPTVector6D nearest = soup.Near6(unit);
+
+                double distance = mind.calc.Pyth6D(v_near.xx, nearest.xx, v_near.yy, nearest.yy, v_near.zz, nearest.zz, v_near.ww, nearest.ww, v_near.vv, nearest.vv, v_near.uu, nearest.uu);
+
+                if (distance < min_distance)
+                {
+                    min_distance = distance;
+                    res = unit;
+                }
+            }
+
+            return res;
         }
 
         public UNIT ByOther(List<UNIT> units, GPTVector2D near)
@@ -181,34 +290,47 @@ namespace Awesome.AI.Core.Spaces
             if (units == null)
                 throw new Exception("USSoup, Unit");
 
-            GPTVector2D near = Near(mind.unit_current);
+            GPTVector2D near2 = Near2(mind.unit_current);
+            GPTVector6D near6 = Near6(mind.unit_current);
             List<UNIT> list = new List<UNIT>() { mind.unit_current };
             UNIT res = null;
 
-            if (CONST.select_curr == SELECTCURRENT.PYTH)
-                res = Select.Create(mind, this).ByPyth(units, near);
+            if (CONST.select_curr == SELECTCURRENT.PYTH2)
+            {
+                res = Select.Create(mind, this).ByPyth2D(units, near2);
+
+                list = GPT.Create().Corridor2D(units, mind.unit_current, res);
+
+                list[0].Update2D(near2);
+            }
+
+            if (CONST.select_curr == SELECTCURRENT.PYTH6)
+            {
+                res = Select.Create(mind, this).ByPyth6D(units, near6);
+
+                list = GPT.Create().Corridor6D(units, mind.unit_current, res);
+
+                list[0].Update6D(near6);
+            }
 
             if (CONST.select_curr == SELECTCURRENT.OTHER)
-                res = Select.Create(mind, this).ByOther(units, near);
+                res = Select.Create(mind, this).ByOther(units, near2);
 
             if (res == null)
                 return (new List<UNIT>() { UNIT.CreateIdle(mind) }).ToArray();
             
-            list = GPT.Create().Corridor(units, mind.unit_current, res);
-
-            list[0].Update(near);            
-
             return list.ToArray();
         }
 
-        public GPTVector2D Near(UNIT unit)
+        public GPTVector2D Near2(UNIT unit)
         {
             GPTVector2D func = new GPTVector2D();
             GPTVector2D near = new GPTVector2D();
-            GPTVector2D vec = unit.ToVector();
+            GPTVector2D vec = unit.ToVector2D();
             GPTVector2D vec_u = vec.Unit();
-            GPTVector2D dir_u = (GPTVector2D)((Down)mind.down).Output(vec);
-            
+            int _out = (int)((Down)mind.down).Output(vec);
+            GPTVector2D dir_u = _out < 0 ? vec_u.Unit().ReverseUnit() : vec_u.Unit();
+
             bool same = (int)func.ToDegrees(vec_u) == (int)func.ToDegrees(dir_u);
 
             if (same)
@@ -216,6 +338,27 @@ namespace Awesome.AI.Core.Spaces
 
             if (!same)
                 near = vec.Reverse();
+
+            return near;
+        }
+
+        public GPTVector6D Near6(UNIT unit)
+        {
+            GPTVector2D func = new GPTVector2D();
+            GPTVector6D near = new GPTVector6D();
+            GPTVector2D vec2 = unit.ToVector2D();
+            GPTVector6D vec6 = unit.ToVector6D();
+            GPTVector2D vec_u = vec2.Unit();
+            int _out = (int)((Down)mind.down).Output(vec2);
+            GPTVector2D dir_u = _out < 0 ? vec_u.Unit().ReverseUnit() : vec_u.Unit();
+
+            bool same = (int)func.ToDegrees(vec_u) == (int)func.ToDegrees(dir_u);
+
+            if (same)
+                near = vec6;
+
+            if (!same)
+                near = vec6.Reverse();
 
             return near;
         }

@@ -169,7 +169,7 @@ namespace Awesome.AI.Common
             return y;
         }
 
-        public double Pyth(double _a, double _b)
+        public double Pyth2D(double _a, double _b)
         {
             if (_a <= 0.0d)
                 throw new Exception("Pyth");
@@ -182,14 +182,25 @@ namespace Awesome.AI.Common
             return _dist;
         }
 
-        public double Pyth(double x1, double x2, double y1, double y2)
+        public double Pyth2D(double x1, double x2, double y1, double y2)
         {
             double _dist = Math.Sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 
             return _dist;
         }
 
-        public double PythNear(double theta, double hypotenuse)//hosliggende
+        public double Pyth6D(double x1, double x2, double y1, double y2, double z1, double z2, double w1, double w2, double v1, double v2, double u1, double u2)
+        {
+            return Math.Sqrt(
+                (x1 - x2) * (x1 - x2) +
+                (y1 - y2) * (y1 - y2) +
+                (z1 - z2) * (z1 - z2) +
+                (w1 - w2) * (w1 - w2) +
+                (v1 - v2) * (v1 - v2) +
+                (u1 - u2) * (u1 - u2));
+        }
+
+        public double PythNear2D(double theta, double hypotenuse)//hosliggende
         {
             /*
              * cos(v) = hosliggende katete / hypotenusen
@@ -212,7 +223,7 @@ namespace Awesome.AI.Common
             return res;
         }
 
-        public double PythFar(double theta, double hypotenuse)//modstående
+        public double PythFar2D(double theta, double hypotenuse)//modstående
         {
             /*
              * cos(v) = hosliggende katete / hypotenusen

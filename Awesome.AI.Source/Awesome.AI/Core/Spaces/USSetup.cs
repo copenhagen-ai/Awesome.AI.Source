@@ -291,13 +291,31 @@ namespace Awesome.AI.Core.Spaces
                 {
                     double rand1 = mind.cycles < CONST.FIRST_RUN ?
                     random.NextDouble() :
-                    mind.rand.MyRandomDouble(list.Count())[100];
+                    mind.rand.MyRandomDouble(list.Count())[10];
 
                     double rand2 = mind.cycles < CONST.FIRST_RUN ?
                     random.NextDouble() :
-                    mind.rand.MyRandomDouble(list.Count())[200];
+                    mind.rand.MyRandomDouble(list.Count())[20];
 
-                    _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], "DATA", "" + s + ticket[i - 1], utype, ltype));
+                    double rand3 = mind.cycles < CONST.FIRST_RUN ?
+                    random.NextDouble() :
+                    mind.rand.MyRandomDouble(list.Count())[30];
+
+                    double rand4 = mind.cycles < CONST.FIRST_RUN ?
+                    random.NextDouble() :
+                    mind.rand.MyRandomDouble(list.Count())[40];
+
+                    double rand5 = mind.cycles < CONST.FIRST_RUN ?
+                    random.NextDouble() :
+                    mind.rand.MyRandomDouble(list.Count())[50];
+
+                    double rand6 = mind.cycles < CONST.FIRST_RUN ?
+                    random.NextDouble() :
+                    mind.rand.MyRandomDouble(list.Count())[60];
+
+                    double[] arr = [GetIndex(tone, rand1), GetIndex(tone, rand2), GetIndex(tone, rand3), GetIndex(tone, rand4), GetIndex(tone, rand5), GetIndex(tone, rand6)];
+
+                    _u.Add(UNIT.Create(mind, guid, arr, "DATA", "" + s + ticket[i - 1], utype, ltype));
 
                     //_count++;
                 }
@@ -323,27 +341,35 @@ namespace Awesome.AI.Core.Spaces
 
             Random random = new Random();
 
-            int _count = 10;
-            
             foreach (string s in units)
             {
 
                 string guid = Guid.NewGuid().ToString();
 
-                double rand1 = mind.rand.MyRandomDouble(_count)[(int)((_count) - 1)];//->100
+                double rand1 = mind.rand.MyRandomDouble(100)[10];//->100
 
-                double rand2 = mind.rand.MyRandomDouble(index + _count)[(int)((index + _count) - 1)];//->200
+                double rand2 = mind.rand.MyRandomDouble(100)[20];//->200
+
+                double rand3 = mind.rand.MyRandomDouble(100)[30];//->200
+
+                double rand4 = mind.rand.MyRandomDouble(100)[40];//->200
+
+                double rand5 = mind.rand.MyRandomDouble(100)[50];//->200
+
+                double rand6 = mind.rand.MyRandomDouble(100)[60];//->200
+
+                double[] arr = [GetIndex(tone, rand1), GetIndex(tone, rand2), GetIndex(tone, rand3), GetIndex(tone, rand4), GetIndex(tone, rand5), GetIndex(tone, rand6)];
 
                 switch (state)
                 {
                     case STATE.JUSTRUNNING: 
-                        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], s, "NONE", utype, ltype)); break;
+                        _u.Add(UNIT.Create(mind, guid, arr, s, "NONE", utype, ltype)); break;
                     case STATE.QUICKDECISION: 
-                        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], s, "NONE", utype, ltype)); break;
+                        _u.Add(UNIT.Create(mind, guid, arr, s, "NONE", utype, ltype)); break;
                     default: throw new NotImplementedException();
                 }
 
-                _count += 10;
+                //_count += 10;
                 count++;
             }
 

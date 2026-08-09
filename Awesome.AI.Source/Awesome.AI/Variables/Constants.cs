@@ -48,7 +48,7 @@ namespace Awesome.AI.Variables
         public static string[] sub_basic = { CONST.basic_s1, CONST.basic_s2, CONST.basic_s3, CONST.basic_s4, CONST.basic_s5, CONST.basic_s6, CONST.basic_s7, CONST.basic_s8, CONST.basic_s9, CONST.basic_s10 };
 
         public static string[] AXES = { "will", "conflict", "commitment", "adaptation", "activation", "influence" };
-        public const int AXIS_MAX = 2;
+        public const int AXIS_MAX = 6;
 
         public const string prop1_temperament = "will";
         public const string prop2_temperament = "mood";
@@ -160,7 +160,7 @@ namespace Awesome.AI.Variables
         public const HACKMODE hack = HACKMODE.HACK;
 
         public const TRANSFER transfer = TRANSFER.NONE;        
-        public const SELECTCURRENT select_curr = SELECTCURRENT.PYTH;
+        public const SELECTCURRENT select_curr = SELECTCURRENT.PYTH6;
         public const SELECTACTUAL select_act = SELECTACTUAL.DOMINANT;
 
         public const bool AGENT_USE_TIMER = false;
