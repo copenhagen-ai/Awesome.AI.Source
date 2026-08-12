@@ -1,5 +1,4 @@
-﻿using Awesome.AI.Common;
-using Awesome.AI.Core;
+﻿using Awesome.AI.Core;
 using Awesome.AI.Core.Internals;
 using Awesome.AI.CoreSystems;
 using Awesome.AI.Source.Awesome.AI.Common;
@@ -13,8 +12,7 @@ namespace Awesome.AI.Source.Awesome.AI.Core.Internals
         public BaseProperties prop {  get; set; }
         public List<double> _ratio { get; set; }
         public List<bool> _errors { get; set; }
-        public bool RES_BOOL { get; set; }
-        public bool RES_DOUBLE { get; set; }
+        public double d_res { get; set; }
         public int _error { get; set; }
 
         public TheMind mind;
@@ -40,19 +38,20 @@ namespace Awesome.AI.Source.Awesome.AI.Core.Internals
 
         public override object Output(object vec)
         {
-            if (RES_BOOL)
+            if (d_res < 0.0d)
                 return -1;
 
             return 1;
         }
 
         public override void Modify()
-        {
-            SetDown();
-
+        {            
             double d_curr = prop.Conflict();
             double d_zero = d_curr.Norm0DV(mind);
             double d_save = d_curr.Norm0DV(mind);
+
+            //down
+            d_res = d_curr < 0.0d ? -1d : 1d;
             
             if (mind.bot.logic == LOGICTYPE.PROBABILITY && Probability(d_curr, mind)/* && NoInertia() && NoMomentum()*/)
                 d_zero *= -1.0d;
@@ -62,17 +61,10 @@ namespace Awesome.AI.Source.Awesome.AI.Core.Internals
 
             bool flip = d_save != d_zero;
 
-            RES_BOOL = flip ? !RES_BOOL : RES_BOOL;
+            d_res = flip ? d_res * -1d : d_res;
             
             SetError(flip);
-            SetRatio(RES_BOOL);
-        }
-
-        public void SetDown()
-        {
-            double curr_dir = mind.mech.mp.eprops.Conflict() < 0 ? -1.0d : 1.0d;
-
-            RES_BOOL = curr_dir == -1.0d;            
+            SetRatio(d_res);
         }
 
         public int Count(HARDDOWN dir)
@@ -87,10 +79,8 @@ namespace Awesome.AI.Source.Awesome.AI.Core.Internals
             return count;
         }
 
-        public void SetRatio(bool down)
+        public void SetRatio(double ratio)
         {
-            double ratio = down ? -1d : 1d;
-
             _ratio.Add(ratio);
             if (_ratio.Count > CONST.LAPSES)
                 _ratio.RemoveAt(0);

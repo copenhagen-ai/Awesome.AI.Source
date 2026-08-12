@@ -20,9 +20,8 @@ namespace Awesome.AI.Core.Spaces
         public DateTime created { get; set; }
         public string guid { get; set; }
         public double credits { get; set; }
-        public double reward { get; set; }        
-        public double trace { get; set; }
-                
+        public double reward { get; set; }
+
         private TheMind mind;
         private UNIT() { }
         public UNIT(TheMind mind)
@@ -159,7 +158,7 @@ namespace Awesome.AI.Core.Spaces
 
             double _r1 = rand.NextDouble();
 
-            _w.trace = 1.0d;
+            _w.reward = 1.0d;
             _w.credits = CONST.MAX_CREDIT;
             _w.h_index = _r1 * CONST.MAX_HUBSPACE;
 
@@ -212,9 +211,9 @@ namespace Awesome.AI.Core.Spaces
             foreach (UNIT unit in units)
             {
                 if (unit.guid == this.guid)
-                    unit.trace = CONST.DECAY * unit.trace + 1.0d;
+                    unit.reward = CONST.DECAY * unit.reward + 1.0d;
                 else
-                    unit.trace = CONST.DECAY * unit.trace + 0.0d;                    
+                    unit.reward = CONST.DECAY * unit.reward + 0.0d;                    
             }
         }
 
@@ -226,7 +225,7 @@ namespace Awesome.AI.Core.Spaces
             if (IsDECISION())
                 return;
 
-            reward += 1.0 * trace;
+            //reward += 1.0 * trace;
 
             List<UNIT> units = mind.hub.UnitsPerOccupasionc();
 
