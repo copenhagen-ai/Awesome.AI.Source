@@ -1,0 +1,2 @@
+from .WordGenerator import WordGenerator
+
