@@ -166,19 +166,33 @@ namespace Awesome.AI.Core.Mechanics
             return x_meter;
         }
 
-        public double Friction(TheMind mind)
+        public double FrictionRand(TheMind mind)
         {
             /*
              * friction coeficient
              * should friction be calculated from position???
              * */
 
-            double credits = mind.unit_current.credits;
-            double shift = mind.calc.Normalize(credits, 0.0d, 10.0d, -5.0d, 5.0d);
+            double credits = mind.rand.MyRandomDouble(1)[0];
+            double shift = mind.calc.Normalize(credits, 0.0d, 1.0d, -2.0d, 2.0d);
             double friction = mind.calc.Logistic(shift);
 
             return friction;
         }
+
+        //public double FrictionCred(TheMind mind)
+        //{
+        //    /*
+        //     * friction coeficient
+        //     * should friction be calculated from position???
+        //     * */
+
+        //    double credits = mind.unit_current.credits;
+        //    double shift = mind.calc.Normalize(credits, 0.0d, 10.0d, -5.0d, 5.0d);
+        //    double friction = mind.calc.Logistic(shift);
+
+        //    return friction;
+        //}
 
         //public double GetRandomNoise(TheMind mind, double noiseAmplitude)
         //{

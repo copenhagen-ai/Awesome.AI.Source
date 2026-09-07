@@ -129,15 +129,18 @@ namespace Awesome.AI.Core
 
         public void UpdateCredit()
         {
+            if (!CONST.USE_FILTERS)
+                return;
+
             List<UNIT> list = mind.access.UNITS_ALL();
 
             //this could be a problem with many hubs
             foreach (UNIT _u in list)
             {
-                if (_u.IsNull()) 
+                if (_u.IsNull())
                     continue;
 
-                if (_u.Root == "") 
+                if (_u.Root == "")
                     continue;
 
                 if (_u.Root == mind.unit_current.Root)

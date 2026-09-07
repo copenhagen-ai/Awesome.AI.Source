@@ -190,7 +190,7 @@ namespace Awesome.AI.Core.Mechanics
             //double sign = -Math.Sign(mp.dv_curr);
 
             double N = total_mass * CONST.GRAVITY;
-            double u = mh.Friction(mind) * 0.001d;
+            double u = mh.FrictionRand(mind) * 0.001d;
             double sign = mp.vv_curr.Sign();
             double f_friction = u * N * -sign;
 
@@ -222,7 +222,7 @@ namespace Awesome.AI.Core.Mechanics
                 return 0.0d;
 
             double k = 500.0d;
-            double u = mh.Friction(mind);
+            double u = mh.FrictionRand(mind);
             double sign = mp.vv_curr.Sign();
 
             double f_friction = k * u * -sign;
@@ -238,7 +238,7 @@ namespace Awesome.AI.Core.Mechanics
             double f_net = mp.f_sta + mp.f_dyn;
 
             double k = 500.0d;
-            double u = mh.Friction(mind);
+            double u = mh.FrictionRand(mind);
             double sign = -f_net.Sign();
 
             double f_friction = k * u * sign;

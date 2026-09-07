@@ -1,8 +1,6 @@
 ﻿using Awesome.AI.Common;
 using Awesome.AI.Source.Awesome.AI.Core.Internals;
 using Awesome.AI.Variables;
-using System.Numerics;
-using System.Xml.Schema;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces

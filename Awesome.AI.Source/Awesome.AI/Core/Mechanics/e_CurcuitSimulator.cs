@@ -6,6 +6,7 @@ using Awesome.AI.Interfaces;
 using Awesome.AI.Source.Awesome.AI.Common;
 using Awesome.AI.Variables;
 using static Awesome.AI.Variables.Enums;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Awesome.AI.Core.Electrical
 {
@@ -251,6 +252,9 @@ namespace Awesome.AI.Core.Electrical
 
         public double Damping(TheMind mind)
         {
+            if (!CONST.USE_FILTERS)
+                return -1.0d;
+                            
             /*
              * friction coeficient
              * should friction be calculated from position???
@@ -261,7 +265,7 @@ namespace Awesome.AI.Core.Electrical
             double credits = CONST.MAX_CREDIT - mind.unit_current.credits;
             double friction = calc.Logistic(credits - ((double)CONST.MAX_CREDIT / 2.0d));
 
-            return friction;
+            return friction;            
         }
 
         public void Calculate(PATTERN match, int cycles)

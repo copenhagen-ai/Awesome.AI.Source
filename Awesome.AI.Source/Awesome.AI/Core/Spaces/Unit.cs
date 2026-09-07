@@ -19,7 +19,9 @@ namespace Awesome.AI.Core.Spaces
         public LONGTYPE ld_type { get; set; }
         public DateTime created { get; set; }
         public string guid { get; set; }
+        
         public double credits { get; set; }
+        
         public double reward { get; set; }
 
         private TheMind mind;
@@ -159,8 +161,10 @@ namespace Awesome.AI.Core.Spaces
             double _r1 = rand.NextDouble();
 
             _w.reward = 1.0d;
-            _w.credits = CONST.MAX_CREDIT;
             _w.h_index = _r1 * CONST.MAX_HUBSPACE;
+
+            if (CONST.USE_FILTERS)
+            _w.credits = CONST.MAX_CREDIT;
 
             return _w;
         }

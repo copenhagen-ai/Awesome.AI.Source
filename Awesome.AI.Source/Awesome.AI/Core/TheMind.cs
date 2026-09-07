@@ -286,7 +286,9 @@ namespace Awesome.AI.Core
              * This is the algorithm for producing thought/making the choise
              * */
 
-            core.UpdateCredit();
+            if (CONST.USE_FILTERS)
+                core.UpdateCredit();
+            
             core.StopCondition();
             
             if (unit_current.IsIDLE())
