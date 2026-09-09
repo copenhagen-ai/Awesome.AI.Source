@@ -252,7 +252,7 @@ namespace Awesome.AI.Core.Electrical
 
         public double Damping(TheMind mind)
         {
-            if (!CONST.USE_FILTERS)
+            if (!CONST.USE_CREDITS)
                 return -1.0d;
                             
             /*

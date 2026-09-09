@@ -20,9 +20,6 @@ namespace Awesome.AI.Core.Internals
 
         public bool LowCut(UNIT unit, string axis)//aka SayNo
         {
-            if (!CONST.USE_FILTERS)
-                return true;
-            
             /*
              * Lowcut filter?
              * */
@@ -47,7 +44,7 @@ namespace Awesome.AI.Core.Internals
 
         public bool Credits(UNIT unit, string axis)
         {
-            if (!CONST.USE_FILTERS)
+            if (!CONST.USE_CREDITS)
                 return true;
 
             if (unit == null)

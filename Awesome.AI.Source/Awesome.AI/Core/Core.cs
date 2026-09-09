@@ -129,7 +129,7 @@ namespace Awesome.AI.Core
 
         public void UpdateCredit()
         {
-            if (!CONST.USE_FILTERS)
+            if (!CONST.USE_CREDITS)
                 return;
 
             List<UNIT> list = mind.access.UNITS_ALL();

@@ -163,7 +163,7 @@ namespace Awesome.AI.Variables
         public const SELECTCURRENT select_curr = SELECTCURRENT.PYTH6;
         public const SELECTACTUAL select_act = SELECTACTUAL.DOMINANT;
 
-        public const bool USE_FILTERS = false;
+        public const bool USE_CREDITS = false;
 
         public const bool AGENT_USE_TIMER = false;
         public const int AGENT_DELAY_MS = 10;

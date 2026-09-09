@@ -163,8 +163,8 @@ namespace Awesome.AI.Core.Spaces
             _w.reward = 1.0d;
             _w.h_index = _r1 * CONST.MAX_HUBSPACE;
 
-            if (CONST.USE_FILTERS)
-            _w.credits = CONST.MAX_CREDIT;
+            if (CONST.USE_CREDITS)
+                _w.credits = CONST.MAX_CREDIT;
 
             return _w;
         }
