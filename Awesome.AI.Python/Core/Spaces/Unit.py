@@ -33,9 +33,11 @@ class UNIT:
     def Create(mind, h_guid, index, data, ticket, ut, lt):
         unit = UNIT(
             ticket=Ticket(ticket or "NOTICKET"), unit_type=ut, ld_type=lt,
-            guid=h_guid, data=data, mind=mind, credits=CONST.MAX_CREDIT, reward=1.0,
+            guid=h_guid, data=data, mind=mind, reward=1.0,
             h_index=random.random() * CONST.MAX_HUBSPACE,
         )
+        if CONST.USE_CREDITS:
+            unit.credits = CONST.MAX_CREDIT
         for axis, value in zip(CONST.AXES, index):
             unit.UIset(axis, value)
         return unit

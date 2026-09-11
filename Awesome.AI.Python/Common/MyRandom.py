@@ -54,7 +54,9 @@ class MyRandom:
             for index in range(count):
                 digits = self.Rand(index + self.shift_a)
                 try:
-                    decimal = int(digits[:4]) / 10000.0
+                    if len(digits) < 4:
+                        raise IndexError("MyRandomInt requires four digits")
+                    decimal = int(digits[0] + digits[1] + digits[2] + digits[3]) / 10000.0
                     result.append(int((i_max + 1) * decimal))
                 except (ValueError, IndexError):
                     result.append(0)

@@ -11,6 +11,8 @@ class Filters:
         low_unit = self.mind.access.UNITS_ALL(ORDER.BYINDEX)[CONST.LOWCUT]
         return unit.UIget("will") > low_unit.UIget("will")
     def Credits(self, unit, axis):
+        if not CONST.USE_CREDITS:
+            return True
         if unit is None: raise ValueError("unit")
         if self.mind.STATE == STATE.QUICKDECISION or axis != CONST.AXES[0]: return True
         return unit.credits > CONST.LOW_CREDIT

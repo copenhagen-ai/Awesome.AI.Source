@@ -1,5 +1,6 @@
 from collections import deque
 from awesome_ai.Interfaces import IMechanics
+from awesome_ai.Variables.Constants import CONST
 from .MechParams import MechParams
 from .MechSymbolicOut import MechSymbolicOut
 
@@ -29,5 +30,8 @@ class e_CircuitSimulator(IMechanics):
             self.mp.posxy = self.stage.Step(self.mp.batteryVoltage, 1.0, 1.0, self.mp.dt or .01)
             self.feedback.Push(self.mp.posxy)
     def DeltaTime(self): return self.mp.dt
-    def Damping(self, mind): return self.feedback.Average()
+    def Damping(self, mind):
+        if not CONST.USE_CREDITS:
+            return -1.0
+        return self.feedback.Average()
     def Calculate(self, match, cycles): self.Calc(None, cycles); self.ms.Convert(self.mp, self.type)

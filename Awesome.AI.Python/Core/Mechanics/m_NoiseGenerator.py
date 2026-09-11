@@ -80,7 +80,7 @@ class m_NoiseGenerator(IMechanics):
         if self.mind.goodbye: return 0.0
         if type not in (MECHANICS.TUGOFWAR_LOW, MECHANICS.BALLONHILL_LOW):
             raise RuntimeError("m_NoiseGenerator, Friction")
-        return self.mh.Friction(self.mind) * 0.001 * mp.m1 * CONST.GRAVITY * -_sign(mp.vv_curr)
+        return self.mh.FrictionRand(self.mind) * 0.001 * mp.m1 * CONST.GRAVITY * -_sign(mp.vv_curr)
 
     def Friction2(self, mp, type):
         if self.mind.goodbye: return 0.0
@@ -90,11 +90,11 @@ class m_NoiseGenerator(IMechanics):
 
     def Friction3(self, mp, type):
         if self.mind.goodbye: return 0.0
-        return 500.0 * self.mh.Friction(self.mind) * -_sign(mp.vv_curr)
+        return 500.0 * self.mh.FrictionRand(self.mind) * -_sign(mp.vv_curr)
 
     def Friction4(self, mp, type):
         if self.mind.goodbye: return 0.0
-        return 500.0 * self.mh.Friction(self.mind) * -_sign(mp.f_sta + mp.f_dyn)
+        return 500.0 * self.mh.FrictionRand(self.mind) * -_sign(mp.f_sta + mp.f_dyn)
 
     def ApplyStatic(self, mp, type):
         if mp.acc_curr == 0.0: mp.acc_curr = 1.0

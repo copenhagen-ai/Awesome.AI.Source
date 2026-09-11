@@ -14,7 +14,7 @@ class USSetup:
         self.location_what_decision = (
             [CONST.LDAT_LOC_WHAT_u1] * 7
             + [CONST.LDAT_LOC_WHAT_u2] * 7
-            + [CONST.LDAT_LOC_WHAT_u3] * 6
+            + [CONST.LDAT_LOC_WHAT_u3] * 7
         )
         self.answer_should_decision = [CONST.LDAT_ANS_SHOULD] * 8 + [CONST.LDAT_ANS_SHOULD] * 2
         self.answer_what_decision = (
@@ -27,16 +27,16 @@ class USSetup:
         self.Common(CONST.NUMBER_OF_UNITS, self.Tags(mind.mindtype), UNITTYPE.JUSTAUNIT, LONGTYPE.NONE, TONE.RANDOM)
 
         count = 1
-        count = self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, self.location_should_decision,
-                            UNITTYPE.LDECISION, LONGTYPE.LOCATION, count, TONE.RANDOM)
-        count = self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_WHAT, self.location_what_decision,
-                            UNITTYPE.LDECISION, LONGTYPE.LOCATION, count, TONE.HIGH)
-        count = self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, self.answer_should_decision,
-                            UNITTYPE.LDECISION, LONGTYPE.ANSWER, count, TONE.RANDOM)
-        count = self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_WHAT, self.answer_what_decision,
-                            UNITTYPE.LDECISION, LONGTYPE.ANSWER, count, TONE.LOW)
-        self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, self.ask_should_decision,
-                    UNITTYPE.LDECISION, LONGTYPE.ASK, count, TONE.MID)
+        # count = self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, self.location_should_decision,
+        #                     UNITTYPE.LDECISION, LONGTYPE.LOCATION, count, TONE.RANDOM)
+        # count = self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_WHAT, self.location_what_decision,
+        #                     UNITTYPE.LDECISION, LONGTYPE.LOCATION, count, TONE.HIGH)
+        # count = self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, self.answer_should_decision,
+        #                     UNITTYPE.LDECISION, LONGTYPE.ANSWER, count, TONE.RANDOM)
+        # count = self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_WHAT, self.answer_what_decision,
+        #                     UNITTYPE.LDECISION, LONGTYPE.ANSWER, count, TONE.LOW)
+        # self.Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, self.ask_should_decision,
+        #             UNITTYPE.LDECISION, LONGTYPE.ASK, count, TONE.MID)
 
     def Tags(self, mindtype):
         if mindtype == MINDS.ANDREW: return list(CONST.sub_andrew)

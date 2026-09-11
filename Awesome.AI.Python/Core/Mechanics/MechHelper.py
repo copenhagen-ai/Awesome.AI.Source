@@ -91,7 +91,7 @@ class MechHelper:
         if x_meter > mp.posx_high: mp.posx_high = x_meter
         return x_meter
 
-    def Friction(self, mind):
-        credits = mind.unit_current.credits
-        shift = mind.calc.Normalize(credits, 0.0, 10.0, -5.0, 5.0)
+    def FrictionRand(self, mind):
+        credits = mind.rand.MyRandomDouble(1)[0]
+        shift = mind.calc.Normalize(credits, 0.0, 1.0, -2.0, 2.0)
         return mind.calc.Logistic(shift)

@@ -108,8 +108,7 @@ class TheMind:
                 self.ok = False
 
             self.CorePost(self._pro)
-            # Systems remains intentionally disabled for the simulation path.
-            # self.Systems(self._pro)
+            self.Systems(self._pro)
             self.Post(self._pro)
             if self._pro:
                 self.cycles = 0
@@ -128,7 +127,9 @@ class TheMind:
         self.json = self.o_json.GetJson(_pro)
 
     def Core(self, _pro):
-        self.core.UpdateCredit(); self.core.StopCondition()
+        if CONST.USE_CREDITS:
+            self.core.UpdateCredit()
+        # self.core.StopCondition()
         if self.unit_current.IsIDLE(): return True
         for pattern in (PATTERN.MOODGENERAL, PATTERN.MOODGOOD, PATTERN.MOODBAD): self.mech.Calculate(pattern, self.cycles)
         self.down.Modify(); self.mech.mp.mprops.Update()
@@ -147,8 +148,12 @@ class TheMind:
         if self.unit_current.Data in quick_names:
             self._quick.Decide(self.unit_current, self.unit_current.Data)
         self.whistle.Do(_pro)
-        self.g_math.Learn(self.g_math.GetProblem(-1), _pro)
-        self.g_math.Solve(self.g_math.GetProblem(-1), _pro)
+        # self.g_math.Learn(self.g_math.GetProblem(-1), _pro)
+        # self.g_math.Solve(self.g_math.GetProblem(-1), _pro)
         if self.STATE == STATE.QUICKDECISION: return
-        for decision_type in self.lng_dec: self._long.Decide(_pro, decision_type)
-        self.mood.Generate(_pro); self.mono1.Create(_pro); self.mono2.Create(_pro)
+
+        # for decision_type in self.lng_dec:
+        #     self._long.Decide(_pro, decision_type)
+        self.mood.Generate(_pro)
+        self.mono1.Create(_pro)
+        self.mono2.Create(_pro)

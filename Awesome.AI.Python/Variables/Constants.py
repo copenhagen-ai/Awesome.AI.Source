@@ -8,6 +8,7 @@ class CONST:
     LSUB_SHOULD = "long_decision_should"
     LSUB_WHAT = "long_decision_what"
     QSUB_SHOULD = "quick_decision_should"
+    QUICK = "QUICK"
     LDAT_LOC_SHOULD = "SHOULD_A"
     LDAT_ANS_SHOULD = "SHOULD_B"
     LDAT_ASK_SHOULD = "SHOULD_C"
@@ -74,6 +75,7 @@ class CONST:
     transfer = TRANSFER.NONE
     select_curr = SELECTCURRENT.PYTH6
     select_act = SELECTACTUAL.DOMINANT
+    USE_CREDITS = False
 
     @staticmethod
     def DECI_SUBJECT_CONTAINS(value: str) -> bool:

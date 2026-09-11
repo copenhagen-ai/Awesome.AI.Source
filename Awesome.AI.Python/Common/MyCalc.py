@@ -1,13 +1,12 @@
 import math
-import random
 
 from awesome_ai.Variables.Constants import CONST
 
 
 class MyCalc:
-    def __init__(self, mind=None): self.mind = mind
+    def __init__(self, mind): self.mind = mind
     def Chance(self, count, gt):
-        rand = self.mind.rand.MyRandomInt(1, count)[0] if self.mind is not None else random.randrange(count)
+        rand = self.mind.rand.MyRandomInt(1, count)[0]
         return rand > count - gt
     def IsRandomSample(self, count, gt): return self.Chance(count, gt)
     def Normalize(self, val, valmin, valmax, ranmin=0.0, ranmax=1.0):

@@ -50,6 +50,8 @@ class Core:
         self.mind.goodbye = self.mind.theanswer.data == "It does not"
 
     def UpdateCredit(self):
+        if not CONST.USE_CREDITS:
+            return
         current = self.mind.unit_current
         for unit in self.mind.access.UNITS_ALL():
             if unit is None or not unit.Root or unit.Root == current.Root:
