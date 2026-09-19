@@ -120,11 +120,11 @@ namespace Awesome.AI.Core
              * */
 
             if ((mind.epochs) >= (60 * mind.bot.RUNTIME))
-                mind.theanswer.Data = "It's just a joke";
+                mind.theanswer.Data = "42";
                         
             string answer = mind.theanswer.Data;
             
-            mind.goodbye = answer == "It's just a joke" ? true : false;
+            mind.goodbye = answer == "42" ? true : false;
         }
 
         public void UpdateCredit()
