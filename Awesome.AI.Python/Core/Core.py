@@ -13,8 +13,14 @@ class Core:
         self.remember = []
         self.hits = {index * 10: 0 for index in range(1, 11)}
         self.units = {index * 10: 0 for index in range(1, 11)}
-        available = mind.access.UNITS_ALL()
-        self.history.extend(available[index] for index in (rand1, rand2, rand3))
+        # ``unit_actual`` represents a normal thought. Long-decision units
+        # are operational control units and must not seed history.
+        available = [unit for unit in mind.access.UNITS_ALL() if unit.IsUNIT()]
+        if not available:
+            raise RuntimeError("Core requires normal units to seed history")
+        self.history.extend(
+            available[index % len(available)] for index in (rand1, rand2, rand3)
+        )
         mind.unit_actual = self.history[1]
 
     def OK(self, old):

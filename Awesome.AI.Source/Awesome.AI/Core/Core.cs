@@ -27,9 +27,18 @@ namespace Awesome.AI.Core
             hits = new Dictionary<int, int>();
             units = new Dictionary<int, int>();
 
-            history.Add(mind.access.UNITS_ALL()[rand1]);
-            history.Add(mind.access.UNITS_ALL()[rand2]);
-            history.Add(mind.access.UNITS_ALL()[rand3]);
+            // ``unit_actual`` represents a normal thought. Long-decision
+            // units are operational control units and must not seed history.
+            List<UNIT> available = mind.access.UNITS_ALL()
+                .Where(unit => unit.IsUNIT())
+                .ToList();
+
+            if (!available.Any())
+                throw new InvalidOperationException("Core requires normal units to seed history");
+
+            history.Add(available[rand1 % available.Count]);
+            history.Add(available[rand2 % available.Count]);
+            history.Add(available[rand3 % available.Count]);
             
             mind.unit_actual = history[1];
 
