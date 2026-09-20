@@ -44,10 +44,15 @@ class Core:
         except (ArithmeticError, RuntimeError):
             return False, 0.0
 
-    def StopCondition(self):
+    def StopCondition1(self):
         if self.mind.epochs >= 60 * self.mind.bot.RUNTIME:
-            self.mind.theanswer.data = "It does not"
-        self.mind.goodbye = self.mind.theanswer.data == "It does not"
+            self.mind.theanswer.data = "42"
+        self.mind.goodbye = self.mind.theanswer.data == "42"
+        
+    def StopCondition2(self):
+        if self.mind.stop:
+            self.mind.theanswer.data = "42"
+        self.mind.goodbye = self.mind.theanswer.data == "42"
 
     def UpdateCredit(self):
         if not CONST.USE_CREDITS:

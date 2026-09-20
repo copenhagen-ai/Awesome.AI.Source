@@ -165,7 +165,7 @@ namespace Awesome.AI.CoreSystems
 
         public bool Valid(UNIT _u)
         {
-            if (_u.IsDECISION()) return true;
+            if (_u.IsLONGDECISION()) return true;
 
             try
             {
@@ -253,7 +253,7 @@ namespace Awesome.AI.CoreSystems
             if (_u.ticket.IsNull())
                 throw new Exception("Valid");
 
-            if (_u.IsDECISION())
+            if (_u.IsLONGDECISION())
                 return true;
 
             if (_u.IsQDECISION())

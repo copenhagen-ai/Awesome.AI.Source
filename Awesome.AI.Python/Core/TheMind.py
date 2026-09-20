@@ -78,6 +78,7 @@ class TheMind:
         self.Pre(True); self.Post(True)
         self.theanswer = UNIT.Create(self, "GUID", [-1] * 6, "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE)
         self.ok = True
+        self.stop = False
 
     def SetAccess(self, _pro):
         self.count = 0 if _pro else self.count + 1
@@ -98,7 +99,7 @@ class TheMind:
                 return
 
             # Replaces the removed C# do_process/ProcessPass timer.
-            self._pro = (self.cycles_all & 50) == 0
+            self._pro = (self.cycles_all % 50) == 0
             if self._pro:
                 self.epochs += 1
 
@@ -129,7 +130,8 @@ class TheMind:
     def Core(self, _pro):
         if CONST.USE_CREDITS:
             self.core.UpdateCredit()
-        # self.core.StopCondition()
+        # self.core.StopCondition1()
+        # self.core.StopCondition2()
         if self.unit_current.IsIDLE(): return True
         for pattern in (PATTERN.MOODGENERAL, PATTERN.MOODGOOD, PATTERN.MOODBAD): self.mech.Calculate(pattern, self.cycles)
         self.down.Modify(); self.mech.mp.mprops.Update()

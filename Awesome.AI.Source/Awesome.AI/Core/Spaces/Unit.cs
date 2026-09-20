@@ -4,6 +4,7 @@ using Awesome.AI.CoreSystems;
 using Awesome.AI.Interfaces;
 using Awesome.AI.Source.Awesome.AI.Core.Internals;
 using Awesome.AI.Variables;
+using System.Diagnostics.Metrics;
 using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.Core.Spaces
@@ -166,6 +167,15 @@ namespace Awesome.AI.Core.Spaces
             if (CONST.USE_CREDITS)
                 _w.credits = CONST.MAX_CREDIT;
 
+            if (ut == UNITTYPE.JUSTAUNIT)
+            {
+                mind.memory.Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, CONST.LDAT_LOC_SHOULD, UNITTYPE.LDS, LONGTYPE.LOCATION, TONE.RANDOM);
+                mind.memory.Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, mind.memory.GetLOCWHAT, UNITTYPE.LDW, LONGTYPE.LOCATION, TONE.HIGH);
+                mind.memory.Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, CONST.LDAT_ANS_SHOULD, UNITTYPE.LDS, LONGTYPE.ANSWER, TONE.RANDOM);
+                mind.memory.Decide(STATE.JUSTRUNNING, CONST.LSUB_WHAT, mind.memory.GetANSWHAT, UNITTYPE.LDW, LONGTYPE.ANSWER, TONE.LOW);
+                mind.memory.Decide(STATE.JUSTRUNNING, CONST.LSUB_SHOULD, CONST.LDAT_ASK_SHOULD, UNITTYPE.LDS, LONGTYPE.ASK, TONE.MID);
+            }
+
             return _w;
         }
 
@@ -207,7 +217,7 @@ namespace Awesome.AI.Core.Spaces
 
         private void UpdateTRA()
         {
-            if (IsDECISION())
+            if (IsLONGDECISION())
                 return;
 
             List<UNIT> units = mind.hub.UnitsPerOccupasionc();
@@ -226,7 +236,7 @@ namespace Awesome.AI.Core.Spaces
             if (!mind.reward)
                 return;
 
-            if (IsDECISION())
+            if (IsLONGDECISION())
                 return;
 
             //reward += 1.0 * trace;
@@ -243,13 +253,13 @@ namespace Awesome.AI.Core.Spaces
                 double reward_norm = mind.calc.Normalize(reward, 0.0d, max, 0.0d, 1.0d);
 
                 if (reward_norm < CONST.EPSILON1)
-                    mind.access.UNITS_REM(unit);                
+                    mind.access.UNITS_REM(false, unit);                
             }
         }
 
         private void UpdateHUB()
         {
-            if (IsDECISION())
+            if (IsLONGDECISION())
                 return;
 
             mind.reward = false;
@@ -404,15 +414,15 @@ namespace Awesome.AI.Core.Spaces
 
             switch (_new.xx)
             {
-                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
-                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(false, this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(false, this); break;
                 default: UIset("will", _new.xx); return;
             }
 
             switch (_new.yy)
             {
-                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
-                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(false, this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(false, this); break;
                 default: UIset("conflict", _new.yy); return;
             }
         }
@@ -438,43 +448,43 @@ namespace Awesome.AI.Core.Spaces
 
             switch (_new.xx)
             {
-                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
-                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(false, this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(false, this); break;
                 default: UIset("will", _new.xx); return;
             }
 
             switch (_new.yy)
             {
-                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
-                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(false, this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(false, this); break;
                 default: UIset("conflict", _new.yy); return;
             }
 
             switch (_new.zz)
             {
-                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
-                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(false, this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(false, this); break;
                 default: UIset("conflict", _new.zz); return;
             }
 
             switch (_new.ww)
             {
-                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
-                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(false, this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(false, this); break;
                 default: UIset("conflict", _new.ww); return;
             }
 
             switch (_new.vv)
             {
-                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
-                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(false, this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(false, this); break;
                 default: UIset("conflict", _new.vv); return;
             }
 
             switch (_new.uu)
             {
-                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(this); break;
-                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(this); break;
+                case < CONST.MIN + CONST.MIN: mind.access.UNITS_REM(false, this); break;
+                case > CONST.MAX - CONST.MIN: mind.access.UNITS_REM(false, this); break;
                 default: UIset("conflict", _new.uu); return;
             }
         }
@@ -491,7 +501,11 @@ namespace Awesome.AI.Core.Spaces
 
         public bool IsIDLE() => unit_type == UNITTYPE.IDLE;
 
-        public bool IsDECISION() => unit_type == UNITTYPE.LDECISION;
+        public bool IsLDS() => unit_type == UNITTYPE.LDS;
+
+        public bool IsLDW() => unit_type == UNITTYPE.LDW;
+
+        public bool IsLONGDECISION() => unit_type == UNITTYPE.LDW || unit_type == UNITTYPE.LDS;
 
         public bool IsQDECISION() => unit_type == UNITTYPE.QDECISION;
     }

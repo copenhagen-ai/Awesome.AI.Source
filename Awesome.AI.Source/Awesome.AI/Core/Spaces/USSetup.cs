@@ -6,118 +6,45 @@ namespace Awesome.AI.Core.Spaces
 {
     public class USSetup
     {
-        private List<string> location_should_decision = new List<string>()
+        private int count_loc_what = 0;
+        public string GetLOCWHAT
         {
-            //Constants.decision_u1,//MAKEDECISION
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-            CONST.LDAT_LOC_SHOULD,//YES
-                                    
-            //Constants.should_decision_u2,//NO
-        };
+            get
+            {
+                if (count_loc_what > 2)
+                    count_loc_what = 0;
 
-        private List<string> location_what_decision = new List<string>()
+                switch (count_loc_what)
+                {
+                    case 0: return CONST.LDAT_LOC_WHAT_u1;
+                    case 1: return CONST.LDAT_LOC_WHAT_u2;
+                    case 2: return CONST.LDAT_LOC_WHAT_u3;
+                    default: throw new Exception("GetWHAT, USSetup");
+                }
+
+                count_loc_what++;
+            }
+        }
+
+        private int count_ans_what = 0;
+        public string GetANSWHAT
         {
-            //Constants.decision_u1,//MAKEDECISION
-            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
-            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
-            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
-            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
-            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
-            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
-            CONST.LDAT_LOC_WHAT_u1,//KITCHEN
-            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
-            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
-            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
-            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
-            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
-            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
-            CONST.LDAT_LOC_WHAT_u2,//BEDROOM
-            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_LOC_WHAT_u3,//LIVINGROOM
-        };
+            get
+            {
+                if (count_ans_what > 2)
+                    count_ans_what = 0;
 
-        private List<string> answer_should_decision = new List<string>()
-        {
-            //Constants.decision_u1,//MAKEDECISION
-            CONST.LDAT_ANS_SHOULD,//YES
-            CONST.LDAT_ANS_SHOULD,//YES
-            CONST.LDAT_ANS_SHOULD,//YES
-            CONST.LDAT_ANS_SHOULD,//YES
-            CONST.LDAT_ANS_SHOULD,//YES
-            CONST.LDAT_ANS_SHOULD,//YES
-            CONST.LDAT_ANS_SHOULD,//YES
-            CONST.LDAT_ANS_SHOULD,//YES
-            CONST.LDAT_ANS_SHOULD,//NO
-            CONST.LDAT_ANS_SHOULD,//NO
-                                    
-            //Constants.should_decision_u2,//NO
-        };
+                switch (count_ans_what)
+                {
+                    case 0: return CONST.LDAT_ANS_WHAT_u1;
+                    case 1: return CONST.LDAT_ANS_WHAT_u2;
+                    case 2: return CONST.LDAT_ANS_WHAT_u3;
+                    default: throw new Exception("GetANSWHAT, USSetup");
+                }
 
-        private List<string> answer_what_decision = new List<string>()
-        {
-            //Constants.decision_u1,//MAKEDECISION
-            CONST.LDAT_ANS_WHAT_u1,//KITCHEN
-            CONST.LDAT_ANS_WHAT_u1,//KITCHEN
-            CONST.LDAT_ANS_WHAT_u1,//KITCHEN
-            CONST.LDAT_ANS_WHAT_u1,//KITCHEN
-            CONST.LDAT_ANS_WHAT_u2,//BEDROOM
-            CONST.LDAT_ANS_WHAT_u2,//BEDROOM
-            CONST.LDAT_ANS_WHAT_u2,//BEDROOM
-            CONST.LDAT_ANS_WHAT_u2,//BEDROOM
-            CONST.LDAT_ANS_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_ANS_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_ANS_WHAT_u3,//LIVINGROOM
-            CONST.LDAT_ANS_WHAT_u3,//LIVINGROOM
-        };
-
-        private List<string> ask_should_decision = new List<string>()
-        {
-            //Constants.decision_u1,//MAKEDECISION
-            CONST.LDAT_ASK_SHOULD,//YES
-            CONST.LDAT_ASK_SHOULD,//YES
-            CONST.LDAT_ASK_SHOULD,//YES
-            CONST.LDAT_ASK_SHOULD,//YES
-            CONST.LDAT_ASK_SHOULD,//YES
-            CONST.LDAT_ASK_SHOULD,//NO
-            CONST.LDAT_ASK_SHOULD,//NO
-            CONST.LDAT_ASK_SHOULD,//NO
-            CONST.LDAT_ASK_SHOULD,//NO
-            CONST.LDAT_ASK_SHOULD,//NO
-                                    
-            //Constants.should_decision_u2,//NO
-        };
-
-        //private List<string> whistle_should_decision = new List<string>()
-        //{
-        //    Constants.whistle_decision_u1,
-        //    Constants.whistle_decision_u1,
-        //    Constants.whistle_decision_u1,
-        //    Constants.whistle_decision_u1,
-        //    Constants.whistle_decision_u1,            
-        //};
+                count_ans_what++;
+            }
+        }
 
         public List<UNIT> units_running { get; set; }
         public List<UNIT> units_decision { get; set; }
@@ -132,50 +59,8 @@ namespace Awesome.AI.Core.Spaces
             this.mind = mind;
 
             units_running = new List<UNIT>();
-            units_decision = new List<UNIT>();
-
-            List<string> commen = Tags(mind.mindtype);
-            //List<string> long_decision_should = this.location_should_decision;
-            //List<string> long_decision_what = this.location_what_decision;
-            //List<string> answer_should_decision = this.answer_should_decision;
-            //List<string> answer_what_decision = this.answer_what_decision;
-            //List<string> ask_should_decision = this.ask_should_decision;
-
-            Common(CONST.NUMBER_OF_UNITS, commen, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE, TONE.RANDOM);
-
-            int count1 = 1;
-
-            TONE tone;
-            tone = TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, location_should_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
-
-            tone = TONE.HIGH;
-            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_WHAT, location_what_decision, UNITTYPE.LDECISION, LONGTYPE.LOCATION, count1, tone);
-
-            tone = TONE.RANDOM;
-            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, answer_should_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
-
-            tone = TONE.LOW;
-            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_WHAT, answer_what_decision, UNITTYPE.LDECISION, LONGTYPE.ANSWER, count1, tone);
-
-            tone = TONE.MID;
-            count1 = Decide(STATE.JUSTRUNNING, 100, CONST.LSUB_SHOULD, ask_should_decision, UNITTYPE.LDECISION, LONGTYPE.ASK, count1, tone);
-
-            //Dictionary<string, int[]> dict = mind.mindtype == MINDS.ROBERTA ? CONST.DECISIONS_R : CONST.DECISIONS_A;
-            //foreach (var kv in dict)
-            //{
-            //tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            //Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "WHISTLE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
-
-            //tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            //Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "MATHLEARN"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
-
-            //tone = mind.bot.mech_high == MECHANICS.GRAVITY_HIGH ? TONE.RANDOM : TONE.RANDOM;
-            //Quick(5 /*kv.Value[1]*/, CONST.QSUB_SHOULD, "MATHSOLVE"/*kv.Key*/, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
-            //}
-        }
-
-        
+            units_decision = new List<UNIT>();            
+        }        
 
         private double GetIndex(TONE tone, double _rand)
         {
@@ -266,12 +151,6 @@ namespace Awesome.AI.Core.Spaces
 
         public void Common(/*int num_regions, */int num_units, List<string> list, UNITTYPE utype, LONGTYPE ltype, TONE tone)
         {
-            //XElement xdoc;
-            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
-            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
-            //else
-            //    throw new Exception();
-
             Random random = new Random();
 
             foreach (string s in list)
@@ -285,8 +164,7 @@ namespace Awesome.AI.Core.Spaces
                 List<UNIT> _u = new List<UNIT>();
 
                 string guid = Guid.NewGuid().ToString();
-
-                //int _count = 0;
+                                
                 for (int i = 1; i <= num_units; i++)
                 {
                     double rand1 = mind.cycles < CONST.FIRST_RUN ?
@@ -316,8 +194,6 @@ namespace Awesome.AI.Core.Spaces
                     double[] arr = [GetIndex(tone, rand1), GetIndex(tone, rand2), GetIndex(tone, rand3), GetIndex(tone, rand4), GetIndex(tone, rand5), GetIndex(tone, rand6)];
 
                     _u.Add(UNIT.Create(mind, guid, arr, "DATA", "" + s + ticket[i - 1], utype, ltype));
-
-                    //_count++;
                 }
 
                 switch (mind.STATE)
@@ -329,89 +205,44 @@ namespace Awesome.AI.Core.Spaces
             }
         }
 
-        public int Decide(STATE state, int index, string subject, List<string> units, UNITTYPE utype, LONGTYPE ltype, int count, TONE tone)
+        public void Decide(STATE state, string subject, string s, UNITTYPE utype, LONGTYPE ltype, TONE tone)
         {
-            //XElement xdoc;
-            //if (mind.parms.setup_tags == TAGSETUP.PRIME)
-            //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
-            //else
-            //    throw new Exception();
-
             List<UNIT> _u = new List<UNIT>();
 
             Random random = new Random();
 
-            foreach (string s in units)
+            string guid = Guid.NewGuid().ToString();
+
+            double rand1 = mind.rand.MyRandomDouble(100)[10];//->100
+
+            double rand2 = mind.rand.MyRandomDouble(100)[20];//->200
+
+            double rand3 = mind.rand.MyRandomDouble(100)[30];//->200
+
+            double rand4 = mind.rand.MyRandomDouble(100)[40];//->200
+
+            double rand5 = mind.rand.MyRandomDouble(100)[50];//->200
+
+            double rand6 = mind.rand.MyRandomDouble(100)[60];//->200
+
+            double[] arr = [GetIndex(tone, rand1), GetIndex(tone, rand2), GetIndex(tone, rand3), GetIndex(tone, rand4), GetIndex(tone, rand5), GetIndex(tone, rand6)];
+
+            switch (state)
             {
-
-                string guid = Guid.NewGuid().ToString();
-
-                double rand1 = mind.rand.MyRandomDouble(100)[10];//->100
-
-                double rand2 = mind.rand.MyRandomDouble(100)[20];//->200
-
-                double rand3 = mind.rand.MyRandomDouble(100)[30];//->200
-
-                double rand4 = mind.rand.MyRandomDouble(100)[40];//->200
-
-                double rand5 = mind.rand.MyRandomDouble(100)[50];//->200
-
-                double rand6 = mind.rand.MyRandomDouble(100)[60];//->200
-
-                double[] arr = [GetIndex(tone, rand1), GetIndex(tone, rand2), GetIndex(tone, rand3), GetIndex(tone, rand4), GetIndex(tone, rand5), GetIndex(tone, rand6)];
-
-                switch (state)
-                {
-                    case STATE.JUSTRUNNING: 
-                        _u.Add(UNIT.Create(mind, guid, arr, s, "NONE", utype, ltype)); break;
-                    case STATE.QUICKDECISION: 
-                        _u.Add(UNIT.Create(mind, guid, arr, s, "NONE", utype, ltype)); break;
-                    default: throw new NotImplementedException();
-                }
-
-                //_count += 10;
-                count++;
+                case STATE.JUSTRUNNING: 
+                    _u.Add(UNIT.Create(mind, guid, arr, s, "NONE", utype, ltype)); break;
+                case STATE.QUICKDECISION: 
+                    _u.Add(UNIT.Create(mind, guid, arr, s, "NONE", utype, ltype)); break;
+                default: throw new NotImplementedException();
             }
-
+            
             switch (state)
             {
                 case STATE.JUSTRUNNING: units_running = units_running.Concat(_u).ToList(); break;
                 case STATE.QUICKDECISION: units_decision = units_decision.Concat(_u).ToList(); break;
                 default: throw new NotImplementedException();
             }
-
-            return count;
         }
 
     }
 }
-
-//public void Quick(/*int max_units, */int num_units, string subject, string name, UNITTYPE utype, LONGTYPE ltype, TONE tone)
-//{
-//    //XElement xdoc;
-//    //if (mind.parms.setup_tags == TAGSETUP.PRIME)
-//    //    xdoc = XElement.Load(PathSetup.MyPath(mind.settings));
-//    //else
-//    //    throw new Exception();
-
-//    List<UNIT> _u = new List<UNIT>();
-
-//    Random random = new Random();
-
-//    string guid = Guid.NewGuid().ToString();
-
-//    for (int i = 0; i < num_units; i++)
-//    {
-//        double rand1 = mind.cycles < CONST.FIRST_RUN ?
-//        random.NextDouble() :
-//        mind.rand.MyRandomDouble(num_units)[100];
-
-//        double rand2 = mind.cycles < CONST.FIRST_RUN ?
-//        random.NextDouble() :
-//        mind.rand.MyRandomDouble(num_units)[200];
-
-//        _u.Add(UNIT.Create(mind, guid, [GetIndex(tone, rand1), GetIndex(tone, rand2)], name, "NONE", utype, ltype));
-//    }
-
-//    units_running = units_running.Concat(_u).ToList();
-//}

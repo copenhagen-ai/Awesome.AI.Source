@@ -21,14 +21,18 @@ namespace Awesome.AI.Core.Spaces
             if (mind.STATE == STATE.QUICKDECISION && !mind.memory.units_decision.Any())
                 throw new Exception("Memory, UNITS_ALL 2");
 
+            bool active = mind._long.Active;
+            LONGTYPE longtype = mind._long.ActiveType;
+
             switch (mind.STATE)
             {
                 case STATE.JUSTRUNNING:
                     if (order == ORDER.BYINDEX)
-                        return mind.memory.units_running.OrderBy(x=>x.UIget("will")).ToList();
+                        return mind.memory.units_running.Where(x=> active ? (x.IsUNIT() || (x.IsLONGDECISION() && x.ld_type == longtype)) : x.IsUNIT() || x.IsLDS()).OrderBy(x=>x.UIget("will")).ToList();
                     if (order == ORDER.BYVARIABLE)
-                        return mind.memory.units_running.OrderBy(x=>x.Variable).ToList();
-                    return mind.memory.units_running;
+                        return mind.memory.units_running.Where(x => active ? (x.IsUNIT() || (x.IsLONGDECISION() && x.ld_type == longtype)) : x.IsUNIT() || x.IsLDS()).OrderBy(x=>x.Variable).ToList();
+                    
+                    return mind.memory.units_running.Where(x => active ? (x.IsUNIT() || (x.IsLONGDECISION() && x.ld_type == longtype)) : x.IsUNIT() || x.IsLDS()).ToList();
                 case STATE.QUICKDECISION: 
                     return mind.memory.units_decision.ToList();
                 default: throw new NotImplementedException();
@@ -60,14 +64,29 @@ namespace Awesome.AI.Core.Spaces
         }
 
 
-        public void UNITS_REM(UNIT unit)
+        public void UNITS_REM(bool is_quick, UNIT unit)
         {
-            mind.meters.units_removed++;
-            mind.memory.units_running.Remove(unit);
+            if (!is_quick)
+                mind.meters.units_removed++;
+
+            List<UNIT> list1 = is_quick ? mind.memory.units_decision : mind.memory.units_running;
+            list1.Remove(unit);
+
+            if (is_quick)
+                return;
+
+            List<UNIT> list2 = list1.Where(x => x.IsLONGDECISION()).ToList();
+
+            for (int i = 0; i < 5; i++)
+            {
+                int rand = mind.rand.MyRandomInt(10, list2.Count)[i];
+                UNIT _u = list2[rand];
+                list1.Remove(_u);
+            }
         }
 
         public void QDRESETU() => mind.memory.units_decision = new List<UNIT>();
-        public void QDREMOVE(UNIT curr) => mind.memory.units_decision.Remove(curr);
+        public void QDREMOVE(UNIT curr) => UNITS_REM(true, curr);
         public int QDCOUNT() => mind.memory.units_decision.Count();        
     }
 }

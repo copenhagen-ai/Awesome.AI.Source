@@ -70,6 +70,7 @@ namespace Awesome.AI.Core
 
         public bool goodbye { get; set; }
         public bool ok { get; set; }
+        public bool stop { get; set; }
         public bool do_process { get; set; }
         public bool chat_answer { get; set; }
         public bool chat_asked { get; set; }
@@ -139,6 +140,9 @@ namespace Awesome.AI.Core
                 g_math = new GoalMath(this);
                 g_arc = new ArcGoal(this);
 
+                List<string> commen = memory.Tags(mindtype);
+                memory.Common(CONST.NUMBER_OF_UNITS, commen, UNITTYPE.JUSTAUNIT, LONGTYPE.NONE, TONE.RANDOM);
+
                 string[] list = { "WHISTLE", "MATHLEARN", "MATHSOLVE", "ARCLEARN", "ARCSOLVE" };
                 q_u_whistle = UNIT.CreateQuick(this, list[0], [50d, 50d, 50d, 50d, 50d, 50d]);
                 q_u_mathlearn = UNIT.CreateQuick(this, list[1], [51d, 50d, 50d, 50d, 50d, 50d]);
@@ -168,6 +172,7 @@ namespace Awesome.AI.Core
                 theanswer = UNIT.Create(this, "GUID", [-1d, -1d, -1d, -1d, -1d, -1d], "I dont Know", "SPECIAL", UNITTYPE.JUSTAUNIT, LONGTYPE.NONE);//set it to "It does not", and the program terminates
 
                 ok = true;
+                stop = false;
                 do_process = false;
             }
             catch (Exception _e)
@@ -288,9 +293,10 @@ namespace Awesome.AI.Core
 
             if (CONST.USE_CREDITS)
                 core.UpdateCredit();
-            
-            core.StopCondition();
-            
+
+            core.StopCondition1();
+            //core.StopCondition2();
+
             if (unit_current.IsIDLE())
                 return true;
 

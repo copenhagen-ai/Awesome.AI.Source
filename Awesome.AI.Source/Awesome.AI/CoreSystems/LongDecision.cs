@@ -1,4 +1,3 @@
-﻿using Awesome.AI.Common;
 using Awesome.AI.Core;
 using Awesome.AI.Core.Spaces;
 using Awesome.AI.Variables;
@@ -6,15 +5,23 @@ using static Awesome.AI.Variables.Enums;
 
 namespace Awesome.AI.CoreSystems
 {
+    // A mind resolves one long-decision session at a time. Decision units are
+    // created/deleted with normal units; the first eligible current unit claims
+    // the session and it remains active until it resolves or cancels.
     public class LongDecision
     {
         public Dictionary<LONGTYPE, string> Result = new Dictionary<LONGTYPE, string>();
         public Dictionary<LONGTYPE, int> State = new Dictionary<LONGTYPE, int>();
 
-        List<double> index = new List<double>();
-        
-        private TheMind mind;
-        private LongDecision() { }
+        private readonly List<double> index = new List<double>();
+        private readonly TheMind mind;
+        private bool active;
+        private LONGTYPE activeType = LONGTYPE.NONE;
+        private int activeState;
+        private int lastRecordedEpoch = -1;
+
+        public bool Active => active;
+        public LONGTYPE ActiveType => activeType;
 
         public LongDecision(TheMind mind, Dictionary<LONGTYPE, string> dec)
         {
@@ -22,146 +29,117 @@ namespace Awesome.AI.CoreSystems
 
             foreach (var kv in dec)
             {
-                State.Add(kv.Key, 0);
-                Result.Add(kv.Key, kv.Value.Replace("WHAT", ""));
+                State[kv.Key] = 0;
+                Result[kv.Key] = kv.Value.Replace("WHAT", "");
             }
         }
 
         public string GetResult(LONGTYPE type)
         {
-            string res = Result[type];
-            mind._long.Result[type] = "";
-            return res;
+            string result = Result[type];
+            Result[type] = "";
+            return result;
         }
 
-        public void Decide(bool _pro, LONGTYPE type)
+        public void Decide(bool process, LONGTYPE type)
         {
-            /*
-             * should this really run on unit_actual
-             * */
-
-            if (!_pro)
+            if (!process || mind.epochs < 5)
                 return;
 
-            if (mind.epochs < 5)
-                return;
+            RecordWill();
 
-            SetAction(mind, type);
-
-            if (!mind.unit_current.IsDECISION())
-                return;
-
-            if (mind.unit_current.ld_type != type)
-                return;
-
-            if (type == LONGTYPE.ASK && mind.chat_asked)
-                return;
-
-            if (type == LONGTYPE.ASK && State[LONGTYPE.ANSWER] > 0)
-                return;
-
-            ACTION actionA = GetActionA(mind);
-            ACTION actionB = GetActionB(mind);
             UNIT unit = mind.unit_current;
+            if (!unit.IsLONGDECISION() || unit.ld_type != type)
+                return;
+
+            if (!active)
+            {
+                if (type == LONGTYPE.ASK && mind.chat_asked)
+                    return;
+
+                if (unit.IsLDW())
+                    return;
+
+                active = true;
+                activeType = type;
+                activeState = 0;
+                State[type] = 0;
+            }
+
+            if (activeType != type)
+                return;
+
+            Resolve(unit, type);
+        }
+
+        private void Resolve(UNIT unit, LONGTYPE type)
+        {
+            ACTION action = GetAction();
             string subject = mind.hub.GetSubject(unit) ?? "";
 
-            if (mind.Roberta())
-                ;
-
-            if (mind.Andrew())
-                ;
-
-            if (subject == CONST.LSUB_SHOULD && State[type] == 0)
+            if (subject == CONST.LSUB_SHOULD && activeState == 0)
             {
-                //location
-                if (unit.Data == CONST.LDAT_LOC_SHOULD && actionB == ACTION.ACTION)
-                    SetResult(type, "", 1);
+                if (unit.Data == CONST.LDAT_LOC_SHOULD && action == ACTION.ACTION)
+                {
+                    activeState = 1;
+                    State[type] = 1;
+                    mind.reward = true;
+                    return;
+                }
 
+                if (unit.Data == CONST.LDAT_ANS_SHOULD)
+                {
+                    Complete(type, action == ACTION.ACTION ? ":YES" : "Im busy right now..");
+                    return;
+                }
 
-                //answer
-                if (unit.Data == CONST.LDAT_ANS_SHOULD && actionB == ACTION.ACTION)
-                    SetResult(type, ":YES", 0);
-
-                if (unit.Data == CONST.LDAT_ANS_SHOULD && actionB == ACTION.DECLINE)
-                    SetResult(type, "Im busy right now..", 0);
-
-                
-                //ask
-                if (unit.Data == CONST.LDAT_ASK_SHOULD && actionB == ACTION.ACTION)
-                    SetResult(type, mind.hub.GetSubject(unit), 0);
+                if (unit.Data == CONST.LDAT_ASK_SHOULD && action == ACTION.ACTION)
+                {
+                    Complete(type, mind.hub.GetSubject(mind.unit_actual) ?? "");
+                    return;
+                }
             }
 
-            if (subject == CONST.LSUB_WHAT && State[type] == 1)
+            if (subject == CONST.LSUB_WHAT && activeState == 1)
             {
-                string _new = unit.Data.Replace(CONST.lng_what, "");
-
                 if (mind.down.d_res < 0.0d)
-                    SetResult(type, "", 0);
-
-                else if (unit.Data != CONST.lng_what + Result[type])
-                    SetResult(type, _new, 0);
+                    End(type);
+                else
+                    Complete(type, unit.Data.Replace(CONST.lng_what, ""));
             }
         }
 
-        private void SetResult(LONGTYPE type, string res, int state)
+        private void Complete(LONGTYPE type, string result)
         {
-            if (state == 1)
-                mind.reward = true;
-
-            if (res != "")
-                Result[type] = res;
-
-            if (state == 0)
-                State[type] = 0;
-
-            if (state == 1)
-                State[type] = 1;
+            if (!string.IsNullOrEmpty(result))
+                Result[type] = result;
+            End(type);
         }
 
-        double thres { get { switch (mind.mindtype) { case MINDS.ROBERTA: return 23.0d; case MINDS.ANDREW: return 40; case MINDS.BASIC: return 40; default: throw new Exception(); } } }
-        
-        private void SetAction(TheMind mind, LONGTYPE type)
+        private void End(LONGTYPE type)
         {
-            if (type != LONGTYPE.LOCATION) //only want the first
+            State[type] = 0;
+            active = false;
+            activeType = LONGTYPE.NONE;
+            activeState = 0;
+        }
+
+        private void RecordWill()
+        {
+            if (lastRecordedEpoch == mind.epochs)
                 return;
 
+            lastRecordedEpoch = mind.epochs;
             index.Add(mind.unit_current.UIget("will"));
-
             if (index.Count > 10)
-                index.RemoveAt(0);            
+                index.RemoveAt(0);
         }
 
-        private ACTION GetActionA(TheMind mind)
+        private ACTION GetAction()
         {
-            if (mind.Roberta())
-                ;
-
-            if (mind.Andrew())
-                ;
-
-            double avg = index.Average();
-
-            if (avg > thres)
-                return ACTION.ACTION;
-
-            return ACTION.DECLINE;            
-        }
-
-        private ACTION GetActionB(TheMind mind)
-        {
-            if (mind.Roberta())
-                ;
-
-            if (mind.Andrew())
-                ;
-
-            double avg = index.Average();
-            double curr = mind.unit_current.UIget("will");
-
-            if (curr >= avg)
-                return ACTION.ACTION;
-
-            return ACTION.DECLINE;
+            double average = index.Average();
+            double current = mind.unit_current.UIget("will");
+            return current >= average ? ACTION.ACTION : ACTION.DECLINE;
         }
     }
 }

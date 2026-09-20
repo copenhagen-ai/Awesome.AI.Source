@@ -111,7 +111,7 @@ namespace Awesome.AI.Core
             }
         }
 
-        public void StopCondition()
+        public void StopCondition1()
         {
             /*
              * ..or if all goals are fulfilled?
@@ -121,9 +121,25 @@ namespace Awesome.AI.Core
 
             if ((mind.epochs) >= (60 * mind.bot.RUNTIME))
                 mind.theanswer.Data = "42";
-                        
+
             string answer = mind.theanswer.Data;
-            
+
+            mind.goodbye = answer == "42" ? true : false;
+        }
+
+        public void StopCondition2()
+        {
+            /*
+             * ..or if all goals are fulfilled?
+             * ..or if can make consious choise
+             * should there be some procedure for this (unlocking)?
+             * */
+
+            if (mind.stop)
+                mind.theanswer.Data = "42";
+
+            string answer = mind.theanswer.Data;
+
             mind.goodbye = answer == "42" ? true : false;
         }
 
@@ -169,7 +185,7 @@ namespace Awesome.AI.Core
             if (mind.unit_current.IsQDECISION())
                 return;
 
-            if (mind.unit_current.IsDECISION())
+            if (mind.unit_current.IsLONGDECISION())
                 return;
 
             history.Insert(0, mind.unit_current);

@@ -100,7 +100,8 @@ namespace Awesome.AI.CoreSystems
 
                 TONE tone = TONE.RANDOM;
 
-                mind.memory.Decide(STATE.QUICKDECISION, 100, CONST.QSUB_SHOULD, should_decision, UNITTYPE.QDECISION, LONGTYPE.NONE, 0, tone);
+                foreach (string s in should_decision)
+                    mind.memory.Decide(STATE.QUICKDECISION, CONST.QSUB_SHOULD, s, UNITTYPE.QDECISION, LONGTYPE.NONE, tone);
             
                 mind.STATE = STATE.QUICKDECISION;
 

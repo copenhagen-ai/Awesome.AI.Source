@@ -89,7 +89,7 @@ namespace Awesome.AI.CoreSystems
                 if (mind.unit_actual.IsQDECISION())
                     return;
 
-                if (mind.unit_actual.IsDECISION())
+                if (mind.unit_actual.IsLONGDECISION())
                     return;
 
                 //if (!CONST.SAMPLE20.RandomSample(mind))

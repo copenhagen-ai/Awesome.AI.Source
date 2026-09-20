@@ -116,7 +116,7 @@ namespace Awesome.AI.Core.Spaces
         private bool LongDecision(UNIT unit, out string sub)
         {
             sub = "";
-            if (unit.IsDECISION())
+            if (unit.IsLONGDECISION())
             {
                 string data = unit.Data;
 
