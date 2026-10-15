@@ -14,6 +14,8 @@ namespace Awesome.AI.Core.Internals
         // Maps mechanics to emergent cognition
         public double Will() => ms.vv_sym_curr;
 
+        public double Valence() => ms.pos_sym_curr;
+
         public double Conflict() => ms.dv_sym_curr;
 
         public double Commitment() => ms.mom_sym_curr;

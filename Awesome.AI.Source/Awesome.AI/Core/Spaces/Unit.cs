@@ -153,7 +153,9 @@ namespace Awesome.AI.Core.Spaces
             
             UNIT _w = new UNIT() { mind = mind, created = create, guid = h_guid, data = data, unit_type = ut, ld_type = lt };
 
-            for (int i = 0; i < CONST.AXIS_MAX; i++)
+            int len = data == "IDLE" ? 0 : CONST.AXIS_MAX;
+
+            for (int i = 0; i < len; i++)
                 _w.UIset(CONST.AXES[i], index[i]);
 
             ticket = ticket != "" ? ticket : "NOTICKET";

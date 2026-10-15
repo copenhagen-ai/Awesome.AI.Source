@@ -8,6 +8,8 @@ namespace Awesome.AI.Core.Mechanics
         public double vv_sym_low_peek { get; set; }
         public double vv_sym_high_peek { get; set; }
 
+
+        //public double pos_sym_prev { get; set; }
         public double dv_sym_prev { get; set; }
         public double vv_sym_prev { get; set; }
         public double fnet_sym_prev { get; set; }
@@ -15,6 +17,7 @@ namespace Awesome.AI.Core.Mechanics
         public double acc_sym_prev { get; set; }
         public double ke_sym_prev { get; set; }
 
+        public double pos_sym_curr { get; set; }
         public double dv_sym_curr { get; set; }
         public double vv_sym_curr { get; set; }
         public double fnet_sym_curr { get; set; }
@@ -67,6 +70,8 @@ namespace Awesome.AI.Core.Mechanics
                     //vv_sym_peek = mp.peek_vv_curr;
                     //vv_sym_low_peek = mp.peek_vv_out_low;
                     //vv_sym_high_peek = mp.peek_vv_out_high;
+
+                    pos_sym_curr = mp.pos_x;
 
                     dv_sym_prev = mp.dv_prev;
                     vv_sym_prev = mp.vv_prev;

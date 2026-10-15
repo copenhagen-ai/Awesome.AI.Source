@@ -10,7 +10,7 @@ namespace Awesome.AI.Core.Mechanics
             if (!CONST.SAMPLE20.RandomSample(mind))
                 return;
 
-            mp.posxy = CONST.STARTXY;
+            //mp.posxy = CONST.STARTXY;
 
             mp.cc_elec_max = -1000.0d;
             mp.cc_elec_min = 1000.0d;
@@ -33,7 +33,7 @@ namespace Awesome.AI.Core.Mechanics
             if (!CONST.SAMPLE20.RandomSample(mind))
                 return;
 
-            mp.posxy = CONST.STARTXY;
+            //mp.posxy = CONST.STARTXY;
 
             //mp.peek_vv_out_high = -1000.0d;
             //mp.peek_vv_out_low = 1000.0d;
@@ -43,6 +43,22 @@ namespace Awesome.AI.Core.Mechanics
             mp.dv_out_low = 1000.0d;
             mp.posx_high = -1000.0d;
             mp.posx_low = 1000.0d;
+
+            mp.pos_x = CONST.STARTXY;
+
+            mp.dv_prev = 0.0d;
+            mp.vv_prev = 0.0d;
+            mp.fnet_prev = 0.0d;
+            mp.mom_prev = 0.0d;
+            mp.acc_prev = 0.0d;
+            mp.ke_prev = 0.0d;
+
+            mp.dv_curr = 0.0d;
+            mp.vv_curr = 0.0d;
+            mp.fnet_curr = 0.0d;
+            mp.mom_curr = 0.0d;
+            mp.acc_curr = 0.0d;
+            mp.ke_curr = 0.0d;
         }
 
         public void Reset(MechParams mp)

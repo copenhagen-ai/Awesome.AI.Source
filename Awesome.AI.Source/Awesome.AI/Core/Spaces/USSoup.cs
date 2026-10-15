@@ -86,7 +86,7 @@ namespace Awesome.AI.Core.Spaces
             double length = dir.magnitude;
 
             if (length == 0)
-                return new List<UNIT>();
+                return null;
 
             dir = func.Div(dir, length);
 
@@ -299,7 +299,8 @@ namespace Awesome.AI.Core.Spaces
 
                 list = GPT.Create().Corridor2D(units, mind.unit_current, res);
 
-                list[0].Update2D(near2);
+                if (list != null)
+                    list[0].Update2D(near2);
             }
 
             if (CONST.select_curr == SELECTCURRENT.PYTH6)
@@ -308,13 +309,14 @@ namespace Awesome.AI.Core.Spaces
 
                 list = GPT.Create().Corridor6D(units, mind.unit_current, res);
 
-                list[0].Update6D(near6);
+                if (list != null)
+                    list[0].Update6D(near6);                
             }
 
             if (CONST.select_curr == SELECTCURRENT.OTHER)
                 res = Select.Create(mind, this).ByOther(units, near2);
 
-            if (res == null)
+            if (res == null || list == null)
                 return (new List<UNIT>() { UNIT.CreateIdle(mind) }).ToArray();
             
             return list.ToArray();

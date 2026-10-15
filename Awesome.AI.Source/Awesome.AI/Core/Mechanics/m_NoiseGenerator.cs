@@ -30,7 +30,7 @@ namespace Awesome.AI.Core.Mechanics
             this.mp.mprops = new ModProperties(mind, mprops);
             this.mp.eprops = new BaseProperties(ms);
 
-            mp.posxy = CONST.STARTXY;
+            //mp.posxy = CONST.STARTXY;
 
             //mp.peek_vv_out_high = -1000.0d;
             //mp.peek_vv_out_low = 1000.0d;

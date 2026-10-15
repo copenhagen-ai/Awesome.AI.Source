@@ -68,7 +68,7 @@ namespace Awesome.AI.Core.Mechanics
         public double posx_high { get; set; }
         public double posx_low { get; set; }
 
-        public double posxy { get; set; }        
+        //public double posxy { get; set; }        
         public double pos_x = CONST.STARTXY;
 
         public PATTERN pattern_curr = PATTERN.NONE;
